@@ -7,44 +7,37 @@
     - ufw
     - miscellaneous
     - python
-  gather_facts: no
   tags: bootstrap_step
 
 - hosts: newrelic
   roles:
     - newrelic
-  gather_facts: no
   tags: newrelic_step
 
 - hosts: caching
   roles:
     - redis
-  gather_facts: no
   tags: caching_step
 
 - hosts: database
   roles:
     - postgresql
-  gather_facts: yes
   tags: database_step
 
 - hosts: messaging
   roles:
     - rabbitmq
-  gather_facts: yes
   tags: messaging_step
 
 # - hosts: monitoring
 #   roles:
 #     - graphite
-#   gather_facts: yes
 #   tags: monitoring_step
 
 - hosts: storage
   roles:
     - nfs
   tags: storage_step
-  gather_facts: no
 
 - hosts:
   - web
@@ -52,7 +45,6 @@
   roles:
     - mounts
     - <here-the-role-for-your-django-app>
-  gather_facts: yes
   max_fail_percentage: 0
   tags: application_step
 
@@ -60,19 +52,16 @@
   roles:
     - nginx
     - uwsgi
-  gather_facts: yes
   tags: application_step
 
 - hosts: worker
   roles:
     - celery
-  gather_facts: no
   tags: application_step
 
 - hosts: owncloud
   roles:
     - owncloud
-  gather_facts: no
   tags: owncloud_step
 
 - hosts:
