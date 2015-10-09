@@ -4,7 +4,7 @@
   tags: config
   when: desktop_has_run is undefined
 
-- include: 1-packages.yml
+- include: 2-packages.yml
   tags: packages
   when: desktop_has_run is undefined
 
