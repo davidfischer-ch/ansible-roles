@@ -1,0 +1,38 @@
+desktop_package: ubuntu-gnome-desktop
+file_utility_packages:
+  - dos2unix
+  - odt2txt
+  - pdfshuffler
+  - pyrenamer
+  - tofrodos
+  - unoconv
+java_packages:
+  - icedtea-7-plugin
+  - openjdk-7-jre
+miscellaneous_packages:
+  - stellarium
+office_packages:
+  - gedit-plugins
+  - gnome-raw-thumbnailer
+  - indicator-cpufreq
+  - libreoffice-style-sifr
+  - xournal
+ubuntu_desktop_packages:
+  - compizconfig-settings-manager
+  - nautilus-open-terminal
+  - nemo
+  - nemo-fileroller
+  - unity-tweak-tool
+system_packages:
+  - apt-file
+  - gdebi
+  - gparted
+  - playonlinux
+  - wireshark
+virtualization_packages:
+  - virtualbox
+  - virtualbox-guest-additions-iso
+web_packages:
+  - chromium-browser
+  - filezilla
+  - firefox
