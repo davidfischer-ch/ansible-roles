@@ -1,68 +1,89 @@
 ---
 
-- hosts: all
+- hosts:
+    - all
   roles:
     - bootstrap
     - fail2ban
     - ufw
     - miscellaneous
     - python
-  tags: bootstrap_step
-
-- hosts: newrelic
-  roles:
-    - newrelic
-  tags: newrelic_step
-
-- hosts: caching
-  roles:
-    - redis
-  tags: caching_step
-
-- hosts: database
-  roles:
-    - postgresql
-  tags: database_step
-
-- hosts: messaging
-  roles:
-    - rabbitmq
-  tags: messaging_step
-
-# - hosts: monitoring
-#   roles:
-#     - graphite
-#   tags: monitoring_step
-
-- hosts: storage
-  roles:
-    - nfs
-  tags: storage_step
+  tags:
+    - bootstrap_step
 
 - hosts:
-  - web
-  - worker
+    - newrelic
+  roles:
+    - newrelic
+  tags:
+    - newrelic_step
+
+- hosts:
+    - caching
+  roles:
+    - redis
+  tags:
+    - caching_step
+
+- hosts:
+    - database
+  roles:
+    - postgresql
+  tags:
+    - database_step
+
+- hosts:
+    - messaging
+  roles:
+    - rabbitmq
+  tags:
+    - messaging_step
+
+# - hosts:
+#     - monitoring
+#   roles:
+#     - graphite
+#   tags:
+#     - monitoring_step
+
+- hosts:
+    - storage
+  roles:
+    - nfs
+  tags:
+    - storage_step
+
+- hosts:
+    - web
+    - worker
   roles:
     - mounts
     - <here-the-role-for-your-django-app>
   max_fail_percentage: 0
-  tags: application_step
+  tags:
+    - application_step
 
-- hosts: web
+- hosts:
+    - web
   roles:
     - nginx
     - uwsgi
-  tags: application_step
+  tags:
+    - application_step
 
-- hosts: worker
+- hosts:
+    - worker
   roles:
     - celery
-  tags: application_step
+  tags:
+    - application_step
 
-- hosts: owncloud
+- hosts:
+    - owncloud
   roles:
     - owncloud
-  tags: owncloud_step
+  tags:
+    - owncloud_step
 
 - hosts:
     - desktop
@@ -83,13 +104,17 @@
   tags:
     - utilities_step
 
-- hosts: laptop
+- hosts:
+    - laptop
   roles:
     - laptop
-  tags: utilities_step
+  tags:
+    - utilities_step
 
-- hosts: phone
+- hosts:
+    - phone
   roles:
     - phone
-  tags: utilities_step
+  tags:
+    - utilities_step
 
