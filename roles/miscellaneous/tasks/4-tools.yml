@@ -1,0 +1,13 @@
+---
+
+- name: Install usefull system tools
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items: system_tools
+
+- name: Install building and development tools
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items: development_tools

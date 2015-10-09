@@ -1,0 +1,12 @@
+# Install and configure MySQL
+---
+
+- include: 1-services.yml
+  tags: services
+  when: mysql_has_run is undefined
+
+- include: 2-config.yml
+  tags: config
+  when: mysql_has_run is undefined
+
+- set_fact: mysql_has_run=yes

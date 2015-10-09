@@ -1,0 +1,22 @@
+---
+
+- name: Install TLP power management PPA repositories
+  apt_repository: >
+    repo=ppa:linrunner/tlp state=present update_cache=yes
+  sudo: yes
+  when: laptop_with_tlp|bool
+
+- name: Remove laptop-mode-tools package
+  apt: >
+    name=laptop-mode-tools state=absent
+  sudo: yes
+  when: laptop_with_tlp|bool
+
+- name: Install TLP power management packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - tlp
+    - tlp-rdw
+  sudo: yes
+  when: laptop_with_tlp|bool

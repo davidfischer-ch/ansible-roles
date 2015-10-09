@@ -1,0 +1,50 @@
+---
+
+- name: Flush PostgreSQL databases
+  postgresql_db: >
+    name={{ item.value.name }} state=absent
+  sudo: yes
+  sudo_user: postgres
+  tags: flush
+  when: not 'template' in item.value.name
+  with_dict: postgresql_databases
+
+- name: Setup PostgreSQL users
+  postgresql_user: >
+    name={{ item.value.user }} password={{ item.value.password }} role_attr_flags=SUPERUSER,CREATEDB state=present
+  sudo: yes
+  sudo_user: postgres
+  tags: flush_extra
+  when: not 'template' in item.value.name
+  with_dict: postgresql_databases
+
+- name: Setup PostgreSQL databases
+  postgresql_db: >
+    name={{ item.value.name }} encoding={{ item.value.encoding|default('unicode') }} owner={{ item.value.user }}
+    template={{ item.value.template|default('template1') }} state=present
+  sudo: yes
+  sudo_user: postgres
+  tags: flush_extra
+  when: not 'template' in item.value.name
+  with_dict: postgresql_databases
+
+- include: 4-hstore.yml
+- include: 5-postgis.yml
+
+- name: Remove PostgreSQL unit-test databases
+  postgresql_db: >
+    name=test_{{ item.value.name }} state=absent
+  sudo: yes
+  sudo_user: postgres
+  tags: unit_test
+  when: item.value.with_test|bool
+  with_dict: postgresql_databases
+
+- name: Allow PostgreSQL users to access PostgreSQL databases
+  postgresql_privs: >
+    db={{ item.value.name }} type=database priv=ALL role={{ item.value.user }} state=present
+  sudo: yes
+  sudo_user: postgres
+  tags: flush_extra
+  when: not 'template' in item.value.name
+  with_dict: postgresql_databases

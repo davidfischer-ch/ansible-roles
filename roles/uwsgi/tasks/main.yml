@@ -1,0 +1,20 @@
+# Install and configure uWSGI, daemonize with Supervisor, enable our Application
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: uwsgi_has_run is undefined
+
+- include: 2-services.yml
+  tags: services
+  when: uwsgi_has_run is undefined
+
+- include: 3-update.yml
+  tags: update
+  when: uwsgi_has_run is undefined
+
+- include: 4-apps.yml
+  tags: config
+  when: uwsgi_has_run is undefined
+
+- set_fact: uwsgi_has_run=yes

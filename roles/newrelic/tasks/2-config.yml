@@ -1,0 +1,7 @@
+---
+
+- name: Configure New Relic System Monitor
+  command: >
+    nrsysmond-config --set license_key={{ newrelic_license_key }}
+  sudo: yes
+  when: newrelic_license_key|length > 0

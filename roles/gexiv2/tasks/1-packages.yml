@@ -1,0 +1,46 @@
+---
+
+- name: Create GExiv2 source directory
+  file: >
+    name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+  sudo: yes
+  with_items:
+    - "{{ tools_src_directory }}/gexiv2"
+
+- name: Remove old GExiv2 with apt
+  apt: >
+    name=gir1.2-gexiv2-0.10 state=absent
+  sudo: yes
+
+- name: Clone GExiv2 source code
+  git: >
+    repo=https://git.gnome.org/browse/gexiv2
+    dest={{ tools_src_directory }}/gexiv2
+    force=yes
+    version={{ gexiv2_version }}
+
+- name: Generate GExiv2 build configuration
+  command: >
+    {{ tools_src_directory }}/gexiv2/autogen.sh
+  args:
+    chdir: "{{ tools_src_directory }}/gexiv2"
+
+- name: Configure GExiv2 build process
+  command: >
+    {{ tools_src_directory }}/gexiv2/configure
+      --enable-introspection
+  args:
+    chdir: "{{ tools_src_directory }}/gexiv2"
+
+- name: Build GExiv2 from source
+  command: >
+    make -j{{ ansible_processor_cores }}
+  args:
+    chdir: "{{ tools_src_directory }}/gexiv2"
+
+- name: Install GExiv2 from source
+  command: >
+    make install
+  args:
+    chdir: "{{ tools_src_directory }}/gexiv2"
+  sudo: yes

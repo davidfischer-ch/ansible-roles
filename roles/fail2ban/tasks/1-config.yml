@@ -1,0 +1,6 @@
+---
+
+- name: Configure fail2ban rules
+  template: >
+    src=jail.conf.j2 dest=/etc/fail2ban/jail.conf mode=644
+  sudo: yes

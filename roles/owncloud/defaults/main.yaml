@@ -1,0 +1,3 @@
+owncloud_data_directory: /var/www/owncloud/data
+owncloud_default_language: fr
+owncloud_port: 80

@@ -1,0 +1,14 @@
+---
+
+dependencies:
+  - role: requirements
+    apt_requirements:
+      - rabbitmq-server
+    when: rabbitmq_has_run is undefined
+
+  - role: ufw
+    ufw_rules:
+      - port: "{{ rabbitmq_port }}"
+        proto: tcp
+        rule: allow
+    when: rabbitmq_has_run is undefined

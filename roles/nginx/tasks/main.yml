@@ -1,0 +1,29 @@
+# Install and configure Nginx, daemonize with Supervisor, enable our Site
+# https://blog.engineyard.com/2011/useful-rewrites-for-nginx
+---
+
+- include: 1-pagespeed.yml
+  tags: packages
+  when: nginx_has_run is undefined and nginx_pagespeed_enabled|bool
+
+- include: 2-packages.yml
+  tags: packages
+  when: nginx_has_run is undefined
+
+- include: 3-config.yml
+  tags: config
+  when: nginx_has_run is undefined
+
+- include: 4-services.yml
+  tags: services
+  when: nginx_has_run is undefined
+
+- include: 5-update.yml
+  tags: update
+  when: nginx_has_run is undefined
+
+- include: 6-site.yml
+  tags: config
+  when: nginx_has_run is undefined
+
+- set_fact: nginx_has_run=yes

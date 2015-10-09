@@ -1,0 +1,11 @@
+---
+
+dependencies:
+  - role: python
+    when: uwsgi_has_run is undefined
+
+  - role: requirements
+    apt_requirements:
+      - uwsgi
+      - uwsgi-plugin-python3
+    when: uwsgi_has_run is undefined

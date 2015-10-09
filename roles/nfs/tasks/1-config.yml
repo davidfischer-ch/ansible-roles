@@ -1,0 +1,7 @@
+---
+
+- name: Configure NFS Kernel Server
+  template: >
+    src=nfs-kernel-server.j2 dest=/etc/default/nfs-kernel-server mode=644
+  notify: reload nfs-kernel-server
+  sudo: yes

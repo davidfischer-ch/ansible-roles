@@ -1,0 +1,8 @@
+# https://software.opensuse.org/download/package?project=isv:ownCloud:desktop&package=owncloud-client
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: owncloud_client_has_run is undefined
+
+- set_fact: owncloud_client_has_run=yes

@@ -1,0 +1,16 @@
+# Install and configure Supervisor
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: supervisor_has_run is undefined
+
+- include: 2-config.yml
+  tags: config
+  when: supervisor_has_run is undefined
+
+- include: 3-services.yml
+  tags: services
+  when: supervisor_has_run is undefined
+
+- set_fact: supervisor_has_run=yes

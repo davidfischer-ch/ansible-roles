@@ -1,0 +1,7 @@
+---
+
+- name: Remove guest RabbitMQ user
+  rabbitmq_user: >
+    user=guest state=absent
+  sudo: yes
+  when: rabbitmq_is_master|bool

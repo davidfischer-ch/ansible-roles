@@ -1,0 +1,35 @@
+---
+
+- name: Install building and development tools
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items:
+    - bpython
+    - bpython3
+    - build-essential
+    - checkinstall
+    - python-dev
+    - python3-dev
+
+- name: Download pip bootstrap script
+  get_url: >
+    url=https://bootstrap.pypa.io/get-pip.py dest=/tmp/get-pip.py sha256sum={{ python_get_pip_checksum }}
+  sudo: yes
+
+- name: Install pip
+  command: >
+    python{{ item }} /tmp/get-pip.py
+  sudo: yes
+  with_items: python_versions
+
+- name: Install setuptools
+  pip: >
+    name=setuptools executable=pip{{ item }}
+  sudo: yes
+  with_items: python_versions
+
+- name: Install virtualenv
+  pip: >
+    name=virtualenv state=latest
+  sudo: yes

@@ -1,0 +1,25 @@
+---
+
+dependencies:
+  - role: github
+    when: nginx_has_run is undefined
+
+  - role: requirements
+    apt_requirements:
+      # https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
+      - build-essential
+      - libpcre3
+      - libpcre3-dev
+      - unzip
+      - zlib1g-dev
+    when: nginx_has_run is undefined
+
+  - role: supervisor
+    when: nginx_has_run is undefined
+
+  - role: ufw
+    ufw_rules:
+      - port: "{{ nginx_port }}"
+        proto: tcp
+        rule: allow
+    when: nginx_has_run is undefined

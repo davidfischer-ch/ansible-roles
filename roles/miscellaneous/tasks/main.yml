@@ -1,0 +1,19 @@
+# Upgrade system packages, configure locales & NTP, install misc. packages
+---
+
+- include: 1-system.yml
+  tags: packages
+  when: miscellaneous_has_run is undefined
+
+- include: 2-locales.yml
+  tags: config
+  when: miscellaneous_has_run is undefined and locale|length > 0
+
+- include: 3-timezone.yml
+  when: miscellaneous_has_run is undefined and timezone|length > 0
+
+- include: 4-tools.yml
+  tags: packages
+  when: miscellaneous_has_run is undefined
+
+- set_fact: miscellaneous_has_run=yes

@@ -1,0 +1,11 @@
+---
+
+- name: restart nginx
+  supervisorctl: >
+    name=nginx state=restarted
+  sudo: yes
+
+- name: reload nginx
+  command: >
+    supervisorctl signal HUP nginx
+  sudo: yes

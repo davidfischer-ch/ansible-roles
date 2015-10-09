@@ -1,0 +1,22 @@
+---
+
+dependencies:
+  - role: mysql
+    when: owncloud_has_run is undefined
+
+  - role: openssl
+    when: owncloud_has_run is undefined
+
+  - role: ufw
+    ufw_rules:
+      - port: "{{ owncloud_port }}"
+        proto: tcp
+        rule: allow
+    when: owncloud_has_run is undefined
+
+  - role: requirements
+    key_requirements:
+      - http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_{{ ansible_distribution_version }}/Release.key
+    apt_requirements:
+      - python-mysqldb
+    when: owncloud_has_run is undefined

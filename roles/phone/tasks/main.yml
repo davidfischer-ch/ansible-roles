@@ -1,0 +1,10 @@
+# http://askubuntu.com/questions/399709/install-with-sudo-app-get-install-doesnt-work-not-using-locking-for-read-only
+# http://askubuntu.com/questions/348714/how-can-i-access-my-ubuntu-phone-over-ssh
+# http://askubuntu.com/questions/563573/cant-ssh-into-ubuntu-touch-device
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: phone_has_run is undefined
+
+- set_fact: phone_has_run=yes

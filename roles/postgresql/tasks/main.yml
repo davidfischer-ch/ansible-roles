@@ -1,0 +1,15 @@
+# Install and configure PostgreSQL including setup our user & database
+---
+
+- include: 1-config.yml
+  tags: config
+  when: postgresql_has_run is undefined
+
+- include: 2-services.yml
+  tags: services
+  when: postgresql_has_run is undefined
+
+- include: 3-databases.yml
+  when: postgresql_has_run is undefined and postgresql_is_master|bool
+
+- set_fact: postgresql_has_run=yes

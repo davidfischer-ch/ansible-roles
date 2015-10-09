@@ -1,0 +1,8 @@
+# Install and configure Redis
+---
+
+- include: 1-config.yml
+  tags: config
+  when: redis_has_run is undefined
+
+- set_fact: redis_has_run=yes

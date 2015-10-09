@@ -1,0 +1,8 @@
+---
+
+dependencies:
+  - role: python
+    when: celery_has_run is undefined
+
+  - role: supervisor
+    when: celery_has_run is undefined

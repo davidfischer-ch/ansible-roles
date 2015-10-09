@@ -1,0 +1,25 @@
+# # https://software.opensuse.org/download/package?project=isv:ownCloud:desktop&package=owncloud-client
+
+---
+
+- name: Enable ownCloud client apt repository
+  template:
+    src=owncloud-client.list
+    dest=/etc/apt/sources.list.d/owncloud-client.list
+    mode=644
+  register: owncloud_client_repo_result
+  sudo: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
+
+- name: Update Debian packages cache
+  apt: update_cache=yes
+  sudo: yes
+  when: owncloud_client_repo_result|changed
+
+- name: Install ownCloud packages
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
+  with_items:
+    - owncloud-client

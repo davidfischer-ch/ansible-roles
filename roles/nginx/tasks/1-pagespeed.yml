@@ -1,0 +1,37 @@
+---
+
+- set_fact:
+    nginx_pagespeed_module_name: "ngx_pagespeed-release-{{ nginx_pagespeed_module_version }}-beta"
+
+- set_fact:
+    nginx_pagespeed_items:
+      - url: "https://github.com/pagespeed/ngx_pagespeed/archive/release-{{ nginx_pagespeed_module_version }}-beta.zip"
+        file: "nginx-pagespeed-module-{{ nginx_pagespeed_module_version }}.zip"
+        path: ""
+        sha256_checksum: "{{ nginx_pagespeed_module_checksum }}"
+      - url: "https://dl.google.com/dl/page-speed/psol/{{ nginx_pagespeed_module_version }}.tar.gz"
+        file: "nginx-pagespeed-library-{{ nginx_pagespeed_module_version }}.zip"
+        path: "{{ nginx_pagespeed_module_name }}"
+        sha256_checksum: "{{ nginx_pagespeed_library_module_checksum }}"
+    nginx_pagespeed_configure: "--add-module={{ tools_src_directory }}/{{ nginx_pagespeed_module_name }}"
+
+- name: Create PageSpeed source directories
+  file: >
+    name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+  sudo: yes
+  with_items:
+    - "{{ nginx_pagespeed_cache_directory }}"
+    - "{{ tools_src_directory }}/{{ nginx_pagespeed_module_name }}/psol"
+
+- name: Download PageSpeed module source code
+  get_url: >
+    url="{{ item.url }}" dest="{{ tools_src_directory }}/{{ item.file }}" force=no
+    sha256sum={{ item.sha256_checksum }} validate_certs=no
+  notify: restart nginx
+  with_items: nginx_pagespeed_items
+
+- name: Extract PageSpeed module source code
+  unarchive: >
+    src="{{ tools_src_directory }}/{{ item.file }}" dest="{{ tools_src_directory }}/{{ item.path }}" copy=no
+  notify: restart nginx
+  with_items: nginx_pagespeed_items

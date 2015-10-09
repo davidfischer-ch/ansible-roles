@@ -1,0 +1,64 @@
+---
+
+# https://wooster.checkmy.ws/doc/graphite/
+# http://uwsgi-docs.readthedocs.org/en/latest/tutorials/GraphiteAndMetrics.html
+# https://uwsgi-docs.readthedocs.org/en/latest/
+
+# - name: Create graphite user
+#   user: >
+#     name=graphite createhome=no home=/usr/local/src/graphite shell=/bin/false state=present
+#   sudo: yes
+#   tags: bootstrap
+
+# Packages
+
+- name: Create virtualenv
+  shell: >
+    virtualenv -p python2.7 --system-site-packages {{ graphite_bin_directory }}
+  args:
+    creates: "{{ graphite_bin_directory }}"
+  tags: packages
+  when: graphite_has_run is undefined
+
+- name: Install requirements into virtualenv
+  pip: >
+    name={{ item }} state=present virtualenv={{ graphite_bin_directory }}
+    extra_args='--install-option="--prefix={{ graphite_bin_directory }} --install-lib={{ graphite_bin_directory }}/lib"'
+  tags: packages
+  when: graphite_has_run is undefined
+  with_items:
+    - cairocffi
+    - carbon
+    - django<1.7
+    - django-tagging
+    - graphite-web
+    - twisted<12.0
+    - whisper
+
+- name: Create symbolic link cairo -> cairocffi
+  file: >
+    src={{ graphite_bin_directory }}/lib/python2.7/site-packages/cairocffi
+    dest={{ graphite_bin_directory }}/lib/python2.7/site-packages/cairo
+    state=link
+
+# Configuration
+
+- name: Deploy Carbon settings
+  template: >
+    src={{ item }}
+    dest={{ graphite_bin_directory }}/conf/{{ item|basename|pathname }}
+    mode=644
+  tags: config
+  with_fileglob:
+    - ../templates/*.conf.j2
+    - ../templates/*.wsgi.j2
+
+- name: Deploy Graphite settings
+  template: >
+    src=local_settings.py.j2
+    dest={{ graphite_bin_directory }}/webapp/graphite/local_settings.py
+    mode=644
+  sudo: yes
+  tags: config
+
+- set_fact: graphite_has_run=yes

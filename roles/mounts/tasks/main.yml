@@ -1,0 +1,8 @@
+# Install filesystems packages & configure mount points
+---
+
+- include: 1-mounts.yml
+  tags: mounts
+  when: mounts_has_run is undefined
+
+- set_fact: mounts_has_run=yes

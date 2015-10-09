@@ -1,0 +1,11 @@
+# Install and configure UFW
+---
+
+- include: 1-config.yml
+  tags: config
+  when: ufw_has_run is undefined
+
+- include: 2-rules.yml
+  tags: config
+
+- set_fact: ufw_has_run=yes

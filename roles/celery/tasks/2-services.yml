@@ -1,0 +1,19 @@
+---
+
+- name: Start celery services
+  supervisorctl: >
+    name={{ item.value.name }} state=started
+  ignore_errors: yes
+  register: celery_start_result
+  sudo: yes
+  with_dict: celery_services
+
+- name: Restart celery services
+  supervisorctl: >
+    name={{ item.value.name }} state=restarted
+  # async: 360  # FIXME lookup plugins (with_*) cannot be used with async tasks
+  # poll: 5
+  sudo: yes
+  tags: [services, update]
+  when: celery_start_result|failed
+  with_dict: celery_services

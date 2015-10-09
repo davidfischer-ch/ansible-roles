@@ -1,0 +1,8 @@
+---
+
+- name: Setup new rules
+  ufw: >
+    port={{ item.port }} proto={{ item.proto }} rule={{ item.rule }}
+  notify: reload ufw
+  sudo: yes
+  with_items: ufw_rules

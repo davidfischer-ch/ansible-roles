@@ -1,0 +1,8 @@
+# Install and configure GExiv2
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: gexiv2_has_run is undefined
+
+- set_fact: gexiv2_has_run=yes

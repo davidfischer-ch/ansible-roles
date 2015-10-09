@@ -1,0 +1,7 @@
+---
+
+dependencies:
+  - role: requirements
+    apt_requirements:
+      - fail2ban
+    when: ufw_has_run is undefined

@@ -1,0 +1,16 @@
+# Install and configure RabbitMQ including our user & vhost
+---
+
+- include: 1-services.yml
+  tags: services
+  when: rabbitmq_has_run is undefined
+
+- include: 2-config.yml
+  tags: config
+  when: rabbitmq_has_run is undefined and rabbitmq_is_master|bool
+
+- include: 3-vhost.yml
+  tags: config
+  when: rabbitmq_has_run is undefined and rabbitmq_is_master|bool
+
+- set_fact: rabbitmq_has_run=yes

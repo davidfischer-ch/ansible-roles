@@ -1,0 +1,20 @@
+---
+
+dependencies:
+  - role: requirements
+    apt_requirements:
+      - nfs-kernel-server
+    when: nfs_has_run is undefined
+
+  - role: ufw
+    ufw_rules:
+      - port: nfs
+        proto: any  # tcp/udp
+        rule: allow
+      - port: sunrpc
+        proto: any  # tcp/udp
+        rule: allow
+      - port: 4001  # rpc.mountd
+        proto: any  # tcp/udp
+        rule: allow
+    when: nfs_has_run is undefined

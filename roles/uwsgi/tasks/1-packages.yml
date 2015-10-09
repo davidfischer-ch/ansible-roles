@@ -1,0 +1,14 @@
+---
+
+- name: Upgrade uWSGI
+  pip: >
+    executable=pip3 name=uwsgi state=latest
+  sudo: yes
+
+- name: Enable upgraded uWSGI
+  file: >
+    src=/usr/local/bin/uwsgi dest=/usr/bin/uwsgi force=yes state=link
+  notify: restart uwsgi
+  sudo: yes
+
+- meta: flush_handlers

@@ -1,0 +1,32 @@
+---
+
+- name: Register New Relic apt repository
+  copy: >
+    src=newrelic.list dest=/etc/apt/sources.list.d/newrelic.list mode=644
+  register: newrelic_ppa_result
+  sudo: yes
+  when: newrelic_license_key|length > 0
+
+- name: Trust New Relic GPG key
+  shell: >
+    wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
+  sudo: yes
+  when: newrelic_license_key|length > 0
+
+- name: Update the Debian packages cache
+  apt: >
+    update_cache=yes
+  sudo: yes
+  when: newrelic_license_key|length > 0 and newrelic_ppa_result|changed
+
+- name: Install New Relic System Monitor
+  apt: >
+    name=newrelic-sysmond state=latest
+  sudo: yes
+  when: newrelic_license_key|length > 0
+
+- name: Remove New Relic System Monitor
+  apt: >
+    name=newrelic-sysmond state=absent
+  sudo: yes
+  when: newrelic_license_key|length == 0

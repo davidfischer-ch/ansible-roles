@@ -1,0 +1,10 @@
+---
+
+- include: 1-debian.yml
+  tags: packages
+
+- include: 2-bower.yml
+  tags: packages
+
+- include: 3-python.yml
+  tags: packages

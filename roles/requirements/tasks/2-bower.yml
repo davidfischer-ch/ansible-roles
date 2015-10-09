@@ -1,0 +1,7 @@
+---
+
+- name: Install requirements with npm
+  npm: >
+    name={{ item }} global=yes production=yes state=latest
+  sudo: yes
+  with_items: npm_requirements

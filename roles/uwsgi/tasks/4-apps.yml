@@ -1,0 +1,19 @@
+---
+
+- name: Setup the uWSGI applications
+  template: >
+    src={{ item.value.config_file }}
+    dest=/etc/uwsgi/apps-available/{{ item.value.name }}.xml
+    mode=644
+  notify: reload uwsgi
+  sudo: yes
+  with_dict: uwsgi_apps
+
+- name: Enable the uWSGI applications
+  file: >
+    src=/etc/uwsgi/apps-available/{{ item.value.name }}.xml
+    dest=/etc/uwsgi/apps-enabled/{{ item.value.name }}.xml
+    state=link
+  notify: reload uwsgi
+  sudo: yes
+  with_dict: uwsgi_apps

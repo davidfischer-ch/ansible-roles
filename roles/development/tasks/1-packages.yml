@@ -1,0 +1,34 @@
+---
+
+- name: Install ScudCloud PPA repository
+  apt_repository: >
+    repo=ppa:rael-gc/scudcloud state=present update_cache=yes
+  sudo: yes
+  when: scudcloud in devops_packages
+
+- name: Install devops packages
+  apt: >
+    name={{ item }} state=latest
+  with_items: devops_packages
+  sudo: yes
+
+- name: Install programming packages
+  apt: >
+    name={{ item }} state=latest
+  with_items: programming_packages
+  sudo: yes
+
+- name: Download sublime text 3
+  get_url: >
+    url=http://c758482.r82.cf2.rackcdn.com/sublime-text_build-{{ sublime_text_version }}_amd64.deb
+    dest=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
+  tags: packages
+  when: sublime_text_version|bool
+
+- name: Install sublime text 3
+  command: >
+    gdebi /tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb --non-interactive
+  sudo: yes
+  when: sublime_text_version|bool
+
+# FIXME install package control, gitgutter ... configure ...

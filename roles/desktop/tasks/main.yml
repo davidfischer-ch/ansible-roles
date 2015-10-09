@@ -1,0 +1,11 @@
+---
+
+- include: 1-config.yml
+  tags: config
+  when: desktop_has_run is undefined
+
+- include: 1-packages.yml
+  tags: packages
+  when: desktop_has_run is undefined
+
+- set_fact: desktop_has_run=yes

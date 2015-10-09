@@ -1,0 +1,83 @@
+
+upstream uwsgi {
+    server unix:///run/uwsgi/app/{{ site }}/socket;
+}
+
+server
+{
+    # Security - http://nginx.org/en/docs/http/request_processing.html
+    return 444;
+}
+
+{% if domain_old|length > 0 %}
+server
+{
+    server_name {{ domain_old }};
+    rewrite ^ $scheme://{{ domain }}$request_uri permanent;
+}
+{% endif %}
+
+server {
+
+    gzip off;  # Security - http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf
+
+    listen {{ nginx_port|int }};
+    client_max_body_size 0;
+    server_name {{ domain }} 127.0.0.1;
+    access_log /var/log/nginx/{{ site }}/access.log;
+    error_log /var/log/nginx/{{ site }}/error.log warn;
+
+    {% if nginx_pagespeed_enabled|bool %}
+    pagespeed on;
+    pagespeed DisableRewriteOnNoTransform on;  # default
+    pagespeed LowercaseHtmlNames on;
+    pagespeed ModifyCachingHeaders on;  # default
+    pagespeed PreserveUrlRelativity on;
+    pagespeed RespectVary off;  # default
+    # pagespeed StaticAssetPrefix /static/pagespeed/;
+    pagespeed XHeaderValue "Powered By ngx_pagespeed";
+
+    pagespeed RewriteLevel PassThrough;  # enable filters individually
+    pagespeed EnableFilters {{ nginx_pagespeed_filters|join(',') }};
+    pagespeed FileCachePath {{ nginx_pagespeed_cache_directory }};
+    {% endif %}
+
+    location /robots.txt {
+        alias {{ production_symlink }}/server/static/{{ application }}/robots.txt;
+    }
+
+    location /favicon/ {
+        alias {{ production_symlink }}/server/static/{{ application }}/favicons/active/;
+    }
+
+    location /static/ {
+        access_log  off;
+        autoindex   on;
+        {% if not debug|bool %}
+        expires     max;
+        {% endif %}
+        gzip        on;
+        sendfile    off;  # Avoid Nginx serving outdated static files
+        alias {{ production_symlink }}/server/static/;
+    }
+
+    location /media/ {
+        access_log  off;
+        autoindex   on;
+        gzip        on;
+        sendfile    off;  # Avoid Nginx serving outdated static files
+        alias {{ production_symlink }}/server/media/;
+    }
+
+    location / {
+        client_max_body_size 100k;
+        include uwsgi_params;
+        uwsgi_pass uwsgi;
+    }
+
+    location @uwsgi {
+        client_max_body_size 100k;
+        include uwsgi_params;
+        uwsgi_pass uwsgi;
+    }
+}

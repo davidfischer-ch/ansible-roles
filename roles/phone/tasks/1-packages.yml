@@ -1,0 +1,16 @@
+---
+
+- name: Copy the cleanup script
+  template: >
+    src=cleanup.py
+    dest=/tmp/cleanup.py
+    mode=755
+  sudo: yes
+
+- name: Execute the cleanup script
+  command: >
+    python3 /tmp/cleanup.py -k {{ keyboards|join(',') }}
+  changed_when: cleanup_result.stdout != ''
+  register: cleanup_result
+  sudo: yes
+  when: keyboards is defined and keyboards

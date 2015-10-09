@@ -1,0 +1,16 @@
+# Install New Relic and configure system monitor daemon
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: newrelic_has_run is undefined
+
+- include: 2-config.yml
+  tags: config
+  when: newrelic_has_run is undefined
+
+- include: 3-services.yml
+  tags: services
+  when: newrelic_has_run is undefined
+
+- set_fact: newrelic_has_run=yes

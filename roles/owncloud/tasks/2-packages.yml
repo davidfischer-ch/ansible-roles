@@ -1,0 +1,27 @@
+---
+
+- name: Enable ownCloud apt repository
+  template:
+    src=owncloud.list
+    dest=/etc/apt/sources.list.d/owncloud.list
+    mode=644
+  register: owncloud_repo_result
+  sudo: yes
+
+- name: Update Debian packages cache
+  apt: update_cache=yes
+  sudo: yes
+  when: owncloud_repo_result|changed
+
+- name: Install libreoffice
+  apt: >
+    name=libreoffice-common install_recommends=no state=latest
+  sudo: yes
+
+- name: Install ownCloud packages
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items:
+    - libapache2-mod-php5
+    - owncloud

@@ -1,0 +1,16 @@
+---
+
+- name: Create system user
+  user: >
+    name={{ user }} shell=/bin/bash state=present
+  sudo: yes
+
+- name: Add user to password-less sudoers
+  template: >
+    src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
+    owner=root group=root mode=644 validate='visudo -cf %s'
+  sudo: yes
+
+- name: Enable password-less ssh
+  authorized_key: >
+    user={{ user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

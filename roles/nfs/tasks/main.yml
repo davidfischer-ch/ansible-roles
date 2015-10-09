@@ -1,0 +1,9 @@
+---
+
+- include: 1-config.yml
+  tags: config
+  when: nfs_has_run is undefined
+
+- set_fact: nfs_has_run=yes
+
+# FIXME configure exports?

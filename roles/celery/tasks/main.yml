@@ -1,0 +1,12 @@
+# Install our Workers and daemonize with Supervisor
+---
+
+- include: 1-config.yml
+  tags: config
+  when: celery_has_run is undefined
+
+- include: 2-services.yml
+  tags: services
+  when: celery_has_run is undefined
+
+- set_fact: celery_has_run=yes

@@ -1,0 +1,46 @@
+---
+
+- name: Enable Apache 2 modules
+  apache2_module: >
+    name={{ item }} state=present
+  sudo: yes
+  with_items:
+    - ssl
+    - rewrite
+
+- name: Configure Apache 2 options
+  lineinfile: >
+    dest=/etc/apache2/apache2.conf regexp=^HostnameLookups line='HostnameLookups On'
+  sudo: yes
+
+- name: Compute ownCloud configuration checksum
+  stat: >
+    path=/var/www/owncloud/config/config.php get_md5=yes
+  register: owncloud_config
+  sudo: yes
+
+- name: Backup ownCloud configuration
+  command: >
+    cp -a /var/www/owncloud/config/config.php /var/www/owncloud/config/config.{{ owncloud_config.stat.md5 }}.php
+  sudo: yes
+  when: owncloud_config.stat.md5 is defined
+
+- name: Configure ownCloud
+  template: >
+    src=config.php.j2
+    dest=/var/www/owncloud/config/config.php
+    owner=www-data
+    group=www-data
+    mode=644
+  sudo: yes
+  when: owncloud_config.stat.md5 is undefined
+
+- name: Configure ownCloud site
+  template: >
+    src=owncloud.conf.j2
+    dest=/etc/apache2/conf-available/owncloud.conf
+    owner=www-data
+    group=www-data
+    mode=644
+  notify: reload apache2
+  sudo: yes

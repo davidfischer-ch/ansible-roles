@@ -1,0 +1,12 @@
+---
+
+- name: Configure UFW
+  ufw: >
+    state=enabled logging=on policy=deny
+  sudo: yes
+
+- name: Allow ssh
+  ufw: >
+    port={{ ssh_port }} proto=tcp rule=allow
+  notify: reload ufw
+  sudo: yes

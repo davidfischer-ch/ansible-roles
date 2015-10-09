@@ -1,0 +1,5 @@
+nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
+nginx_pagespeed_configure: ''
+nginx_port: 80
+nginx_start_result: {}
+tools_src_directory: /usr/local/src

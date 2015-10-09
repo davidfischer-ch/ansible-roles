@@ -1,0 +1,25 @@
+development_tools:
+  - build-essential
+  - checkinstall
+  - git
+  - mercurial
+extra_ppa_repos: []
+extra_packages: []
+kernel_packages:
+  - linux-generic
+  - linux-signed-generic
+locale: ''
+system_tools:
+  - htop
+  - iftop
+  - iotop
+  - openssh-server # only top update it
+  - ncdu
+  - preload
+  - rsync
+  - p7zip-full
+  - screen
+  - sshfs
+  - tree
+timezone: ''
+upgrade_packages: yes

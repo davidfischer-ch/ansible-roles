@@ -1,0 +1,11 @@
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: laptop_has_run is undefined
+
+- include: 2-services.yml
+  tags: services
+  when: laptop_has_run is undefined
+
+- set_fact: laptop_has_run=yes

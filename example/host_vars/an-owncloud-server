@@ -1,0 +1,24 @@
+ansible_ssh_host: my-owncloud.com
+ansible_ssh_port: 2222
+ansible_ssh_user: ubuntu
+http_port: 80
+ssh_port: 22
+user: ubuntu
+
+ssl_cert_country: <country>
+ssl_cert_state: <state>
+ssl_cert_locality: <locality>
+ssl_cert_organization: <organization>
+ssl_cert_organization_unit: <unit>
+ssl_cert_key_filename: /etc/ssl/server.key
+ssl_cert_crt_filename: /etc/ssl/server.crt
+
+domain: my-owncloud.com
+domain_old: ''
+
+mysql_root_password: ****
+
+owncloud_instance_id: ****
+owncloud_mysql_password: ****
+owncloud_password_salt: ****
+owncloud_secret: ****

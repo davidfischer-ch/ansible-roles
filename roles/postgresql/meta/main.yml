@@ -1,0 +1,19 @@
+---
+
+dependencies:
+  - role: requirements
+    apt_requirements:
+      - postgresql-9.3
+      - postgresql-client-9.3
+      - postgresql-server-dev-9.3
+      - postgresql-contrib-9.3
+    pip2_requirements:
+      - psycopg2
+    when: postgresql_has_run is undefined
+
+  - role: ufw
+    ufw_rules:
+      - port: "{{ postgresql_port }}"
+        proto: tcp
+        rule: allow
+    when: postgresql_has_run is undefined

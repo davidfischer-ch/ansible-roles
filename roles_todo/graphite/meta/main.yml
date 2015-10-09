@@ -1,0 +1,17 @@
+---
+
+dependencies:
+  - role: ufw
+    ufw_rules:
+      - port: "{{ graphite_port }}"
+        proto: tcp
+        rule: allow
+  - role: requirements
+    apt_requirements:
+       - build-essential
+       - libcairo2
+       - libffi-dev
+       - python-dev
+       - python-pip
+       - python-virtualenv
+       - supervisor

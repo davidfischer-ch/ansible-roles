@@ -1,0 +1,28 @@
+---
+
+- name: Create Supervisor directories
+  file: >
+    name={{ item }} mode=755 state=directory
+  sudo: yes
+  with_items:
+    - /etc/supervisor/conf.d
+    - /var/log/supervisor/
+
+- name: Configure Supervisor
+  template: >
+    src=supervisord.conf.j2 dest=/etc/supervisor/supervisord.conf mode=644
+  notify: restart supervisor
+  sudo: yes
+
+- name: Symlink Configuration for supervisorctl
+  file: >
+    src=/etc/supervisor/supervisord.conf dest=/etc/supervisord.conf state=link
+  sudo: yes
+
+- name: Install Supervisor service
+  template: >
+    src=supervisor dest=/etc/init.d/supervisor mode=751
+  notify: restart supervisor
+  sudo: yes
+
+- meta: flush_handlers

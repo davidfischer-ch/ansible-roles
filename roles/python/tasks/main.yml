@@ -1,0 +1,7 @@
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: python_has_run is undefined
+
+- set_fact: python_has_run=yes

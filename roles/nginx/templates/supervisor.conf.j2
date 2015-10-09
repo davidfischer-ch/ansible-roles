@@ -1,0 +1,10 @@
+[program:nginx]
+command=/usr/share/nginx/sbin/nginx
+stopsignal=INT
+stdout_events_enabled=true
+stderr_events_enabled=true
+user=root
+numprocs=1
+autostart=true
+autorestart=true
+startsecs=10

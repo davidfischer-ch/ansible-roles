@@ -1,0 +1,5 @@
+---
+
+- name: Start MySQL service
+  shell: ls /dev/null
+  notify: start mysql

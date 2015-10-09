@@ -1,0 +1,7 @@
+---
+
+- include: 1-config.yml
+  tags: config
+  when: openssl_has_run is undefined
+
+- set_fact: openssl_has_run=yes

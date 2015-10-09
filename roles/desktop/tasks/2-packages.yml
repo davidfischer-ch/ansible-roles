@@ -1,0 +1,118 @@
+---
+
+# Miscellaneous
+
+- name: Install Nemo PPA repository
+  apt_repository: >
+    repo=ppa:webupd8team/nemo state=present
+  sudo: yes
+  when: desktop_package == 'ubuntu-desktop'
+
+- name: Update the Debian packages cache
+  apt: >
+    update_cache=yes
+  sudo: yes
+
+# Desktop
+
+- name: Install Ubuntu desktop packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - "{{ desktop_package }}"
+    - ubuntu-minimal
+    - ubuntu-restricted-addons
+    - ubuntu-restricted-extras
+    - libavcodec-extra
+    - ubuntu-standard
+  sudo: yes
+
+- name: Install desktop and office packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - gedit-plugins
+    - gnome-raw-thumbnailer
+    - indicator-cpufreq
+    - libreoffice-style-sifr
+    - xournal
+  sudo: yes
+
+- name: Install desktop and office packages (bis)
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - compizconfig-settings-manager
+    - nautilus-open-terminal
+    - nemo
+    - nemo-fileroller
+    - unity-tweak-tool
+  sudo: yes
+  when: desktop_package == 'ubuntu-desktop'
+
+- name: Install system packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - apt-file
+    - gdebi
+    - gparted
+    - playonlinux
+    - wireshark
+  sudo: yes
+
+- name: Update apt-file cache
+  command: >
+    apt-file update
+
+- name: Remove bumblebee packages
+  apt: >
+    name={{ item }} state=absent
+  with_items:
+    - bumblebee
+    - bumblebee-nvidia
+  sudo: yes
+
+- name: Install files utilities packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - dos2unix
+    - odt2txt
+    - pdfshuffler
+    - pyrenamer
+    - tofrodos
+    - unoconv
+  sudo: yes
+
+- name: Install java packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - icedtea-7-plugin
+    - openjdk-7-jre
+  sudo: yes
+
+- name: Install scientific packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - stellarium
+  sudo: yes
+
+- name: Install web packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - chromium-browser
+    - filezilla
+    - firefox
+  sudo: yes
+
+- name: Install virtualization packages
+  apt: >
+    name={{ item }} state=latest
+  with_items:
+    - virtualbox
+    - virtualbox-guest-additions-iso
+  sudo: yes

@@ -1,0 +1,24 @@
+; ==================================================================
+;  celery default worker supervisor configuration for {{ project }}
+; ==================================================================
+
+[program:{{ site }}-celery-default-worker]
+command={{ production_symlink }}/venv/bin/python manage.py celery worker -Q default --loglevel=INFO
+directory={{ production_symlink }}/server/
+user={{ user }}
+numprocs=1
+stdout_logfile=/var/log/celery/{{ site }}/default-worker-stdout.log
+stderr_logfile=/var/log/celery/{{ site }}/default-worker-stderr.log
+autostart=true
+autorestart=true
+startsecs=10
+
+; Need to wait for currently executing tasks to finish at shutdown. Increase this if you have very long running tasks.
+stopwaitsecs = 6000
+
+; When resorting to send SIGKILL to the program to terminate it send SIGKILL to its whole process group instead,
+; taking care of its children as well.
+killasgroup=true
+
+; if rabbitmq is supervised, set its priority higher so it starts first.
+priority=998

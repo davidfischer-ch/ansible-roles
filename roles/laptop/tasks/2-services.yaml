@@ -1,0 +1,7 @@
+---
+
+- name: Start TLP power management daemon
+  command: >
+    tlp start
+  sudo: yes
+  when: laptop_with_tlp|bool

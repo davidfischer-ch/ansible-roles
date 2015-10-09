@@ -1,0 +1,12 @@
+---
+
+- name: Generate our locale
+  locale_gen: >
+    name={{ locale }} state=present
+  sudo: yes
+
+- name: Reconfigure the locales and enable our locale
+  shell: >
+    dpkg-reconfigure locales &&
+    update-locale LANG={{ locale }} LC_ALL={{ locale }}
+  sudo: yes

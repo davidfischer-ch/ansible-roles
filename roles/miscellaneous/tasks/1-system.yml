@@ -1,0 +1,33 @@
+---
+
+- name: Install extra PPA repositories
+  apt_repository: >
+    repo={{ item }} state=present
+  register: extra_ppa_result
+  sudo: yes
+  with_items: extra_ppa_repos
+
+- name: Upgrade the Debian packages
+  shell: >
+    sudo dpkg --configure -a &&
+    apt-get -y update &&
+    apt-get -y upgrade &&
+    apt-get -y dist-upgrade &&
+    apt-get -y autoremove &&
+    apt-get -y autoclean
+  async: 600
+  poll: 5
+  sudo: yes
+  when: upgrade_packages|bool
+
+- name: Install GNU/Linux kernel packages
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items: kernel_packages
+
+- name: Install extra Debian packages
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items: extra_packages

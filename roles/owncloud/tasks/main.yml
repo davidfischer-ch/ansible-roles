@@ -1,0 +1,24 @@
+# Install and configure ownCloud
+
+# https://doc.owncloud.org/server/8.1/admin_manual/installation/installation_wizard.html
+# http://idroot.net/tutorials/install-owncloud-8-ubuntu-14-04/
+# http://sharadchhetri.com/2014/07/21/setup-self-signed-ssl-certificate-owncloud-6-ubuntu-14-04-lts-server/
+
+---
+
+- include: 1-directories.yml
+  when: owncloud_has_run is undefined
+
+- include: 2-packages.yml
+  tags: packages
+  when: owncloud_has_run is undefined
+
+- include: 3-config.yml
+  tags: config
+  when: owncloud_has_run is undefined
+
+- include: 4-database.yml
+  tags: database
+  when: owncloud_has_run is undefined
+
+- set_fact: owncloud_has_run=yes

@@ -1,0 +1,26 @@
+---
+
+dependencies:
+  - role: github
+    when: redis_has_run is undefined
+
+  - role: requirements
+    ppa_requirements:
+      - ppa:chris-lea/redis-server
+    apt_requirements:
+      - python-apt
+      - python-pycurl
+      - python-software-properties
+      - redis-server
+      - software-properties-common
+    # Install redis for Redis Ansible modules
+    # pip_requirements:
+    #   - redis
+    when: redis_has_run is undefined
+
+  - role: ufw
+    ufw_rules:
+      - port: "{{ redis_port }}"
+        proto: tcp
+        rule: allow
+    when: redis_has_run is undefined

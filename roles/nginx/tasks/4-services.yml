@@ -1,0 +1,14 @@
+---
+
+- name: Start Nginx service
+  supervisorctl: >
+    name=nginx state=started
+  ignore_errors: yes
+  register: nginx_start_result
+  sudo: yes
+
+- name: Restart Nginx service
+  supervisorctl: >
+    name=nginx state=restarted
+  sudo: yes
+  when: nginx_start_result|failed

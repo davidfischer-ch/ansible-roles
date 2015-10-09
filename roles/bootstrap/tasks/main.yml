@@ -1,0 +1,8 @@
+# Configure password-less ssh for automating next steps
+---
+
+- include: 1-bootstrap.yml
+  tags: bootstrap
+  when: bootstrap_has_run is undefined
+
+- set_fact: bootstrap_has_run=yes

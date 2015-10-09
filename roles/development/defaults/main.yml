@@ -1,0 +1,16 @@
+devops_packages:
+  - ansible
+  - juju-local
+  - libzmq3
+  - scudcloud
+  - vagrant
+programming_packages:
+  - build-essential
+  - bzr
+  - gedit-developer-plugins
+  - git-core
+  - gitg
+  - meld
+  - mercurial
+  - subversion
+sublime_text_version: 3095

@@ -1,0 +1,21 @@
+---
+
+- name: Configure celery services
+  template: >
+    src={{ item.value.config_file }}
+    dest=/etc/supervisor/conf.d/{{ item.value.name }}.conf
+    mode=644
+  notify: restart celery
+  sudo: yes
+  with_dict: celery_services
+
+- name: Create our logs directory
+  file: >
+    name=/var/log/celery/{{ site }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+  sudo: yes
+
+- name: Install celery services
+  supervisorctl: >
+    name={{ item.value.name }} state=present
+  sudo: yes
+  with_dict: celery_services
