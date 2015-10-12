@@ -3,7 +3,7 @@
 ; ========================================================
 
 [program:{{ site }}-celery-beat]
-command={{ production_symlink }}/venv/bin/python manage.py celery beat --loglevel=INFO -n=beat.{{ ansible_fqdn }}.{{ site }}
+command={{ production_symlink }}/venv/bin/python manage.py celery beat --loglevel=INFO
 directory={{ production_symlink }}/server/
 user={{ user }}
 numprocs=1
