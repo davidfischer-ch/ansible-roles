@@ -9,11 +9,30 @@
   with_dict: celery_services
 
 - name: Restart celery services
-  supervisorctl: >
-    name={{ item.value.name }} state=restarted
-  # async: 360  # FIXME lookup plugins (with_*) cannot be used with async tasks
-  # poll: 5
+  shell: >
+    supervisorctl restart {{ item.value.name }} &
   sudo: yes
   tags: [services, update]
   when: celery_start_result|failed
   with_dict: celery_services
+
+- name: Wait until celery services are running
+  shell: >
+    supervisorctl status {{ item.value.name }}
+  changed_when: no
+  failed_when: "'FATAL' in celery_wait_result.stdout"
+  register: celery_wait_result
+  sudo: yes
+  tags: [services, update]
+  until: "'RUNNING' in celery_wait_result.stdout"
+  with_dict: celery_services
+
+# - name: Restart celery services
+#   supervisorctl: >
+#     name={{ item.value.name }} state=restarted
+#   async: 360  # FIXME lookup plugins (with_*) cannot be used with async tasks
+#   poll: 5
+#   sudo: yes
+#   tags: [services, update]
+#   when: celery_start_result|failed
+#   with_dict: celery_services
