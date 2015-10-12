@@ -3,7 +3,7 @@
 ; ==================================================================
 
 [program:{{ site }}-celery-default-worker]
-command={{ production_symlink }}/venv/bin/python manage.py celery worker -Q default --loglevel=INFO --name=default.{{ ansible_fqdn }}.{{ site }} --statedb={{ production_symlink }}/{{ site }}-celery-default-worker.db
+command={{ production_symlink }}/venv/bin/python manage.py celery worker -Q default --loglevel=INFO --name=default.{{ ansible_fqdn }}.{{ site }} --statedb={{ production_symlink }}/celery-default-worker.db
 directory={{ production_symlink }}/server/
 user={{ user }}
 numprocs=1
