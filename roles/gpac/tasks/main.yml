@@ -1,0 +1,7 @@
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: gpac_has_run is undefined
+
+- set_fact: gpac_has_run=yes

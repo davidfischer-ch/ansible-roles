@@ -1,0 +1,39 @@
+---
+
+# https://github.com/gpac/gpac/blob/master/doc/INSTALL.gcc
+
+- name: Create GPAC source directories
+  file: >
+    name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+  sudo: yes
+
+# - name: Install GPAC build dependencies
+#   command: >
+#     apt-get build-dep -qq gpac
+#   sudo: yes
+
+- name: Clone GPAC source code
+  git: >
+    repo=https://github.com/gpac/gpac.git
+    dest={{ tools_src_directory }}/gpac
+    force=yes
+    version={{ gpac_version }}
+
+- name: Configure GPAC build process
+  command: >
+    {{ tools_src_directory }}/gpac/configure
+  args:
+    chdir: "{{ tools_src_directory }}/gpac"
+
+- name: Build GPAC from source
+  command: >
+    make -j{{ ansible_processor_cores }}
+  args:
+    chdir: "{{ tools_src_directory }}/gpac"
+
+- name: Install GPAC from source
+  command: >
+    make install
+  args:
+    chdir: "{{ tools_src_directory }}/gpac"
+  sudo: yes
