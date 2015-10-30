@@ -37,3 +37,63 @@
   args:
     chdir: "{{ tools_src_directory }}/gpac"
   sudo: yes
+
+# Current configure gives:
+
+#   $ /usr/local/src/gpac$ ./configure
+#
+#   ** System Configuration
+#   Install prefix: /usr/local
+#   Source path: /usr/local/src/gpac
+#   C   compiler: gcc
+#   C++ compiler: g++
+#   make: make
+#   CPU: x86_64 (depends of your CPU)
+#   Big Endian: no
+#
+#   ** GPAC Core Configuration **
+#   debug version: no
+#   GProf enabled: no
+#   Static build enabled: no
+#   Memory tracking enabled: no
+#   Fixed-Point Version: no
+#   IPV6 Support: yes
+#   Static Modules: no
+#
+#   ** Detected libraries **
+#   zlib: system
+#   OSS Audio: yes
+#   ALSA Audio: no
+#   Jack Audio: no
+#   PulseAudio Audio: no
+#   DirectFB support: no
+#   X11 Shared Memory support: yes (path: /usr/X11R6)
+#   X11 XVideo support: no
+#   SDL Support: no
+#   OpenGL support: no
+#   TinyGL support: no
+#   OpenSSL support: no
+#   Mozilla XUL/GECKO support: no
+#   DVB Support: yes
+#   XMLRPC Support: no
+#   wxWidgets support: no
+#
+#   ** Extra Libraries used **
+#   SpiderMonkey: no
+#   FreeType: system
+#   JPEG: system
+#   OpenJPEG: system
+#   PNG: system
+#   MAD: system
+#   FAAD: system
+#   XVID: system
+#   FFMPEG: no
+#   Xiph OGG: system
+#   Platinum UPnP: no
+#   AVCap: no
+#   Xiph Vorbis: system
+#   Xiph Theora: system
+#   A52 (AC3): system
+#   OpenSVCDecoder: no
+#   OpenHEVCDecoder: no
+#   Freenect: no
