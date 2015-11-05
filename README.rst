@@ -1,6 +1,6 @@
-===============
-Ansible Paybook
-===============
+================
+Ansible Playbook
+================
 
 Set of Ansible roles for deploying various services.
 
