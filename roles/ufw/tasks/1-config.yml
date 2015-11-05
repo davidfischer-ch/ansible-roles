@@ -8,5 +8,5 @@
 
 - name: Configure UFW
   ufw: >
-    state=enabled logging=on policy=deny
+    state=enabled logging={{ ufw_logging }} policy={{ ufw_policy }}
   sudo: yes
