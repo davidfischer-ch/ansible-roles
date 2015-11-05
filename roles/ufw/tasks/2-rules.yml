@@ -1,8 +1,26 @@
 ---
 
+# http://docs.ansible.com/ansible/ufw_module.html
+# FIXME find a better way to pass parameters to module like python's kwargs?
+
 - name: Setup new rules
-  ufw: >
-    port={{ item.port }} proto={{ item.proto }} rule={{ item.rule }}
+  ufw:
+    # required
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    rule: "{{ item.rule }}"
+    # optional
+    delete: "{{ item.delete|default('') }}"
+    direction: "{{ item.direction|default('') }}"
+    from_ip: "{{ item.from_ip|default('any') }}"
+    from_port: "{{ item.from_port|default('') }}"
+    insert: "{{ item.insert|default('') }}"
+    interface: "{{ item.interface|default('') }}"
+    log: "{{ item.log|default('') }}"
+    # name: Design decision, favor port/protocol over UFW profiles (/etc/ufw/applications.d/)
+    route: "{{ item.route|default('') }}"
+    to_ip: "{{ item.to_ip|default('any') }}"
+    to_port: "{{ item.to_port|default('') }}"
   notify: reload ufw
   sudo: yes
   with_items: ufw_rules
