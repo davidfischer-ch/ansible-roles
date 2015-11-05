@@ -6,21 +6,22 @@
 - name: Setup new rules
   ufw:
     # required
-    port: "{{ item.port }}"
-    proto: "{{ item.proto }}"
     rule: "{{ item.rule }}"
     # optional
-    delete: "{{ item.delete|default('') }}"
-    direction: "{{ item.direction|default('') }}"
-    from_ip: "{{ item.from_ip|default('any') }}"
-    from_port: "{{ item.from_port|default('') }}"
-    insert: "{{ item.insert|default('') }}"
-    interface: "{{ item.interface|default('') }}"
-    log: "{{ item.log|default('') }}"
+    delete: "{{ item.delete|default(omit) }}"
+    direction: "{{ item.direction|default(omit) }}"
+    from_ip: "{{ item.from_ip|default(omit) }}"
+    from_port: "{{ item.from_port|default(omit) }}"
+    insert: "{{ item.insert|default(omit) }}"
+    interface: "{{ item.interface|default(omit) }}"
+    log: "{{ item.log|default(omit) }}"
     # name: Design decision, favor port/protocol over UFW profiles (/etc/ufw/applications.d/)
-    route: "{{ item.route|default('') }}"
-    to_ip: "{{ item.to_ip|default('any') }}"
-    to_port: "{{ item.to_port|default('') }}"
+    proto: "{{ item.proto|default(omit) }}"
+    to_ip: "{{ item.to_ip|default(omit) }}"
+    to_port: "{{ item.to_port|default(omit) }}"
+    # aliases made available for retro-compatibility
+    dest: "{{ item.dest|default(omit) }}"  # to_ip
+    port: "{{ item.port|default(omit) }}"  # to_port
   notify: reload ufw
   sudo: yes
   with_items: ufw_rules
