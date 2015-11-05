@@ -1,1 +1,5 @@
 redis_port: 6379
+redis_ufw_rules:
+  - port: "{{ redis_port }}"
+    proto: tcp
+    rule: allow

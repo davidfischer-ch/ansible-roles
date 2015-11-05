@@ -2,4 +2,8 @@ nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
 nginx_pagespeed_configure: ''
 nginx_port: 80
 nginx_start_result: {}
+nginx_ufw_rules:
+  - port: "{{ nginx_port }}"
+    proto: tcp
+    rule: allow
 tools_src_directory: /usr/local/src

@@ -7,8 +7,5 @@ dependencies:
     when: rabbitmq_has_run is undefined
 
   - role: ufw
-    ufw_rules:
-      - port: "{{ rabbitmq_port }}"
-        proto: tcp
-        rule: allow
-    when: rabbitmq_has_run is undefined
+    ufw_rules: "{{ rabbitmq_ufw_rules }}"
+    when: rabbitmq_has_run is undefined and rabbitmq_ufw_rules

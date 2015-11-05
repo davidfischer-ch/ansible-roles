@@ -12,8 +12,5 @@ dependencies:
     when: postgresql_has_run is undefined
 
   - role: ufw
-    ufw_rules:
-      - port: "{{ postgresql_port }}"
-        proto: tcp
-        rule: allow
-    when: postgresql_has_run is undefined
+    ufw_rules: "{{ postgresql_ufw_rules }}"
+    when: postgresql_has_run is undefined and postgresql_ufw_rules

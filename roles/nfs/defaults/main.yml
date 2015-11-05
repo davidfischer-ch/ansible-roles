@@ -1,0 +1,10 @@
+nfs_ufw_rules:
+  - port: nfs
+    proto: any  # tcp/udp
+    rule: allow
+  - port: sunrpc
+    proto: any  # tcp/udp
+    rule: allow
+  - port: 4001  # rpc.mountd
+    proto: any  # tcp/udp
+    rule: allow

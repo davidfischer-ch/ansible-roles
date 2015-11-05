@@ -18,8 +18,5 @@ dependencies:
     when: nginx_has_run is undefined
 
   - role: ufw
-    ufw_rules:
-      - port: "{{ nginx_port }}"
-        proto: tcp
-        rule: allow
-    when: nginx_has_run is undefined
+    ufw_rules: "{{ nginx_ufw_rules }}"
+    when: nginx_has_run is undefined and nginx_ufw_rules
