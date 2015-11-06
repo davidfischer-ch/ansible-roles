@@ -22,7 +22,7 @@ pidfile /var/run/redis/redis-server.pid
 
 # Accept connections on the specified port, default is 6379.
 # If port 0 is specified Redis will not listen on a TCP socket.
-port 6379
+port {{ redis_port|int }}
 
 # By default Redis listens for connections from all the network interfaces
 # available on the server. It is possible to listen to just one or multiple
