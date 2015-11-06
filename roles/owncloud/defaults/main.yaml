@@ -3,7 +3,8 @@ owncloud_default_language: fr
 owncloud_interface: omit
 owncloud_port: 80
 owncloud_ufw_rules:
-  - interface: "{{ owncloud_interface }}"
+  - direction: in
+    interface: "{{ owncloud_interface }}"
     port: "{{ owncloud_port }}"
     proto: tcp
     rule: allow

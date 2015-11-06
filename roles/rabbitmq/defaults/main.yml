@@ -1,5 +1,6 @@
 rabbitmq_port: 5672
 rabbitmq_ufw_rules:
-  - port: "{{ rabbitmq_port }}"
+  - direction: in
+    port: "{{ rabbitmq_port }}"
     proto: tcp
     rule: allow

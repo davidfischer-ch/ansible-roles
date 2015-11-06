@@ -10,7 +10,8 @@ postgresql_max_connections: 100
 postgresql_port: 5432
 postgresql_shared_buffers: "{{ postgresql_allocated_ram // 4 }}MB"
 postgresql_ufw_rules:
-  - interface: "{{ postgresql_interface }}"
+  - direction: in
+    interface: "{{ postgresql_interface }}"
     port: "{{ postgresql_port }}"
     proto: tcp
     rule: allow

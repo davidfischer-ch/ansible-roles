@@ -4,7 +4,8 @@ nginx_pagespeed_configure: ''
 nginx_port: 80
 nginx_start_result: {}
 nginx_ufw_rules:
-  - interface: "{{ nginx_interface }}"
+  - direction: in
+    interface: "{{ nginx_interface }}"
     port: "{{ nginx_port }}"
     proto: tcp
     rule: allow

@@ -1,7 +1,8 @@
 redis_interface: omit
 redis_port: 6379
 redis_ufw_rules:
-  - interface: "{{ redis_interface }}"
+  - direction: in
+    interface: "{{ redis_interface }}"
     port: "{{ redis_port }}"
     proto: tcp
     rule: allow
