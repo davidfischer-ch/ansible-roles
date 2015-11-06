@@ -1,10 +1,14 @@
+nfs_interface: omit
 nfs_ufw_rules:
-  - port: nfs
+  - interface: "{{ nfs_interface }}"
+    port: nfs
     proto: any  # tcp/udp
     rule: allow
-  - port: sunrpc
+  - interface: "{{ nfs_interface }}"
+    port: sunrpc
     proto: any  # tcp/udp
     rule: allow
-  - port: 4001  # rpc.mountd
+  - interface: "{{ nfs_interface }}"
+    port: 4001  # rpc.mountd
     proto: any  # tcp/udp
     rule: allow

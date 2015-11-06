@@ -3,13 +3,15 @@ postgresql_allow_result: {}
 postgresql_config_result:
   changed: yes
 postgresql_effective_cache_size: "{{ postgresql_allocated_ram // 2 }}MB"
+postgresql_interface: omit
 postgresql_log_timezone: UTC
 postgresql_maintenance_work_mem: "{{ postgresql_allocated_ram // 16 }}MB"
 postgresql_max_connections: 100
 postgresql_port: 5432
 postgresql_shared_buffers: "{{ postgresql_allocated_ram // 4 }}MB"
 postgresql_ufw_rules:
-  - port: "{{ postgresql_port }}"
+  - interface: "{{ postgresql_interface }}"
+    port: "{{ postgresql_port }}"
     proto: tcp
     rule: allow
 postgresql_work_mem:  "{{ 2 * postgresql_allocated_ram // postgresql_max_connections }}MB"
