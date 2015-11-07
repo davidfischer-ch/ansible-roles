@@ -9,4 +9,5 @@
 - name: Configure UFW
   ufw: >
     state=enabled logging={{ ufw_logging }} policy={{ ufw_policy }}
+  notify: reload ufw
   sudo: yes
