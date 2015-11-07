@@ -15,3 +15,4 @@ nfs_ufw_rules:
     port: 4001  # rpc.mountd
     proto: any  # tcp/udp
     rule: allow
+nfs_exports: {}
