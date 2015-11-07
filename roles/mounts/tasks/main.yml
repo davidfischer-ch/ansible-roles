@@ -1,7 +1,11 @@
-# Install filesystems packages & configure mount points
+# Install file-systems packages & configure mount points
 ---
 
-- include: 1-mounts.yml
+- include: 1-packages.yml
+  tags: packages
+  when: mounts_has_run is undefined
+
+- include: 2-mounts.yml
   tags: mounts
   when: mounts_has_run is undefined
 

@@ -1,0 +1,4 @@
+filesystem_packages:
+  - cifs-utils
+  - nfs-common
+  - ntfs-3g

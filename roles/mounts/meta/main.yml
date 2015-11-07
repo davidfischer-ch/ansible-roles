@@ -1,7 +1,0 @@
----
-
-dependencies:
-  - role: requirements
-    apt_requirements:
-      - cifs-utils
-    when: mounts_has_run is undefined

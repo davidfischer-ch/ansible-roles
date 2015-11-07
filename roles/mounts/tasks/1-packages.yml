@@ -1,0 +1,7 @@
+---
+
+- name: Install file-system packages
+  apt: >
+    name={{ item }} state=latest
+  with_items: filesystem_packages
+  sudo: yes
