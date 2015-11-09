@@ -1,11 +1,11 @@
-nginx_interface: omit
+nginx_interface: null
 nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
 nginx_pagespeed_configure: ''
 nginx_port: 80
 nginx_start_result: {}
 nginx_ufw_rules:
   - direction: in
-    interface: "{{ nginx_interface }}"
+    interface: "{{ nginx_interface or omit }}"
     port: "{{ nginx_port }}"
     proto: tcp
     rule: allow

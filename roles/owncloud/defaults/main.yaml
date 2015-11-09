@@ -1,10 +1,10 @@
 owncloud_data_directory: /var/www/owncloud/data
 owncloud_default_language: fr
-owncloud_interface: omit
+owncloud_interface: null
 owncloud_port: 80
 owncloud_ufw_rules:
   - direction: in
-    interface: "{{ owncloud_interface }}"
+    interface: "{{ owncloud_interface or omit }}"
     port: "{{ owncloud_port }}"
     proto: tcp
     rule: allow
