@@ -18,6 +18,12 @@
   sudo: yes
   when: ppa_requirements|length > 0 and ppa_requirements_result|changed
 
+- name: Install build requirements with apt
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items: apt_build_requirements
+
 - name: Install requirements with apt
   apt: >
     name={{ item }} state=latest

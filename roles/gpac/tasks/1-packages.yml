@@ -7,11 +7,6 @@
     name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
   sudo: yes
 
-# - name: Install GPAC build dependencies
-#   command: >
-#     apt-get build-dep -qq gpac
-#   sudo: yes
-
 - name: Clone GPAC source code
   git: >
     repo=https://github.com/gpac/gpac.git

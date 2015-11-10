@@ -5,6 +5,8 @@ dependencies:
     when: nginx_has_run is undefined
 
   - role: requirements
+    apt_build_requirements:
+      - nginx
     apt_requirements:
       # https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
       - build-essential

@@ -2,6 +2,8 @@
 
 dependencies:
   - role: requirements
+    # apt_build_requirements:
+    #   - gpac
     apt_requirements:
       - autoconf
       - git

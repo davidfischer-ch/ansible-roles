@@ -13,11 +13,6 @@
     - "{{ tools_src_directory }}/nginx-zip-module"
     - "{{ tools_src_directory }}"
 
-- name: Install Nginx build dependencies
-  command: >
-    apt-get build-dep -qq nginx
-  sudo: yes
-
 - name: Clone Nginx source code
   git: >
     repo=https://github.com/nginx/nginx.git
