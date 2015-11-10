@@ -8,6 +8,14 @@ global
     log      /dev/log local1 notice
     {% if haproxy_max_connections %}maxconn {{ haproxy_max_connections|int }}{% endif %}
 
+    # Default SSL material locations
+    ca-base  /etc/ssl/certs
+    crt-base /etc/ssl/private
+
+    {% if haproxy_stats_enabled|bool %}
+    stats socket /var/lib/haproxy/haproxy.sock mode 0600 level admin
+    {% endif %}
+
 defaults
     log     global
     mode    http
@@ -26,18 +34,29 @@ defaults
     errorfile 503 {{ haproxy_errors_directory }}/503.http
     errorfile 504 {{ haproxy_errors_directory }}/504.http
 
+{% if haproxy_stats_enabled|bool %}
+listen stats 127.0.0.1:1936
+    stats enable
+    stats uri /
+    stats hide-version
+    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
+{% endif %}
+
 frontend http_frontend
     bind    *:{{ haproxy_http_port|int }}
     default_backend web_backends
 
+{% if haproxy_ssl_cert|length %}
 frontend https_frontend
-    bind    *:{{ haproxy_https_port|int }}
+    bind    *:{{ haproxy_https_port|int }} ssl crt {{ haproxy_ssl_cert }} ciphers RC4:HIGH:!aNULL:!MD5
     option  forwardfor
     reqadd  X-Forwarded-Proto:\ https
     default_backend web_backends
+{% endif %}
 
 backend web_backends
     balance {{ haproxy_balance }}
+    option  httpchk
     {% for backend in haproxy_backends %}
-    server {{ backend }}
+    server {{ backend }} check inter {{ haproxy_check_delay|int }}
     {% endfor %}

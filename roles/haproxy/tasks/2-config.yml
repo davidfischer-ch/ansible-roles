@@ -32,3 +32,8 @@
   with_items:
     - {src: default, mode: 644}
     - {src: init.d,  mode: 755}
+
+- name: Copy default HAProxy error pages
+  copy: >
+    src=errors/ dest=/etc/haproxy/errors/
+  sudo: yes
