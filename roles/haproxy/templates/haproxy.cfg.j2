@@ -1,0 +1,43 @@
+global
+    daemon
+    chroot   /var/lib/haproxy
+    user     haproxy
+    group    haproxy
+    log-tag  haproxy
+    log      /dev/log local0
+    log      /dev/log local1 notice
+    {% if haproxy_max_connections %}maxconn {{ haproxy_max_connections|int }}{% endif %}
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    option  redispatch
+    retries {{ haproxy_retries|int }}
+    timeout connect {{ haproxy_timeout_connect|int }}
+    timeout client {{ haproxy_timeout_client|int }}
+    timeout server {{ haproxy_timeout_server|int }}
+    errorfile 400 {{ haproxy_errors_directory }}/400.http
+    errorfile 403 {{ haproxy_errors_directory }}/403.http
+    errorfile 408 {{ haproxy_errors_directory }}/408.http
+    errorfile 500 {{ haproxy_errors_directory }}/500.http
+    errorfile 502 {{ haproxy_errors_directory }}/502.http
+    errorfile 503 {{ haproxy_errors_directory }}/503.http
+    errorfile 504 {{ haproxy_errors_directory }}/504.http
+
+frontend http_frontend
+    bind    *:{{ haproxy_http_port|int }}
+    default_backend web_backends
+
+frontend https_frontend
+    bind    *:{{ haproxy_https_port|int }}
+    option  forwardfor
+    reqadd  X-Forwarded-Proto:\ https
+    default_backend web_backends
+
+backend web_backends
+    balance {{ haproxy_balance }}
+    {% for backend in haproxy_backends %}
+    server {{ backend }}
+    {% endfor %}

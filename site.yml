@@ -47,6 +47,13 @@
 #     - monitoring_step
 
 - hosts:
+    - proxy
+  roles:
+    - haproxy
+  tags:
+    - proxy_step
+
+- hosts:
     - storage
   roles:
     - nfs

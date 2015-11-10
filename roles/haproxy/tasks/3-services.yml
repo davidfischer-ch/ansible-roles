@@ -1,0 +1,6 @@
+---
+
+- name: Start HAProxy service
+  service: >
+    name=haproxy state=started enabled=yes
+  sudo: yes

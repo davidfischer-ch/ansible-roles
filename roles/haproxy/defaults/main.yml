@@ -1,0 +1,27 @@
+haproxy_balance: roundrobin
+haproxy_build_target: linux2628
+haproxy_build_flags: CPU=native USE_LIBCRYPT=1 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1
+haproxy_errors_directory: /etc/haproxy/errors
+haproxy_interface: null
+haproxy_max_connections: null
+haproxy_http_port: 80
+haproxy_https_port: 443
+haproxy_backends: []
+haproxy_retries: 3
+# its recommended to set client/server timeouts to the same value
+haproxy_timeout_connect: 5000
+haproxy_timeout_client: 50000
+haproxy_timeout_server: 50000
+haproxy_ufw_rules:
+  - direction: in
+    interface: "{{ haproxy_interface or omit }}"
+    port: "{{ haproxy_http_port }}"
+    proto: tcp
+    rule: allow
+  - direction: in
+    interface: "{{ haproxy_interface or omit }}"
+    port: "{{ haproxy_https_port }}"
+    proto: tcp
+    rule: allow
+haproxy_version: v1.6.0  # 10/11/2015
+tools_src_directory: /usr/local/src

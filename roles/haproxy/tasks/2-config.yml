@@ -1,0 +1,26 @@
+---
+
+- name: Create HAProxy user
+  user: >
+    name=haproxy shell=/bin/false system=yes state=present
+  sudo: yes
+
+- name: Configure HAProxy
+  template: >
+    src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg mode=644
+  notify: reload haproxy
+  sudo: yes
+
+- name: Set non-local bind kernel parameter
+  sysctl: >
+    name=net.ipv4.ip_nonlocal_bind value=1 ignoreerrors=yes state=present
+  sudo: yes
+
+- name: Install HAProxy service
+  template: >
+    src={{ item.src }}.j2 dest=/etc/{{ item.src }}/haproxy mode={{ item.mode }}
+  notify: restart haproxy
+  sudo: yes
+  with_items:
+    - {src: default, mode: 644}
+    - {src: init.d,  mode: 755}

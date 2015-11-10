@@ -1,0 +1,33 @@
+---
+
+# http://www.networkinghowtos.com/howto/compile-haproxy-from-source-on-ubuntu/
+# http://louwrentius.com/how-to-compile-haproxy-from-source-and-setup-a-basic-configuration.html
+
+- name: Create HAProxy source directories
+  file: >
+    name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
+  sudo: yes
+
+- name: Clone HAProxy source code
+  git: >
+    repo=https://github.com/haproxy/haproxy.git
+    dest={{ tools_src_directory }}/haproxy
+    force=yes
+    version={{ haproxy_version }}
+
+- name: Build HAProxy from source
+  command: >
+    make -j{{ ansible_processor_cores }} TARGET={{ haproxy_build_target }} {{ haproxy_build_flags }}
+  args:
+    chdir: "{{ tools_src_directory }}/haproxy"
+
+- name: Install HAProxy from source
+  command: >
+    make install-{{ item }}
+  args:
+    chdir: "{{ tools_src_directory }}/haproxy"
+  sudo: yes
+  with_items:
+    - bin
+    - man
+    # - doc  # stderr: install: cannot stat ‘doc/haproxy-en.txt’: No such file or directory
