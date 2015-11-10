@@ -1,5 +1,13 @@
 ---
 
+- name: Create HAProxy directories
+  file: >
+    name={{ item }} mode=755 state=directory
+  sudo: yes
+  with_items:
+    - /etc/haproxy/
+    - /var/lib/haproxy/
+
 - name: Create HAProxy user
   user: >
     name=haproxy shell=/bin/false system=yes state=present
