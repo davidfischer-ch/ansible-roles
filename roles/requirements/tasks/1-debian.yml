@@ -20,7 +20,7 @@
 
 - name: Install build requirements with apt
   apt: >
-    name={{ item }} state=latest
+    name={{ item }} state=build-dep
   sudo: yes
   with_items: apt_build_requirements
 
