@@ -56,7 +56,7 @@ frontend https_frontend
 
 backend web_backends
     balance {{ haproxy_balance }}
-    option  httpchk
+    option  httpchk {{ haproxy_check_params }}
     {% for backend in haproxy_backends %}
     server {{ backend }} check inter {{ haproxy_check_delay|int }}
     {% endfor %}

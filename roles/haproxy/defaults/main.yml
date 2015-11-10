@@ -3,6 +3,7 @@ haproxy_balance: roundrobin
 haproxy_build_target: linux2628
 haproxy_build_flags: CPU=native USE_LIBCRYPT=1 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1
 haproxy_check_delay: 2000
+haproxy_check_params: HEAD / HTTP/1.1\r\nHost:\ 127.0.0.1
 haproxy_errors_directory: /etc/haproxy/errors
 haproxy_interface: null
 haproxy_max_connections: null
