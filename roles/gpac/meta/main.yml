@@ -6,7 +6,7 @@ dependencies:
     #   - gpac
     apt_requirements:
       - autoconf
-      - git
+      - build-essentials
       # SpiderMonkey v1.7 (libjs from mozilla).
       # libjpg version 6b
       - libfreetype6  # freetype2 from version 2.1.4

@@ -13,6 +13,7 @@ dependencies:
       - libpcre3
       - libpcre3-dev
       - unzip
+      - zlib1g
       - zlib1g-dev
     when: nginx_has_run is undefined
 
