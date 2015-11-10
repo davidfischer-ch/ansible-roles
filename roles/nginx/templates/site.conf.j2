@@ -6,12 +6,14 @@ upstream uwsgi {
 server
 {
     # Security - http://nginx.org/en/docs/http/request_processing.html
+    listen {{ nginx_port|int }};
     return 444;
 }
 
 {% if domain_old|length > 0 %}
 server
 {
+    listen {{ nginx_port|int }};
     server_name {{ domain_old }};
     rewrite ^ $scheme://{{ domain }}$request_uri permanent;
 }
