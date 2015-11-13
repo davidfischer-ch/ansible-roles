@@ -3,6 +3,7 @@
 ; ========================================================
 
 [program:{{ site }}-celery-beat]
+environment=LANG={{ locale }},LC_ALL={{ locale }},LC_LANG={{ locale }}
 command={{ production_symlink }}/venv/bin/python manage.py celery beat --loglevel=INFO
 directory={{ production_symlink }}/server/
 user={{ user }}
