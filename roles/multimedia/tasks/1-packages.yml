@@ -4,7 +4,7 @@
   apt_repository: >
     repo=ppa:nilarimogard/webupd8 state=present update_cache=yes
   sudo: yes
-  when: pulseaudio-equalizer in audio_packages
+  when: "'pulseaudio-equalizer' in audio_packages"
 
 - name: Install imaging packages
   apt: >
