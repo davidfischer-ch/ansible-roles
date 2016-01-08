@@ -13,4 +13,5 @@
 
 - name: Enable password-less ssh
   authorized_key: >
-    user={{ user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    user={{ user }} key="{{ lookup('file', item) }}"
+  with_items: ssh_authorized_keys
