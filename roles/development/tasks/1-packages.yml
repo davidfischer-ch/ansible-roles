@@ -4,7 +4,7 @@
   apt_repository: >
     repo=ppa:rael-gc/scudcloud state=present update_cache=yes
   sudo: yes
-  when: scudcloud in devops_packages
+  when: "'scudcloud' in devops_packages"
 
 - name: Install devops packages
   apt: >

@@ -6,7 +6,7 @@
   apt_repository: >
     repo=ppa:webupd8team/nemo state=present update_cache=yes
   sudo: yes
-  when: desktop_package == 'ubuntu-desktop' and nemo in ubuntu_desktop_packages
+  when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
 
 # Desktop
 
