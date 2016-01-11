@@ -23,12 +23,12 @@
     url=http://c758482.r82.cf2.rackcdn.com/sublime-text_build-{{ sublime_text_version }}_amd64.deb
     dest=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
   tags: packages
-  when: sublime_text_version|bool
+  when: sublime_text_version is defined and sublime_text_version
 
 - name: Install sublime text 3
   command: >
     gdebi /tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb --non-interactive
   sudo: yes
-  when: sublime_text_version|bool
+  when: sublime_text_version is defined and sublime_text_version
 
 # FIXME install package control, gitgutter ... configure ...
