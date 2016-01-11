@@ -1,8 +1,11 @@
 ---
 
+# FIXME ansible/ansible-modules-extras#425
 - name: Generate our locale
-  locale_gen: >
-    name={{ locale }} state=present
+  #locale_gen: >
+  #  name={{ locale }} state=present
+  command: >
+    locale-gen --purge {{ locale }}
   sudo: yes
 
 - name: Reconfigure the locales and enable our locale
