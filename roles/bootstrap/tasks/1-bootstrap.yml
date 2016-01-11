@@ -8,7 +8,7 @@
 - name: Add user to password-less sudoers
   template: >
     src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
-    owner=root group=root mode=644 validate='visudo -cf %s'
+    owner=root group=root mode=440 validate='visudo -cf %s'
   sudo: yes
 
 - name: Enable password-less ssh
