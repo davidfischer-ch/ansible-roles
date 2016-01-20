@@ -1,0 +1,11 @@
+---
+
+- name: Generate vagrant file
+  template: >
+    src=Vagrantfile.j2 dest=/tmp/Vagrantfile mode=644
+
+- name: Provision machines
+  command:
+    vagrant up
+  args:
+    chdir: /tmp

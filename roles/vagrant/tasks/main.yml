@@ -1,0 +1,7 @@
+---
+
+- include: 1-provision.yml
+  tags: provision
+  when: vagrant_has_run is undefined
+
+- set_fact: vagrant_has_run=yes
