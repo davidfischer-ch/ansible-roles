@@ -4,6 +4,7 @@ docker_compose_release: 1.5.2
 docker_machine_path: /usr/local/bin/docker-machine
 docker_machine_release: 0.5.3
 docker_packages:
+  - python-docker-py
   - docker-engine
 docker_images:
   - hello-world
@@ -11,6 +12,7 @@ docker_install_compose: yes
 docker_install_engine: yes
 docker_install_machine: yes
 docker_install_registry: no
+docker_machines: {}
 docker_ufw_rules:
   - direction: in
     interface: "{{ docker_interface or omit }}"
