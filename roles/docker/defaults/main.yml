@@ -1,0 +1,24 @@
+docker_apt_repository: "deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main"
+docker_compose_path: /usr/local/bin/docker-compose
+docker_compose_release: 1.5.2
+docker_machine_path: /usr/local/bin/docker-machine
+docker_machine_release: 0.5.3
+docker_packages:
+  - docker-engine
+docker_images:
+  - hello-world
+docker_install_compose: yes
+docker_install_engine: yes
+docker_install_machine: yes
+docker_install_registry: no
+docker_ufw_rules:
+  - direction: in
+    interface: "{{ docker_interface or omit }}"
+    port: 2375
+    proto: tcp
+    rule: allow
+  - direction: in
+    interface: "{{ docker_interface or omit }}"
+    port: 2376
+    proto: tcp
+    rule: allow

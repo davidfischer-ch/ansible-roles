@@ -1,0 +1,16 @@
+# https://docs.docker.com/engine/installation/ubuntulinux/
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: docker_has_run is undefined
+
+- include: 2-config.yml
+  tags: config
+  when: docker_has_run is undefined
+
+- include: 3-services.yml
+  tags: services
+  when: docker_has_run is undefined
+
+- set_fact: docker_has_run=yes

@@ -1,0 +1,60 @@
+---
+
+- name: Start Docker service
+  service: >
+    name=docker state=started enabled=yes
+  sudo: yes
+  when: docker_install_engine|bool
+
+- name: Verify Docker is installed correctly
+  command: >
+    docker run hello-world
+  sudo: yes  # FIXME calling docker as simple user is not yet working
+  when: docker_install_engine|bool
+  args:
+    env:
+      # Fixes "Cannot connect to the Docker daemon. Is 'docker daemon' running on this host?"
+      DOCKER_HOST: ''
+  changed_when: no
+
+# https://github.com/docker/distribution/blob/master/docs/deploying.md
+
+# docker run -d -p 5000:5000 --restart=always --name registry registry:2
+- name: Start Docker Registry service
+  docker: >
+    name=registry image=registry ports=5000:5000 restart_policy=always state=started
+  sudo: yes  # FIXME calling docker as simple user is not yet working
+  when: docker_install_registry|bool
+
+# Pull images from the Docker Hub and push into our registry
+
+# docker pull ubuntu
+- name: Get images from Docker Hub
+  command: >
+    docker pull {{ item }}
+  register: docker_pull_result
+  changed_when: "'up to date' not in docker_pull_result.stdout"
+  when: docker_install_registry|bool
+  with_items: docker_images
+
+# docker tag ubuntu localhost:5000/ubuntu
+- name: Tag images to point to our registry
+  command: >
+    docker tag {{ item }} localhost:5000/{{ item }}
+  changed_when: "'already set' not in docker_tag_result.stderr"
+  failed_when: docker_tag_result|failed and 'already set' not in docker_tag_result.stderr
+  register: docker_tag_result
+  with_items: docker_images
+  when: docker_install_registry|bool
+
+# docker push localhost:5000/ubuntu
+- name: Push images into our registry
+  command: >
+    docker push localhost:5000/{{ item }}
+  changed_when: "'successfully pushed' in docker_push_result.stdout"
+  register: docker_push_result
+  with_items: docker_images
+  when: docker_install_registry|bool
+
+# To stop your registry, you would:
+# docker stop registry && docker rm -v registry

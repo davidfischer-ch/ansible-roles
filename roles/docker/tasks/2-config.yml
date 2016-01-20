@@ -1,0 +1,16 @@
+---
+
+- name: Create the docker group
+  group: >
+    name=docker state=present
+  sudo: yes
+  when: docker_install_engine|bool
+
+- name: Add our user to the docker group
+  user: >
+    name={{ ansible_ssh_user }} groups=docker append=yes state=present
+  sudo: yes
+  when: docker_install_engine|bool
+
+# Adjust memory and swap accounting
+# FIXME https://docs.docker.com/engine/installation/ubuntulinux/

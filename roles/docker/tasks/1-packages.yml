@@ -1,0 +1,56 @@
+---
+
+- name: Register Docker APT key
+  apt_key: >
+    keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
+  sudo: yes
+  when: docker_install_engine|bool
+
+- name: Register Docker APT repository
+  apt_repository: >
+    repo="{{ docker_apt_repository }}" update_cache=yes state=present
+  sudo: yes
+  when: docker_install_engine|bool
+
+- name: Install Docker Engine
+  apt: >
+    name={{ item }} state=latest
+  sudo: yes
+  when: docker_install_engine|bool
+  with_items: docker_packages
+
+- name: Install Docker Compose
+  shell: >
+    curl -L https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/run.sh > "{{ docker_compose_path }}"
+  when: docker_install_compose|bool
+  sudo: yes
+
+- name: Make Docker Compose executable
+  file: >
+    name="{{ docker_compose_path }}" mode=755 state=file
+  args:
+    creates: "{{ docker_compose_path }}"
+  when: docker_install_compose|bool
+  sudo: yes
+
+- name: Install Docker Machine
+  shell: >
+    curl -L https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64 > "{{ docker_machine_path }}"
+  args:
+    creates: "{{ docker_machine_path }}"
+  when: docker_install_machine|bool
+  sudo: yes
+
+- name: Make Docker Machine executable
+  file: >
+    name="{{ docker_machine_path }}" mode=755 state=file
+  when: docker_install_machine|bool
+  sudo: yes
+
+# FIXME https://github.com/docker/compose/pull/2513#issuecomment-172494821 issue with non tty
+# - name: Check Docker Compose version
+#   shell:
+#     docker-compose version --short
+#   register: docker_compose_version_result
+#   failed_when: docker_compose_version_result.stdout != docker_compose_release
+#   sudo: yes  # FIXME calling docker as simple user is not yet working
