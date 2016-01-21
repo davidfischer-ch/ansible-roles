@@ -9,3 +9,5 @@
     vagrant up
   args:
     chdir: /tmp
+  register: vagrant_up_result
+  changed_when: "'already running' not in vagrant_up_result.stdout"
