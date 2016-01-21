@@ -35,19 +35,19 @@
   when: docker_install_compose|bool
   sudo: yes
 
-- name: Register Docker APT key
+- name: Register Docker apt key
   apt_key: >
     keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
   sudo: yes
   when: docker_install_engine|bool
 
-- name: Register Docker APT repository
+- name: Register Docker apt repository
   apt_repository: >
     repo="{{ docker_apt_repository }}" update_cache=yes state=present
   sudo: yes
   when: docker_install_engine|bool
 
-- name: Install Docker Engine
+- name: Install Docker Engine with apt
   apt: >
     name={{ item }} state=latest
   sudo: yes

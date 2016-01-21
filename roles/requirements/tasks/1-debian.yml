@@ -1,6 +1,6 @@
 ---
 
-- name: Register APT keys
+- name: Register apt keys
   apt_key: >
     url={{ item }} state=present
   sudo: yes
