@@ -1,4 +1,4 @@
-python_get_pip_checksum: 2ef5b465e65818244f56d242b827a76586dbe642f1fdc32161e0757e245d2e3e.  # 20/01/2016
+python_get_pip_checksum: 834a568709eeb0e739143bb515a5c7ac9143605fdb477487bbfe90f1acc912b0  # 21/01/2016
 python_versions:
   - 2.7
   - 3.4
