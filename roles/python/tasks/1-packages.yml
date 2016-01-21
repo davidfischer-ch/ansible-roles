@@ -23,6 +23,11 @@
   sudo: yes
   with_items: python_versions
 
+- name: Set pip default version
+  file: >
+    src={{ python_pip_path }}{{ python_pip_default_version }} dest={{ python_pip_path }} force=yes state=link
+  sudo: yes
+
 - name: Install setuptools
   pip: >
     name=setuptools executable=pip{{ item }}

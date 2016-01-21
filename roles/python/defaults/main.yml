@@ -1,7 +1,9 @@
+python_pip_path: /usr/local/bin/pip
 python_get_pip_checksum: 834a568709eeb0e739143bb515a5c7ac9143605fdb477487bbfe90f1acc912b0  # 21/01/2016
 python_pip_versions:
   - 2
   - 3
+python_pip_default_version: 2
 python_versions:
   - 2.7
   - 3.4
