@@ -13,7 +13,7 @@ system_tools:
   - htop
   - iftop
   - iotop
-  - openssh-server # only top update it
+  - openssh-server # to update it
   - ncdu
   - preload
   - rsync
