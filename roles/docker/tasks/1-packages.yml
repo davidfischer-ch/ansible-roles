@@ -24,14 +24,14 @@
 - name: Install Docker Compose
   shell: >
     curl -L https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/run.sh > "{{ docker_compose_path }}"
+  args:
+    creates: "{{ docker_compose_path }}"
   when: docker_install_compose|bool
   sudo: yes
 
 - name: Make Docker Compose executable
   file: >
     name="{{ docker_compose_path }}" mode=755 state=file
-  args:
-    creates: "{{ docker_compose_path }}"
   when: docker_install_compose|bool
   sudo: yes
 
