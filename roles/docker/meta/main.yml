@@ -1,0 +1,10 @@
+---
+
+dependencies:
+  - role: ufw
+    ufw_rules: "{{ docker_engine_ufw_rules }}"
+    when: docker_has_run is undefined and docker_install_engine|bool and docker_engine_ufw_rules
+
+  - role: ufw
+    ufw_rules: "{{ docker_registry_ufw_rules }}"
+    when: docker_has_run is undefined and docker_install_registry|bool and docker_registry_ufw_rules

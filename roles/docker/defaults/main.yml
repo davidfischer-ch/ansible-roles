@@ -1,20 +1,7 @@
 docker_apt_repository: "deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main"
 docker_compose_path: /usr/local/bin/docker-compose
 docker_compose_release: 1.5.2
-docker_machine_path: /usr/local/bin/docker-machine
-docker_machine_release: 0.5.3
-docker_packages:
-  - docker-engine
-docker_python_packages:
-  - docker-py
-docker_images:
-  - hello-world
-docker_install_compose: yes
-docker_install_engine: yes
-docker_install_machine: yes
-docker_install_registry: no
-docker_machines: {}
-docker_ufw_rules:
+docker_engine_ufw_rules:
   - direction: in
     interface: "{{ docker_interface or omit }}"
     port: 2375
@@ -23,5 +10,25 @@ docker_ufw_rules:
   - direction: in
     interface: "{{ docker_interface or omit }}"
     port: 2376
+    proto: tcp
+    rule: allow
+docker_images:
+  - hello-world
+docker_install_compose: yes
+docker_install_engine: yes
+docker_install_machine: yes
+docker_install_registry: no
+docker_interface: null
+docker_machine_path: /usr/local/bin/docker-machine
+docker_machine_release: 0.5.3
+docker_machines: {}
+docker_packages:
+  - docker-engine
+docker_python_packages:
+  - docker-py
+docker_registry_ufw_rules:
+  - direction: in
+    interface: "{{ docker_interface or omit }}"
+    port: 5000
     proto: tcp
     rule: allow

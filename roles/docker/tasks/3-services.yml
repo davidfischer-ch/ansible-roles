@@ -19,16 +19,14 @@
 
 # https://github.com/docker/distribution/blob/master/docs/deploying.md
 
-# docker run -d -p 5000:5000 --restart=always --name registry registry:2
 - name: Start Docker Registry service
   docker: >
     name=registry image=registry ports=5000:5000 restart_policy=always state=started
   sudo: yes  # FIXME calling docker as simple user is not yet working
   when: docker_install_registry|bool
 
-# Pull images from the Docker Hub and push into our registry
+# Pull some images from the Docker Hub and push into our registry
 
-# docker pull ubuntu
 - name: Get images from Docker Hub
   command: >
     docker pull {{ item }}
@@ -37,7 +35,6 @@
   when: docker_install_registry|bool
   with_items: docker_images
 
-# docker tag ubuntu localhost:5000/ubuntu
 - name: Tag images to point to our registry
   command: >
     docker tag {{ item }} localhost:5000/{{ item }}
@@ -47,7 +44,6 @@
   with_items: docker_images
   when: docker_install_registry|bool
 
-# docker push localhost:5000/ubuntu
 - name: Push images into our registry
   command: >
     docker push localhost:5000/{{ item }}
