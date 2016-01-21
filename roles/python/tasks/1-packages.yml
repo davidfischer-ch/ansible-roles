@@ -19,7 +19,7 @@
 
 - name: Install pip
   command: >
-    python{{ item }} /tmp/get-pip.py
+    python{{ item }} /tmp/get-pip.py {{ python_get_pip_options }} pip{{ python_pip_version }}
   changed_when: "'already up-to-date' not in python_pip_install_result.stdout"
   register: python_pip_install_result
   sudo: yes
@@ -27,17 +27,17 @@
 
 - name: Set pip default version
   file: >
-    src={{ python_pip_path }}{{ python_pip_default_version }} dest={{ python_pip_path }} force=yes state=link
+    src={{ python_pip_path }}{{ python_default_version[0] }} dest={{ python_pip_path }} force=yes state=link
   sudo: yes
 
 - name: Install setuptools
   pip: >
-    name=setuptools executable=pip{{ item }}
+    name=setuptools executable=pip{{ item[0] }}
   sudo: yes
-  with_items: python_pip_versions
+  with_items: python_versions
 
 - name: Install virtualenv
   pip: >
-    name=virtualenv executable=pip{{ item }} state=latest
+    name=virtualenv executable=pip{{ item[0] }} state=latest
   sudo: yes
-  with_items: python_pip_versions
+  with_items: python_versions
