@@ -27,9 +27,10 @@
   pip: >
     name=setuptools executable=pip{{ item }}
   sudo: yes
-  with_items: python_versions
+  with_items: python_pip_versions
 
 - name: Install virtualenv
   pip: >
-    name=virtualenv state=latest
+    name=virtualenv executable=pip{{ item }} state=latest
   sudo: yes
+  with_items: python_pip_versions
