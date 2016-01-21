@@ -54,6 +54,12 @@
   when: docker_install_engine|bool
   with_items: docker_packages
 
+- name: Install Docker Engine with pip
+  pip: >
+    name={{ item }} state=latest
+  sudo: yes
+  with_items: docker_python_packages
+
 # FIXME https://github.com/docker/compose/pull/2513#issuecomment-172494821 issue with non tty
 # - name: Check Docker Compose version
 #   shell:
