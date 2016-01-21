@@ -20,6 +20,8 @@
 - name: Install pip
   command: >
     python{{ item }} /tmp/get-pip.py
+  changed_when: "'already up-to-date' not in python_pip_install_result.stdout"
+  register: python_pip_install_result
   sudo: yes
   with_items: python_versions
 
