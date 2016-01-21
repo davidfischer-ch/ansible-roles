@@ -2,6 +2,13 @@ python_default_version: '2.7'
 python_pip_path: /usr/local/bin/pip
 python_get_pip_checksum: 834a568709eeb0e739143bb515a5c7ac9143605fdb477487bbfe90f1acc912b0  # 21/01/2016
 python_get_pip_options: ''
+python_packages:
+  - bpython
+  - bpython3
+  - build-essential
+  - checkinstall
+  - python-dev
+  - python3-dev
 python_pip_version: '>=7,<8'
 python_versions:
   - '2.7'

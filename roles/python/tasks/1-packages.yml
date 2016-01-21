@@ -4,13 +4,7 @@
   apt: >
     name={{ item }} state=latest
   sudo: yes
-  with_items:
-    - bpython
-    - bpython3
-    - build-essential
-    - checkinstall
-    - python-dev
-    - python3-dev
+  with_items: python_packages
 
 - name: Download pip bootstrap script
   get_url: >
