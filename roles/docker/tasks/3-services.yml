@@ -32,6 +32,7 @@
     docker pull {{ item }}
   register: docker_pull_result
   changed_when: "'up to date' not in docker_pull_result.stdout"
+  sudo: yes  # FIXME calling docker as simple user is not yet working
   when: docker_install_registry|bool
   with_items: docker_images
 
@@ -41,6 +42,7 @@
   changed_when: "'already set' not in docker_tag_result.stderr"
   failed_when: docker_tag_result|failed and 'already set' not in docker_tag_result.stderr
   register: docker_tag_result
+  sudo: yes  # FIXME calling docker as simple user is not yet working
   with_items: docker_images
   when: docker_install_registry|bool
 
@@ -49,6 +51,7 @@
     docker push localhost:5000/{{ item }}
   changed_when: "'successfully pushed' in docker_push_result.stdout"
   register: docker_push_result
+  sudo: yes  # FIXME calling docker as simple user is not yet working
   with_items: docker_images
   when: docker_install_registry|bool
 
