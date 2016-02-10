@@ -1,0 +1,18 @@
+---
+
+- name: Get VMs snapshot list
+  command: >
+    vagrant snapshot list {{ item.key }}
+  args:
+    chdir: /tmp
+  changed_when: no
+  register: vagrant_snapshot_list
+  with_dict: vagrant_snapshots
+
+- name: Take base VMs snapshot
+  command: >
+    vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
+  args:
+    chdir: /tmp
+  when: "' {{ item.item.value }} ' not in item.stdout"
+  with_items: vagrant_snapshot_list.results

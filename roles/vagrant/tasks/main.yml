@@ -4,4 +4,11 @@
   tags: provision
   when: vagrant_has_run is undefined
 
+- include: 2-packages.yml
+  tags: packages
+  when: vagrant_has_run is undefined
+
+- include: 3-snapshots.yml
+  tags: snapshots
+
 - set_fact: vagrant_has_run=yes
