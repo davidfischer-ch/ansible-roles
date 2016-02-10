@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+# -*- encoding: utf-8 -*-
+
+"""
+Return a JSON string with the GNU/Linux Kernel configuration.
+
+*Example usage*
+
+Retrieve current kernel configuration::
+
+    $ get-kernel-config
+    ...
+
+Retrieve current kernel configuration (bis)::
+
+    $ get-kernel-config $(uname -r)
+"""
+
+import argparse, configparser, json, os, re, sys
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('release', default=None, nargs='?')
+    args = parser.parse_args()
+    sys.stdout.write(json.dumps(get_kernel_config(args.release)))
+
+
+CONFIG_PREFIX = re.compile(r'^config_')
+DRIVER_IN_KERNEL = 'y'
+DRIVER_HAS_MODULE = 'm'
+
+
+def get_kernel_config(release=None):
+    with open('/boot/config-{0}'.format(release or os.uname().release)) as f:
+        config = configparser.ConfigParser()
+        config.read_string('[kernel]' + f.read())
+    return {CONFIG_PREFIX.sub('', k): v for k, v in config['kernel'].items()}
+
+if __name__ == '__main__':
+    main()

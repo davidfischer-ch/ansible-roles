@@ -1,0 +1,12 @@
+# Install and configure GNU/Linux Kernel
+---
+
+- include: 1-facts.yml
+  tags: always
+  when: kernel_has_run is undefined
+
+- include: 2-packages.yml
+  tags: packages
+  when: kernel_has_run is undefined
+
+- set_fact: kernel_has_run=yes

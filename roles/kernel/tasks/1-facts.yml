@@ -1,0 +1,11 @@
+---
+
+- name: Get current GNU/Linux Kernel configuration
+  script: >
+    get-kernel-config
+  changed_when: no
+  register: kernel_config_result
+
+- name: Get current GNU/Linux Kernel configuration
+  set_fact:
+    kernel_config: "{{ kernel_config_result.stdout }}"

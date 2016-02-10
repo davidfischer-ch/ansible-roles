@@ -5,9 +5,6 @@ development_tools:
   - mercurial
 extra_ppa_repos: []
 extra_packages: []
-kernel_packages:
-  - linux-generic
-  - linux-signed-generic
 locale: ''
 system_tools:
   - htop

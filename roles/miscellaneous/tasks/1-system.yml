@@ -20,12 +20,6 @@
   sudo: yes
   when: upgrade_packages|bool
 
-- name: Install GNU/Linux kernel packages
-  apt: >
-    name={{ item }} state=latest
-  sudo: yes
-  with_items: kernel_packages
-
 - name: Install extra Debian packages
   apt: >
     name={{ item }} state=latest
