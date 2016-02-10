@@ -7,6 +7,7 @@
     - fail2ban
     - ufw
     - miscellaneous
+    - kernel
     - python
   tags:
     - bootstrap_step
