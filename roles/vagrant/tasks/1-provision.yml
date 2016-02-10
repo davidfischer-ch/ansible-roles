@@ -6,8 +6,8 @@
 
 - name: Provision machines
   command:
-    vagrant up
+    vagrant up --provider virtualbox
   args:
     chdir: /tmp
-  register: vagrant_up_result
   changed_when: "'already running' not in vagrant_up_result.stdout"
+  register: vagrant_up_result
