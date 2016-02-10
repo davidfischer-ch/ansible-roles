@@ -1,3 +1,4 @@
 vagrant_machines: {}
 vagrant_plugins:
   - vbox-snapshot
+vagrant_snapshots: {}

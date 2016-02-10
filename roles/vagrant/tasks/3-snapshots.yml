@@ -15,4 +15,4 @@
   args:
     chdir: /tmp
   when: "' {{ item.item.value }} ' not in item.stdout"
-  with_items: vagrant_snapshot_list.results
+  with_items: vagrant_snapshot_list.results|default([])
