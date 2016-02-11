@@ -10,56 +10,56 @@
     - kernel
     - python
   tags:
-    - bootstrap_step
+    - bootstrap-step
 
 - hosts:
     - newrelic
   roles:
     - newrelic
   tags:
-    - newrelic_step
+    - newrelic-step
 
 - hosts:
     - caching
   roles:
     - redis
   tags:
-    - caching_step
+    - caching-step
 
 - hosts:
     - database
   roles:
     - postgresql
   tags:
-    - database_step
+    - database-step
 
 - hosts:
     - messaging
   roles:
     - rabbitmq
   tags:
-    - messaging_step
+    - messaging-step
 
 # - hosts:
 #     - monitoring
 #   roles:
 #     - graphite
 #   tags:
-#     - monitoring_step
+#     - monitoring-step
 
 - hosts:
     - proxy
   roles:
     - haproxy
   tags:
-    - proxy_step
+    - proxy-step
 
 - hosts:
     - storage
   roles:
     - nfs
   tags:
-    - storage_step
+    - storage-step
 
 - hosts:
     - web
@@ -69,7 +69,7 @@
     - <here-the-role-for-your-django-app>
   max_fail_percentage: 0
   tags:
-    - application_step
+    - application-step
 
 - hosts:
     - web
@@ -77,21 +77,21 @@
     - nginx
     - uwsgi
   tags:
-    - application_step
+    - application-step
 
 - hosts:
     - worker
   roles:
     - celery
   tags:
-    - application_step
+    - application-step
 
 - hosts:
     - owncloud
   roles:
     - owncloud
   tags:
-    - owncloud_step
+    - owncloud-step
 
 - hosts:
     - desktop
@@ -100,7 +100,7 @@
   roles:
     - owncloud-client
   tags:
-    - owncloud_step
+    - owncloud-step
 
 - hosts:
     - desktop
@@ -110,19 +110,19 @@
     - development
     - multimedia
   tags:
-    - utilities_step
+    - utilities-step
 
 - hosts:
     - laptop
   roles:
     - laptop
   tags:
-    - utilities_step
+    - utilities-step
 
 - hosts:
     - phone
   roles:
     - phone
   tags:
-    - utilities_step
+    - utilities-step
 
