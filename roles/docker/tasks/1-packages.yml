@@ -3,7 +3,7 @@
 - name: Install Docker Machine
   get_url: >
     url=https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64
-    dest="{{ docker_machine_path }}" mode=755 sha256sum=909cae9be74b39cc529fc015aa7c015e1d8f96322d7d92a64004957054965a81
+    dest="{{ docker_machine_path }}" mode=755 sha256sum={{ docker_machine_checksum }}
   when: docker_install_machine|bool
   sudo: yes
 
@@ -17,7 +17,7 @@
 - name: Install Docker Compose
   get_url: >
     url=https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/run.sh
-    dest="{{ docker_compose_path }}" mode=755 sha256sum=e843627e511a7acb2b26eaa1b2f84d1289acd7e280a222c7f5e701b54b40df0b
+    dest="{{ docker_compose_path }}" mode=755 sha256sum={{ docker_compose_checksum }}
   when: docker_install_compose|bool
   sudo: yes
 

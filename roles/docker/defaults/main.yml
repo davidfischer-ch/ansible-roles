@@ -1,4 +1,5 @@
 docker_apt_repository: "deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main"
+docker_compose_checksum: e843627e511a7acb2b26eaa1b2f84d1289acd7e280a222c7f5e701b54b40df0b
 docker_compose_path: /usr/local/bin/docker-compose
 docker_compose_release: 1.5.2
 docker_engine_ufw_rules:
@@ -19,6 +20,7 @@ docker_install_engine: yes
 docker_install_machine: yes
 docker_install_registry: no
 docker_interface: null
+docker_machine_checksum: 909cae9be74b39cc529fc015aa7c015e1d8f96322d7d92a64004957054965a81
 docker_machine_path: /usr/local/bin/docker-machine
 docker_machine_release: 0.5.3
 docker_machines: {}
