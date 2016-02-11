@@ -1,0 +1,11 @@
+---
+
+dependencies:
+  - role: requirements
+    ppa_requirements:
+      - ppa:paolorotolo/android-studio
+      - ppa:webupd8team/java
+    apt_requirements:
+      - android-studio
+      - oracle-java8-installer
+    when: android_studio_has_run is undefined
