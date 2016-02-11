@@ -30,11 +30,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Provider-specific configuration so you can fine-tune various backing providers for Vagrant. These expose provider-
     # specific options. View the documentation for the provider you're using for more information on available options.
-    machine.vm.provider :virtualbox do |v|
+    machine.vm.provider :{{ specs.provider }} do |v|
       v.name = "{{ name }}"
       v.gui = false  # Headless mode
       v.cpus = {{ specs.cpus|int }}
       v.memory = {{ specs.memory }}
+      {% if specs.provider == 'virtualbox' %}
       v.customize [
         "modifyvm", :id,
         "--cpus", "{{ specs.cpus|int }}",
@@ -42,6 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         "--hwvirtex", "on",
         "--ioapic", "on"
       ]
+      {% endif %}
     end
   end
   {% endfor %}

@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+
+"""
+Update a machine id managed by Vagrant to prevent "Already Exists" bug https://github.com/mitchellh/vagrant/issues/5038.
+"""
+
+import argparse, os, re, subprocess
+
+
+VBOX_LIST_REGEX = re.compile(r'"(?P<name>[^"]+)"\s+{(?P<uuid>[0-9a-f\-]+)}')
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('directory')
+    parser.add_argument('name')
+    parser.add_argument('provider')
+    args = parser.parse_args()
+
+    old, new = update_vagrant_machine_id(args.directory, args.name, args.provider)
+    if old != new:
+        print('Identifier of machine {0.name} updated from {1} to {2}'.format(args, old, new))
+
+
+def get_virtualbox_machines_list():
+    return {
+        n: u for n, u in VBOX_LIST_REGEX.findall(subprocess.check_output(['vboxmanage', 'list', 'vms']).decode('utf-8'))
+    }
+
+
+def update_vagrant_machine_id(directory, name, provider):
+    if provider == 'virtualbox':
+        new = get_virtualbox_machines_list()[name]
+        with open(os.path.join(directory, '.vagrant', 'machines', name, provider, 'id'), 'r+') as f:
+            old = f.read()
+            if old != new:
+                f.seek(0)
+                f.write(new)
+                f.truncate()
+        return old, new
+    else:
+        raise NotImplementedError('Handling machine {0} provider {1} not yet implemented.'.format(name, provider))
+
+
+if __name__ == '__main__':
+    main()
