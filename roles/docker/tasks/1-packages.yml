@@ -4,8 +4,8 @@
   get_url: >
     url=https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64
     dest="{{ docker_machine_path }}" mode=755 sha256sum={{ docker_machine_checksum }}
-  when: docker_install_machine|bool
   sudo: yes
+  when: docker_install_machine|bool
 
 - name: Provision Docker Machines
   command: >
@@ -18,8 +18,8 @@
   get_url: >
     url=https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/run.sh
     dest="{{ docker_compose_path }}" mode=755 sha256sum={{ docker_compose_checksum }}
-  when: docker_install_compose|bool
   sudo: yes
+  when: docker_install_compose|bool
 
 - name: Register Docker apt key
   apt_key: >
