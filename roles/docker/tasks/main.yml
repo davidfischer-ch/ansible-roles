@@ -13,4 +13,8 @@
   tags: services
   when: docker_has_run is undefined
 
+- include: 4-images.yml
+  tags: images
+  when: docker_has_run is undefined
+
 - set_fact: docker_has_run=yes
