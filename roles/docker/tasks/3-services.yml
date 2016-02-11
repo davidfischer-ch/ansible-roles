@@ -9,20 +9,14 @@
 - name: Verify Docker is installed correctly
   command: >
     docker run hello-world
-  sudo: yes  # FIXME calling docker as simple user is not yet working
-  when: docker_install_engine|bool
-  args:
-    env:
-      # Fixes "Cannot connect to the Docker daemon. Is 'docker daemon' running on this host?"
-      DOCKER_HOST: ''
   changed_when: no
+  when: docker_install_engine|bool
 
 # https://github.com/docker/distribution/blob/master/docs/deploying.md
 
 - name: Start Docker Registry service
   docker: >
     name=registry image=registry ports=5000:5000 restart_policy=always state=started
-  sudo: yes  # FIXME calling docker as simple user is not yet working
   when: docker_install_registry|bool
 
 # Pull some images from the Docker Hub and push into our registry
@@ -32,7 +26,6 @@
     docker pull {{ item }}
   register: docker_pull_result
   changed_when: "'up to date' not in docker_pull_result.stdout"
-  sudo: yes  # FIXME calling docker as simple user is not yet working
   when: docker_install_registry|bool
   with_items: docker_images
 
@@ -42,7 +35,6 @@
   changed_when: "'already set' not in docker_tag_result.stderr"
   failed_when: docker_tag_result|failed and 'already set' not in docker_tag_result.stderr
   register: docker_tag_result
-  sudo: yes  # FIXME calling docker as simple user is not yet working
   with_items: docker_images
   when: docker_install_registry|bool
 
@@ -51,7 +43,6 @@
     docker push localhost:5000/{{ item }}
   changed_when: "'successfully pushed' in docker_push_result.stdout"
   register: docker_push_result
-  sudo: yes  # FIXME calling docker as simple user is not yet working
   with_items: docker_images
   when: docker_install_registry|bool
 

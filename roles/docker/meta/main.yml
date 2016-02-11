@@ -1,6 +1,9 @@
 ---
 
 dependencies:
+  - role: kernel
+    when: docker_has_run is undefined
+
   - role: ufw
     ufw_rules: "{{ docker_engine_ufw_rules }}"
     when: docker_has_run is undefined and docker_install_engine|bool and docker_engine_ufw_rules
