@@ -1,0 +1,19 @@
+---
+
+- name: Check node command is available
+  command: >
+    node
+  changed_when: cordova_node_result|failed
+  ignore_errors: yes
+  register: cordova_node_result
+
+- name: Add symlink nodejs = node
+  file: >
+    src=/usr/bin/nodejs dest=/usr/bin/node state=link
+  sudo: yes
+  when: cordova_node_result|failed
+
+- name: Check cordova command is available
+  command: >
+    cordova
+  changed_when: no

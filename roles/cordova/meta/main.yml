@@ -3,8 +3,8 @@
 dependencies:
   - role: requirements
     apt_requirements:
+      - nodejs
       - npm
     npm_requirements:
       - cordova
-      - node
     when: cordova_has_run is undefined

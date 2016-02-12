@@ -1,1 +1,8 @@
+# http://jeffmcmahan.info/blog/installing-cordova-on-linux/
 ---
+
+- include: 1-packages.yml
+  tags: packages
+  when: cordova_has_run is undefined
+
+- set_fact: cordova_has_run=yes
