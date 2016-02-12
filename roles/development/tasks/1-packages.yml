@@ -3,20 +3,20 @@
 - name: Install ScudCloud PPA repository
   apt_repository: >
     repo=ppa:rael-gc/scudcloud state=present update_cache=yes
-  sudo: yes
+  become: yes
   when: "'scudcloud' in devops_packages"
 
 - name: Install devops packages
   apt: >
     name={{ item }} state=latest
   with_items: devops_packages
-  sudo: yes
+  become: yes
 
 - name: Install programming packages
   apt: >
     name={{ item }} state=latest
   with_items: programming_packages
-  sudo: yes
+  become: yes
 
 - name: Download sublime text 3
   get_url: >
@@ -28,7 +28,7 @@
 - name: Install sublime text 3
   command: >
     gdebi /tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb --non-interactive
-  sudo: yes
+  become: yes
   when: sublime_text_version is defined and sublime_text_version
 
 # FIXME install package control, gitgutter ... configure ...

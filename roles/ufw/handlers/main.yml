@@ -3,4 +3,4 @@
 - name: reload ufw
   ufw: >
     state=reloaded
-  sudo: yes
+  become: yes

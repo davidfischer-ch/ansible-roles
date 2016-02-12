@@ -10,7 +10,7 @@
 - name: Add symlink nodejs = node
   file: >
     src=/usr/bin/nodejs dest=/usr/bin/node state=link
-  sudo: yes
+  become: yes
   when: cordova_node_result|failed
 
 - name: Check cordova command is available

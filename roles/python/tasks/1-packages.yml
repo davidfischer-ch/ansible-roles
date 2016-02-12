@@ -3,13 +3,13 @@
 - name: Install building and development tools
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items: python_packages
 
 - name: Download pip bootstrap script
   get_url: >
     url=https://bootstrap.pypa.io/get-pip.py dest=/tmp/get-pip.py sha256sum={{ python_get_pip_checksum }}
-  sudo: yes
+  become: yes
 
 - name: Install pip
   command: >
@@ -17,22 +17,22 @@
   changed_when: "'already up-to-date' not in get_pip_result.stdout|default('') and 'are using pip' not in get_pip_result.stderr|default('')"
   failed_when: "get_pip_result|failed and 'are using pip' not in get_pip_result.stderr|default('')"
   register: get_pip_result
-  sudo: yes
+  become: yes
   with_items: python_versions
 
 - name: Set pip default version
   file: >
     src={{ python_pip_path }}{{ python_default_version[0] }} dest={{ python_pip_path }} force=yes state=link
-  sudo: yes
+  become: yes
 
 - name: Install setuptools
   pip: >
     name=setuptools executable=pip{{ item[0] }}
-  sudo: yes
+  become: yes
   with_items: python_versions
 
 - name: Install virtualenv
   pip: >
     name=virtualenv executable=pip{{ item[0] }} state=latest
-  sudo: yes
+  become: yes
   with_items: python_versions

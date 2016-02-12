@@ -17,7 +17,7 @@
     dest=/etc/default/grub regexp='GRUB_CMDLINE_LINUX=' backup=yes state=present
     line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 noprompt"'
   notify: update grub
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
 
 - name: Check memory/swap accounting is active
@@ -35,7 +35,7 @@
 - name: Create the docker group
   group: >
     name=docker state=present
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
 
 - name: Add our user to the docker group
@@ -44,7 +44,7 @@
   notify:
     - restart
     - wait started
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
 
 # Restart if necessary

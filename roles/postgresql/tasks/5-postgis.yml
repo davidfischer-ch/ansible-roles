@@ -9,7 +9,7 @@
 - name: Install PostGIS
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   tags: packages
   when: postgis_enabled is defined
   with_items:
@@ -20,7 +20,7 @@
 - name: Install geolocation prerequisites required for all back-ends
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   tags: packages
   when: postgis_enabled is defined
   with_items:
@@ -32,7 +32,7 @@
 - name: Install geolocation prerequisites required for PostgreSQL and SQLite
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   tags: packages
   when: postgis_enabled is defined
   with_items:
@@ -43,7 +43,7 @@
 - name: Install geolocation prerequisites optional but required for SQLite
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   tags: packages
   when: postgis_enabled is defined
   with_items:
@@ -54,7 +54,7 @@
 - name: install optional IP-based geolocation library
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   tags: packages
   when: postgis_enabled is defined
   with_items:
@@ -67,7 +67,7 @@
   changed_when: "postgresql_result.rc == 0"
   failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
   register: postgresql_result
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: flush_extra
   when: postgis_enabled is defined and 'postgis' in item.value.extensions
@@ -80,7 +80,7 @@
   changed_when: "postgresql_result.rc == 0"
   failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
   register: postgresql_result
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: flush_extra
   when: postgis_enabled is defined and 'postgis' in item.value.extensions

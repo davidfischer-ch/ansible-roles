@@ -3,4 +3,4 @@
 - name: Start RabbitMQ service
   service: >
     name=rabbitmq-server state=started enabled=yes
-  sudo: yes
+  become: yes

@@ -4,7 +4,7 @@
   get_url: >
     url=https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64
     dest="{{ docker_machine_path }}" mode=755 sha256sum={{ docker_machine_checksum }}
-  sudo: yes
+  become: yes
   when: docker_install_machine|bool
 
 - name: Provision Docker Machines
@@ -18,32 +18,32 @@
   get_url: >
     url=https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/run.sh
     dest="{{ docker_compose_path }}" mode=755 sha256sum={{ docker_compose_checksum }}
-  sudo: yes
+  become: yes
   when: docker_install_compose|bool
 
 - name: Register Docker apt key
   apt_key: >
     keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
 
 - name: Register Docker apt repository
   apt_repository: >
     repo="{{ docker_apt_repository }}" update_cache=yes state=present
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
 
 - name: Install Docker Engine with apt
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
   with_items: docker_packages
 
 - name: Install Docker Engine with pip
   pip: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items: docker_python_packages
 
 # FIXME https://github.com/docker/compose/pull/2513#issuecomment-172494821 issue with non tty
@@ -52,4 +52,4 @@
 #     docker-compose version --short
 #   register: docker_compose_version_result
 #   failed_when: docker_compose_version_result.stdout != docker_compose_release
-#   sudo: yes  # FIXME calling docker as simple user is not yet working
+#   become: yes  # FIXME calling docker as simple user is not yet working

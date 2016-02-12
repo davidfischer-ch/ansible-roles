@@ -5,12 +5,12 @@
     src=cleanup.py
     dest=/tmp/cleanup.py
     mode=755
-  sudo: yes
+  become: yes
 
 - name: Execute the cleanup script
   command: >
     python3 /tmp/cleanup.py -k {{ keyboards|join(',') }}
   changed_when: cleanup_result.stdout != ''
   register: cleanup_result
-  sudo: yes
+  become: yes
   when: keyboards is defined and keyboards

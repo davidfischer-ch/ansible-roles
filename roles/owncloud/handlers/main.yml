@@ -3,4 +3,4 @@
 - name: reload apache2
   service: >
     name=apache2 state=reloaded
-  sudo: yes
+  become: yes

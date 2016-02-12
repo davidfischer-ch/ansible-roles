@@ -23,5 +23,5 @@
     dest: "{{ item.dest|default(omit) }}"  # to_ip
     port: "{{ item.port|default(omit) }}"  # to_port
   notify: reload ufw
-  sudo: yes
+  become: yes
   with_items: ufw_rules

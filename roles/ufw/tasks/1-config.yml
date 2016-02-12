@@ -4,10 +4,10 @@
   ufw: >
     port={{ ssh_port }} proto=tcp rule=allow
   notify: reload ufw
-  sudo: yes
+  become: yes
 
 - name: Configure UFW
   ufw: >
     state=enabled logging={{ ufw_logging }} policy={{ ufw_policy }}
   notify: reload ufw
-  sudo: yes
+  become: yes

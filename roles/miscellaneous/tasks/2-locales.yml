@@ -6,10 +6,10 @@
   #  name={{ locale }} state=present
   command: >
     locale-gen --purge {{ locale }}
-  sudo: yes
+  become: yes
 
 - name: Reconfigure the locales and enable our locale
   shell: >
     dpkg-reconfigure locales &&
     update-locale LANG={{ locale }} LC_ALL={{ locale }}
-  sudo: yes
+  become: yes

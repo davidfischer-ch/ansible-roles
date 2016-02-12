@@ -3,4 +3,4 @@
 - name: Start Supervisor service
   service: >
     name=supervisor state=started enabled=yes
-  sudo: yes
+  become: yes

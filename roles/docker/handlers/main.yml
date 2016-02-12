@@ -6,7 +6,7 @@
   ignore_errors: yes
   async: 0
   poll: 0
-  sudo: yes
+  become: yes
 
 - name: wait started
   local_action: >
@@ -15,4 +15,4 @@
 - name: update grub
   command:
     update-grub
-  sudo: yes
+  become: yes

@@ -4,10 +4,10 @@
   service: >
     name=uwsgi state=started enabled=yes
   register: uwsgi_start_result
-  sudo: yes
+  become: yes
 
 - name: Restart uWSGI service
   service: >
     name=uwsgi state=restarted enabled=yes
-  sudo: yes
+  become: yes
   when: uwsgi_start_result|failed

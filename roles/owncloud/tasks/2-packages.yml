@@ -6,22 +6,22 @@
     dest=/etc/apt/sources.list.d/owncloud.list
     mode=644
   register: owncloud_repo_result
-  sudo: yes
+  become: yes
 
 - name: Update Debian packages cache
   apt: update_cache=yes
-  sudo: yes
+  become: yes
   when: owncloud_repo_result|changed
 
 - name: Install libreoffice
   apt: >
     name=libreoffice-common install_recommends=no state=latest
-  sudo: yes
+  become: yes
 
 - name: Install ownCloud packages
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items:
     - libapache2-mod-php5
     - owncloud

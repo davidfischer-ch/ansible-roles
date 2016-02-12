@@ -7,7 +7,7 @@
 # - name: Create graphite user
 #   user: >
 #     name=graphite createhome=no home=/usr/local/src/graphite shell=/bin/false state=present
-#   sudo: yes
+#   become: yes
 #   tags: bootstrap
 
 # Packages
@@ -58,7 +58,7 @@
     src=local_settings.py.j2
     dest={{ graphite_bin_directory }}/webapp/graphite/local_settings.py
     mode=644
-  sudo: yes
+  become: yes
   tags: config
 
 - set_fact: graphite_has_run=yes

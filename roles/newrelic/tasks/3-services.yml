@@ -3,12 +3,12 @@
 - name: Start New Relic System Monitor service
   service: >
     name=newrelic-sysmond state=started enabled=yes
-  sudo: yes
+  become: yes
   when: newrelic_license_key|length > 0
 
 - name: Stop New Relic System Monitor service
   service: >
     name=newrelic-sysmond state=stopped enabled=no
   ignore_errors: yes
-  sudo: yes
+  become: yes
   when: newrelic_license_key|length == 0

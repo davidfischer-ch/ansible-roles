@@ -4,12 +4,12 @@
   template: >
     src=nginx.conf.j2 dest=/etc/nginx/nginx.conf mode=644
   notify: reload nginx
-  sudo: yes
+  become: yes
 
 - name: Create Nginx directories
   file: >
     name={{ item }} mode=755 state=directory
-  sudo: yes
+  become: yes
   with_items:
     - /etc/nginx/sites-enabled/
     - /var/lib/nginx/
@@ -18,15 +18,15 @@
   file: >
     path=/etc/nginx/sites-enabled/default state=absent
   notify: reload nginx
-  sudo: yes
+  become: yes
 
 - name: Configure Nginx service
   template: >
     src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
   notify: restart nginx
-  sudo: yes
+  become: yes
 
 - name: Install Nginx service
   supervisorctl: >
     name=nginx state=present
-  sudo: yes
+  become: yes

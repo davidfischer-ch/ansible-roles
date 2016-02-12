@@ -4,17 +4,17 @@
   template: >
     src=postgresql.conf.j2 dest=/etc/postgresql/9.3/main/postgresql.conf mode=644
   register: postgresql_config_result
-  sudo: yes
+  become: yes
 
 - name: Configure PostgreSQL allowed hosts
   template: >
     src=pg_hba.conf.j2 dest=/etc/postgresql/9.3/main/pg_hba.conf mode=644
   register: postgresql_allow_result
-  sudo: yes
+  become: yes
 
 - name: Restart PostgreSQL service
   service: >
     name=postgresql state=restarted enabled=yes
-  sudo: yes
+  become: yes
   tags: flush_extra
   when: postgresql_config_result|changed or postgresql_allow_result|changed

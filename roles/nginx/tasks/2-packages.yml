@@ -5,7 +5,7 @@
 - name: Create Nginx source directories
   file: >
     name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
-  sudo: yes
+  become: yes
   with_items:
     - "{{ tools_src_directory }}/nginx"
     - "{{ tools_src_directory }}/nginx-upload-module"
@@ -91,4 +91,4 @@
     make install
   args:
     chdir: "{{ tools_src_directory }}/nginx"
-  sudo: yes
+  become: yes

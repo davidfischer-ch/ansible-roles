@@ -8,4 +8,4 @@
 - name: Add GitHub IP address to hosts file
   lineinfile: >
     dest=/etc/hosts regexp=" github.com$" line="{{ github_ip }} github.com" create=yes
-  sudo: yes
+  become: yes

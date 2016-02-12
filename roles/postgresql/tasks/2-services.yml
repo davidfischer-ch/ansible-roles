@@ -3,4 +3,4 @@
 - name: Start PostgreSQL service
   service: >
     name=postgresql state=started enabled=yes
-  sudo: yes
+  become: yes

@@ -4,4 +4,4 @@
   apt: >
     name={{ item }} state=latest
   with_items: filesystem_packages
-  sudo: yes
+  become: yes

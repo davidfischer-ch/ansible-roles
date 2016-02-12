@@ -3,7 +3,7 @@
 - name: Setup ownCloud MySQL database
   mysql_db: >
     name=owncloud state=present
-  sudo: yes
+  become: yes
 
 - name: Setup ownCloud MySQL user
   mysql_user: >
@@ -12,4 +12,4 @@
     password="{{ owncloud_mysql_password }}"
     priv=owncloud.*:ALL
     state=present
-  sudo: yes
+  become: yes

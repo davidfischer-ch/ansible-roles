@@ -3,7 +3,7 @@
 - name: Remove Supervisor Debian package
   apt: >
     name=supervisor state=absent
-  sudo: yes
+  become: yes
 
 - name: Install Supervisor with pip
   pip: >
@@ -12,4 +12,4 @@
   changed_when: "'supervisor {{ supervisor_release }} is already' not in supervisor_upgrade_result.stdout"
   notify: restart supervisor
   register: supervisor_upgrade_result
-  sudo: yes
+  become: yes

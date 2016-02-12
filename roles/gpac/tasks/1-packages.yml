@@ -5,7 +5,7 @@
 - name: Create GPAC source directories
   file: >
     name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
-  sudo: yes
+  become: yes
 
 - name: Clone GPAC source code
   git: >
@@ -31,7 +31,7 @@
     make install
   args:
     chdir: "{{ tools_src_directory }}/gpac"
-  sudo: yes
+  become: yes
 
 # Current configure gives:
 

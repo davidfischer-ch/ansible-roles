@@ -8,17 +8,17 @@
     dest=/etc/apt/sources.list.d/owncloud-client.list
     mode=644
   register: owncloud_client_repo_result
-  sudo: yes
+  become: yes
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
 
 - name: Update Debian packages cache
   apt: update_cache=yes
-  sudo: yes
+  become: yes
   when: owncloud_client_repo_result|changed
 
 - name: Install ownCloud packages
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items:
     - owncloud-client

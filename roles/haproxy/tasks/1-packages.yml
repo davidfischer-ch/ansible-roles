@@ -6,7 +6,7 @@
 - name: Create HAProxy source directories
   file: >
     name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
-  sudo: yes
+  become: yes
 
 - name: Clone HAProxy source code
   git: >
@@ -26,7 +26,7 @@
     make install-{{ item }}
   args:
     chdir: "{{ tools_src_directory }}/haproxy"
-  sudo: yes
+  become: yes
   with_items:
     - bin
     - man

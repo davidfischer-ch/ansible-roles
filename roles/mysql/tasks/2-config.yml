@@ -2,7 +2,7 @@
 
 - name: Copy user my.cnf file with root credentials
   template: src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
-  sudo: yes
+  become: yes
 
 - name: Configure MySQL root password
   mysql_user: >
@@ -12,12 +12,12 @@
     - localhost
     - 127.0.0.1
     - ::1
-  sudo: yes
+  become: yes
 
 - name: Remove anonymous MySQL user
   mysql_user: name='' state=absent
-  sudo: yes
+  become: yes
 
 - name: Remove MySQL test database
   mysql_db: name=test state=absent
-  sudo: yes
+  become: yes

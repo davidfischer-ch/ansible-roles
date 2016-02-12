@@ -4,17 +4,17 @@
   copy: >
     content={{ timezone }} dest=/etc/timezone
   notify: update tzdata
-  sudo: yes
+  become: yes
   tags: config
 
 - name: Install NTP
   apt: >
     name=ntp state=latest
-  sudo: yes
+  become: yes
   tags: packages
 
 - name: Start NTP service
   service: >
     name=ntp state=started enabled=yes
-  sudo: yes
+  become: yes
   tags: services

@@ -3,4 +3,4 @@
 - name: Create ownCloud data directory
   file: >
     name={{ owncloud_data_directory }} owner=www-data group=www-data state=directory
-  sudo: yes
+  become: yes

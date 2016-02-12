@@ -3,4 +3,4 @@
 - name: restart supervisor
   command: >
     service supervisor restart
-  sudo: yes
+  become: yes

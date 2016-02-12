@@ -7,7 +7,7 @@
     group={{ item.value.group|default(group) }}
     mode=755
     state=directory
-  sudo: yes
+  become: yes
   with_dict: mounts
 
 - name: Mount the shared directories
@@ -17,7 +17,7 @@
     opts="{{ item.value.options }}{% if item.value.fstype != 'nfs' %},uid={{ user_uid }},gid={{ user_gid }}{% endif %}"
     src={{ item.value.source }}
     state=mounted
-  sudo: yes
+  become: yes
   when: item.value.source|length > 0
   with_dict: mounts
 
@@ -28,14 +28,14 @@
     opts="{{ item.value.options }},uid={{ user_uid }},gid={{ user_gid }}"
     src={{ item.value.source }}
     state=unmounted
-  sudo: yes
+  become: yes
   when: not item.value.source|length > 0
   with_dict: mounts
 
 - name: Check root can write and chown
   file: >
     name={{ item.value.directory }}/{{ inventory_hostname }} owner={{ user }} group={{ group }} mode=755 state=directory
-  sudo: yes
+  become: yes
   when: item.value.check|bool
   with_dict: mounts
 
@@ -48,6 +48,6 @@
 - name: Final cleanup
   file: >
     name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
-  sudo: yes
+  become: yes
   when: item.value.check|bool
   with_dict: mounts

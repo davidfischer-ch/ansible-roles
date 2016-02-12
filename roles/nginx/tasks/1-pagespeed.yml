@@ -18,7 +18,7 @@
 - name: Create PageSpeed source directories
   file: >
     name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
-  sudo: yes
+  become: yes
   with_items:
     - "{{ nginx_pagespeed_cache_directory }}"
     - "{{ tools_src_directory }}/{{ nginx_pagespeed_module_name }}/psol"

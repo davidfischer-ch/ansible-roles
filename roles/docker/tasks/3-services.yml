@@ -3,7 +3,7 @@
 - name: Start Docker service
   service: >
     name=docker state=started enabled=yes
-  sudo: yes
+  become: yes
   when: docker_install_engine|bool
 
 - name: Verify Docker is installed correctly

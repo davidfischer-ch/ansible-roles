@@ -4,13 +4,13 @@
   template: >
     src=nfs-kernel-server.j2 dest=/etc/default/nfs-kernel-server mode=644
   notify: reload nfs-kernel-server
-  sudo: yes
+  become: yes
 
 - name: Create shared directories
   file: >
     path={{ item.value.path }} owner={{ item.value.user|default(user) }} group={{ item.value.group|default(group) }}
     mode={{ item.value.mode|default(755) }} state=directory
-  sudo: yes
+  become: yes
   with_dict: nfs_exports
 
 - name: Setup shared directories
@@ -18,5 +18,5 @@
     dest=/etc/exports regexp="ansible-roles-key-{{ item.key }}" state={{ item.value.state|default('present') }}
     line="{{ item.value.path }} {{ item.value.rules|join(' ') }}  # ansible-roles-key-{{ item.key }}"
   notify: reload nfs-kernel-server
-  sudo: yes
+  become: yes
   with_dict: nfs_exports

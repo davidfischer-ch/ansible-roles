@@ -3,5 +3,5 @@
 - name: restart celery
   supervisorctl: >
     name={{ item.value.name }} state=restarted
-  sudo: yes
+  become: yes
   with_dict: celery_services

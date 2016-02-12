@@ -3,26 +3,26 @@
 - name: Check the application for common errors
   command: >
     {{ graphite_bin_directory }}/bin/python /opt/graphite/bin/django-admin.py check
-  sudo: yes
+  become: yes
   tags: unit_test_extra
 
 # - name: Flush the database
 #   command: >
 #     graphite-manage flush
-#   sudo: yes
+#   become: yes
 #   tags: flush
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses)
 
 # - name: Create the super-user
 #   shell: >
 #     echo "from django.contrib.auth.models import User; User.objects.create_superuser('{{ superuser.name }}', '{{ superuser.email }}', '{{ superuser.password }}')" | graphite-manage shell
-#   sudo: yes
+#   become: yes
 #   tags: [flush_extra, database]
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses) and superuser
 
 # - name: Create the database
 #   command: >
 #     graphite-manage syncdb
-#   sudo: yes
+#   become: yes
 #   tags: [flush_extra, database]
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses)

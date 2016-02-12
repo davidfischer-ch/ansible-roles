@@ -3,7 +3,7 @@
 - name: Flush PostgreSQL databases
   postgresql_db: >
     name={{ item.value.name }} state=absent
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: flush
   when: not 'template' in item.value.name
@@ -12,7 +12,7 @@
 - name: Setup PostgreSQL users
   postgresql_user: >
     name={{ item.value.user }} password={{ item.value.password }} role_attr_flags=SUPERUSER,CREATEDB state=present
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: flush_extra
   when: not 'template' in item.value.name
@@ -22,7 +22,7 @@
   postgresql_db: >
     name={{ item.value.name }} encoding={{ item.value.encoding|default('unicode') }} owner={{ item.value.user }}
     template={{ item.value.template|default('template1') }} state=present
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: flush_extra
   when: not 'template' in item.value.name
@@ -34,7 +34,7 @@
 - name: Remove PostgreSQL unit-test databases
   postgresql_db: >
     name=test_{{ item.value.name }} state=absent
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: unit_test
   when: item.value.with_test|bool
@@ -43,7 +43,7 @@
 - name: Allow PostgreSQL users to access PostgreSQL databases
   postgresql_privs: >
     db={{ item.value.name }} type=database priv=ALL role={{ item.value.user }} state=present
-  sudo: yes
+  become: yes
   sudo_user: postgres
   tags: flush_extra
   when: not 'template' in item.value.name

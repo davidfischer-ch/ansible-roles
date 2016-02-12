@@ -4,4 +4,4 @@
   apt: >
     name={{ item }} state=latest
   with_items: gaming_packages
-  sudo: yes
+  become: yes

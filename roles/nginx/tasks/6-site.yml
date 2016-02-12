@@ -4,9 +4,9 @@
   template: >
     src=site.conf.j2 dest=/etc/nginx/sites-enabled/{{ site }}.conf mode=644
   notify: reload nginx
-  sudo: yes
+  become: yes
 
 - name: Create the Nginx site logs directory
   file: >
     name=/var/log/nginx/{{ site }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
-  sudo: yes
+  become: yes

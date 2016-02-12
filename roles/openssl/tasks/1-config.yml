@@ -8,5 +8,5 @@
     -keyout {{ ssl_cert_key_filename }} -out {{ ssl_cert_crt_filename }}
   args:
     creates: "{{ ssl_cert_crt_filename }}"
-  sudo: yes
+  become: yes
   when: ssl_cert_key_filename is defined and ssl_cert_key_filename

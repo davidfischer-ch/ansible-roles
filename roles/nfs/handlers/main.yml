@@ -3,4 +3,4 @@
 - name: reload nfs-kernel-server
   service: >
     name=nfs-kernel-server state=reloaded
-  sudo: yes
+  become: yes

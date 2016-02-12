@@ -4,7 +4,7 @@
   template: >
     src=redis.conf.j2 dest=/etc/redis/redis.conf mode=644
   notify: restart redis-server
-  sudo: yes
+  become: yes
 
 - meta: flush_handlers
 

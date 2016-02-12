@@ -3,29 +3,29 @@
 - name: Register apt keys
   apt_key: >
     url={{ item }} state=present
-  sudo: yes
+  become: yes
   with_items: key_requirements
 
 - name: Install PPA repositories
   apt_repository: >
     repo={{ item }} state=present
   register: ppa_requirements_result
-  sudo: yes
+  become: yes
   with_items: ppa_requirements
 
 - name: Update Debian packages cache
   apt: update_cache=yes
-  sudo: yes
+  become: yes
   when: ppa_requirements|length > 0 and ppa_requirements_result|changed
 
 - name: Install build requirements with apt
   apt: >
     name={{ item }} state=build-dep
-  sudo: yes
+  become: yes
   with_items: apt_build_requirements
 
 - name: Install requirements with apt
   apt: >
     name={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items: apt_requirements
