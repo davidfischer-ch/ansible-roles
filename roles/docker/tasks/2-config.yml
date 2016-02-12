@@ -10,6 +10,7 @@
     - memcg
     - memcg_kmem
     - memcg_swap
+  when: docker_install_engine|bool
 
 - name: Enable the memory/swap accounting
   lineinfile: >
@@ -17,6 +18,7 @@
     line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 noprompt"'
   notify: update grub
   sudo: yes
+  when: docker_install_engine|bool
 
 - name: Check memory/swap accounting is active
   command: >
@@ -26,6 +28,7 @@
     - restart
     - wait started
   register: cmdline_result
+  when: docker_install_engine|bool
 
 # Allow our user to communicate with docker daemon without sudo
 
