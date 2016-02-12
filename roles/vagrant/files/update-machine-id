@@ -7,6 +7,8 @@ Update a machine id managed by Vagrant to prevent "Already Exists" bug https://g
 
 import argparse, os, re, subprocess
 
+from pytoolbox.filesystem import try_makedirs
+
 
 VBOX_LIST_REGEX = re.compile(r'"(?P<name>[^"]+)"\s+{(?P<uuid>[0-9a-f\-]+)}')
 
@@ -32,7 +34,9 @@ def get_virtualbox_machines_list():
 def update_vagrant_machine_id(directory, name, provider):
     if provider == 'virtualbox':
         new = get_virtualbox_machines_list()[name]
-        with open(os.path.join(directory, '.vagrant', 'machines', name, provider, 'id'), 'r+') as f:
+        id_directory = os.path.join(directory, '.vagrant', 'machines', name, provider)
+        try_makedirs(id_directory)
+        with open(os.path.join(id_directory, 'id'), 'a+') as f:
             old = f.read()
             if old != new:
                 f.seek(0)
