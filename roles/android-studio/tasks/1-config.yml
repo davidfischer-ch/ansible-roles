@@ -1,0 +1,6 @@
+---
+
+- name: Add Android SDK tools to PATH
+  lineinfile: >
+    dest=/home/{{ user }}/.bashrc regexp='Register Android SDK tools' state=present
+    line='export PATH="$PATH:{{ android_sdk_tools_directory }}" # Register Android SDK tools'

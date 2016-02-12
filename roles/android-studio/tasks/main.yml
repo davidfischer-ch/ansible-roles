@@ -1,1 +1,7 @@
 ---
+
+- include: 1-config.yml
+  tags: config
+  when: android_studio_has_run is undefined
+
+- set_fact: android_studio_has_run=yes
