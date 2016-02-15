@@ -27,8 +27,7 @@
 
 - name: Configure GExiv2 build process
   command: >
-    {{ tools_src_directory }}/gexiv2/configure
-      --enable-introspection
+    {{ tools_src_directory }}/gexiv2/configure --enable-introspection
   args:
     chdir: "{{ tools_src_directory }}/gexiv2"
 
