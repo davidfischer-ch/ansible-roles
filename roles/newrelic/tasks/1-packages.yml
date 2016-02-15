@@ -1,32 +1,28 @@
 ---
 
-- name: Register New Relic apt repository
-  copy: >
-    src=newrelic.list dest=/etc/apt/sources.list.d/newrelic.list mode=644
-  register: newrelic_ppa_result
-  become: yes
-  when: newrelic_license_key|length > 0
+- block:
+    - block:
+        - name: Register New Relic apt repository
+          copy: >
+            src=newrelic.list dest=/etc/apt/sources.list.d/newrelic.list mode=644
+          register: newrelic_ppa_result
 
-- name: Trust New Relic GPG key
-  shell: >
-    wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
-  become: yes
-  when: newrelic_license_key|length > 0
+        - name: Trust New Relic GPG key
+          shell: >
+            wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
 
-- name: Update the Debian packages cache
-  apt: >
-    update_cache=yes
-  become: yes
-  when: newrelic_license_key|length > 0 and newrelic_ppa_result|changed
+        - name: Update the Debian packages cache
+          apt: >
+            update_cache=yes
+          when: newrelic_ppa_result|changed
 
-- name: Install New Relic System Monitor
-  apt: >
-    name=newrelic-sysmond state=latest
-  become: yes
-  when: newrelic_license_key|length > 0
+        - name: Install New Relic System Monitor
+          apt: >
+            name=newrelic-sysmond state=latest
+      when: newrelic_license_key|length > 0
 
-- name: Remove New Relic System Monitor
-  apt: >
-    name=newrelic-sysmond state=absent
+    - name: Remove New Relic System Monitor
+      apt: >
+        name=newrelic-sysmond state=absent
+      when: newrelic_license_key|length == 0
   become: yes
-  when: newrelic_license_key|length == 0
