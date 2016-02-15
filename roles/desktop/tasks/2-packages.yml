@@ -1,84 +1,76 @@
 ---
 
-# Miscellaneous
+- block:
+    # Miscellaneous
 
-- name: Install Nemo PPA repository
-  apt_repository: >
-    repo=ppa:webupd8team/nemo state=present update_cache=yes
-  become: yes
-  when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
+    - name: Install Nemo PPA repository
+      apt_repository: >
+        repo=ppa:webupd8team/nemo state=present update_cache=yes
+      when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
 
-# Desktop
+    # Desktop
 
-- name: Install Ubuntu desktop packages
-  apt: >
-    name={{ item }} state=latest
-  with_items:
-    - "{{ desktop_package }}"
-    - ubuntu-minimal
-    - ubuntu-restricted-addons
-    - ubuntu-restricted-extras
-    - libavcodec-extra
-    - ubuntu-standard
-  become: yes
+    - name: Install Ubuntu desktop packages
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - "{{ desktop_package }}"
+        - ubuntu-minimal
+        - ubuntu-restricted-addons
+        - ubuntu-restricted-extras
+        - libavcodec-extra
+        - ubuntu-standard
 
-- name: Install desktop and office packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: office_packages
-  become: yes
+    - name: Install desktop and office packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: office_packages
 
-- name: Install Ubuntu desktop and office packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: ubuntu_desktop_packages
-  become: yes
-  when: desktop_package == 'ubuntu-desktop'
+    - name: Install Ubuntu desktop and office packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: ubuntu_desktop_packages
+      when: desktop_package == 'ubuntu-desktop'
 
-- name: Install system packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: system_packages
-  become: yes
+    - name: Install system packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: system_packages
 
-- name: Update apt-file cache
-  command: >
-    apt-file update
+    - name: Update apt-file cache
+      command: >
+        apt-file update
+      become: no
 
-- name: Remove bumblebee packages
-  apt: >
-    name={{ item }} state=absent
-  with_items:
-    - bumblebee
-    - bumblebee-nvidia
-  become: yes
+    - name: Remove bumblebee packages
+      apt: >
+        name={{ item }} state=absent
+      with_items:
+        - bumblebee
+        - bumblebee-nvidia
 
-- name: Install files utilities packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: file_utility_packages
-  become: yes
+    - name: Install files utilities packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: file_utility_packages
 
-- name: Install java packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: java_packages
-  become: yes
+    - name: Install java packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: java_packages
 
-- name: Install miscellaneous packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: miscellaneous_packages
-  become: yes
+    - name: Install miscellaneous packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: miscellaneous_packages
 
-- name: Install virtualization packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: virtualization_packages
-  become: yes
+    - name: Install virtualization packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: virtualization_packages
 
-- name: Install web packages
-  apt: >
-    name={{ item }} state=latest
-  with_items: web_packages
+    - name: Install web packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: web_packages
   become: yes
