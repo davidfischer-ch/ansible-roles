@@ -47,7 +47,7 @@
 
 - name: Configure Nginx build process
   command: >
-    {{ tools_src_directory }}/nginx/auto/configure
+    ./auto/configure
       --prefix=/usr/share/nginx
       --conf-path=/etc/nginx/nginx.conf
       --http-log-path=/var/log/nginx/access.log
