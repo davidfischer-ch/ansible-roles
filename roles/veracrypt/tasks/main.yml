@@ -1,0 +1,32 @@
+# https://github.com/veracrypt/VeraCrypt
+---
+
+# https://github.com/nginx/nginx.git
+
+- name: Create VeraCrypt source directories
+  file: >
+    name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
+  become: yes
+  with_items:
+    - "{{ tools_src_directory }}/veracrypt"
+    - "{{ tools_src_directory }}"
+
+- name: Clone VeraCrypt source code
+  git: >
+    repo=https://github.com/veracrypt/VeraCrypt.git
+    dest={{ tools_src_directory }}/veracrypt
+    force=yes
+    version={{ veracrypt_version }}
+
+- name: Build VeraCrypt from source
+  command: >
+    make -j{{ ansible_processor_cores }}
+  args:
+    chdir: "{{ tools_src_directory }}/veracrypt/src"
+  changed_when: "{{ veracrypt_make_result.stdout_lines|length > 0 }}"
+  register: veracrypt_make_result
+
+- name: Create VeraCrypt symlink
+  file: >
+    src={{ tools_src_directory }}/veracrypt/src/Main/veracrypt dest=/usr/local/bin/veracrypt state=link
+  become: yes
