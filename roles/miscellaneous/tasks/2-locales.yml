@@ -1,15 +1,15 @@
 ---
 
-# FIXME ansible/ansible-modules-extras#425
-- name: Generate our locale
-  #locale_gen: >
-  #  name={{ locale }} state=present
-  command: >
-    locale-gen --purge {{ locale }}
-  become: yes
+- block:
+    # FIXME ansible/ansible-modules-extras#425
+    - name: Generate our locale
+      #locale_gen: >
+      #  name={{ locale }} state=present
+      command: >
+        locale-gen --purge {{ locale }}
 
-- name: Reconfigure the locales and enable our locale
-  shell: >
-    dpkg-reconfigure locales &&
-    update-locale LANG={{ locale }} LC_ALL={{ locale }}
+    - name: Reconfigure the locales and enable our locale
+      shell: >
+        dpkg-reconfigure locales &&
+        update-locale LANG={{ locale }} LC_ALL={{ locale }}
   become: yes
