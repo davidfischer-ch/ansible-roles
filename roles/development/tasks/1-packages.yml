@@ -24,8 +24,8 @@
           become: no
 
         - name: Install sublime text 3
-          command: >
-            gdebi /tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb --non-interactive
+          apt: >
+            deb=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
       when: sublime_text_version is defined and sublime_text_version
   become: yes
 # FIXME install package control, gitgutter ... configure ...
