@@ -1,15 +1,15 @@
 ---
 
-- name: Setup ownCloud MySQL database
-  mysql_db: >
-    name=owncloud state=present
-  become: yes
+- block:
+    - name: Setup ownCloud MySQL database
+      mysql_db: >
+        name=owncloud state=present
 
-- name: Setup ownCloud MySQL user
-  mysql_user: >
-    name=owncloud
-    host=localhost
-    password="{{ owncloud_mysql_password }}"
-    priv=owncloud.*:ALL
-    state=present
+    - name: Setup ownCloud MySQL user
+      mysql_user: >
+        name=owncloud
+        host=localhost
+        password="{{ owncloud_mysql_password }}"
+        priv=owncloud.*:ALL
+        state=present
   become: yes
