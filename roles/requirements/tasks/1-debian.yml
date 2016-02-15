@@ -1,31 +1,28 @@
 ---
 
-- name: Register apt keys
-  apt_key: >
-    url={{ item }} state=present
-  become: yes
-  with_items: key_requirements
+- block:
+    - name: Register apt keys
+      apt_key: >
+        url={{ item }} state=present
+      with_items: key_requirements
 
-- name: Install PPA repositories
-  apt_repository: >
-    repo={{ item }} state=present
-  register: ppa_requirements_result
-  become: yes
-  with_items: ppa_requirements
+    - name: Install PPA repositories
+      apt_repository: >
+        repo={{ item }} state=present
+      register: ppa_requirements_result
+      with_items: ppa_requirements
 
-- name: Update Debian packages cache
-  apt: update_cache=yes
-  become: yes
-  when: ppa_requirements|length > 0 and ppa_requirements_result|changed
+    - name: Update Debian packages cache
+      apt: update_cache=yes
+      when: ppa_requirements|length > 0 and ppa_requirements_result|changed
 
-- name: Install build requirements with apt
-  apt: >
-    name={{ item }} state=build-dep
-  become: yes
-  with_items: apt_build_requirements
+    - name: Install build requirements with apt
+      apt: >
+        name={{ item }} state=build-dep
+      with_items: apt_build_requirements
 
-- name: Install requirements with apt
-  apt: >
-    name={{ item }} state=latest
+    - name: Install requirements with apt
+      apt: >
+        name={{ item }} state=latest
+      with_items: apt_requirements
   become: yes
-  with_items: apt_requirements
