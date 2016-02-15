@@ -1,14 +1,14 @@
 ---
 
-- name: Create system user
-  user: >
-    name={{ user }} shell=/bin/bash state=present
-  become: yes
+- block:
+    - name: Create system user
+      user: >
+        name={{ user }} shell=/bin/bash state=present
 
-- name: Add user to password-less sudoers
-  template: >
-    src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
-    owner=root group=root mode=440 validate='visudo -cf %s'
+    - name: Add user to password-less sudoers
+      template: >
+        src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
+        owner=root group=root mode=440 validate='visudo -cf %s'
   become: yes
 
 - name: Enable password-less ssh
