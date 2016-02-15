@@ -1,39 +1,35 @@
 ---
 
-- name: Create HAProxy directories
-  file: >
-    name={{ item }} mode=755 state=directory
-  become: yes
-  with_items:
-    - /etc/haproxy/
-    - /var/lib/haproxy/
+- block:
+    - name: Create HAProxy directories
+      file: >
+        name={{ item }} mode=755 state=directory
+      with_items:
+        - /etc/haproxy/
+        - /var/lib/haproxy/
 
-- name: Create HAProxy user
-  user: >
-    name=haproxy shell=/bin/false system=yes state=present
-  become: yes
+    - name: Create HAProxy user
+      user: >
+        name=haproxy shell=/bin/false system=yes state=present
 
-- name: Configure HAProxy
-  template: >
-    src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg mode=644
-  notify: reload haproxy
-  become: yes
+    - name: Configure HAProxy
+      template: >
+        src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg mode=644
+      notify: reload haproxy
 
-- name: Set non-local bind kernel parameter
-  sysctl: >
-    name=net.ipv4.ip_nonlocal_bind value=1 ignoreerrors=yes state=present
-  become: yes
+    - name: Set non-local bind kernel parameter
+      sysctl: >
+        name=net.ipv4.ip_nonlocal_bind value=1 ignoreerrors=yes state=present
 
-- name: Install HAProxy service
-  template: >
-    src={{ item.src }}.j2 dest=/etc/{{ item.src }}/haproxy mode={{ item.mode }}
-  notify: restart haproxy
-  become: yes
-  with_items:
-    - {src: default, mode: 644}
-    - {src: init.d,  mode: 755}
+    - name: Install HAProxy service
+      template: >
+        src={{ item.src }}.j2 dest=/etc/{{ item.src }}/haproxy mode={{ item.mode }}
+      notify: restart haproxy
+      with_items:
+        - {src: default, mode: 644}
+        - {src: init.d,  mode: 755}
 
-- name: Copy default HAProxy error pages
-  copy: >
-    src=errors/ dest=/etc/haproxy/errors/
+    - name: Copy default HAProxy error pages
+      copy: >
+        src=errors/ dest=/etc/haproxy/errors/
   become: yes
