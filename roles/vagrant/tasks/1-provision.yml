@@ -17,20 +17,20 @@
     vagrant box update
   args:
     chdir: /tmp
-  when: vagrant_outdated_result|changed
+  when: vagrant_outdated_result|changed and false
 
-- name: Update machines IDs
-  script: >
-    update-machine-id /tmp {{ item.key }} {{ item.value.provider }}
-  changed_when: vagrant_update_ids_result.stdout|length > 0
-  register: vagrant_update_ids_result
-  with_dict: vagrant_machines
+- block:
+    - name: Update machines IDs
+      script: >
+        update-machine-id /tmp {{ item.key }} {{ item.value.provider }}
+      changed_when: vagrant_update_ids_result.stdout|length > 0
+      register: vagrant_update_ids_result
 
-- name: Provision machines
-  command: >
-    vagrant up --provider {{ item.value.provider }} {{ item.key }}
-  args:
-    chdir: /tmp
-  changed_when: "'already running' not in vagrant_up_result.stdout"
-  register: vagrant_up_result
+    - name: Provision machines
+      command: >
+        vagrant up --provider {{ item.value.provider }} {{ item.key }}
+      args:
+        chdir: /tmp
+      changed_when: "'already running' not in vagrant_up_result.stdout"
+      register: vagrant_up_result
   with_dict: vagrant_machines
