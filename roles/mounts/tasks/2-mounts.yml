@@ -1,53 +1,51 @@
 ---
 
-- name: Create mount directories
-  file: >
-    name={{ item.value.directory }}
-    owner={{ item.value.user|default(user) }}
-    group={{ item.value.group|default(group) }}
-    mode=755
-    state=directory
-  become: yes
-  with_dict: mounts
+- block:
+    - name: Create mount directories
+      file: >
+        name={{ item.value.directory }}
+        owner={{ item.value.user|default(user) }}
+        group={{ item.value.group|default(group) }}
+        mode=755
+        state=directory
+      with_dict: mounts
 
-- name: Mount the shared directories
-  mount: >
-    fstype={{ item.value.fstype }}
-    name={{ item.value.directory }}
-    opts="{{ item.value.options }}{% if item.value.fstype != 'nfs' %},uid={{ user_uid }},gid={{ user_gid }}{% endif %}"
-    src={{ item.value.source }}
-    state=mounted
-  become: yes
-  when: item.value.source|length > 0
-  with_dict: mounts
+    - name: Mount the shared directories
+      mount: >
+        fstype={{ item.value.fstype }}
+        name={{ item.value.directory }}
+        opts="{{ item.value.options }}{% if item.value.fstype != 'nfs' %},uid={{ user_uid }},gid={{ user_gid }}{% endif %}"
+        src={{ item.value.source }}
+        state=mounted
+      when: item.value.source|length > 0
+      with_dict: mounts
 
-- name: Unmount the shared directories
-  mount: >
-    fstype={{ item.value.fstype }}
-    name={{ item.value.directory }}
-    opts="{{ item.value.options }},uid={{ user_uid }},gid={{ user_gid }}"
-    src={{ item.value.source }}
-    state=unmounted
-  become: yes
-  when: not item.value.source|length > 0
-  with_dict: mounts
+    - name: Unmount the shared directories
+      mount: >
+        fstype={{ item.value.fstype }}
+        name={{ item.value.directory }}
+        opts="{{ item.value.options }},uid={{ user_uid }},gid={{ user_gid }}"
+        src={{ item.value.source }}
+        state=unmounted
+      when: not item.value.source|length > 0
+      with_dict: mounts
 
-- name: Check root can write and chown
-  file: >
-    name={{ item.value.directory }}/{{ inventory_hostname }} owner={{ user }} group={{ group }} mode=755 state=directory
-  become: yes
-  when: item.value.check|bool
-  with_dict: mounts
+    - name: Check root can write and chown
+      file: >
+        name={{ item.value.directory }}/{{ inventory_hostname }} owner={{ user }} group={{ group }} mode=755 state=directory
+      when: item.value.check|bool
+      with_dict: mounts
 
-- name: Check user can write
-  file: >
-    name={{ item.value.directory }}/{{ inventory_hostname }}/{{ user }} state=directory
-  when: item.value.check|bool
-  with_dict: mounts
+    - name: Check user can write
+      file: >
+        name={{ item.value.directory }}/{{ inventory_hostname }}/{{ user }} state=directory
+      become: no
+      when: item.value.check|bool
+      with_dict: mounts
 
-- name: Final cleanup
-  file: >
-    name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
+    - name: Final cleanup
+      file: >
+        name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
+      when: item.value.check|bool
+      with_dict: mounts
   become: yes
-  when: item.value.check|bool
-  with_dict: mounts
