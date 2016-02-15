@@ -1,13 +1,13 @@
 ---
 
-- name: Start uWSGI service
-  service: >
-    name=uwsgi state=started enabled=yes
-  register: uwsgi_start_result
-  become: yes
+- block:
+    - name: Start uWSGI service
+      service: >
+        name=uwsgi state=started enabled=yes
+      register: uwsgi_start_result
 
-- name: Restart uWSGI service
-  service: >
-    name=uwsgi state=restarted enabled=yes
+    - name: Restart uWSGI service
+      service: >
+        name=uwsgi state=restarted enabled=yes
+      when: uwsgi_start_result|failed
   become: yes
-  when: uwsgi_start_result|failed
