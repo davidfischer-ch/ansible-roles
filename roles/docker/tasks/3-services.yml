@@ -1,15 +1,15 @@
 ---
 
-- name: Start Docker service
-  service: >
-    name=docker state=started enabled=yes
-  become: yes
-  when: docker_install_engine|bool
+- block:
+    - name: Start Docker service
+      service: >
+        name=docker state=started enabled=yes
+      become: yes
 
-- name: Verify Docker is installed correctly
-  command: >
-    docker run hello-world
-  changed_when: no
+    - name: Verify Docker is installed correctly
+      command: >
+        docker run hello-world
+      changed_when: no
   when: docker_install_engine|bool
 
 # https://github.com/docker/distribution/blob/master/docs/deploying.md

@@ -1,18 +1,18 @@
 ---
 
-- name: Install Docker Machine
-  get_url: >
-    url=https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64
-    dest="{{ docker_machine_path }}" mode=755 sha256sum={{ docker_machine_checksum }}
-  become: yes
-  when: docker_install_machine|bool
+- block:
+    - name: Install Docker Machine
+      get_url: >
+        url=https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64
+        dest="{{ docker_machine_path }}" mode=755 sha256sum={{ docker_machine_checksum }}
+      become: yes
 
-- name: Provision Docker Machines
-  command: >
-    docker-machine create -d {{ item.value.provider }} {{ item.key }} {{ item.extra|default('') }}
-  tags: provision
+    - name: Provision Docker Machines
+      command: >
+        docker-machine create -d {{ item.value.provider }} {{ item.key }} {{ item.extra|default('') }}
+      tags: provision
+      with_dict: docker_machines
   when: docker_install_machine|bool
-  with_dict: docker_machines
 
 - name: Install Docker Compose
   get_url: >
@@ -21,24 +21,21 @@
   become: yes
   when: docker_install_compose|bool
 
-- name: Register Docker apt key
-  apt_key: >
-    keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
-  become: yes
-  when: docker_install_engine|bool
+- block:
+    - name: Register Docker apt key
+      apt_key: >
+        keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
 
-- name: Register Docker apt repository
-  apt_repository: >
-    repo="{{ docker_apt_repository }}" update_cache=yes state=present
-  become: yes
-  when: docker_install_engine|bool
+    - name: Register Docker apt repository
+      apt_repository: >
+        repo="{{ docker_apt_repository }}" update_cache=yes state=present
 
-- name: Install Docker Engine with apt
-  apt: >
-    name={{ item }} state=latest
+    - name: Install Docker Engine with apt
+      apt: >
+        name={{ item }} state=latest
+      with_items: docker_packages
   become: yes
   when: docker_install_engine|bool
-  with_items: docker_packages
 
 - name: Install Docker Engine with pip
   pip: >
