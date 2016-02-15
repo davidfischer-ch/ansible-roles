@@ -15,8 +15,8 @@
         apt-get -y dist-upgrade &&
         apt-get -y autoremove &&
         apt-get -y autoclean
-      async: 600
-      poll: 5
+      async: "{{ (ansible_connection == 'local')|ternary(omit, 600) }}"
+      poll: "{{ (ansible_connection == 'local')|ternary(omit, 5) }}"
       when: upgrade_packages|bool
 
     - name: Install extra Debian packages
