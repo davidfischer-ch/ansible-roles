@@ -17,6 +17,6 @@
   file: >
     src={{ tools_src_directory }}/drush-{{ drush_version }}.phar dest={{ drush_path }} force=yes state=link
 
-- name: Enrich the bash startup file with completion and aliases
-  command: >
-    drush init --bg
+# - name: Enrich the bash startup file with completion and aliases
+#   command: >
+#     yes | drush init --bg
