@@ -1,0 +1,8 @@
+# http://docs.drush.org/en/master/install/#install-a-site-local-drush
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: packages_has_run is undefined
+
+- set_fact: packages_has_run=yes

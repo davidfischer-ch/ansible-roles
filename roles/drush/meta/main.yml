@@ -1,0 +1,9 @@
+---
+
+dependencies:
+  - role: github
+    when: drush_has_run is undefined
+
+  - role: requirements
+    apt_requirements: "{{ php_packages }}"
+    when: drush_has_run is undefined
