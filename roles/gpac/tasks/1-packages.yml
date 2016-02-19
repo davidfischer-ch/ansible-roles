@@ -43,10 +43,10 @@
 #   C   compiler: gcc
 #   C++ compiler: g++
 #   make: make
-#   CPU: x86_64 (depends of your CPU)
+#   CPU: x86_64
 #   Big Endian: no
 #
-#   ** GPAC Core Configuration **
+#   ** GPAC 0.6.0 rev0-gb5e51f8-HEAD Core Configuration **
 #   debug version: no
 #   GProf enabled: no
 #   Static build enabled: no
@@ -67,7 +67,7 @@
 #   SDL Support: no
 #   OpenGL support: no
 #   TinyGL support: no
-#   OpenSSL support: no
+#   OpenSSL support: yes
 #   Mozilla XUL/GECKO support: no
 #   DVB Support: yes
 #   XMLRPC Support: no
@@ -92,3 +92,8 @@
 #   OpenSVCDecoder: no
 #   OpenHEVCDecoder: no
 #   Freenect: no
+#
+#   Creating config.mak
+#   config.h is unchanged
+#   Check config.log for detection failures
+#   Done - type 'make help' for make info, 'make' to build

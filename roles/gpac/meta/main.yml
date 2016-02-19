@@ -30,6 +30,8 @@ dependencies:
       - liba52-0.7.4-dev
       - libopenjpeg5  # OpenJPEG, version 1.3
       - libopenjpeg-dev
+      - libssl-dev
+      - openssl
       # OpenSVCDecoder, version 1.3
       - zlib1g
       - zlib1g-dev
