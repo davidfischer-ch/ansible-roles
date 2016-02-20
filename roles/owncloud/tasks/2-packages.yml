@@ -3,9 +3,7 @@
 - block:
     - name: Enable ownCloud apt repository
       template:
-        src=owncloud.list
-        dest=/etc/apt/sources.list.d/owncloud.list
-        mode=644
+        src=owncloud.list dest=/etc/apt/sources.list.d/owncloud.list mode=644
       register: owncloud_repo_result
 
     - name: Update Debian packages cache

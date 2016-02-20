@@ -24,19 +24,16 @@
 
     - name: Configure ownCloud
       template: >
-        src=config.php.j2
-        dest=/var/www/owncloud/config/config.php
-        owner=www-data
-        group=www-data
-        mode=644
+        src=config.php.j2 dest=/var/www/owncloud/config/config.php owner=www-data group=www-data mode=644
       when: owncloud_config.stat.md5 is undefined
 
     - name: Configure ownCloud site
       template: >
-        src=owncloud.conf.j2
-        dest=/etc/apache2/conf-available/owncloud.conf
-        owner=www-data
-        group=www-data
-        mode=644
+        src=owncloud.conf.j2 dest=/etc/apache2/conf-available/owncloud.conf owner=root group=root mode=644
+      notify: reload apache2
+
+    - name: Enable ownCloud site
+      file: >
+        src=/etc/apache2/conf-available/owncloud.conf dest=/etc/apache2/conf-enabled/owncloud.conf state=link
       notify: reload apache2
   become: yes
