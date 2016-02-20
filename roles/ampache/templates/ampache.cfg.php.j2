@@ -963,7 +963,7 @@ encode_ss_duration = "-t %DURATION%"
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
 ;Default: false
-;force_ssl = "true"
+force_ssl = "{{ ampache_force_ssl|bool|ternary('true', 'false') }}"
 
 
 ;#########################################################

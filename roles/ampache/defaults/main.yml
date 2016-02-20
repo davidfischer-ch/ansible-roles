@@ -1,3 +1,4 @@
+ampache_force_ssl: no
 ampache_interface: null
 ampache_memory_cache: yes
 ampache_metadata_directory: /var/ampache/metadata
