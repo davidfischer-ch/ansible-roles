@@ -1,0 +1,8 @@
+# https://getcomposer.org/download/
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: composer_has_run is undefined
+
+- set_fact: composer_has_run=yes

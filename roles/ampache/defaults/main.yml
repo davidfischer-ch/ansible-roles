@@ -1,0 +1,16 @@
+ampache_interface: null
+ampache_memory_cache: yes
+ampache_metadata_directory: /var/ampache/metadata
+ampache_port: 80
+ampache_lastfm_api_key: ''
+ampache_lastfm_api_secret: ''
+ampache_lastfm_show_converts: yes
+ampache_lastfm_show_similar: yes
+ampache_ufw_rules:
+  - direction: in
+    interface: "{{ ampache_interface or omit }}"
+    port: "{{ ampache_port }}"
+    proto: tcp
+    rule: allow
+ampache_version: 3.8.2
+tools_src_directory: /usr/local/src

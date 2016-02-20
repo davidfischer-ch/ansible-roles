@@ -87,6 +87,13 @@
     - application-step
 
 - hosts:
+    - ampache
+  roles:
+    - ampache
+  tags:
+    - ampache-step
+
+- hosts:
     - owncloud
   roles:
     - owncloud

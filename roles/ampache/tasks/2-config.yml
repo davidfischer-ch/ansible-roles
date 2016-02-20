@@ -1,0 +1,19 @@
+---
+
+- block:
+    - name: Enable Apache 2 modules
+      apache2_module: >
+        name={{ item }} state=present
+      with_items:
+        - ssl
+        - rewrite
+
+    - name: Configure Ampache
+      template: >
+        src=ampache.cfg.php.j2 dest=/usr/share/ampache/www2/config/ampache.cfg.php owner=root group=root mode=644
+
+    - name: Configure Ampache site
+      template: >
+        src=ampache.conf.j2 dest=/etc/apache2/conf-available/ampache.conf owner=root group=root mode=644
+      notify: reload apache2
+  become: yes

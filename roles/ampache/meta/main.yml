@@ -1,0 +1,23 @@
+---
+
+dependencies:
+  - role: composer
+    when: ampache_has_run is undefined
+
+  - role: github
+    when: ampache_has_run is undefined
+
+  - role: mysql
+    when: ampache_has_run is undefined
+
+  - role: openssl
+    when: ampache_has_run is undefined
+
+  - role: ufw
+    ufw_rules: "{{ ampache_ufw_rules }}"
+    when: ampache_has_run is undefined and ampache_ufw_rules
+
+  - role: requirements
+    apt_requirements:
+      - python-mysqldb
+    when: ampache_has_run is undefined

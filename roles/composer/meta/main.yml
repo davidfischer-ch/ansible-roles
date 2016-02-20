@@ -1,0 +1,8 @@
+---
+
+dependencies:
+  - role: github
+    when: composer_has_run is undefined
+
+  - role: php
+    when: composer_has_run is undefined

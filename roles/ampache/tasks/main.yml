@@ -1,0 +1,19 @@
+# Install and configure Ampache
+
+# https://github.com/ampache/ampache/wiki/Installation
+
+---
+
+- include: 1-packages.yml
+  tags: packages
+  when: ampache_has_run is undefined
+
+- include: 2-config.yml
+  tags: config
+  when: ampache_has_run is undefined
+
+- include: 3-database.yml
+  tags: database
+  when: ampache_has_run is undefined
+
+- set_fact: ampache_has_run=yes

@@ -1,0 +1,11 @@
+---
+
+- block:
+    - name: Setup Ampache MySQL database
+      mysql_db: >
+        name=ampache state=present
+
+    - name: Setup Ampache MySQL user
+      mysql_user: >
+        name=ampache host=localhost password="{{ ampache_mysql_password }}" priv=ampache.*:ALL state=present
+  become: yes
