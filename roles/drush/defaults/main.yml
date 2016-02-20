@@ -1,5 +1,3 @@
 drush_path: /usr/local/bin/drush
 drush_version: 8.0.3
-php_packages:
-  - php5
 tools_src_directory: /usr/local/src

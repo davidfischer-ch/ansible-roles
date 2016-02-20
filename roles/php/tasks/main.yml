@@ -1,0 +1,4 @@
+# Install and configure PHP
+---
+
+- set_fact: php_has_run=yes
