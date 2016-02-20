@@ -55,7 +55,7 @@
           changed_when: "postgresql_result.rc == 0"
           failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
           register: postgresql_result
-          when: 'postgis' in item.value.extensions
+          when: "'postgis' in item.value.extensions"
           with_dict: postgresql_databases
 
         - name: Enable geolocation extensions to PostgreSQL databases (2/2)
@@ -64,7 +64,7 @@
           changed_when: "postgresql_result.rc == 0"
           failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
           register: postgresql_result
-          when: 'postgis' in item.value.extensions
+          when: "'postgis' in item.value.extensions"
           with_dict: postgresql_databases
       become_user: postgres
       tags: flush_extra
