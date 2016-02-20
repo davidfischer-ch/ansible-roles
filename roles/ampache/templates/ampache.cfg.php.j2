@@ -437,7 +437,7 @@ memory_cache = "{{ ampache_memory_cache|bool|ternary('true', 'false') }}"
 ; This define a local metadata directory with write access where to store
 ; heavy data if enabled (album arts, ...)
 ; DEFAULT: none
-{% if ampache_metadata_directory %}
+{% if ampache_metadata_directory|length > 0 %}
 local_metadata_dir = "{{ ampache_metadata_directory }}"
 {% endif %}
 
