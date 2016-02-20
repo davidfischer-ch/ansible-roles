@@ -7,7 +7,7 @@
   failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
   register: postgresql_result
   become: yes
-  sudo_user: postgres
+  become_user: postgres
   tags: flush_extra
   when: item.value.extensions is defined and 'hstore' in item.value.extensions
   with_dict: postgresql_databases

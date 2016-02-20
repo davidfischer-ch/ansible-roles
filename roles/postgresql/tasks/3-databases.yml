@@ -23,7 +23,7 @@
       when: not 'template' in item.value.name
       with_dict: postgresql_databases
   become: yes
-  sudo_user: postgres
+  become_user: postgres
 
 - include: 4-hstore.yml
 - include: 5-postgis.yml
@@ -43,4 +43,4 @@
       when: not 'template' in item.value.name
       with_dict: postgresql_databases
   become: yes
-  sudo_user: postgres
+  become_user: postgres
