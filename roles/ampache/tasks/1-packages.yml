@@ -23,8 +23,8 @@
 
     - name: Install Ampache from source
       command: >
-        rsync -ah -lH --delete {{ tools_src_directory }}/ampache/ /usr/share/ampache/www2/
-        --exclude=.git --exclude=lib/components --exclude=lib/vendor --exclude=config/ampache.cfg.php
+        rsync -ah -lH --delete {{ tools_src_directory }}/ampache/ /usr/share/ampache/www2/ --exclude=.git
+        --exclude=lib/components --exclude=lib/vendor --exclude=config/ampache.cfg.php --exclude=rest/.htaccess
       changed_when: ampache_install_result.stdout|length > 1
       register: ampache_install_result
 

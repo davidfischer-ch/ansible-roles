@@ -31,12 +31,12 @@ config_version = 33
 ; if it is located at http://localhost/music you need to
 ; set web_path to /music
 ; DEFAULT: ""
-web_path = "/ampache"
+web_path = "{{ ampache_web_path }}"
 
 ; The local http url of your server.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
-;local_web_path = "http://localhost/ampache"
+;local_web_path = "http://localhost{{ ampache_web_path }}"
 
 
 ;#########################################################

@@ -15,7 +15,11 @@
 
     - name: Configure Ampache
       template: >
-        src=ampache.cfg.php.j2 dest=/usr/share/ampache/www2/config/ampache.cfg.php owner=root group=root mode=644
+        src={{ item.name }}.j2 dest=/usr/share/ampache/www2/{{ item.path }} owner=root group=root mode=644
+      notify: reload apache2
+      with_items:
+        - { name: 'ampache.cfg.php', path: 'config/ampache.cfg.php' }
+        - { name: 'rest-htaccess',   path: 'rest/.htaccess' }
 
     - name: Configure Ampache site
       template: >
