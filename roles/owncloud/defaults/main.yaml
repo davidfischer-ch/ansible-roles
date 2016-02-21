@@ -1,6 +1,14 @@
 owncloud_data_directory: /var/www/owncloud/data
 owncloud_default_language: fr
 owncloud_interface: null
+owncloud_php_options:
+  # https://github.com/owncloud/documentation/wiki/Uploading-files-up-to-16GB
+  max_execution_time: 30
+  memory_limit: 128M
+  output_buffering: 'Off'
+  post_max_size: 65536M
+  upload_max_filesize: 64G
+  # ;upload_tmp_dir = /var/owncloud/bla-bla
 owncloud_port: 80
 owncloud_ufw_rules:
   - direction: in

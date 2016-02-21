@@ -1,4 +1,8 @@
 # Install and configure PHP
 ---
 
+- include: 1-config.yml
+  tags: config
+  # always run to allow other roles to configure php
+
 - set_fact: php_has_run=yes
