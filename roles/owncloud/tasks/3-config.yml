@@ -12,20 +12,9 @@
       lineinfile: >
         dest=/etc/apache2/apache2.conf regexp=^HostnameLookups line='HostnameLookups On'
 
-    - name: Compute ownCloud configuration checksum
-      stat: >
-        path=/var/www/owncloud/config/config.php get_md5=yes
-      register: owncloud_config
-
-    - name: Backup ownCloud configuration
-      command: >
-        cp -a /var/www/owncloud/config/config.php /var/www/owncloud/config/config.{{ owncloud_config.stat.md5 }}.php
-      when: owncloud_config.stat.md5 is defined
-
     - name: Configure ownCloud
       template: >
-        src=config.php.j2 dest=/var/www/owncloud/config/config.php owner=www-data group=www-data mode=644
-      when: owncloud_config.stat.md5 is undefined
+        src=config.php.j2 dest=/var/www/owncloud/config/config.php backup=yes owner=www-data group=www-data mode=640
 
     - name: Configure ownCloud site
       template: >

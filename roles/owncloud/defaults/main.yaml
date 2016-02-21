@@ -1,6 +1,10 @@
 owncloud_data_directory: /var/www/owncloud/data
 owncloud_default_language: fr
 owncloud_interface: null
+owncloud_log_level: 2
+owncloud_log_file: owncloud.log
+owncloud_log_rotate_size: 104857600
+owncloud_log_type: syslog
 owncloud_php_options:
   # https://github.com/owncloud/documentation/wiki/Uploading-files-up-to-16GB
   max_execution_time: 30
@@ -10,6 +14,10 @@ owncloud_php_options:
   upload_max_filesize: 64G
   # ;upload_tmp_dir = /var/owncloud/bla-bla
 owncloud_port: 80
+owncloud_preview_max_scale_factor: 5
+owncloud_preview_max_x: null
+owncloud_preview_max_y: null
+owncloud_syslog_tag: ownCloud
 owncloud_ufw_rules:
   - direction: in
     interface: "{{ owncloud_interface or omit }}"
