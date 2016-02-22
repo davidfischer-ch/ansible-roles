@@ -9,21 +9,21 @@
     vagrant box outdated
   args:
     chdir: /tmp
-  changed_when: "'to update' in vagrant_outdated_result.stdout"
-  register: vagrant_outdated_result
+  changed_when: "'to update' in _outdated.stdout"
+  register: _outdated
 
 - name: Update machines
   command: >
     vagrant box update
   args:
     chdir: /tmp
-  when: vagrant_outdated_result|changed and false
+  when: _outdated|changed
 
 - name: Update machines IDs
   script: >
     update-machine-id /tmp {{ item.key }} {{ item.value.provider }}
-  changed_when: vagrant_update_ids_result.stdout|length > 0
-  register: vagrant_update_ids_result
+  changed_when: (_ids.stdout|from_json).new and (_ids.stdout|from_json).new != (_ids.stdout|from_json).old
+  register: _ids
   with_dict: vagrant_machines
 
 - name: Provision machines
