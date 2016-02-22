@@ -7,16 +7,25 @@
       register: extra_ppa_result
       with_items: extra_ppa_repos
 
+    - name: Fix any previously running Debian packages upgrade
+      command: >
+        dpkg --configure -a
+      changed_when: upgrade_fix_result.stdout|length > 0
+      register: upgrade_fix_result
+      when: upgrade_packages|bool
+
     - name: Upgrade the Debian packages
-      shell: >
-        sudo dpkg --configure -a &&
-        apt-get -y update &&
-        apt-get -y upgrade &&
-        apt-get -y dist-upgrade &&
-        apt-get -y autoremove &&
-        apt-get -y autoclean
+      apt: >
+        upgrade=full update_cache=yes cache_valid_time={{ upgrade_packages_cache_valid_time }}
       async: "{{ (ansible_connection == 'local')|ternary(omit, 600) }}"
       poll: "{{ (ansible_connection == 'local')|ternary(omit, 5) }}"
+      when: upgrade_packages|bool
+
+    - name: Cleanup the Debian packages
+      shell: >
+        apt-get -y autoremove && apt-get -y autoclean
+      changed_when: upgrade_cleanup_result.stdout_lines|length > 7
+      register: upgrade_cleanup_result
       when: upgrade_packages|bool
 
     - name: Install extra Debian packages

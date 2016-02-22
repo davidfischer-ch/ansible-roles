@@ -20,4 +20,5 @@ system_tools:
   - tree
 timezone: ''
 upgrade_packages: yes
+upgrade_packages_cache_valid_time: 3600
 vm_swappiness: 0
