@@ -6,7 +6,7 @@
 
     - name: Configure MySQL root password
       mysql_user: >
-        name=root host={{ item }} password={{ mysql_root_password }} state=present
+        name=root host={{ item }} password={{ mysql_root_password }} check_implicit_admin=yes state=present
       with_items:
         - "{{ ansible_hostname }}"
         - localhost
