@@ -2,7 +2,8 @@
 
 - block:
     - name: Copy user my.cnf file with root credentials
-      template: src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+      template: >
+        src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
 
     - name: Configure MySQL root password
       mysql_user: >
@@ -14,8 +15,10 @@
         - ::1
 
     - name: Remove anonymous MySQL user
-      mysql_user: name='' state=absent
+      mysql_user: >
+        name='' state=absent
 
     - name: Remove MySQL test database
-      mysql_db: name=test state=absent
+      mysql_db: >
+        name=test state=absent
   become: yes
