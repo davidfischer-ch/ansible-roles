@@ -1,3 +1,4 @@
+nginx_config_file: site.conf.j2
 nginx_interface: null
 nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
 nginx_pagespeed_configure: ''

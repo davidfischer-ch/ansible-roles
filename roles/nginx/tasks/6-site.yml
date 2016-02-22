@@ -3,7 +3,7 @@
 - block:
     - name: Install the Nginx site
       template: >
-        src=site.conf.j2 dest=/etc/nginx/sites-enabled/{{ site }}.conf mode=644
+        src={{ nginx_config_file }} dest=/etc/nginx/sites-enabled/{{ site }}.conf mode=644
       notify: reload nginx
 
     - name: Create the Nginx site logs directory
