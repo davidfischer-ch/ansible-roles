@@ -10,8 +10,8 @@
     name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
   become: yes
   with_items:
-    - "{{ tools_src_directory }}/ampache"
-    - "{{ tools_src_directory }}"
+    - '{{ tools_src_directory }}/ampache'
+    - '{{ tools_src_directory }}'
 
 - block:
     - name: Clone Ampache source code

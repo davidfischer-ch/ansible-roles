@@ -1,10 +1,14 @@
 ---
 
 - block:
-    - name: Create Ampache metadata directory
+    - name: Create Ampache directories
       file: >
-        name={{ ampache_metadata_directory }} owner=www-data group=www-data mode=755 recurse=no state=directory
-      when: ampache_metadata_directory|length > 0
+        name={{ item }} owner=www-data group=www-data mode=755 recurse=no state=directory
+      when: item|length > 0
+      with_items:
+        - '{{ ampache_log_directory }}'
+        - '{{ ampache_metadata_directory }}'
+        - '{{ ampache_tmp_directory }}'
 
     - name: Enable Apache 2 modules
       apache2_module: >

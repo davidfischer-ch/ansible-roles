@@ -1,12 +1,17 @@
 ampache_force_ssl: no
 ampache_interface: null
+ampache_log_directory: /var/log/ampache
 ampache_memory_cache: yes
 ampache_metadata_directory: /var/ampache/metadata
+ampache_mysql_host: localhost
+ampache_mysql_port: 3306
 ampache_port: 80
 ampache_lastfm_api_key: ''
 ampache_lastfm_api_secret: ''
 ampache_lastfm_show_converts: yes
 ampache_lastfm_show_similar: yes
+ampache_ssl: yes
+ampache_tmp_directory: /tmp/ampache
 ampache_ufw_rules:
   - direction: in
     interface: "{{ ampache_interface or omit }}"

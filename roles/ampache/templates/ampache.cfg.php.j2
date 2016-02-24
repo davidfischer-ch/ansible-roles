@@ -17,7 +17,7 @@ config_version = 33
 ; If not set, retrieved automatically from client request.
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
-;http_host = "localhost"
+http_host = "{{ domain }}"
 
 ; The public http port of your server.
 ; If not set, retrieved automatically from client request.
@@ -36,7 +36,7 @@ web_path = "{{ ampache_web_path }}"
 ; The local http url of your server.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
-;local_web_path = "http://localhost{{ ampache_web_path }}"
+local_web_path = "http{% if ampache_ssl|bool %}s{% endif %}://127.0.0.1:{{ ampache_port|int }}{{ ampache_web_path }}"
 
 
 ;#########################################################
@@ -46,11 +46,11 @@ web_path = "{{ ampache_web_path }}"
 ; Hostname of your database
 ; For socket authentication, set the path to socket file (e.g. /var/run/mysqld/mysqld.sock)
 ; DEFAULT: localhost
-database_hostname = localhost
+database_hostname = {{ ampache_mysql_host }}
 
 ; Port to use when connecting to your database
 ; DEFAULT: none
-;database_port = 3306
+database_port = {{ ampache_mysql_port|int }}
 
 ; Name of your ampache database
 ; DEFAULT: ampache
@@ -332,7 +332,9 @@ Allow Zip Types
 ; Ampache which directory to save the temporary file to. Do not put a
 ; trailing slash or this will not work.
 ; DEFAULT: false
-;tmp_dir_path = "false"
+{% if ampache_tmp_directory|length > 0 %}
+tmp_dir_path = "{{ ampache_tmp_directory }}"
+{% endif %}
 
 ; This setting throttles a persons downloading to the specified
 ; bytes per second. This is not a 100% guaranteed function, and
@@ -531,7 +533,9 @@ wanted_types = "album,official"
 
 ; EchoNest API key
 ; EchoNest provides several music services. Currently used for missing song 30 seconds preview.
-;echonest_api_key = ""
+{% if ampache_echonest_api_key|length > 0 %}
+echonest_api_key = "{{ ampache_echonest_api_key }}"
+{% endif %}
 
 ; Labels
 ; Use labels to browse artists per label membership.
@@ -601,7 +605,7 @@ show_footer_statistics = "true"
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
 ; DEFAULT: false
-;debug = "false"
+debug = "true"
 
 ; Debug Level
 ; This should always be set in conjunction with the
@@ -622,7 +626,9 @@ debug_level = 5
 ; the specified directory exists and your HTTP server has
 ; write access.
 ; DEFAULT: none
-;log_path = "/var/log/ampache"
+{% if ampache_log_directory|length > 0 %}
+log_path = "{{ ampache_log_directory }}"
+{% endif %}
 
 ; Log filename pattern
 ; This defines where the log file name pattern
