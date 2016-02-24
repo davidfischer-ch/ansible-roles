@@ -36,7 +36,7 @@ web_path = "{{ ampache_web_path }}"
 ; The local http url of your server.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
-local_web_path = "http{% if ampache_ssl|bool %}s{% endif %}://127.0.0.1:{{ ampache_port|int }}{{ ampache_web_path }}"
+local_web_path = "http{% if ampache_ssl|bool %}s{% endif %}://127.0.0.1{{ ampache_web_path }}"
 
 
 ;#########################################################
