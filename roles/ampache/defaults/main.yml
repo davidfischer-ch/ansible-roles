@@ -10,7 +10,7 @@ ampache_lastfm_api_key: ''
 ampache_lastfm_api_secret: ''
 ampache_lastfm_show_converts: yes
 ampache_lastfm_show_similar: yes
-ampache_ssl: yes
+ampache_ssl: no
 ampache_tmp_directory: /tmp/ampache
 ampache_ufw_rules:
   - direction: in
