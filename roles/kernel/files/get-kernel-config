@@ -16,7 +16,7 @@ Retrieve current kernel configuration (bis)::
     $ get-kernel-config $(uname -r)
 """
 
-import argparse, configparser, json, os, re, sys
+import argparse, configparser, errno, json, os, re, sys
 
 
 def main():
@@ -32,9 +32,15 @@ DRIVER_HAS_MODULE = 'm'
 
 
 def get_kernel_config(release=None):
-    with open('/boot/config-{0}'.format(release or os.uname().release)) as f:
-        config = configparser.ConfigParser()
-        config.read_string('[kernel]' + f.read())
+    # Using index on os.uname() to be retro-compatible with old python releases
+    try:
+        with open('/boot/config-{0}'.format(release or os.uname()[2])) as f:
+            config = configparser.ConfigParser()
+            config.read_string('[kernel]' + f.read())
+    except IOError as e:
+        if e.errno == errno.ENOENT:
+            return {}
+        raise
     return {CONFIG_PREFIX.sub('', k): v for k, v in config['kernel'].items()}
 
 if __name__ == '__main__':
