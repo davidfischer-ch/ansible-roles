@@ -4,8 +4,14 @@
     - name: Setup Ampache MySQL database
       mysql_db: >
         name=ampache state=present
+      register: ampache_database_result
 
     - name: Setup Ampache MySQL user
       mysql_user: >
         name=ampache host=localhost password="{{ ampache_mysql_password }}" priv=ampache.*:ALL state=present
+
+    - name: Initialize Ampache MySQL database
+      shell: >
+        mysql -uampache -p{{ ampache_mysql_password }} ampache < {{ ampache_web_directory }}/sql/ampache.sql
+      when: ampache_database_result|changed
   become: yes

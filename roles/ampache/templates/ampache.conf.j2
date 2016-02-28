@@ -1,6 +1,20 @@
-Alias /ampache /usr/share/ampache/www2
+<VirtualHost *:{{ ampache_port|int }}>
+    ServerName {{ domain }}
+    DocumentRoot {{ ampache_web_directory }}
 
-<Directory /usr/share/ampache/www2>
-    Options FollowSymLinks
-    AllowOverride All
-</Directory>
+    SSLEngine {{ ampache_ssl|bool|ternary('on', 'off') }}
+    {% if ampache_ssl|bool %}
+    SSLCertificateFile    {{ ssl_cert_crt_filename }}
+    SSLCertificateKeyFile {{ ssl_cert_key_filename }}
+    {% endif %}
+
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog  ${APACHE_LOG_DIR}/error.log
+
+    Alias {{ ampache_web_path }} {{ ampache_web_directory }}
+
+    <Directory {{ ampache_web_directory }}>
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+</VirtualHost>

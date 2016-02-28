@@ -25,8 +25,23 @@
         - { name: 'ampache.cfg.php', path: 'config/ampache.cfg.php' }
         - { name: 'rest-htaccess',   path: 'rest/.htaccess' }
 
+    - name: Remove Ampache default site
+      file: >
+        name=/etc/apache2/{{ item }}.conf state=absent
+      notify: reload apache2
+      with_items:
+        - conf-available/ampache
+        - conf-enabled/ampache
+        - sites-available/000-default
+        - sites-enabled/000-default
+
     - name: Configure Ampache site
       template: >
-        src=ampache.conf.j2 dest=/etc/apache2/conf-available/ampache.conf owner=root group=root mode=644
+        src=ampache.conf.j2 dest=/etc/apache2/sites-available/ampache.conf owner=root group=root mode=644
+      notify: reload apache2
+
+    - name: Enable Ampache site
+      file: >
+        src=/etc/apache2/sites-available/ampache.conf dest=/etc/apache2/sites-enabled/ampache.conf state=link
       notify: reload apache2
   become: yes

@@ -19,5 +19,6 @@ ampache_ufw_rules:
     proto: tcp
     rule: allow
 ampache_version: 3.8.2
+ampache_web_directory: /usr/share/ampache/www2
 ampache_web_path: /ampache
 tools_src_directory: /usr/local/src

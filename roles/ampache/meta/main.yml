@@ -11,7 +11,7 @@ dependencies:
     when: ampache_has_run is undefined
 
   - role: openssl
-    when: ampache_has_run is undefined
+    when: ampache_has_run is undefined and ampache_ssl|bool
 
   - role: ufw
     ufw_rules: "{{ ampache_ufw_rules }}"

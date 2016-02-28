@@ -32,7 +32,7 @@
       command: >
         composer install --prefer-source --no-interaction
       args:
-        chdir: /usr/share/ampache/www2
+        chdir: '{{ ampache_web_directory }}'
       changed_when: "'Nothing to install or update' not in ampache_install_result.stderr"
       register: ampache_install_result
   become: yes
