@@ -1,0 +1,27 @@
+---
+
+- hosts:
+    - all
+  roles:
+    - bootstrap
+    - fail2ban
+    - ufw
+    - miscellaneous
+    - kernel
+    - python
+  tags:
+    - bootstrap-step
+
+- hosts:
+    - ampache
+  roles:
+    - ampache
+  tags:
+    - ampache-step
+
+- hosts:
+    - owncloud
+  roles:
+    - owncloud
+  tags:
+    - owncloud-step
