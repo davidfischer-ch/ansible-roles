@@ -21,4 +21,6 @@ system_tools:
 timezone: ''
 upgrade_packages: yes
 upgrade_packages_cache_valid_time: 3600
+upgrade_packages_async: "{{ (ansible_connection == 'local')|ternary(omit, 600) }}"
+upgrade_packages_poll: "{{ (ansible_connection == 'local')|ternary(omit, 5) }}"
 vm_swappiness: 0
