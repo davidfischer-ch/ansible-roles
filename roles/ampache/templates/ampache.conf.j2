@@ -1,3 +1,5 @@
+Listen {{ ampache_port|int }}
+
 <VirtualHost *:{{ ampache_port|int }}>
     ServerName {{ domain }}
     DocumentRoot {{ ampache_web_directory }}

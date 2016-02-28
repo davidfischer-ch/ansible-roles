@@ -1,3 +1,5 @@
+Listen {{ owncloud_port|int }}
+
 <VirtualHost *:{{ owncloud_port|int }}>
     ServerName {{ domain }}
     DocumentRoot {{ owncloud_web_directory }}
