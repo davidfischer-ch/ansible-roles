@@ -1,16 +1,6 @@
 ---
 
-- hosts:
-    - all
-  roles:
-    - bootstrap
-    - fail2ban
-    - ufw
-    - miscellaneous
-    - kernel
-    - python
-  tags:
-    - bootstrap-step
+- include: common.yml
 
 - hosts:
     - ampache

@@ -1,16 +1,6 @@
 ---
 
-- hosts:
-    - all
-  roles:
-    - bootstrap
-    - fail2ban
-    - ufw
-    - miscellaneous
-    - kernel
-    - python
-  tags:
-    - bootstrap-step
+- include: common.yml
 
 - hosts:
     - newrelic
@@ -65,7 +55,6 @@
     - web
     - worker
   roles:
-    - mounts
     - <here-the-role-for-your-django-app>
   max_fail_percentage: 0
   tags:
