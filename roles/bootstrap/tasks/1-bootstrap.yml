@@ -9,6 +9,7 @@
       template: >
         src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
         owner=root group=root mode=440 validate='visudo -cf %s'
+      when: "user != 'root'"
   become: yes
 
 - name: Enable password-less ssh
