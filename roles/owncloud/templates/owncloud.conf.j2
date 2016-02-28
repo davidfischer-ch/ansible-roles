@@ -1,21 +1,31 @@
-Alias /owncloud "/var/www/owncloud/"
-<Directory "/var/www/owncloud">
-    Options +FollowSymLinks
-    AllowOverride All
+<VirtualHost *:{{ owncloud_port|int }}>
+    ServerName {{ domain }}
+    DocumentRoot {{ owncloud_web_directory }}
 
-    <IfModule mod_dav.c>
-      Dav off
-    </IfModule>
+    SSLEngine {{ owncloud_ssl|bool|ternary('on', 'off') }}
+    {% if owncloud_ssl|bool %}
+    SSLCertificateFile    {{ ssl_cert_crt_filename }}
+    SSLCertificateKeyFile {{ ssl_cert_key_filename }}
+    {% endif %}
 
-    SetEnv HOME /var/www/owncloud
-    SetEnv HTTP_HOME /var/www/owncloud
-</Directory>
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog  ${APACHE_LOG_DIR}/error.log
 
-<Directory "/var/www/owncloud/data/">
-  # just in case if .htaccess gets disabled
-  Require all denied
-</Directory>
+    Alias {{ owncloud_web_path }} {{ owncloud_web_directory }}
+    <Directory {{ owncloud_web_directory }}>
+        Options +FollowSymLinks
+        AllowOverride All
 
-SSLEngine on
-SSLCertificateFile {{ ssl_cert_crt_filename }}
-SSLCertificateKeyFile {{ ssl_cert_key_filename }}
+        <IfModule mod_dav.c>
+          Dav off
+        </IfModule>
+
+        SetEnv HOME      {{ owncloud_web_directory }}
+        SetEnv HTTP_HOME {{ owncloud_web_directory }}
+    </Directory>
+
+    <Directory {{ owncloud_data_directory }}>
+        # just in case if .htaccess gets disabled
+        Require all denied
+    </Directory>
+</VirtualHost>

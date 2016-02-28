@@ -597,7 +597,7 @@ $CONFIG = array(
  */
 'apps_paths' => array(
 	array(
-		'path'=> '/var/www/owncloud/apps',
+		'path'=> '{{ owncloud_web_directory }}/apps',
 		'url' => '/apps',
 		'writable' => true,
 	),
@@ -998,7 +998,7 @@ $CONFIG = array(
  * You will only likely need to change this if the main ownCloud directory
  * is not writeable by the web server in your configuration.
  */
-'assetdirectory' => '/var/www/owncloud',
+'assetdirectory' => '{{ owncloud_web_directory }}',
 
 /**
  * Where ``mount.json`` file should be stored, defaults to ``data/mount.json``

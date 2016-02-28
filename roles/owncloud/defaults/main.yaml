@@ -12,11 +12,12 @@ owncloud_php_options:
   output_buffering: 'Off'
   post_max_size: 65536M
   upload_max_filesize: 64G
-  # ;upload_tmp_dir = /var/owncloud/bla-bla
+  # ;upload_tmp_dir = {{ owncloud_web_directory }}/bla-bla
 owncloud_port: 80
 owncloud_preview_max_scale_factor: 5
 owncloud_preview_max_x: null
 owncloud_preview_max_y: null
+owncloud_ssl: no
 owncloud_syslog_tag: ownCloud
 owncloud_ufw_rules:
   - direction: in
@@ -24,3 +25,5 @@ owncloud_ufw_rules:
     port: "{{ owncloud_port }}"
     proto: tcp
     rule: allow
+owncloud_web_directory: /var/www/owncloud
+owncloud_web_path: /owncloud

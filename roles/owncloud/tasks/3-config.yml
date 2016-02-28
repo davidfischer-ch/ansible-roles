@@ -16,13 +16,23 @@
       template: >
         src=config.php.j2 dest=/var/www/owncloud/config/config.php backup=yes owner=www-data group=www-data mode=640
 
+    - name: Remove ownCloud default site
+      file: >
+        name=/etc/apache2/{{ item }}.conf state=absent
+      notify: reload apache2
+      with_items:
+        - conf-available/owncloud
+        - conf-enabled/owncloud
+        - sites-available/000-default
+        - sites-enabled/000-default
+
     - name: Configure ownCloud site
       template: >
-        src=owncloud.conf.j2 dest=/etc/apache2/conf-available/owncloud.conf owner=root group=root mode=644
+        src=owncloud.conf.j2 dest=/etc/apache2/sites-available/owncloud.conf owner=root group=root mode=644
       notify: reload apache2
 
     - name: Enable ownCloud site
       file: >
-        src=/etc/apache2/conf-available/owncloud.conf dest=/etc/apache2/conf-enabled/owncloud.conf state=link
+        src=/etc/apache2/sites-available/owncloud.conf dest=/etc/apache2/sites-enabled/owncloud.conf state=link
       notify: reload apache2
   become: yes

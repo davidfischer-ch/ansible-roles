@@ -5,7 +5,7 @@ dependencies:
     when: owncloud_has_run is undefined
 
   - role: openssl
-    when: owncloud_has_run is undefined
+    when: owncloud_has_run is undefined and owncloud_ssl|bool
 
   - role: php
     php_options: "{{ owncloud_php_options }}"
