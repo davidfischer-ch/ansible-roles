@@ -8,13 +8,14 @@
         group={{ item.value.group|default(group) }}
         mode=755
         state=directory
+      when: item.value.value.directory is defined
       with_dict: mounts
 
     - name: Mount the shared directories
       mount: >
         fstype={{ item.value.fstype }}
         name={{ item.value.directory }}
-        opts="{{ item.value.options }}{% if item.value.fstype != 'nfs' %},uid={{ user_uid }},gid={{ user_gid }}{% endif %}"
+        opts="{{ item.value.options }}"
         src={{ item.value.source }}
         state=mounted
       when: item.value.source|length > 0
@@ -24,7 +25,7 @@
       mount: >
         fstype={{ item.value.fstype }}
         name={{ item.value.directory }}
-        opts="{{ item.value.options }},uid={{ user_uid }},gid={{ user_gid }}"
+        opts="{{ item.value.options }}"
         src={{ item.value.source }}
         state=unmounted
       when: not item.value.source|length > 0
