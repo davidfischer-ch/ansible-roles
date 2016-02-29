@@ -52,8 +52,8 @@
         - name: Enable geolocation extensions to PostgreSQL databases (1/2)
           action: >
             command psql -d {{ item.value.name }} -c 'CREATE EXTENSION postgis;'
-          changed_when: "postgresql_result.rc == 0"
-          failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
+          changed_when: postgresql_result.rc == 0
+          failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
           register: postgresql_result
           when: "'postgis' in item.value.extensions|default([])"
           with_dict: postgresql_databases
@@ -61,8 +61,8 @@
         - name: Enable geolocation extensions to PostgreSQL databases (2/2)
           action: >
             command psql -d {{ item.value.name }} -c 'CREATE EXTENSION postgis_topology;'
-          changed_when: "postgresql_result.rc == 0"
-          failed_when: postgresql_result.rc != 0 and ("already exists" not in postgresql_result.stderr)
+          changed_when: postgresql_result.rc == 0
+          failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
           register: postgresql_result
           when: "'postgis' in item.value.extensions|default([])"
           with_dict: postgresql_databases
