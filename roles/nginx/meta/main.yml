@@ -18,7 +18,7 @@ dependencies:
     when: nginx_has_run is undefined
 
   - role: supervisor
-    when: nginx_has_run is undefined
+    when: nginx_has_run is undefined and nginx_daemon_mode == 'supervisor'
 
   - role: ufw
     ufw_rules: "{{ nginx_ufw_rules }}"

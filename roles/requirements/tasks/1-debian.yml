@@ -19,6 +19,8 @@
     - name: Install build requirements with apt
       apt: >
         name={{ item }} state=build-dep
+      changed_when: apt_build_dep_result.stdout_lines|length > 4
+      register: apt_build_dep_result
       with_items: '{{ apt_build_requirements }}'
 
     - name: Install requirements with apt
