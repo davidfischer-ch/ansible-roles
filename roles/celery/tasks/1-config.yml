@@ -7,7 +7,7 @@
         dest=/etc/supervisor/conf.d/{{ item.value.name }}.conf
         mode=644
       notify: restart celery
-      with_dict: celery_services
+      with_dict: '{{ celery_services }}'
 
     - name: Create our logs directory
       file: >
