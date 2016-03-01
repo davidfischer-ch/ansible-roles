@@ -4,7 +4,7 @@
   set_fact: postgis_enabled=yes
   tags: packages
   when: postgresql_has_run is undefined and 'postgis' in item.value.extensions
-  with_dict: postgresql_databases
+  with_dict: '{{ postgresql_databases }}'
 
 - block:
     - block:
@@ -56,7 +56,7 @@
           failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
           register: postgresql_result
           when: "'postgis' in item.value.extensions|default([])"
-          with_dict: postgresql_databases
+          with_dict: '{{ postgresql_databases }}'
 
         - name: Enable geolocation extensions to PostgreSQL databases (2/2)
           action: >
@@ -65,7 +65,7 @@
           failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
           register: postgresql_result
           when: "'postgis' in item.value.extensions|default([])"
-          with_dict: postgresql_databases
+          with_dict: '{{ postgresql_databases }}'
       become_user: postgres
       tags: flush_extra
   become: yes

@@ -9,5 +9,5 @@
 - name: Install vagrant plugins
   command: >
     vagrant plugin install vagrant-{{ item }}
-  with_items: vagrant_plugins
+  with_items: '{{ vagrant_plugins }}'
   when: item not in vagrant_plugin_result.stdout

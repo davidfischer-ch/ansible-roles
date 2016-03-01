@@ -15,4 +15,4 @@
 - name: Enable password-less ssh
   authorized_key: >
     user={{ user }} key="{{ lookup('file', item) }}"
-  with_items: ssh_authorized_keys
+  with_items: '{{ ssh_authorized_keys }}'

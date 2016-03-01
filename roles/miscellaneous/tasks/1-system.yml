@@ -5,7 +5,7 @@
       apt_repository: >
         repo={{ item }} state=present
       register: extra_ppa_result
-      with_items: extra_ppa_repos
+      with_items: '{{ extra_ppa_repos }}'
 
     - name: Fix any previously running Debian packages upgrade
       command: >
@@ -31,7 +31,7 @@
     - name: Install extra Debian packages
       apt: >
         name={{ item }} state=latest
-      with_items: extra_packages
+      with_items: '{{ extra_packages }}'
 
     - name: Set swappiness
       sysctl: >

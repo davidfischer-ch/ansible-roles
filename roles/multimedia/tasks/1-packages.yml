@@ -9,22 +9,22 @@
     - name: Install imaging packages
       apt: >
         name={{ item }} state=latest
-      with_items: imaging_packages
+      with_items: '{{ imaging_packages }}'
 
     - name: Install audio related packages
       apt: >
         name={{ item }} state=latest
-      with_items: audio_packages
+      with_items: '{{ audio_packages }}'
 
     - name: Install video related packages
       apt: >
         name={{ item }} state=latest
-      with_items: video_packages
+      with_items: '{{ video_packages }}'
 
     - name: Install media players packages
       apt: >
         name={{ item }} state=latest
-      with_items: media_player_packages
+      with_items: '{{ media_player_packages }}'
 
     - name: Install encrypted DVD playback packages
       apt: >

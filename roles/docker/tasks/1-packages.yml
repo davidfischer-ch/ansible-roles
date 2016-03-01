@@ -11,7 +11,7 @@
       command: >
         docker-machine create -d {{ item.value.provider }} {{ item.key }} {{ item.extra|default('') }}
       tags: provision
-      with_dict: docker_machines
+      with_dict: '{{ docker_machines }}'
   when: docker_install_machine|bool
 
 - name: Install Docker Compose
@@ -33,7 +33,7 @@
     - name: Install Docker Engine with apt
       apt: >
         name={{ item }} state=latest
-      with_items: docker_packages
+      with_items: '{{ docker_packages }}'
   become: yes
   when: docker_install_engine|bool
 
@@ -41,7 +41,7 @@
   pip: >
     name={{ item }} state=latest
   become: yes
-  with_items: docker_python_packages
+  with_items: '{{ docker_python_packages }}'
 
 # FIXME https://github.com/docker/compose/pull/2513#issuecomment-172494821 issue with non tty
 # - name: Check Docker Compose version

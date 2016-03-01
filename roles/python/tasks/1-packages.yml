@@ -4,13 +4,13 @@
     - name: Install building and development tools
       apt: >
         name={{ item }} state=latest
-      with_items: python_packages
+      with_items: '{{ python_packages }}'
 
     - name: Download pip bootstrap script
       get_url: >
         url=https://bootstrap.pypa.io{{ (item == '3.2')|ternary('/3.2', '') }}/get-pip.py
         dest=/tmp/get-pip-{{ item }}.py
-      with_items: python_versions
+      with_items: '{{ python_versions }}'
 
     - name: Install pip
       command: >
@@ -18,7 +18,7 @@
       changed_when: "'already up-to-date' not in get_pip_result.stdout|default('') and 'are using pip' not in get_pip_result.stderr|default('')"
       failed_when: "get_pip_result|failed and 'are using pip' not in get_pip_result.stderr|default('')"
       register: get_pip_result
-      with_items: python_versions
+      with_items: '{{ python_versions }}'
 
     - name: Set pip default version
       file: >
@@ -27,10 +27,10 @@
     - name: Install setuptools
       pip: >
         name=setuptools executable=pip{{ item[0] }}
-      with_items: python_versions
+      with_items: '{{ python_versions }}'
 
     - name: Install virtualenv
       pip: >
         name=virtualenv executable=pip{{ item[0] }} state=latest
-      with_items: python_versions
+      with_items: '{{ python_versions }}'
   become: yes

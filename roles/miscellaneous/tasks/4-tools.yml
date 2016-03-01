@@ -4,10 +4,10 @@
     - name: Install usefull system tools
       apt: >
         name={{ item }} state=latest
-      with_items: system_tools
+      with_items: '{{ system_tools }}'
 
     - name: Install building and development tools
       apt: >
         name={{ item }} state=latest
-      with_items: development_tools
+      with_items: '{{ development_tools }}'
   become: yes

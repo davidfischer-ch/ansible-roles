@@ -7,7 +7,7 @@
         dest=/etc/uwsgi/apps-available/{{ item.value.name }}.xml
         mode=644
       notify: reload uwsgi
-      with_dict: uwsgi_apps
+      with_dict: '{{ uwsgi_apps }}'
 
     - name: Enable the uWSGI applications
       file: >
@@ -15,5 +15,5 @@
         dest=/etc/uwsgi/apps-enabled/{{ item.value.name }}.xml
         state=link
       notify: reload uwsgi
-      with_dict: uwsgi_apps
+      with_dict: '{{ uwsgi_apps }}'
   become: yes

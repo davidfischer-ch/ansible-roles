@@ -6,14 +6,14 @@
         name={{ item.value.name }} state=absent
       tags: flush
       when: not 'template' in item.value.name
-      with_dict: postgresql_databases
+      with_dict: '{{ postgresql_databases }}'
 
     - name: Setup PostgreSQL users
       postgresql_user: >
         name={{ item.value.user }} password={{ item.value.password }} role_attr_flags=SUPERUSER,CREATEDB state=present
       tags: flush_extra
       when: not 'template' in item.value.name
-      with_dict: postgresql_databases
+      with_dict: '{{ postgresql_databases }}'
 
     - name: Setup PostgreSQL databases
       postgresql_db: >
@@ -21,7 +21,7 @@
         template={{ item.value.template|default('template1') }} state=present
       tags: flush_extra
       when: not 'template' in item.value.name
-      with_dict: postgresql_databases
+      with_dict: '{{ postgresql_databases }}'
   become: yes
   become_user: postgres
 
@@ -34,13 +34,13 @@
         name=test_{{ item.value.name }} state=absent
       tags: unit_test
       when: item.value.with_test|bool
-      with_dict: postgresql_databases
+      with_dict: '{{ postgresql_databases }}'
 
     - name: Allow PostgreSQL users to access PostgreSQL databases
       postgresql_privs: >
         db={{ item.value.name }} type=database priv=ALL role={{ item.value.user }} state=present
       tags: flush_extra
       when: not 'template' in item.value.name
-      with_dict: postgresql_databases
+      with_dict: '{{ postgresql_databases }}'
   become: yes
   become_user: postgres

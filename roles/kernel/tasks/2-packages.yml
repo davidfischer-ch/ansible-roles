@@ -4,4 +4,4 @@
   apt: >
     name={{ item }} state=latest
   become: yes
-  with_items: kernel_packages
+  with_items: '{{ kernel_packages }}'

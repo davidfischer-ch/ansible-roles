@@ -26,7 +26,7 @@
     (vagrant_ids_result.stdout|from_json).new and
     (vagrant_ids_result.stdout|from_json).new != (vagrant_ids_result.stdout|from_json).old
   register: vagrant_ids_result
-  with_dict: vagrant_machines
+  with_dict: '{{ vagrant_machines }}'
 
 - name: Provision machines
   command: >
@@ -35,4 +35,4 @@
     chdir: /tmp
   changed_when: "'already running' not in vagrant_up_result.stdout"
   register: vagrant_up_result
-  with_dict: vagrant_machines
+  with_dict: '{{ vagrant_machines }}'

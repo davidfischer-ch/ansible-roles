@@ -16,5 +16,5 @@
     - name: Install celery services
       supervisorctl: >
         name={{ item.value.name }} state=present
-      with_dict: celery_services
+      with_dict: '{{ celery_services }}'
   become: yes

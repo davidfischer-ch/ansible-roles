@@ -8,7 +8,7 @@
         docker pull {{ item }}
       changed_when: "'up to date' not in docker_pull_result.stdout"
       register: docker_pull_result
-      with_items: docker_images
+      with_items: '{{ docker_images }}'
 
     - name: Tag images to point to our registry
       command: >
@@ -16,14 +16,14 @@
       # changed_when: "'already set' not in docker_tag_result.stderr"
       # failed_when: docker_tag_result|failed and 'already set' not in docker_tag_result.stderr
       # register: docker_tag_result
-      with_items: docker_images
+      with_items: '{{ docker_images }}'
 
     - name: Push images into our registry
       command: >
         docker push localhost:5000/{{ item }}
       changed_when: "'successfully pushed' in docker_push_result.stdout"
       register: docker_push_result
-      with_items: docker_images
+      with_items: '{{ docker_images }}'
   when: docker_install_registry|bool
 
 # To stop your registry, you would:

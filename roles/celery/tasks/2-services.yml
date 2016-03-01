@@ -6,14 +6,14 @@
         name={{ item.value.name }} state=started
       ignore_errors: yes
       register: celery_start_result
-      with_dict: celery_services
+      with_dict: '{{ celery_services }}'
 
     - name: Restart celery services
       shell: >
         supervisorctl restart {{ item.value.name }} &
       tags: [services, update]
       when: celery_start_result|failed
-      with_dict: celery_services
+      with_dict: '{{ celery_services }}'
 
     - name: Wait until celery services are running
       shell: >
@@ -23,7 +23,7 @@
       register: celery_wait_result
       tags: [services, update]
       until: "'RUNNING' in celery_wait_result.stdout"
-      with_dict: celery_services
+      with_dict: '{{ celery_services }}'
 
     # - name: Restart celery services
     #   supervisorctl: >
@@ -32,5 +32,5 @@
     #   poll: 5
     #   tags: [services, update]
     #   when: celery_start_result|failed
-    #   with_dict: celery_services
+    #   with_dict: '{{ celery_services }}'
   become: yes

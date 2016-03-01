@@ -10,4 +10,4 @@
   become_user: postgres
   tags: flush_extra
   when: item.value.extensions is defined and 'hstore' in item.value.extensions
-  with_dict: postgresql_databases
+  with_dict: '{{ postgresql_databases }}'

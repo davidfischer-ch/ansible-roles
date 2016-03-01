@@ -24,4 +24,4 @@
     port: "{{ item.port|default(omit) }}"  # to_port
   notify: reload ufw
   become: yes
-  with_items: ufw_rules
+  with_items: '{{ ufw_rules }}'

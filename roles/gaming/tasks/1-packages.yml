@@ -3,5 +3,5 @@
 - name: Install gaming packages
   apt: >
     name={{ item }} state=latest
-  with_items: gaming_packages
+  with_items: '{{ gaming_packages }}'
   become: yes

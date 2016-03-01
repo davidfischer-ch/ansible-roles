@@ -9,12 +9,12 @@
     - name: Install devops packages
       apt: >
         name={{ item }} state=latest
-      with_items: devops_packages
+      with_items: '{{ devops_packages }}'
 
     - name: Install programming packages
       apt: >
         name={{ item }} state=latest
-      with_items: programming_packages
+      with_items: '{{ programming_packages }}'
 
     - block:
         - name: Download sublime text 3

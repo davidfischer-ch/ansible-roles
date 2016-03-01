@@ -24,18 +24,18 @@
     - name: Install desktop and office packages
       apt: >
         name={{ item }} state=latest
-      with_items: office_packages
+      with_items: '{{ office_packages }}'
 
     - name: Install Ubuntu desktop and office packages
       apt: >
         name={{ item }} state=latest
-      with_items: ubuntu_desktop_packages
+      with_items: '{{ ubuntu_desktop_packages }}'
       when: desktop_package == 'ubuntu-desktop'
 
     - name: Install system packages
       apt: >
         name={{ item }} state=latest
-      with_items: system_packages
+      with_items: '{{ system_packages }}'
 
     - name: Update apt-file cache
       command: >
@@ -52,25 +52,25 @@
     - name: Install files utilities packages
       apt: >
         name={{ item }} state=latest
-      with_items: file_utility_packages
+      with_items: '{{ file_utility_packages }}'
 
     - name: Install java packages
       apt: >
         name={{ item }} state=latest
-      with_items: java_packages
+      with_items: '{{ java_packages }}'
 
     - name: Install miscellaneous packages
       apt: >
         name={{ item }} state=latest
-      with_items: miscellaneous_packages
+      with_items: '{{ miscellaneous_packages }}'
 
     - name: Install virtualization packages
       apt: >
         name={{ item }} state=latest
-      with_items: virtualization_packages
+      with_items: '{{ virtualization_packages }}'
 
     - name: Install web packages
       apt: >
         name={{ item }} state=latest
-      with_items: web_packages
+      with_items: '{{ web_packages }}'
   become: yes
