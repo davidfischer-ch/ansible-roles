@@ -12,3 +12,10 @@
         name=nginx state=restarted
       when: nginx_start_result|failed
   become: yes
+  when: "nginx_daemon_mode == 'supervisor'"
+
+- name: Start Nginx service
+  service: >
+    name=nginx state=started enabled=yes
+  become: yes
+  when: "nginx_daemon_mode == 'systemv'"

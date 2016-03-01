@@ -18,12 +18,20 @@
         path=/etc/nginx/sites-enabled/default state=absent
       notify: reload nginx
 
+    - block:
+        - name: Configure Nginx service
+          template: >
+            src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
+          notify: restart nginx
+
+        - name: Install Nginx service
+          supervisorctl: >
+            name=nginx state=present
+      when: "nginx_daemon_mode == 'supervisor'"
+
     - name: Configure Nginx service
       template: >
-        src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
+        src=init.d.j2 dest=/etc/init.d/nginx mode=755
       notify: restart nginx
-
-    - name: Install Nginx service
-      supervisorctl: >
-        name=nginx state=present
+      when: "nginx_daemon_mode == 'systemv'"
   become: yes

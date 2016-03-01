@@ -2,6 +2,15 @@
 # https://blog.engineyard.com/2011/useful-rewrites-for-nginx
 ---
 
+- block:
+    - debug: >
+        var=nginx_daemon_mode
+
+    - assert:
+        that: "nginx_daemon_mode in ['supervisor', 'systemv']"
+  tags: always
+  when: nginx_has_run is undefined
+
 - include: 1-pagespeed.yml
   tags: packages
   when: nginx_has_run is undefined and nginx_pagespeed_enabled|bool

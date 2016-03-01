@@ -1,5 +1,5 @@
 
-daemon off;
+daemon {{ (nginx_daemon_mode == 'supervisor')|ternary('off', 'on') }};
 user {{ user }} {{ group }};
 worker_processes 4;
 pid /run/nginx.pid;
