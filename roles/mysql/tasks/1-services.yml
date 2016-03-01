@@ -1,6 +1,6 @@
 ---
 
-- name: Start MySQL service
-  shell: >
-    ls /dev/null
-  notify: start mysql
+- name: start MySQL service
+  service: >
+    name=mysql state=started enabled=yes
+  become: yes
