@@ -1,3 +1,18 @@
+nginx_build_flags:
+  - '--with-pcre-jit'
+  - '--with-ipv6'
+  - '--with-http_ssl_module'
+  - '--with-http_stub_status_module'
+  - '--with-http_realip_module'
+  - '--with-http_addition_module'
+  - '--with-http_dav_module'
+  - '--with-http_geoip_module'
+  - '--with-http_gzip_static_module'
+  - '--with-http_image_filter_module'
+  # - '--with-http_spdy_module'
+  - '--with-http_sub_module'
+  - '--with-http_xslt_module'
+  - '--with-http_auth_request_module'
 nginx_config_file: site.conf.j2
 nginx_interface: null
 nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
