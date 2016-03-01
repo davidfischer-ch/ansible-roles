@@ -1,1 +1,4 @@
 php_options: {}
+php_packages:
+  - php5
+php_version: 5

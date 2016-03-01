@@ -2,6 +2,6 @@
 
 - name: Configure PHP
   lineinfile: >
-    dest=/etc/php5/apache2/php.ini regexp='^;?{{ item.key }} =' line='{{ item.key }} = {{ item.value }}' state=present
+    dest=/etc/php{{ php_version }}/apache2/php.ini regexp='^;?{{ item.key }} =' line='{{ item.key }} = {{ item.value }}' state=present
   become: yes
   with_dict: '{{ php_options }}'
