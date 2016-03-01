@@ -1,6 +1,5 @@
 python_default_version: '2.7'
 python_pip_path: /usr/local/bin/pip
-python_get_pip_checksum: 85a499fbd52603045812df8ca1c0491483e5f28eca15a3b3025507a66f225acf  # 25/01/2016
 python_get_pip_options: ''
 python_packages:
   - bpython

@@ -8,11 +8,13 @@
 
     - name: Download pip bootstrap script
       get_url: >
-        url=https://bootstrap.pypa.io/get-pip.py dest=/tmp/get-pip.py sha256sum={{ python_get_pip_checksum }}
+        url=https://bootstrap.pypa.io{{ (item == '3.2')|ternary('/3.2', '') }}/get-pip.py
+        dest=/tmp/get-pip-{{ item }}.py
+      with_items: python_versions
 
     - name: Install pip
       command: >
-        python{{ item }} /tmp/get-pip.py {{ python_get_pip_options }} pip{{ python_pip_version }}
+        python{{ item }} /tmp/get-pip-{{ item }}.py {{ python_get_pip_options }} pip{{ python_pip_version }}
       changed_when: "'already up-to-date' not in get_pip_result.stdout|default('') and 'are using pip' not in get_pip_result.stderr|default('')"
       failed_when: "get_pip_result|failed and 'are using pip' not in get_pip_result.stderr|default('')"
       register: get_pip_result
