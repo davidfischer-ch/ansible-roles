@@ -21,21 +21,23 @@
     version={{ nginx_version }}
   notify: restart nginx
 
-- name: Clone Upload module source code
-  git: >
-    repo=https://github.com/vkholodkov/nginx-upload-module.git
-    dest={{ tools_src_directory }}/nginx-upload-module
-    force=yes
-    version={{ nginx_upload_module_version }}
-  notify: restart nginx
+- block:
+    - name: Clone Upload module source code
+      git: >
+        repo=https://github.com/vkholodkov/nginx-upload-module.git
+        dest={{ tools_src_directory }}/nginx-upload-module
+        force=yes
+        version={{ nginx_upload_module_version }}
+      notify: restart nginx
 
-- name: Clone Upload Progress module source code
-  git: >
-    repo=https://github.com/masterzen/nginx-upload-progress-module.git
-    dest={{ tools_src_directory }}/nginx-upload-progress-module
-    force=yes
-    version={{ nginx_upload_progress_module_version }}
-  notify: restart nginx
+    - name: Clone Upload Progress module source code
+      git: >
+        repo=https://github.com/masterzen/nginx-upload-progress-module.git
+        dest={{ tools_src_directory }}/nginx-upload-progress-module
+        force=yes
+        version={{ nginx_upload_progress_module_version }}
+      notify: restart nginx
+  when: nginx_upload_module_enabled|bool
 
 - name: Clone Zip module source code
   git: >
@@ -44,6 +46,7 @@
     force=yes
     version={{ nginx_zip_module_version }}
   notify: restart nginx
+  when: nginx_zip_module_enabled|bool
 
 - name: Configure Nginx build process
   command: >
@@ -73,9 +76,13 @@
       --with-http_sub_module
       --with-http_xslt_module
       --with-http_auth_request_module
+      {% if nginx_upload_module_enabled %}
       --add-module={{ tools_src_directory }}/nginx-upload-module
       --add-module={{ tools_src_directory }}/nginx-upload-progress-module
+      {% endif %}
+      {% if nginx_zip_module_enabled %}
       --add-module={{ tools_src_directory }}/nginx-zip-module
+      {% endif %}
       {{ nginx_pagespeed_configure }}
   args:
     chdir: "{{ tools_src_directory }}/nginx"

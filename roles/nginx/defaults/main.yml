@@ -2,6 +2,7 @@ nginx_config_file: site.conf.j2
 nginx_interface: null
 nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
 nginx_pagespeed_configure: ''
+nginx_pagespeed_enabled: no
 nginx_port: 80
 nginx_start_result: {}
 nginx_ufw_rules:
@@ -10,4 +11,6 @@ nginx_ufw_rules:
     port: "{{ nginx_port }}"
     proto: tcp
     rule: allow
+nginx_upload_module_enabled: no
+nginx_zip_module_enabled: no
 tools_src_directory: /usr/local/src
