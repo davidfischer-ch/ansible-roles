@@ -9,8 +9,8 @@
     - name: Create the Nginx site logs directory
       file: >
         name=/var/log/nginx/{{ site }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
-  become: yes
 
-- name: Check Nginx config
-  command: >
-    nginx -t
+    - name: Check Nginx config
+      command: >
+        nginx -t
+  become: yes
