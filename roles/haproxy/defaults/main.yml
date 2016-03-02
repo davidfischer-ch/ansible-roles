@@ -11,7 +11,7 @@ haproxy_http_port: 80
 haproxy_https_port: 443
 haproxy_retries: 3
 haproxy_ssl_cert: ''
-haproxy_stats_enabled: false
+haproxy_stats_enabled: no
 haproxy_stats_user: ''
 haproxy_stats_password: ''
 # its recommended to set client/server timeouts to the same value
