@@ -1,0 +1,7 @@
+---
+
+- name: Remove unwanted PHP packages
+  apt: >
+    name={{ item }} state=absent
+  become: yes
+  with_items: '{{ php_unwanted_packages }}'

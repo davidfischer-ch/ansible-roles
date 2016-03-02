@@ -1,7 +1,11 @@
 # Install and configure PHP
 ---
 
-- include: 1-config.yml
+- include: 1-packages.yml
+  tags: packages
+  when: php_has_run is undefined
+
+- include: 2-config.yml
   tags: config
   # always run to allow other roles to configure php
 
