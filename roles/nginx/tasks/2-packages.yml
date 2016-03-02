@@ -80,9 +80,14 @@
   args:
     chdir: "{{ tools_src_directory }}/nginx"
 
-- name: Install Nginx from source
-  command: >
-    make install
-  args:
-    chdir: "{{ tools_src_directory }}/nginx"
+- block:
+    - name: Install Nginx from source
+      command: >
+        make install
+      args:
+        chdir: "{{ tools_src_directory }}/nginx"
+
+    - name: Make Nginx binary executable
+      file: >
+        name={{ nginx_daemon_path }} mode=755 state=file
   become: yes

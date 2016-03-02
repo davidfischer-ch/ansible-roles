@@ -14,6 +14,7 @@ nginx_build_flags:
   - '--with-http_xslt_module'
   - '--with-http_auth_request_module'
 nginx_config_file: site.conf.j2
+nginx_daemon_path: /usr/share/nginx/sbin/nginx
 nginx_interface: null
 nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
 nginx_pagespeed_configure: ''

@@ -12,5 +12,5 @@
 
     - name: Check Nginx config
       command: >
-        nginx -t
+        {{ nginx_daemon_path }} -t
   become: yes

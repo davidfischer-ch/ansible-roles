@@ -1,5 +1,5 @@
 [program:nginx]
-command=/usr/share/nginx/sbin/nginx
+command={{ nginx_daemon_path }}
 stopsignal=INT
 stdout_events_enabled=true
 stderr_events_enabled=true
