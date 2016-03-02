@@ -10,6 +10,13 @@
     - ampache-step
 
 - hosts:
+    - gitlab
+  roles:
+    - gitlab
+  tags:
+    - gitlab-step
+
+- hosts:
     - owncloud
   roles:
     - owncloud

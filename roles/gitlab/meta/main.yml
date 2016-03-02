@@ -1,0 +1,34 @@
+---
+
+dependencies:
+  - role: requirements
+    # Needed to compile Ruby and native extensions to Ruby gems
+    apt_requirements:
+      - build-essential
+      - checkinstall
+      - cmake
+      - curl
+      - git-core
+      - libcurl4-openssl-dev
+      - libffi-dev
+      - libgdbm-dev
+      - libicu-dev
+      - libncurses5-dev
+      - libreadline-dev
+      - libssl-dev
+      - libxml2-dev
+      - libxslt-dev
+      - libyaml-dev
+      - logrotate
+      - nodejs
+      - openssh-server
+      - pkg-config
+      - python-docutils
+      - zlib1g-dev
+    when: gitlab_has_run is undefined and gitlab_install_mode == 'manual'
+
+  - role: requirements
+    apt_requirements:
+      - ca-certificates
+      - openssh-server
+    when: gitlab_has_run is undefined and gitlab_install_mode == 'omnibus'

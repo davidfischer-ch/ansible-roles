@@ -1,0 +1,11 @@
+---
+
+- name: execute omnibus
+  command:
+    /tmp/gitlab.deb.sh
+  become: yes
+
+- name: restart gitlab
+  command: >
+    gitlab-ctl restart
+  become: yes

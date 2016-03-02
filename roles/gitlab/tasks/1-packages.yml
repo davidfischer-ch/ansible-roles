@@ -1,0 +1,30 @@
+---
+
+- block:
+    - name: Install Kerberos package
+      apt: >
+        name=libkrb5-dev state=lastest
+      when: gitlab_kerberos_enabled|bool
+
+    # - name: Install postfix server
+    #   apt: >
+    #     name=postfix state=latest
+    #   when: gitlab_postfix_enabled|bool
+  become: yes
+  when: gitlab_install_mode == 'manual'
+
+- block:
+    - name: Download Omnibus setup script
+      get_url: >
+        url=https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+        dest=/tmp/gitlab.deb.sh mode=755
+      notify: execute omnibus
+
+    - name: Install GitLab Community Edition
+      apt: >
+        name=gitlab-ce state=latest
+      become: yes
+
+    - debug:
+        msg="You must execute sudo gitlab-ctl reconfigure (root, 5iveL!fe)"
+  when: gitlab_install_mode == 'omnibus'

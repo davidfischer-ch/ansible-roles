@@ -1,0 +1,6 @@
+gitlab_data_directory: /var/opt/gitlab/git-data
+gitlab_install_mode: omnibus
+gitlab_kerberos_enabled: no
+gitlab_postfix_enabled: no
+gitlab_ssl: no
+gitlab_web_path: ''
