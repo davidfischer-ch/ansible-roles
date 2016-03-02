@@ -4,7 +4,7 @@
     - name: Install Docker Machine
       get_url: >
         url=https://github.com/docker/machine/releases/download/v{{ docker_machine_release }}/docker-machine_linux-amd64
-        dest="{{ docker_machine_path }}" mode=755 sha256sum={{ docker_machine_checksum }}
+        dest='{{ docker_machine_path }}' mode=755 sha256sum={{ docker_machine_checksum }}
       become: yes
 
     - name: Provision Docker Machines
@@ -17,7 +17,7 @@
 - name: Install Docker Compose
   get_url: >
     url=https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/run.sh
-    dest="{{ docker_compose_path }}" mode=755 sha256sum={{ docker_compose_checksum }}
+    dest='{{ docker_compose_path }}' mode=755 sha256sum={{ docker_compose_checksum }}
   become: yes
   when: docker_install_compose|bool
 
@@ -28,7 +28,7 @@
 
     - name: Register Docker apt repository
       apt_repository: >
-        repo="{{ docker_apt_repository }}" update_cache=yes state=present
+        repo='{{ docker_apt_repository }}' update_cache=yes state=present
 
     - name: Install Docker Engine with apt
       apt: >

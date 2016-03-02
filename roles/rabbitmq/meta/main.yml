@@ -7,5 +7,5 @@ dependencies:
     when: rabbitmq_has_run is undefined
 
   - role: ufw
-    ufw_rules: "{{ rabbitmq_ufw_rules }}"
+    ufw_rules: '{{ rabbitmq_ufw_rules }}'
     when: rabbitmq_has_run is undefined and rabbitmq_ufw_rules

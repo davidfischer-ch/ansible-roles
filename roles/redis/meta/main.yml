@@ -19,5 +19,5 @@ dependencies:
     when: redis_has_run is undefined
 
   - role: ufw
-    ufw_rules: "{{ redis_ufw_rules }}"
+    ufw_rules: '{{ redis_ufw_rules }}'
     when: redis_has_run is undefined and redis_ufw_rules

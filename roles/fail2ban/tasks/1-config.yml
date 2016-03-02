@@ -11,7 +11,7 @@
     fail2ban_conf_suffix: "{% if fail2ban_version.stdout|version_compare('0.9', '>=') %}new{% else %}old{% endif %}"
 
 - debug: >
-    msg="fail2ban version {{ fail2ban_version.stdout }}, detected as {{ fail2ban_conf_suffix }}"
+    msg='fail2ban version {{ fail2ban_version.stdout }}, detected as {{ fail2ban_conf_suffix }}'
 
 - name: Configure fail2ban rules
   template: >

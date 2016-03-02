@@ -15,7 +15,7 @@
       mount: >
         fstype={{ item.value.fstype }}
         name={{ item.value.directory }}
-        opts="{{ item.value.options }}"
+        opts='{{ item.value.options }}'
         src={{ item.value.source }}
         state={{ (item.value.fstype == 'swap')|ternary('present', 'mounted') }}
       when: item.value.source|length > 0
@@ -25,7 +25,7 @@
       mount: >
         fstype={{ item.value.fstype }}
         name={{ item.value.directory }}
-        opts="{{ item.value.options }}"
+        opts='{{ item.value.options }}'
         src={{ item.value.source }}
         state={{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}
       when: item.value.source|length == 0

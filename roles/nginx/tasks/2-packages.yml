@@ -7,11 +7,11 @@
     name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
   become: yes
   with_items:
-    - "{{ tools_src_directory }}/nginx"
-    - "{{ tools_src_directory }}/nginx-upload-module"
-    - "{{ tools_src_directory }}/nginx-upload-progress-module"
-    - "{{ tools_src_directory }}/nginx-zip-module"
-    - "{{ tools_src_directory }}"
+    - '{{ tools_src_directory }}/nginx'
+    - '{{ tools_src_directory }}/nginx-upload-module'
+    - '{{ tools_src_directory }}/nginx-upload-progress-module'
+    - '{{ tools_src_directory }}/nginx-zip-module'
+    - '{{ tools_src_directory }}'
 
 - name: Clone Nginx source code
   git: >
@@ -72,20 +72,20 @@
       {% endif %}
       {{ nginx_pagespeed_configure }}
   args:
-    chdir: "{{ tools_src_directory }}/nginx"
+    chdir: '{{ tools_src_directory }}/nginx'
 
 - name: Build Nginx from source
   command: >
     make -j{{ ansible_processor_cores }}
   args:
-    chdir: "{{ tools_src_directory }}/nginx"
+    chdir: '{{ tools_src_directory }}/nginx'
 
 - block:
     - name: Install Nginx from source
       command: >
         make install
       args:
-        chdir: "{{ tools_src_directory }}/nginx"
+        chdir: '{{ tools_src_directory }}/nginx'
 
     - name: Make Nginx binary executable
       file: >

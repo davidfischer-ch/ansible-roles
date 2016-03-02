@@ -12,5 +12,5 @@ dependencies:
     when: postgresql_has_run is undefined
 
   - role: ufw
-    ufw_rules: "{{ postgresql_ufw_rules }}"
+    ufw_rules: '{{ postgresql_ufw_rules }}'
     when: postgresql_has_run is undefined and postgresql_ufw_rules

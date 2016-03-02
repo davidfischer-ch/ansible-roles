@@ -4,14 +4,14 @@
     - name: Enable Canonical partners repository (binaries)
       lineinfile: >
         dest=/etc/apt/sources.list
-        regexp=".*deb http://archive.canonical.com/ubuntu trusty partner"
-        line="deb http://archive.canonical.com/ubuntu trusty partner"
+        regexp='.*deb http://archive.canonical.com/ubuntu trusty partner'
+        line='deb http://archive.canonical.com/ubuntu trusty partner'
         state=present
 
     - name: Enable Canonical partners repository (sources)
       lineinfile: >
         dest=/etc/apt/sources.list
-        regexp=".*deb-src http://archive.canonical.com/ubuntu trusty partner"
-        line="deb-src http://archive.canonical.com/ubuntu trusty partner"
+        regexp='.*deb-src http://archive.canonical.com/ubuntu trusty partner'
+        line='deb-src http://archive.canonical.com/ubuntu trusty partner'
         state=present
   become: yes

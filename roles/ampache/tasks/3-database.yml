@@ -8,7 +8,7 @@
 
     - name: Setup Ampache MySQL user
       mysql_user: >
-        name=ampache host=localhost password="{{ ampache_mysql_password }}" priv=ampache.*:ALL state=present
+        name=ampache host=localhost password={{ ampache_mysql_password }} priv=ampache.*:ALL state=present
 
     - name: Initialize Ampache MySQL database
       shell: >

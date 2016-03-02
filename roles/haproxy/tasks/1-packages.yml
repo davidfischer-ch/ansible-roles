@@ -19,13 +19,13 @@
   command: >
     make -j{{ ansible_processor_cores }} TARGET={{ haproxy_build_target }} {{ haproxy_build_flags }}
   args:
-    chdir: "{{ tools_src_directory }}/haproxy"
+    chdir: '{{ tools_src_directory }}/haproxy'
 
 - name: Install HAProxy from source
   command: >
     make install-{{ item }}
   args:
-    chdir: "{{ tools_src_directory }}/haproxy"
+    chdir: '{{ tools_src_directory }}/haproxy'
   become: yes
   with_items:
     - bin

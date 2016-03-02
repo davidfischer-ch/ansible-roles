@@ -18,5 +18,5 @@ dependencies:
     when: haproxy_has_run is undefined
 
   - role: ufw
-    ufw_rules: "{{ haproxy_ufw_rules }}"
+    ufw_rules: '{{ haproxy_ufw_rules }}'
     when: haproxy_has_run is undefined and nginx_ufw_rules

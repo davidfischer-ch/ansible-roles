@@ -14,7 +14,7 @@ dependencies:
     when: ampache_has_run is undefined and ampache_ssl|bool
 
   - role: ufw
-    ufw_rules: "{{ ampache_ufw_rules }}"
+    ufw_rules: '{{ ampache_ufw_rules }}'
     when: ampache_has_run is undefined and ampache_ufw_rules
 
   - role: requirements

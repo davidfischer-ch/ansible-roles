@@ -8,8 +8,8 @@
     name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
   become: yes
   with_items:
-    - "{{ tools_src_directory }}/veracrypt"
-    - "{{ tools_src_directory }}"
+    - '{{ tools_src_directory }}/veracrypt'
+    - '{{ tools_src_directory }}'
 
 - name: Clone VeraCrypt source code
   git: >
@@ -22,8 +22,8 @@
   command: >
     make -j{{ ansible_processor_cores }}
   args:
-    chdir: "{{ tools_src_directory }}/veracrypt/src"
-  changed_when: "{{ veracrypt_make_result.stdout_lines|length > 0 }}"
+    chdir: '{{ tools_src_directory }}/veracrypt/src'
+  changed_when: veracrypt_make_result.stdout_lines|length > 0
   register: veracrypt_make_result
 
 - name: Create VeraCrypt symlink

@@ -3,7 +3,7 @@
 - block:
     - name: Configure GitLab URL
       lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp="^external_url \S+"
+        dest=/etc/gitlab/gitlab.rb regexp='^external_url \S+'
         line="external_url 'http{% if gitlab_ssl|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
       notify: restart gitlab
       register: gitlab_url_result
@@ -17,7 +17,7 @@
 
     - name: Configure GitLab data directory
       lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp="^git_data_dir \S+"
+        dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+'
         line="git_data_dir '{{ gitlab_data_directory }}'"
       notify: restart gitlab
       register: gitlab_data_result

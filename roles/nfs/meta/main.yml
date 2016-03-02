@@ -7,5 +7,5 @@ dependencies:
     when: nfs_has_run is undefined
 
   - role: ufw
-    ufw_rules: "{{ nfs_ufw_rules }}"
+    ufw_rules: '{{ nfs_ufw_rules }}'
     when: nfs_has_run is undefined and nfs_ufw_rules

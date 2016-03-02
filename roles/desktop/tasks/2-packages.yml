@@ -14,7 +14,7 @@
       apt: >
         name={{ item }} state=latest
       with_items:
-        - "{{ desktop_package }}"
+        - '{{ desktop_package }}'
         - ubuntu-minimal
         - ubuntu-restricted-addons
         - ubuntu-restricted-extras

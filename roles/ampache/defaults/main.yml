@@ -14,8 +14,8 @@ ampache_ssl: no
 ampache_tmp_directory: /tmp/ampache
 ampache_ufw_rules:
   - direction: in
-    interface: "{{ ampache_interface or omit }}"
-    port: "{{ ampache_port }}"
+    interface: '{{ ampache_interface or omit }}'
+    port: '{{ ampache_port }}'
     proto: tcp
     rule: allow
 ampache_version: 3.8.2

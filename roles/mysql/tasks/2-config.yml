@@ -9,7 +9,7 @@
       mysql_user: >
         name=root host={{ item }} password={{ mysql_root_password }} check_implicit_admin=yes state=present
       with_items:
-        - "{{ ansible_hostname }}"
+        - '{{ ansible_hostname }}'
         - localhost
         - 127.0.0.1
         - ::1

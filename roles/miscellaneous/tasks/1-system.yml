@@ -17,8 +17,8 @@
     - name: Upgrade the Debian packages
       apt: >
         upgrade=full update_cache=yes cache_valid_time={{ upgrade_packages_cache_valid_time }}
-      async: "{{ upgrade_packages_async }}"
-      poll: "{{ upgrade_packages_poll }}"
+      async: '{{ upgrade_packages_async }}'
+      poll: '{{ upgrade_packages_poll }}'
       when: upgrade_packages|bool
 
     - name: Cleanup the Debian packages

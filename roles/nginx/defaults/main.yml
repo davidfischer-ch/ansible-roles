@@ -23,8 +23,8 @@ nginx_port: 80
 nginx_start_result: {}
 nginx_ufw_rules:
   - direction: in
-    interface: "{{ nginx_interface or omit }}"
-    port: "{{ nginx_port }}"
+    interface: '{{ nginx_interface or omit }}'
+    port: '{{ nginx_port }}'
     proto: tcp
     rule: allow
 nginx_upload_module_enabled: no

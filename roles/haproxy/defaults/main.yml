@@ -20,13 +20,13 @@ haproxy_timeout_client: 50000
 haproxy_timeout_server: 50000
 haproxy_ufw_rules:
   - direction: in
-    interface: "{{ haproxy_interface or omit }}"
-    port: "{{ haproxy_http_port }}"
+    interface: '{{ haproxy_interface or omit }}'
+    port: '{{ haproxy_http_port }}'
     proto: tcp
     rule: allow
   - direction: in
-    interface: "{{ haproxy_interface or omit }}"
-    port: "{{ haproxy_https_port }}"
+    interface: '{{ haproxy_interface or omit }}'
+    port: '{{ haproxy_https_port }}'
     proto: tcp
     rule: allow
 haproxy_version: v1.6.0  # 10/11/2015

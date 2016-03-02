@@ -7,4 +7,4 @@
   register: kernel_config_result
 
 - set_fact:
-    kernel_config: "{{ kernel_config_result.stdout|default({}) }}"
+    kernel_config: '{{ kernel_config_result.stdout|default({}) }}'

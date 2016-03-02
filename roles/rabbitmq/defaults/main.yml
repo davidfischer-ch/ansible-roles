@@ -2,7 +2,7 @@ rabbitmq_interface: null
 rabbitmq_port: 5672
 rabbitmq_ufw_rules:
   - direction: in
-    interface: "{{ rabbitmq_interface or omit }}"
-    port: "{{ rabbitmq_port }}"
+    interface: '{{ rabbitmq_interface or omit }}'
+    port: '{{ rabbitmq_port }}'
     proto: tcp
     rule: allow

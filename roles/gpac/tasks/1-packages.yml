@@ -18,19 +18,19 @@
   command: >
     {{ tools_src_directory }}/gpac/configure
   args:
-    chdir: "{{ tools_src_directory }}/gpac"
+    chdir: '{{ tools_src_directory }}/gpac'
 
 - name: Build GPAC from source
   command: >
     make -j{{ ansible_processor_cores }}
   args:
-    chdir: "{{ tools_src_directory }}/gpac"
+    chdir: '{{ tools_src_directory }}/gpac'
 
 - name: Install GPAC from source
   command: >
     make install
   args:
-    chdir: "{{ tools_src_directory }}/gpac"
+    chdir: '{{ tools_src_directory }}/gpac'
   become: yes
 
 # Current configure gives:
