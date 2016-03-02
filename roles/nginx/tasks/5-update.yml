@@ -4,4 +4,4 @@
   command: >
     ls /dev/null
   changed_when: yes
-  notify: reload nginx
+  notify: '{{ nginx_daemon_mode }} reload nginx'

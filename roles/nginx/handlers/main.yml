@@ -1,3 +1,21 @@
 ---
 
-- include: '{{ nginx_daemon_mode }}.yml'
+- name: supervisor restart nginx
+  supervisorctl: >
+    name=nginx state=restarted
+  become: yes
+
+- name: supervisor reload nginx
+  command: >
+    supervisorctl signal HUP nginx
+  become: yes
+
+- name: systemv restart nginx
+  service: >
+    name=nginx state=restarted
+  become: yes
+
+- name: systemv reload nginx
+  service: >
+    name=nginx state=reloaded
+  become: yes

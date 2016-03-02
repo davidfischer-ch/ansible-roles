@@ -19,7 +19,7 @@
     dest={{ tools_src_directory }}/nginx
     force=yes
     version={{ nginx_version }}
-  notify: restart nginx
+  notify: '{{ nginx_daemon_mode }} restart nginx'
 
 - block:
     - name: Clone Upload module source code
@@ -28,7 +28,7 @@
         dest={{ tools_src_directory }}/nginx-upload-module
         force=yes
         version={{ nginx_upload_module_version }}
-      notify: restart nginx
+      notify: '{{ nginx_daemon_mode }} restart nginx'
 
     - name: Clone Upload Progress module source code
       git: >
@@ -36,7 +36,7 @@
         dest={{ tools_src_directory }}/nginx-upload-progress-module
         force=yes
         version={{ nginx_upload_progress_module_version }}
-      notify: restart nginx
+      notify: '{{ nginx_daemon_mode }} restart nginx'
   when: nginx_upload_module_enabled|bool
 
 - name: Clone Zip module source code
@@ -45,7 +45,7 @@
     dest={{ tools_src_directory }}/nginx-zip-module
     force=yes
     version={{ nginx_zip_module_version }}
-  notify: restart nginx
+  notify: '{{ nginx_daemon_mode }} restart nginx'
   when: nginx_zip_module_enabled|bool
 
 - name: Configure Nginx build process

@@ -4,7 +4,7 @@
     - name: Install the Nginx site
       template: >
         src={{ nginx_config_file }} dest=/etc/nginx/sites-enabled/{{ site }}.conf mode=644
-      notify: reload nginx
+      notify: '{{ nginx_daemon_mode }} reload nginx'
 
     - name: Create the Nginx site logs directory
       file: >
