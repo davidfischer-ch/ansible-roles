@@ -1,7 +1,7 @@
 
 daemon {{ (nginx_daemon_mode == 'supervisor')|ternary('off', 'on') }};
-user {{ user }} {{ group }};
-worker_processes 4;
+user {{ nginx_daemon_user }} {{ nginx_daemon_group }};
+worker_processes {{ nginx_worker_processes|int }};
 pid /run/nginx.pid;
 
 events {

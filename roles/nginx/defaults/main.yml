@@ -13,8 +13,10 @@ nginx_build_flags:
   - '--with-http_sub_module'
   - '--with-http_xslt_module'
   - '--with-http_auth_request_module'
-nginx_config_file: site.conf.j2
+nginx_config_file: nginx.conf.j2
+nginx_daemon_group: www-data
 nginx_daemon_path: /usr/share/nginx/sbin/nginx
+nginx_daemon_user: www-data
 nginx_interface: null
 nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
 nginx_pagespeed_configure: ''
@@ -28,5 +30,6 @@ nginx_ufw_rules:
     proto: tcp
     rule: allow
 nginx_upload_module_enabled: no
+nginx_worker_processes: 4
 nginx_zip_module_enabled: no
 tools_src_directory: /usr/local/src

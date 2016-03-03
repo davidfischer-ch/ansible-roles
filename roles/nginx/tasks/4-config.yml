@@ -3,15 +3,17 @@
 - block:
     - name: Configure Nginx
       template: >
-        src=nginx.conf.j2 dest=/etc/nginx/nginx.conf mode=644
+        src={{ nginx_config_file }} dest=/etc/nginx/nginx.conf mode=644
       notify: '{{ nginx_daemon_mode }} reload nginx'
 
     - name: Create Nginx directories
       file: >
-        name={{ item }} mode=755 state=directory
+        name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
+        state=directory
       with_items:
-        - /etc/nginx/sites-enabled/
-        - /var/lib/nginx/
+        - { name: '/etc/nginx/sites-enabled/' }
+        - { name: '/var/lib/nginx/' }
+        - { name: '/var/log/nginx/', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
 
     - name: Remove default site
       file: >

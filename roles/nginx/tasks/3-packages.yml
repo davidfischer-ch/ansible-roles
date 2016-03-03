@@ -4,7 +4,7 @@
 
 - name: Create Nginx source directories
   file: >
-    name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
+    name={{ item }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755 recurse=no state=directory
   become: yes
   with_items:
     - '{{ tools_src_directory }}/nginx'

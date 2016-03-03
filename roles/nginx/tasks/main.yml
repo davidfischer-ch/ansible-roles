@@ -11,28 +11,31 @@
   tags: always
   when: nginx_has_run is undefined
 
-- include: 1-pagespeed.yml
+- include: 1-daemon.yml
+  tags: config
+  when: nginx_has_run is undefined
+
+- include: 2-pagespeed.yml
   tags: packages
   when: nginx_has_run is undefined and nginx_pagespeed_enabled|bool
 
-- include: 2-packages.yml
+- include: 3-packages.yml
   tags: packages
   when: nginx_has_run is undefined
 
-- include: 3-config.yml
+- include: 4-config.yml
   tags: config
   when: nginx_has_run is undefined
 
-- include: 4-services.yml
+- include: 5-services.yml
   tags: services
   when: nginx_has_run is undefined
 
-- include: 5-update.yml
+- include: 6-update.yml
   tags: update
   when: nginx_has_run is undefined
 
-- include: 6-site.yml
+- include: 7-sites.yml
   tags: config
-  when: nginx_has_run is undefined
 
 - set_fact: nginx_has_run=yes

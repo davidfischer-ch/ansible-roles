@@ -17,7 +17,7 @@
 
 - name: Create PageSpeed source directories
   file: >
-    name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+    name={{ item }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755 recurse=yes state=directory
   become: yes
   with_items:
     - '{{ nginx_pagespeed_cache_directory }}'
