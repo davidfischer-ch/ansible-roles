@@ -15,6 +15,5 @@
 
 - include: 4-apps.yml
   tags: config
-  when: uwsgi_has_run is undefined
 
 - set_fact: uwsgi_has_run=yes
