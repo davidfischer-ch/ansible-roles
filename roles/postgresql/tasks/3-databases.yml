@@ -5,7 +5,7 @@
       postgresql_db: >
         name={{ item.value.name }} state=absent
       tags: flush
-      when: not 'template' in item.value.name
+      when: item.flush|default(false)|bool and not 'template' in item.value.name
       with_dict: '{{ postgresql_databases }}'
 
     - name: Setup PostgreSQL users
