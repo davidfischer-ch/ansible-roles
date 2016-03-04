@@ -1,6 +1,9 @@
 ---
 
-- name: Create Nginx daemon user & group
+- name: Create Nginx daemon group
+  group: >
+    name={{ nginx_daemon_group }} system=yes state=present
+
+- name: Create Nginx daemon user
   user: >
-    name={{ nginx_daemon_user }} groups={{ nginx_daemon_group }} createhome=no group= state=present
-  become: yes
+    name={{ nginx_daemon_user }} group={{ nginx_daemon_group }} createhome=no system=yes state=present
