@@ -3,70 +3,71 @@
 - name: Check if PostGIS should be installed
   set_fact: postgis_enabled=yes
   tags: packages
-  when: postgresql_has_run is undefined and 'postgis' in item.value.extensions
+  when: "'postgis' in item.value.extensions|default([])"
   with_dict: '{{ postgresql_databases }}'
 
 - block:
-    - block:
-        - name: Install PostGIS
-          apt: >
-            name={{ item }} state=latest
-          with_items:
-            - postgis
-            - postgresql-9.3-postgis-2.1
-            - postgresql-9.3-postgis-2.1-scripts
+    - name: Install PostGIS
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - postgis
+        - postgresql-9.3-postgis-2.1
+        - postgresql-9.3-postgis-2.1-scripts
 
-        - name: Install geolocation prerequisites required for all back-ends
-          apt: >
-            name={{ item }} state=latest
-          with_items:
-            - binutils
-            - libgeos-3.4.2
-            - libgeos-c1
-            - libgeos-dev
+    - name: Install geolocation prerequisites required for all back-ends
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - binutils
+        - libgeos-3.4.2
+        - libgeos-c1
+        - libgeos-dev
 
-        - name: Install geolocation prerequisites required for PostgreSQL and SQLite
-          apt: >
-            name={{ item }} state=latest
-          with_items:
-            - libproj-dev
-            - proj-bin
-            - proj-data
+    - name: Install geolocation prerequisites required for PostgreSQL and SQLite
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - libproj-dev
+        - proj-bin
+        - proj-data
 
-        - name: Install geolocation prerequisites optional but required for SQLite
-          apt: >
-            name={{ item }} state=latest
-          with_items:
-            - gdal-bin
-            - libgdal1-dev
-            - python3-gdal
+    - name: Install geolocation prerequisites optional but required for SQLite
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - gdal-bin
+        - libgdal1-dev
+        - python3-gdal
 
-        - name: install optional IP-based geolocation library
-          apt: >
-            name={{ item }} state=latest
-          with_items:
-            - libgeoip1
-      tags: packages
-
-    - block:
-        - name: Enable geolocation extensions to PostgreSQL databases (1/2)
-          action: >
-            command psql -d {{ item.value.name }} -c 'CREATE EXTENSION postgis;'
-          changed_when: postgresql_result.rc == 0
-          failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
-          register: postgresql_result
-          when: "'postgis' in item.value.extensions|default([])"
-          with_dict: '{{ postgresql_databases }}'
-
-        - name: Enable geolocation extensions to PostgreSQL databases (2/2)
-          action: >
-            command psql -d {{ item.value.name }} -c 'CREATE EXTENSION postgis_topology;'
-          changed_when: postgresql_result.rc == 0
-          failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
-          register: postgresql_result
-          when: "'postgis' in item.value.extensions|default([])"
-          with_dict: '{{ postgresql_databases }}'
-      become_user: postgres
-      tags: flush_extra
+    - name: install optional IP-based geolocation library
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - libgeoip1
   become: yes
+  tags: packages
+  when: postgis_enabled is defined
+
+- block:
+    - name: Enable geolocation extensions to PostgreSQL databases (1/2)
+      action: >
+        command psql -d {{ item.value.name }} -c 'CREATE EXTENSION postgis;'
+      changed_when: postgresql_result.rc == 0
+      failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
+      register: postgresql_result
+      when: "'postgis' in item.value.extensions|default([])"
+      with_dict: '{{ postgresql_databases }}'
+
+    - name: Enable geolocation extensions to PostgreSQL databases (2/2)
+      action: >
+        command psql -d {{ item.value.name }} -c 'CREATE EXTENSION postgis_topology;'
+      changed_when: postgresql_result.rc == 0
+      failed_when: postgresql_result.rc != 0 and 'already exists' not in postgresql_result.stderr
+      register: postgresql_result
+      when: "'postgis' in item.value.extensions|default([])"
+      with_dict: '{{ postgresql_databases }}'
+  become: yes
+  become_user: postgres
+  tags: flush_extra
   when: postgis_enabled is defined

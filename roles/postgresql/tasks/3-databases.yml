@@ -33,7 +33,7 @@
       postgresql_db: >
         name=test_{{ item.value.name }} state=absent
       tags: unit_test
-      when: item.value.with_test|bool
+      when: item.value.with_test|default(false)|bool
       with_dict: '{{ postgresql_databases }}'
 
     - name: Allow PostgreSQL users to access PostgreSQL databases
