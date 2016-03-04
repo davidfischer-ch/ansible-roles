@@ -2,11 +2,11 @@
 
 dependencies:
   - role: requirements
-    apt_requirements:
-      - postgresql-9.3
-      - postgresql-client-9.3
-      - postgresql-server-dev-9.3
-      - postgresql-contrib-9.3
+    key_requirements:
+      - https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    ppa_requirements:
+      - 'deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main'
+    apt_requirements: '{{ postgresql_packages }}'
     pip2_requirements:
       - psycopg2
     when: postgresql_has_run is undefined
