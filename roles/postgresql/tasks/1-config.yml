@@ -3,12 +3,12 @@
 - block:
     - name: Configure PostgreSQL
       template: >
-        src=postgresql.conf.j2 dest=/etc/postgresql/9.3/main/postgresql.conf mode=644
+        src={{ postgresql_config_file }} dest=/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf mode=644
       register: postgresql_config_result
 
     - name: Configure PostgreSQL allowed hosts
       template: >
-        src=pg_hba.conf.j2 dest=/etc/postgresql/9.3/main/pg_hba.conf mode=644
+        src=pg_hba.conf.j2 dest=/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf mode=644
       register: postgresql_allow_result
 
     - name: Restart PostgreSQL service

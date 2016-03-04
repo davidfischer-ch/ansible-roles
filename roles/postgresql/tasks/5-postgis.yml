@@ -12,8 +12,8 @@
         name={{ item }} state=latest
       with_items:
         - postgis
-        - postgresql-9.3-postgis-2.1
-        - postgresql-9.3-postgis-2.1-scripts
+        - 'postgresql-{{ postgresql_version }}-postgis-2.1'
+        - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
 
     - name: Install geolocation prerequisites required for all back-ends
       apt: >

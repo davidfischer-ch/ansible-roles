@@ -1,9 +1,12 @@
 postgresql_allocated_ram: 2048  # In megabytes
 postgresql_allow_result: {}
+postgresql_config_file: 'postgresql.{{ postgresql_version }}.conf.j2'
 postgresql_config_result:
   changed: yes
 postgresql_effective_cache_size: '{{ postgresql_allocated_ram // 2 }}MB'
 postgresql_interface: null
+postgresql_listen_addresses:
+  - '*'
 postgresql_log_timezone: UTC
 postgresql_maintenance_work_mem: '{{ postgresql_allocated_ram // 16 }}MB'
 postgresql_max_connections: 100
