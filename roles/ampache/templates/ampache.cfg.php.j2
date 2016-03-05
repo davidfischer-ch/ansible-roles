@@ -605,7 +605,7 @@ show_footer_statistics = "true"
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
 ; DEFAULT: false
-debug = "true"
+debug = "{{ ampache_debug|bool|ternary('true', 'false') }}"
 
 ; Debug Level
 ; This should always be set in conjunction with the
@@ -617,7 +617,7 @@ debug = "true"
 ; 4 == ?? (Profit!)
 ; 5 == Information (cataloging progress etc.)
 ; DEFAULT: 5
-debug_level = 5
+debug_level = {{ ampache_debug_level|int }}
 
 ; Path to Log File
 ; This defines where you want ampache to log events to

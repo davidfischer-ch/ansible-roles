@@ -1,3 +1,5 @@
+ampache_debug: no
+ampache_debug_level: 5
 ampache_force_ssl: no
 ampache_interface: null
 ampache_log_directory: /var/log/ampache
