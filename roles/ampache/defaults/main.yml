@@ -1,3 +1,4 @@
+ampache_config_version: 34
 ampache_debug: no
 ampache_debug_level: 5
 ampache_force_ssl: no
@@ -20,7 +21,7 @@ ampache_ufw_rules:
     port: '{{ ampache_port }}'
     proto: tcp
     rule: allow
-ampache_version: 3.8.2
+ampache_version: deba68d9f8a2685611bb3a0b3d27672e41cccd3e
 ampache_web_directory: /usr/share/ampache/www2
 ampache_web_path: /ampache
 tools_src_directory: /usr/local/src
