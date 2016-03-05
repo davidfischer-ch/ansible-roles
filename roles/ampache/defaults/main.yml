@@ -21,6 +21,7 @@ ampache_ufw_rules:
     port: '{{ ampache_port }}'
     proto: tcp
     rule: allow
+ampache_users: []
 ampache_version: deba68d9f8a2685611bb3a0b3d27672e41cccd3e
 ampache_web_directory: /usr/share/ampache/www2
 ampache_web_path: /ampache

@@ -14,4 +14,18 @@
       shell: >
         mysql -uampache -p{{ ampache_mysql_password }} ampache < {{ ampache_web_directory }}/sql/ampache.sql
       when: ampache_database_result|changed
+
+    # FIXME generate passwords - https://github.com/ampache/ampache/blob/develop/lib/class/user.class.php#L982
+    # FIXME create preferences - https://github.com/ampache/ampache/blob/develop/lib/class/user.class.php#L1085
+    - name: Register Ampache users
+      command: >
+        mysql -uampache -p{{ ampache_mysql_password }} ampache -e
+        "INSERT INTO user (username, fullname, email, password, access) VALUES (
+            '{{ item.username }}', '{{ item.fullname }}', '{{ item.email }}', '{{ item.password }}',
+            {{ item.is_admin|bool|ternary(100, 25)}}
+        );"
+      changed_when: "'Duplicate' not in ampache_register_result.stderr"
+      failed_when: ampache_register_result|failed and 'Duplicate' not in ampache_register_result.stderr
+      register: ampache_register_result
+      with_items: ampache_users
   become: yes
