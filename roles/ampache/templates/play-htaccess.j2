@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-s
+    RewriteRule ^art/([^/]+)/([^/]+)/([0-9]+)/thumb([0-9]*)\.([a-z]+)$ {{ ampache_web_path }}/image.php?object_type=$2&object_id=$3&auth=$1&thumb=$4&name=art.jpg [L]
+    RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)(/.*)?$ {{ ampache_web_path }}/play/$5?$1=$2&$3=$4 [N,QSA]
+    RewriteRule ^([^/]+)/([^/]+)(/.*)?$ {{ ampache_web_path }}/play/$3?$1=$2 [N,QSA]
+    RewriteRule ^(/[^/]+|[^/]+/|/?)$ {{ ampache_web_path }}/play/index.php [L,QSA]
+</IfModule>

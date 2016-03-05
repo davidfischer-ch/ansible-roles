@@ -23,6 +23,8 @@
       notify: reload apache2
       with_items:
         - { name: 'ampache.cfg.{{ ampache_config_version|int }}.php', path: 'config/ampache.cfg.php' }
+        - { name: 'channel-htaccess', path: 'channel/.htaccess' }
+        - { name: 'play-htaccess', path: 'play/.htaccess' }
         - { name: 'rest-htaccess', path: 'rest/.htaccess' }
 
     - name: Remove Ampache default site
