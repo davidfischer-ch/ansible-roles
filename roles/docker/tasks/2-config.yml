@@ -36,7 +36,7 @@
 
     - name: Add our user to the docker group
       user: >
-        name={{ ansible_ssh_user }} groups=docker append=yes state=present
+        name={{ ansible_user }} groups=docker append=yes state=present
       notify:
         - restart
         - wait started

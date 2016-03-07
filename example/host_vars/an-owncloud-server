@@ -1,6 +1,6 @@
-ansible_ssh_host: my-owncloud.com
-ansible_ssh_port: 2222
-ansible_ssh_user: ubuntu
+ansible_host: my-owncloud.com
+ansible_port: 2222
+ansible_user: ubuntu
 http_port: 80
 ssh_port: 22
 user: ubuntu

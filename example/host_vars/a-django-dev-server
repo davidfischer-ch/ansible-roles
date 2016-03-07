@@ -1,6 +1,6 @@
-ansible_ssh_host: 192.168.56.101
-ansible_ssh_port: 22
-ansible_ssh_user: vagrant
+ansible_host: 192.168.56.101
+ansible_port: 22
+ansible_user: vagrant
 
 ssh_connection: 'vagrant@192.168.56.101:'
 ssh_port: 22
