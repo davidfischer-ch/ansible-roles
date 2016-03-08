@@ -36,6 +36,6 @@
   when: nginx_has_run is undefined
 
 - include: 7-sites.yml
-  tags: config
+  tags: [config, sites]
 
 - set_fact: nginx_has_run=yes
