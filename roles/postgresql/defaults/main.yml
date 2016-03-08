@@ -1,5 +1,6 @@
 postgresql_allocated_ram: 2048  # In megabytes
 postgresql_allow_result: {}
+postgresql_authentication_rules: []
 postgresql_config_file: 'postgresql.{{ postgresql_version }}.conf.j2'
 postgresql_config_result:
   changed: yes
