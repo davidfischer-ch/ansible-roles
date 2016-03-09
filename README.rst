@@ -8,6 +8,7 @@ This playbook is covering multiple use-cases:
 
 * Deploying a full Django web stack
 * Deploying an Ampache server
+* Deploying a GitLab server using Omnibus
 * Deploying an ownCloud server
 * Installing a computer under Debian/Ubuntu
 * Tweaking an Ubuntu Phone (never install nfs-client!)
