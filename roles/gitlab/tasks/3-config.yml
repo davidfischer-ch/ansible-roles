@@ -4,9 +4,17 @@
     - name: Configure GitLab URL
       lineinfile: >
         dest=/etc/gitlab/gitlab.rb regexp='^external_url \S+'
-        line="external_url 'http{% if gitlab_ssl|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
+        line="external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
       notify: restart gitlab
       register: gitlab_url_result
+
+    - name: Configure GitLab
+      lineinfile: >
+        dest=/etc/gitlab/gitlab.rb regexp="{{ item.group }}\['{{ item.key }}'\]"
+        line="{{ item.group }}['{{ item.key }}'] = {{ item.value|to_json }}" backup=yes
+      notify: restart gitlab
+      register: gitlab_setings_result
+      with_items: gitlab_settings
 
     - name: Check GitLab data directory
       file: >
@@ -25,7 +33,7 @@
     - name: Stop GitLab services to free up some memory
       command: >
         gitlab-ctl stop {{ item }}
-      when: gitlab_url_result|changed or gitlab_data_result|changed
+      when: gitlab_url_result|changed or gitlab_setings_result|changed or gitlab_data_result|changed
       with_items:
         - unicorn
         - sidekiq

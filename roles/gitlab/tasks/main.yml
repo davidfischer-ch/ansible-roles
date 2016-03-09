@@ -1,25 +1,14 @@
 ---
 
-- block:
-    - name: Detect Git version
-      command:
-        git --version
-      changed_when: no
-      register: gitlab_git_version_result
-
-    - name: Check install mode and Git >= 1.7.10
-      assert:
-        that:
-          - "gitlab_install_mode in ['manual', 'omnibus']"
-          - gitlab_git_version_result.stdout.split(' ')[-1]|version_compare('1.7.10', '>=')
+- include: 1-facts.yml
   tags: always
   when: gitlab_has_run is undefined
 
-- include: 1-packages.yml
+- include: 2-packages.yml
   tags: packages
   when: gitlab_has_run is undefined
 
-- include: 2-config.yml
+- include: 3-config.yml
   tags: config
   when: gitlab_has_run is undefined
 

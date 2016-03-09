@@ -2,9 +2,10 @@ gitlab_data_directory: /var/opt/gitlab/git-data
 gitlab_install_mode: omnibus
 gitlab_kerberos_enabled: no
 gitlab_interface: null
-gitlab_port: 80
 gitlab_postfix_enabled: no
-gitlab_ssl: no
+gitlab_settings: []
+gitlab_ssl_enabled: no
+gitlab_port: '{{ gitlab_ssl_enabled|bool|ternary(443, 80) }}'
 gitlab_ufw_rules:
   - direction: in
     interface: '{{ gitlab_interface or omit }}'
