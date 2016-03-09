@@ -1,0 +1,10 @@
+---
+
+- include: common.yml
+
+- hosts:
+    - elasticsearch
+  roles:
+    - elasticsearch
+  tags:
+    - elasticsearch-step

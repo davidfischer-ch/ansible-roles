@@ -8,6 +8,7 @@ This playbook is covering multiple use-cases:
 
 * Deploying a full Django web stack
 * Deploying an Ampache server
+* Deploying the ELK stack (work in progress)
 * Deploying a GitLab server using Omnibus
 * Deploying an ownCloud server
 * Installing a computer under Debian/Ubuntu
