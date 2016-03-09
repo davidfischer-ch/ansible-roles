@@ -32,3 +32,7 @@ dependencies:
       - ca-certificates
       - openssh-server
     when: gitlab_has_run is undefined and gitlab_install_mode == 'omnibus'
+
+  - role: ufw
+    ufw_rules: '{{ gitlab_ufw_rules }}'
+    when: gitlab_has_run is undefined and gitlab_ufw_rules
