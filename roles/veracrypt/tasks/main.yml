@@ -1,8 +1,6 @@
 # https://github.com/veracrypt/VeraCrypt
 ---
 
-# https://github.com/nginx/nginx.git
-
 - block:
     - name: Create VeraCrypt source directories
       file: >
