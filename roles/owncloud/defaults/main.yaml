@@ -17,7 +17,7 @@ owncloud_port: 80
 owncloud_preview_max_scale_factor: 5
 owncloud_preview_max_x: null
 owncloud_preview_max_y: null
-owncloud_ssl: no
+owncloud_ssl_enabled: no
 owncloud_syslog_tag: ownCloud
 owncloud_ufw_rules:
   - direction: in

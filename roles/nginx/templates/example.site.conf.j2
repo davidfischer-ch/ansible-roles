@@ -55,7 +55,7 @@ server {
     location /static/ {
         access_log  off;
         autoindex   on;
-        {% if not debug|bool %}
+        {% if not item.value.debug|bool %}
         expires     max;
         {% endif %}
         gzip        on;

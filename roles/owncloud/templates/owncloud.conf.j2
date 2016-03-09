@@ -3,8 +3,8 @@ Listen 0.0.0.0:{{ owncloud_port|int }}
     ServerName {{ domain }}
     DocumentRoot {{ owncloud_web_directory }}
 
-    SSLEngine {{ owncloud_ssl|bool|ternary('on', 'off') }}
-    {% if owncloud_ssl|bool %}
+    SSLEngine {{ owncloud_ssl_enabled|bool|ternary('on', 'off') }}
+    {% if owncloud_ssl_enabled|bool %}
     SSLCertificateFile    {{ ssl_cert_crt_filename }}
     SSLCertificateKeyFile {{ ssl_cert_key_filename }}
     {% endif %}

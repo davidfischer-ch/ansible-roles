@@ -3,8 +3,8 @@ Listen 0.0.0.0:{{ ampache_port|int }}
     ServerName {{ domain }}
     DocumentRoot {{ ampache_web_directory }}
 
-    SSLEngine {{ ampache_ssl|bool|ternary('on', 'off') }}
-    {% if ampache_ssl|bool %}
+    SSLEngine {{ ampache_ssl_enabled|bool|ternary('on', 'off') }}
+    {% if ampache_ssl_enabled|bool %}
     SSLCertificateFile    {{ ssl_cert_crt_filename }}
     SSLCertificateKeyFile {{ ssl_cert_key_filename }}
     {% endif %}

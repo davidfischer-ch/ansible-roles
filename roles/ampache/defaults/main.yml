@@ -1,7 +1,6 @@
 ampache_config_version: 34
 ampache_debug: no
 ampache_debug_level: 5
-ampache_force_ssl: no
 ampache_interface: null
 ampache_log_directory: /var/log/ampache
 ampache_memory_cache: yes
@@ -13,7 +12,8 @@ ampache_lastfm_api_key: ''
 ampache_lastfm_api_secret: ''
 ampache_lastfm_show_converts: yes
 ampache_lastfm_show_similar: yes
-ampache_ssl: no
+ampache_ssl_enabled: no
+ampache_ssl_force: no
 ampache_tmp_directory: /tmp/ampache
 ampache_ufw_rules:
   - direction: in
