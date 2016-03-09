@@ -3,7 +3,20 @@
 # http://askubuntu.com/questions/563573/cant-ssh-into-ubuntu-touch-device
 ---
 
-- include: 1-packages.yml
+- block:
+    - name: Copy the cleanup script
+      template: >
+        src=cleanup.py
+        dest=/tmp/cleanup.py
+        mode=755
+
+    - name: Execute the cleanup script
+      command: >
+        python3 /tmp/cleanup.py -k {{ keyboards|join(',') }}
+      changed_when: cleanup_result.stdout != ''
+      register: cleanup_result
+      when: keyboards is defined and keyboards
+  become: yes
   tags: packages
   when: phone_has_run is undefined
 

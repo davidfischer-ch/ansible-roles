@@ -1,8 +1,12 @@
 ---
 
-- include: 1-packages.yml
+- name: Install gaming packages
+  apt: >
+    name={{ item }} state=latest
+  become: yes
   tags: packages
   when: gaming_has_run is undefined
+  with_items: '{{ gaming_packages }}'
 
 - set_fact: gaming_has_run=yes
   tags: always

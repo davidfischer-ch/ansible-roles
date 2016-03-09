@@ -25,8 +25,8 @@
   become: yes
   become_user: postgres
 
-- include: 4-hstore.yml
-- include: 5-postgis.yml
+- include: extension-hstore.yml
+- include: extension-postgis.yml
 
 - block:
     - name: Remove PostgreSQL unit-test databases

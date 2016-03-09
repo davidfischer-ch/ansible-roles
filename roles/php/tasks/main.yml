@@ -1,13 +1,21 @@
 # Install and configure PHP
 ---
 
-- include: 1-packages.yml
+- name: Remove unwanted PHP packages
+  apt: >
+    name={{ item }} state=absent
+  become: yes
   tags: packages
   when: php_has_run is undefined
+  with_items: '{{ php_unwanted_packages }}'
 
-- include: 2-config.yml
+- name: Configure PHP
+  lineinfile: >
+    dest=/etc/php{{ php_version }}/apache2/php.ini regexp='^;?{{ item.key }} =' line='{{ item.key }} = {{ item.value }}' state=present
+  become: yes
   tags: config
-  # always run to allow other roles to configure php
+  with_dict: '{{ php_options }}'
+  # run unconditionally to allow other roles to configure PHP
 
 - set_fact: php_has_run=yes
   tags: always

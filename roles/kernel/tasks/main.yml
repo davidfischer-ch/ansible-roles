@@ -1,13 +1,25 @@
 # Install and configure GNU/Linux Kernel
 ---
 
-- include: 1-facts.yml
+- block:
+    - name: Get current GNU/Linux Kernel configuration
+      script: >
+        get-kernel-config
+      changed_when: no
+      register: kernel_config_result
+
+    - set_fact:
+        kernel_config: '{{ kernel_config_result.stdout|default({}) }}'
   tags: always
   when: kernel_has_run is undefined
 
-- include: 2-packages.yml
+- name: Install GNU/Linux kernel packages
+  apt: >
+    name={{ item }} state=latest
+  become: yes
   tags: packages
   when: kernel_has_run is undefined
+  with_items: '{{ kernel_packages }}'
 
 - set_fact: kernel_has_run=yes
   tags: always

@@ -6,18 +6,85 @@
 
 ---
 
-- include: 1-directories.yml
-  when: owncloud_has_run is undefined
-
-- include: 2-packages.yml
+- name: Create ownCloud data directory
+  file: >
+    name={{ owncloud_data_directory }} owner=www-data group=www-data state=directory
+  become: yes
   tags: packages
   when: owncloud_has_run is undefined
 
-- include: 3-config.yml
+- block:
+    - name: Enable ownCloud apt repository
+      template:
+        src=owncloud.list dest=/etc/apt/sources.list.d/owncloud.list mode=644
+      register: owncloud_repo_result
+
+    - name: Update Debian packages cache
+      apt: update_cache=yes
+      when: owncloud_repo_result|changed
+
+    - name: Install libreoffice
+      apt: >
+        name=libreoffice-common install_recommends=no state=latest
+
+    - name: Install ownCloud packages
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - libapache2-mod-php5
+        - owncloud
+  become: yes
+  tags: packages
+  when: owncloud_has_run is undefined
+
+- block:
+    - name: Enable Apache 2 modules
+      apache2_module: >
+        name={{ item }} state=present
+      with_items:
+        - ssl
+        - rewrite
+
+    - name: Configure Apache 2 options
+      lineinfile: >
+        dest=/etc/apache2/apache2.conf regexp=^HostnameLookups line='HostnameLookups On'
+
+    - name: Configure ownCloud
+      template: >
+        src=config.php.j2 dest=/var/www/owncloud/config/config.php backup=yes owner=www-data group=www-data mode=640
+
+    - name: Remove ownCloud default site
+      file: >
+        name=/etc/apache2/{{ item }}.conf state=absent
+      notify: reload apache2
+      with_items:
+        - conf-available/owncloud
+        - conf-enabled/owncloud
+        - sites-available/000-default
+        - sites-enabled/000-default
+
+    - name: Configure ownCloud site
+      template: >
+        src=owncloud.conf.j2 dest=/etc/apache2/sites-available/owncloud.conf owner=root group=root mode=644
+      notify: reload apache2
+
+    - name: Enable ownCloud site
+      file: >
+        src=/etc/apache2/sites-available/owncloud.conf dest=/etc/apache2/sites-enabled/owncloud.conf state=link
+      notify: reload apache2
+  become: yes
   tags: config
   when: owncloud_has_run is undefined
 
-- include: 4-database.yml
+- block:
+    - name: Setup ownCloud MySQL database
+      mysql_db: >
+        name=owncloud state=present
+
+    - name: Setup ownCloud MySQL user
+      mysql_user: >
+        name=owncloud host=localhost password={{ owncloud_mysql_password }} priv=owncloud.*:ALL state=present
+  become: yes
   tags: database
   when: owncloud_has_run is undefined
 

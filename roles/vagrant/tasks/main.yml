@@ -1,14 +1,77 @@
 ---
 
-- include: 1-provision.yml
+- block:
+    - name: Generate vagrant file
+      template: >
+        src=Vagrantfile.j2 dest=/tmp/Vagrantfile mode=644
+
+    - name: Check machines are up-to-date
+      command: >
+        vagrant box outdated
+      args:
+        chdir: /tmp
+      changed_when: "'to update' in vagrant_outdated_result.stdout"
+      register: vagrant_outdated_result
+
+    - name: Update machines
+      command: >
+        vagrant box update
+      args:
+        chdir: /tmp
+      when: vagrant_outdated_result|changed
+
+    - name: Update machines IDs
+      script: >
+        update-machine-id /tmp {{ item.key }} {{ item.value.provider }}
+      changed_when: >
+        (vagrant_ids_result.stdout|from_json).new and
+        (vagrant_ids_result.stdout|from_json).new != (vagrant_ids_result.stdout|from_json).old
+      register: vagrant_ids_result
+      with_dict: '{{ vagrant_machines }}'
+
+    - name: Provision machines
+      command: >
+        vagrant up --provider {{ item.value.provider }} {{ item.key }}
+      args:
+        chdir: /tmp
+      changed_when: "'already running' not in vagrant_up_result.stdout"
+      register: vagrant_up_result
+      with_dict: '{{ vagrant_machines }}'
   tags: provision
   when: vagrant_has_run is undefined
 
-- include: 2-packages.yml
+- block:
+    - name: Get installed vagrant plugins
+      command: >
+        vagrant plugin list
+      changed_when: no
+      register: vagrant_plugin_result
+
+    - name: Install vagrant plugins
+      command: >
+        vagrant plugin install vagrant-{{ item }}
+      with_items: '{{ vagrant_plugins }}'
+      when: item not in vagrant_plugin_result.stdout
   tags: packages
   when: vagrant_has_run is undefined
 
-- include: 3-snapshots.yml
+- block:
+    - name: Get VMs snapshot list
+      command: >
+        vagrant snapshot list {{ item.key }}
+      args:
+        chdir: /tmp
+      changed_when: no
+      register: vagrant_snapshot_list
+      with_dict: '{{ vagrant_snapshots }}'
+
+    - name: Take base VMs snapshot
+      command: >
+        vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
+      args:
+        chdir: /tmp
+      when: "' {{ item.item.value }} ' not in item.stdout"
+      with_items: '{{ vagrant_snapshot_list.results|default([]) }}'
   tags: snapshots
 
 - set_fact: vagrant_has_run=yes

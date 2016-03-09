@@ -1,7 +1,19 @@
 # Install and configure Redis
 ---
 
-- include: 1-config.yml
+- block:
+    - name: Setup Redis
+      template: >
+        src=redis.conf.j2 dest=/etc/redis/redis.conf mode=644
+      notify: restart redis-server
+      become: yes
+
+    - meta: flush_handlers
+
+    - name: Benchmark Redis
+      command: >
+        redis-benchmark -q -n 10000 -c 50 -P 12
+      changed_when: no
   tags: config
   when: redis_has_run is undefined
 

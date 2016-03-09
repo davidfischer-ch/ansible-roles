@@ -1,10 +1,97 @@
 ---
 
-- include: 1-config.yml
+- block:
+    - name: Enable Canonical partners repository (binaries)
+      lineinfile: >
+        dest=/etc/apt/sources.list
+        regexp='.*deb http://archive.canonical.com/ubuntu trusty partner'
+        line='deb http://archive.canonical.com/ubuntu trusty partner'
+        state=present
+
+    - name: Enable Canonical partners repository (sources)
+      lineinfile: >
+        dest=/etc/apt/sources.list
+        regexp='.*deb-src http://archive.canonical.com/ubuntu trusty partner'
+        line='deb-src http://archive.canonical.com/ubuntu trusty partner'
+        state=present
+  become: yes
   tags: config
   when: desktop_has_run is undefined
 
-- include: 2-packages.yml
+- block:
+    # Miscellaneous
+
+    - name: Install Nemo PPA repository
+      apt_repository: >
+        repo=ppa:webupd8team/nemo state=present update_cache=yes
+      when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
+
+    # Desktop
+
+    - name: Install Ubuntu desktop packages
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - '{{ desktop_package }}'
+        - ubuntu-minimal
+        - ubuntu-restricted-addons
+        - ubuntu-restricted-extras
+        - libavcodec-extra
+        - ubuntu-standard
+
+    - name: Install desktop and office packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ office_packages }}'
+
+    - name: Install Ubuntu desktop and office packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ ubuntu_desktop_packages }}'
+      when: desktop_package == 'ubuntu-desktop'
+
+    - name: Install system packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ system_packages }}'
+
+    - name: Update apt-file cache
+      command: >
+        apt-file update
+      become: no
+
+    - name: Remove bumblebee packages
+      apt: >
+        name={{ item }} state=absent
+      with_items:
+        - bumblebee
+        - bumblebee-nvidia
+
+    - name: Install files utilities packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ file_utility_packages }}'
+
+    - name: Install java packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ java_packages }}'
+
+    - name: Install miscellaneous packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ miscellaneous_packages }}'
+
+    - name: Install virtualization packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ virtualization_packages }}'
+
+    - name: Install web packages
+      apt: >
+        name={{ item }} state=latest
+      with_items: '{{ web_packages }}'
+  become: yes
   tags: packages
   when: desktop_has_run is undefined
 

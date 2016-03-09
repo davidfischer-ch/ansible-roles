@@ -1,12 +1,30 @@
 ---
 
-- include: 1-packages.yml
-  tags: packages
-  when: laptop_has_run is undefined
+- block:
+    - name: Install TLP power management PPA repositories
+      apt_repository: >
+        repo=ppa:linrunner/tlp state=present update_cache=yes
 
-- include: 2-services.yml
+    - name: Remove laptop-mode-tools package
+      apt: >
+        name=laptop-mode-tools state=absent
+
+    - name: Install TLP power management packages
+      apt: >
+        name={{ item }} state=latest
+      with_items:
+        - tlp
+        - tlp-rdw
+  become: yes
+  tags: packages
+  when: laptop_has_run is undefined and laptop_with_tlp|bool
+
+- name: Start TLP power management daemon
+  command: >
+    tlp start
+  become: yes
   tags: services
-  when: laptop_has_run is undefined
+  when: laptop_has_run is undefined and laptop_with_tlp|bool
 
 - set_fact: laptop_has_run=yes
   tags: always

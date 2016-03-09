@@ -1,19 +1,60 @@
 # Install and configure uWSGI, daemonize with Supervisor, enable our Application
 ---
 
-- include: 1-packages.yml
+- block:
+    - name: Upgrade uWSGI
+      pip: >
+        executable=pip3 name=uwsgi state=latest
+
+    - name: Enable upgraded uWSGI
+      file: >
+        src=/usr/local/bin/uwsgi dest=/usr/bin/uwsgi force=yes state=link
+      notify: restart uwsgi
+
+    - meta: flush_handlers
+  become: yes
   tags: packages
   when: uwsgi_has_run is undefined
 
-- include: 2-services.yml
+- block:
+    - name: Start uWSGI service
+      service: >
+        name=uwsgi state=started enabled=yes
+      register: uwsgi_start_result
+
+    - name: Restart uWSGI service
+      service: >
+        name=uwsgi state=restarted enabled=yes
+      when: uwsgi_start_result|failed
+  become: yes
   tags: services
   when: uwsgi_has_run is undefined
 
-- include: 3-update.yml
+- name: Trigger uWSGI restart
+  command: >
+    ls /dev/null
+  changed_when: yes
+  notify: restart uwsgi
   tags: update
   when: uwsgi_has_run is undefined
 
-- include: 4-apps.yml
+- block:
+    - name: Setup the uWSGI applications
+      template: >
+        src={{ item.value.config_file }}
+        dest=/etc/uwsgi/apps-available/{{ item.value.name }}.xml
+        mode=644
+      notify: reload uwsgi
+      with_dict: '{{ uwsgi_apps }}'
+
+    - name: Enable the uWSGI applications
+      file: >
+        src=/etc/uwsgi/apps-available/{{ item.value.name }}.xml
+        dest=/etc/uwsgi/apps-enabled/{{ item.value.name }}.xml
+        state=link
+      notify: reload uwsgi
+      with_dict: '{{ uwsgi_apps }}'
+  become: yes
   tags: config
 
 - set_fact: uwsgi_has_run=yes

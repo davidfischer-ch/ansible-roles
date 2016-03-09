@@ -1,6 +1,0 @@
----
-
-- name: Start Supervisor service
-  service: >
-    name=supervisor state=started enabled=yes
-  become: yes

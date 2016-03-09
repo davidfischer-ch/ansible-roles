@@ -1,7 +1,0 @@
----
-
-- name: Install requirements with npm
-  npm: >
-    name={{ item }} global=yes production=yes state=latest
-  become: yes
-  with_items: '{{ npm_requirements }}'

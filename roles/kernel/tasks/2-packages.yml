@@ -1,7 +1,0 @@
----
-
-- name: Install GNU/Linux kernel packages
-  apt: >
-    name={{ item }} state=latest
-  become: yes
-  with_items: '{{ kernel_packages }}'

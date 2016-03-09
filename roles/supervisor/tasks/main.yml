@@ -1,15 +1,53 @@
 # Install and configure Supervisor
 ---
 
-- include: 1-packages.yml
+- block:
+    - name: Remove Supervisor Debian package
+      apt: >
+        name=supervisor state=absent
+
+    - name: Install Supervisor with pip
+      pip: >
+        name='git+https://github.com/Supervisor/supervisor.git@{{ supervisor_version }}#egg=supervisor'
+        executable=pip2 extra_args=-U
+      changed_when: "'supervisor {{ supervisor_release }} is already' not in supervisor_upgrade_result.stdout"
+      notify: restart supervisor
+      register: supervisor_upgrade_result
+  become: yes
   tags: packages
   when: supervisor_has_run is undefined
 
-- include: 2-config.yml
+- block:
+    - name: Create Supervisor directories
+      file: >
+        name={{ item }} mode=755 state=directory
+      with_items:
+        - /etc/supervisor/conf.d
+        - /var/log/supervisor/
+
+    - name: Configure Supervisor
+      template: >
+        src=supervisord.conf.j2 dest=/etc/supervisor/supervisord.conf mode=644
+      notify: restart supervisor
+
+    - name: Symlink Configuration for supervisorctl
+      file: >
+        src=/etc/supervisor/supervisord.conf dest=/etc/supervisord.conf state=link
+
+    - name: Install Supervisor service
+      template: >
+        src=supervisor dest=/etc/init.d/supervisor mode=751
+      notify: restart supervisor
+
+    - meta: flush_handlers
+  become: yes
   tags: config
   when: supervisor_has_run is undefined
 
-- include: 3-services.yml
+- name: Start Supervisor service
+  service: >
+    name=supervisor state=started enabled=yes
+  become: yes
   tags: services
   when: supervisor_has_run is undefined
 

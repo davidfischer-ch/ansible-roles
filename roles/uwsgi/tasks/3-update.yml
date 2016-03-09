@@ -1,7 +1,0 @@
----
-
-- name: Trigger uWSGI restart
-  command: >
-    ls /dev/null
-  changed_when: yes
-  notify: restart uwsgi

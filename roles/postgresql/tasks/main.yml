@@ -1,15 +1,34 @@
 # Install and configure PostgreSQL including setup our user & database
 ---
 
-- include: 1-config.yml
+- block:
+    - name: Configure PostgreSQL
+      template: >
+        src={{ postgresql_config_file }} dest=/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf mode=644
+      register: postgresql_config_result
+
+    - name: Configure PostgreSQL allowed hosts
+      template: >
+        src=pg_hba.conf.j2 dest=/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf mode=644
+      register: postgresql_allow_result
+
+    - name: Restart PostgreSQL service
+      service: >
+        name=postgresql state=restarted enabled=yes
+      tags: flush_extra
+      when: postgresql_config_result|changed or postgresql_allow_result|changed
+  become: yes
   tags: config
   when: postgresql_has_run is undefined
 
-- include: 2-services.yml
+- name: Start PostgreSQL service
+  service: >
+    name=postgresql state=started enabled=yes
+  become: yes
   tags: services
   when: postgresql_has_run is undefined
 
-- include: 3-databases.yml
+- include: databases.yml
   when: postgresql_has_run is undefined and postgresql_is_master|bool
 
 - set_fact: postgresql_has_run=yes

@@ -1,8 +1,104 @@
+# https://github.com/gpac/gpac/blob/master/doc/INSTALL.gcc
 ---
 
-- include: 1-packages.yml
+- block:
+    - name: Create GPAC source directories
+      file: >
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+      become: yes
+
+    - name: Clone GPAC source code
+      git: >
+        repo=https://github.com/gpac/gpac.git
+        dest={{ tools_src_directory }}/gpac
+        force=yes
+        version={{ gpac_version }}
+
+    - name: Configure GPAC build process
+      command: >
+        {{ tools_src_directory }}/gpac/configure
+      args:
+        chdir: '{{ tools_src_directory }}/gpac'
+
+    - name: Build GPAC from source
+      command: >
+        make -j{{ ansible_processor_cores }}
+      args:
+        chdir: '{{ tools_src_directory }}/gpac'
+
+    - name: Install GPAC from source
+      command: >
+        make install
+      args:
+        chdir: '{{ tools_src_directory }}/gpac'
+      become: yes
   tags: packages
   when: gpac_has_run is undefined
 
 - set_fact: gpac_has_run=yes
   tags: always
+
+# Current configure gives:
+
+#   $ /usr/local/src/gpac$ ./configure
+#
+#   ** System Configuration
+#   Install prefix: /usr/local
+#   Source path: /usr/local/src/gpac
+#   C   compiler: gcc
+#   C++ compiler: g++
+#   make: make
+#   CPU: x86_64
+#   Big Endian: no
+#
+#   ** GPAC 0.6.0 rev0-gb5e51f8-HEAD Core Configuration **
+#   debug version: no
+#   GProf enabled: no
+#   Static build enabled: no
+#   Memory tracking enabled: no
+#   Fixed-Point Version: no
+#   IPV6 Support: yes
+#   Static Modules: no
+#
+#   ** Detected libraries **
+#   zlib: system
+#   OSS Audio: yes
+#   ALSA Audio: no
+#   Jack Audio: no
+#   PulseAudio Audio: no
+#   DirectFB support: no
+#   X11 Shared Memory support: yes (path: /usr/X11R6)
+#   X11 XVideo support: no
+#   SDL Support: no
+#   OpenGL support: no
+#   TinyGL support: no
+#   OpenSSL support: yes
+#   Mozilla XUL/GECKO support: no
+#   DVB Support: yes
+#   XMLRPC Support: no
+#   wxWidgets support: no
+#
+#   ** Extra Libraries used **
+#   SpiderMonkey: no
+#   FreeType: system
+#   JPEG: system
+#   OpenJPEG: system
+#   PNG: system
+#   MAD: system
+#   FAAD: system
+#   XVID: system
+#   FFMPEG: no
+#   Xiph OGG: system
+#   Platinum UPnP: no
+#   AVCap: no
+#   Xiph Vorbis: system
+#   Xiph Theora: system
+#   A52 (AC3): system
+#   OpenSVCDecoder: no
+#   OpenHEVCDecoder: no
+#   Freenect: no
+#
+#   Creating config.mak
+#   config.h is unchanged
+#   Check config.log for detection failures
+#   Done - type 'make help' for make info, 'make' to build

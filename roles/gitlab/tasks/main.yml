@@ -1,14 +1,101 @@
 ---
 
-- include: 1-facts.yml
+- block:
+    - name: Detect Git version
+      command:
+        git --version
+      changed_when: no
+      register: git_version
+
+    - name: Check install mode and Git >= 1.7.10
+      assert:
+        that:
+          - "gitlab_install_mode in ['manual', 'omnibus']"
+          - git_version.stdout is undefined or git_version.stdout.split(' ')[-1]|version_compare('1.7.10', '>=')
   tags: always
   when: gitlab_has_run is undefined
 
-- include: 2-packages.yml
-  tags: packages
-  when: gitlab_has_run is undefined
+- block:
+    - name: Install Kerberos package
+      apt: >
+        name=libkrb5-dev state=lastest
+      when: gitlab_kerberos_enabled|bool
 
-- include: 3-config.yml
+    # - name: Install postfix server
+    #   apt: >
+    #     name=postfix state=latest
+    #   when: gitlab_postfix_enabled|bool
+  become: yes
+  tags: packages
+  when: gitlab_has_run is undefined and gitlab_install_mode == 'manual'
+
+- block:
+    - name: Download Omnibus setup script
+      get_url: >
+        url=https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+        dest=/tmp/gitlab.deb.sh mode=755
+      notify: execute omnibus
+
+    - name: Install GitLab Community Edition
+      apt: >
+        name=gitlab-ce state=latest
+      become: yes
+
+    - debug:
+        msg='You must execute sudo gitlab-ctl reconfigure (root, 5iveL!fe)'
+  tags: packages
+  when: gitlab_has_run is undefined and gitlab_install_mode == 'omnibus'
+
+- block:
+    - name: Configure GitLab URL
+      lineinfile: >
+        dest=/etc/gitlab/gitlab.rb regexp='^external_url \S+'
+        line="external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
+      notify: restart gitlab
+      register: gitlab_url_result
+
+    - name: Configure GitLab port
+      lineinfile: >
+        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*nginx\\['listen_port'\\]"
+        line="nginx['listen_port'] = {{ gitlab_port|int }}"
+      notify: restart gitlab
+      register: gitlab_port_result
+
+    - name: Check GitLab data directory
+      file: >
+        name={{ gitlab_data_directory }}{{ item }} state=directory owner=git group=root mode=700
+      with_items:
+        - ''
+        - '/repositories'
+
+    - name: Configure GitLab data directory
+      lineinfile: >
+        dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+' line="git_data_dir '{{ gitlab_data_directory }}'"
+      notify: restart gitlab
+      register: gitlab_data_result
+
+    - name: Configure GitLab (settings)
+      lineinfile: >
+        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
+        line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}" backup=yes
+      notify: restart gitlab
+      register: gitlab_setings_result
+      with_items: gitlab_settings
+
+    - name: Stop GitLab services to free up some memory
+      command: >
+        gitlab-ctl stop {{ item }}
+      when: gitlab_url_result|changed or gitlab_port_result|changed or gitlab_data_result|changed or gitlab_setings_result|changed
+      with_items:
+        - unicorn
+        - sidekiq
+
+    - name: Generate GitLab configuration
+      command: >
+        gitlab-ctl reconfigure
+      changed_when: "'  - ' in gitlab_reconfigure_result.stderr"
+      register: gitlab_reconfigure_result
+  become: yes
   tags: config
   when: gitlab_has_run is undefined
 

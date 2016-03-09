@@ -1,11 +1,64 @@
 # Install file-systems packages & configure mount points
 ---
 
-- include: 1-packages.yml
+- name: Install file-system packages
+  apt: >
+    name={{ item }} state=latest
+  with_items: '{{ filesystem_packages }}'
+  become: yes
   tags: packages
   when: mounts_has_run is undefined
 
-- include: 2-mounts.yml
+- block:
+    - name: Create mount directories
+      file: >
+        name={{ item.value.directory }}
+        owner={{ item.value.user|default(user) }}
+        group={{ item.value.group|default(group) }}
+        mode=755
+        state=directory
+      when: "item.value.fstype != 'swap'"
+      with_dict: '{{ mounts }}'
+
+    - name: Mount the shared directories
+      mount: >
+        fstype={{ item.value.fstype }}
+        name={{ item.value.directory }}
+        opts='{{ item.value.options }}'
+        src={{ item.value.source }}
+        state={{ (item.value.fstype == 'swap')|ternary('present', 'mounted') }}
+      when: item.value.source|length > 0
+      with_dict: '{{ mounts }}'
+
+    - name: Unmount the shared directories
+      mount: >
+        fstype={{ item.value.fstype }}
+        name={{ item.value.directory }}
+        opts='{{ item.value.options }}'
+        src={{ item.value.source }}
+        state={{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}
+      when: item.value.source|length == 0
+      with_dict: '{{ mounts }}'
+
+    - name: Check root can write and chown
+      file: >
+        name={{ item.value.directory }}/{{ inventory_hostname }} owner={{ user }} group={{ group }} mode=755 state=directory
+      when: item.value.check|bool and item.value.fstype != 'swap'
+      with_dict: '{{ mounts }}'
+
+    - name: Check user can write
+      file: >
+        name={{ item.value.directory }}/{{ inventory_hostname }}/{{ user }} state=directory
+      become: no
+      when: item.value.check|bool and item.value.fstype != 'swap'
+      with_dict: '{{ mounts }}'
+
+    - name: Final cleanup
+      file: >
+        name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
+      when: item.value.check|bool and item.value.fstype != 'swap'
+      with_dict: '{{ mounts }}'
+  become: yes
   tags: mounts
   when: mounts_has_run is undefined
 

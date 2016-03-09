@@ -1,11 +1,61 @@
 # Install our Workers and daemonize with Supervisor
 ---
 
-- include: 1-config.yml
+- block:
+    - name: Configure celery services
+      template: >
+        src={{ item.value.config_file }}
+        dest=/etc/supervisor/conf.d/{{ item.value.name }}.conf
+        mode=644
+      notify: restart celery
+      with_dict: '{{ celery_services }}'
+
+    - name: Create our logs directory
+      file: >
+        name=/var/log/celery/{{ site }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+
+    - name: Install celery services
+      supervisorctl: >
+        name={{ item.value.name }} state=present
+      with_dict: '{{ celery_services }}'
+  become: yes
   tags: config
   when: celery_has_run is undefined
 
-- include: 2-services.yml
+- block:
+    - name: Start celery services
+      supervisorctl: >
+        name={{ item.value.name }} state=started
+      ignore_errors: yes
+      register: celery_start_result
+      with_dict: '{{ celery_services }}'
+
+    - name: Restart celery services
+      shell: >
+        supervisorctl restart {{ item.value.name }} &
+      tags: [services, update]
+      when: celery_start_result|failed
+      with_dict: '{{ celery_services }}'
+
+    - name: Wait until celery services are running
+      shell: >
+        supervisorctl status {{ item.value.name }}
+      changed_when: no
+      failed_when: "'FATAL' in celery_wait_result.stdout"
+      register: celery_wait_result
+      tags: [services, update]
+      until: "'RUNNING' in celery_wait_result.stdout"
+      with_dict: '{{ celery_services }}'
+
+    # - name: Restart celery services
+    #   supervisorctl: >
+    #     name={{ item.value.name }} state=restarted
+    #   async: 360  # FIXME lookup plugins (with_*) cannot be used with async tasks
+    #   poll: 5
+    #   tags: [services, update]
+    #   when: celery_start_result|failed
+    #   with_dict: '{{ celery_services }}'
+  become: yes
   tags: services
   when: celery_has_run is undefined
 
