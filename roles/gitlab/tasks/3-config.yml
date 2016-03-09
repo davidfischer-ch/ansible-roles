@@ -31,7 +31,7 @@
     - name: Configure GitLab (settings)
       lineinfile: >
         dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
-        line="{{ item.group }}['{{ item.key }}'] = {{ item.value|to_json }}" backup=yes
+        line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}" backup=yes
       notify: restart gitlab
       register: gitlab_setings_result
       with_items: gitlab_settings
