@@ -8,13 +8,12 @@
       notify: restart gitlab
       register: gitlab_url_result
 
-    - name: Configure GitLab
+    - name: Configure GitLab port
       lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp="{{ item.group }}\['{{ item.key }}'\]"
-        line="{{ item.group }}['{{ item.key }}'] = {{ item.value|to_json }}" backup=yes
+        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*nginx\\['listen_port'\\]"
+        line="nginx['listen_port'] = {{ gitlab_port|int }}"
       notify: restart gitlab
-      register: gitlab_setings_result
-      with_items: gitlab_settings
+      register: gitlab_port_result
 
     - name: Check GitLab data directory
       file: >
@@ -25,15 +24,22 @@
 
     - name: Configure GitLab data directory
       lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+'
-        line="git_data_dir '{{ gitlab_data_directory }}'"
+        dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+' line="git_data_dir '{{ gitlab_data_directory }}'"
       notify: restart gitlab
       register: gitlab_data_result
+
+    - name: Configure GitLab (settings)
+      lineinfile: >
+        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
+        line="{{ item.group }}['{{ item.key }}'] = {{ item.value|to_json }}" backup=yes
+      notify: restart gitlab
+      register: gitlab_setings_result
+      with_items: gitlab_settings
 
     - name: Stop GitLab services to free up some memory
       command: >
         gitlab-ctl stop {{ item }}
-      when: gitlab_url_result|changed or gitlab_setings_result|changed or gitlab_data_result|changed
+      when: gitlab_url_result|changed or gitlab_port_result|changed or gitlab_data_result|changed or gitlab_setings_result|changed
       with_items:
         - unicorn
         - sidekiq
