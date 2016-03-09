@@ -6,3 +6,4 @@
   when: gexiv2_has_run is undefined
 
 - set_fact: gexiv2_has_run=yes
+  tags: always

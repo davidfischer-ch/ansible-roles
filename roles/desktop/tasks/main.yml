@@ -9,3 +9,4 @@
   when: desktop_has_run is undefined
 
 - set_fact: desktop_has_run=yes
+  tags: always

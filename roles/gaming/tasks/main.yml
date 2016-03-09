@@ -5,3 +5,4 @@
   when: gaming_has_run is undefined
 
 - set_fact: gaming_has_run=yes
+  tags: always

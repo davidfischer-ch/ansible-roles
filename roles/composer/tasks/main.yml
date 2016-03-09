@@ -6,3 +6,4 @@
   when: composer_has_run is undefined
 
 - set_fact: composer_has_run=yes
+  tags: always

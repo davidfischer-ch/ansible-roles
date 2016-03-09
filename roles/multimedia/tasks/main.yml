@@ -5,3 +5,4 @@
   when: multimedia_has_run is undefined
 
 - set_fact: multimedia_has_run=yes
+  tags: always

@@ -17,3 +17,4 @@
   when: miscellaneous_has_run is undefined
 
 - set_fact: miscellaneous_has_run=yes
+  tags: always

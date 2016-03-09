@@ -12,3 +12,4 @@
   tags: snapshots
 
 - set_fact: vagrant_has_run=yes
+  tags: always

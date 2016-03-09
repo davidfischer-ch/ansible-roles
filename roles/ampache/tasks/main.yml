@@ -17,3 +17,4 @@
   when: ampache_has_run is undefined
 
 - set_fact: ampache_has_run=yes
+  tags: always

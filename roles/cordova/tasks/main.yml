@@ -6,3 +6,4 @@
   when: cordova_has_run is undefined
 
 - set_fact: cordova_has_run=yes
+  tags: always

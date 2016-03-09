@@ -10,3 +10,4 @@
   when: kernel_has_run is undefined
 
 - set_fact: kernel_has_run=yes
+  tags: always

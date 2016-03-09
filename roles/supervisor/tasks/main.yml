@@ -14,3 +14,4 @@
   when: supervisor_has_run is undefined
 
 - set_fact: supervisor_has_run=yes
+  tags: always

@@ -13,3 +13,4 @@
   when: postgresql_has_run is undefined and postgresql_is_master|bool
 
 - set_fact: postgresql_has_run=yes
+  tags: always

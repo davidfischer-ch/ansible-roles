@@ -10,3 +10,4 @@
   when: mounts_has_run is undefined
 
 - set_fact: mounts_has_run=yes
+  tags: always

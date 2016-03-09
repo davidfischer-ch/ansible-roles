@@ -10,3 +10,4 @@
   when: mysql_has_run is undefined
 
 - set_fact: mysql_has_run=yes
+  tags: always

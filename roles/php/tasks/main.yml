@@ -10,3 +10,4 @@
   # always run to allow other roles to configure php
 
 - set_fact: php_has_run=yes
+  tags: always

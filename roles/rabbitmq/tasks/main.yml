@@ -14,3 +14,4 @@
   when: rabbitmq_has_run is undefined and rabbitmq_is_master|bool
 
 - set_fact: rabbitmq_has_run=yes
+  tags: always

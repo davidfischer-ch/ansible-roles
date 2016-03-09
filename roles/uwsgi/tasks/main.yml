@@ -17,3 +17,4 @@
   tags: config
 
 - set_fact: uwsgi_has_run=yes
+  tags: always

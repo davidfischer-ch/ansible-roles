@@ -10,3 +10,4 @@
   when: fail2ban_has_run is undefined
 
 - set_fact: fail2ban_has_run=yes
+  tags: always

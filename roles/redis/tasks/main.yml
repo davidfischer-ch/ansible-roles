@@ -6,3 +6,4 @@
   when: redis_has_run is undefined
 
 - set_fact: redis_has_run=yes
+  tags: always

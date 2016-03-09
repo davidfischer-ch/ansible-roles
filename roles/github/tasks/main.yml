@@ -5,3 +5,4 @@
   when: github_has_run is undefined
 
 - set_fact: github_has_run=yes
+  tags: always

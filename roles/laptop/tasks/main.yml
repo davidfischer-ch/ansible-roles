@@ -9,3 +9,4 @@
   when: laptop_has_run is undefined
 
 - set_fact: laptop_has_run=yes
+  tags: always

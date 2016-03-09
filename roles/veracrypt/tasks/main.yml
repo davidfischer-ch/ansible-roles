@@ -32,3 +32,4 @@
   when: veracrypt_has_run is undefined
 
 - set_fact: veracrypt_has_run=yes
+  tags: always

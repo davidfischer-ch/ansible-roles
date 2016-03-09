@@ -22,3 +22,4 @@
   when: owncloud_has_run is undefined
 
 - set_fact: owncloud_has_run=yes
+  tags: always

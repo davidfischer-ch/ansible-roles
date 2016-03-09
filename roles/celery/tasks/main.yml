@@ -10,3 +10,4 @@
   when: celery_has_run is undefined
 
 - set_fact: celery_has_run=yes
+  tags: always

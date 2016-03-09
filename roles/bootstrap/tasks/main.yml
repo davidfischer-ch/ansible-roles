@@ -6,3 +6,4 @@
   when: bootstrap_has_run is undefined
 
 - set_fact: bootstrap_has_run=yes
+  tags: always
