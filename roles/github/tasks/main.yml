@@ -1,15 +1,15 @@
 ---
 
 - block:
-  - name: Add GitHub public key to known_hosts file
-    lineinfile: >
-      dest=/home/{{ user }}/.ssh/known_hosts regexp=^github.com
-      line='github.com,207.97.227.239 ssh-rsa {{ github_rsa }}' create=yes
+    - name: Add GitHub public key to known_hosts file
+      lineinfile: >
+        dest=/home/{{ user }}/.ssh/known_hosts regexp=^github.com
+        line='github.com,207.97.227.239 ssh-rsa {{ github_rsa }}' create=yes
 
-  - name: Add GitHub IP address to hosts file
-    lineinfile: >
-      dest=/etc/hosts regexp=' github.com$' line='{{ github_ip }} github.com' create=yes
-    become: yes
+    - name: Add GitHub IP address to hosts file
+      lineinfile: >
+        dest=/etc/hosts regexp=' github.com$' line='{{ github_ip }} github.com' create=yes
+      become: yes
   tags: config
   when: github_has_run is undefined
 
