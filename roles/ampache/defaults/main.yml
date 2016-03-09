@@ -7,11 +7,11 @@ ampache_memory_cache: yes
 ampache_metadata_directory: /var/ampache/metadata
 ampache_mysql_host: localhost
 ampache_mysql_port: 3306
-ampache_port: 80
 ampache_lastfm_api_key: ''
 ampache_lastfm_api_secret: ''
 ampache_lastfm_show_converts: yes
 ampache_lastfm_show_similar: yes
+ampache_port: '{{ ampache_ssl_enabled|bool|ternary(443, 80) }}'
 ampache_ssl_enabled: no
 ampache_ssl_force: no
 ampache_tmp_directory: /tmp/ampache

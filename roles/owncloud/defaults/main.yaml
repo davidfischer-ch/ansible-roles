@@ -13,7 +13,7 @@ owncloud_php_options:
   post_max_size: 65536M
   upload_max_filesize: 64G
   # ;upload_tmp_dir = {{ owncloud_web_directory }}/bla-bla
-owncloud_port: 80
+owncloud_port: '{{ owncloud_ssl_enabled|bool|ternary(443, 80) }}'
 owncloud_preview_max_scale_factor: 5
 owncloud_preview_max_x: null
 owncloud_preview_max_y: null
