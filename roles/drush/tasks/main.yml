@@ -14,6 +14,7 @@
     - name: Check Drupal Shell
       command: >
         {{ tools_src_directory }}/drush-{{ drush_version }}.phar core-status
+      always_run: yes
 
     - name: Install Drupal Shell
       file: >

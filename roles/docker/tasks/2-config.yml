@@ -25,6 +25,7 @@
     - name: Check memory/swap accounting is active
       command: >
         cat /proc/cmdline
+      always_run: yes
       become: no
       changed_when: "'cgroup_enable=memory' not in cmdline_result.stdout"
       notify:

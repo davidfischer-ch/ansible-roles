@@ -33,6 +33,7 @@
 - name: Trigger uWSGI restart
   command: >
     ls /dev/null
+  always_run: yes
   changed_when: yes
   notify: restart uwsgi
   tags: update

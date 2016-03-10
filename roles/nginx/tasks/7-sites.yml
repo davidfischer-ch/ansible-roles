@@ -16,4 +16,5 @@
     - name: Check Nginx config
       command: >
         {{ nginx_daemon_path }} -t
+      always_run: yes
   become: yes

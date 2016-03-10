@@ -40,6 +40,7 @@
     - name: Wait until celery services are running
       shell: >
         supervisorctl status {{ item.value.name }}
+      always_run: yes
       changed_when: no
       failed_when: "'FATAL' in celery_wait_result.stdout"
       register: celery_wait_result
