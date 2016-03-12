@@ -4,4 +4,4 @@ dependencies:
   - role: requirements
     apt_requirements:
       - fail2ban
-    when: fail2ban_has_run is undefined
+    tags: [fail2ban, dependencies]

@@ -1,23 +1,21 @@
 ---
 
-- block:
-    - assert:
-        that:
-          - elasticsearch_cluster_name is defined
-          - elasticsearch_nodes_group is defined
-        tags: always
+- assert:
+    that:
+      - elasticsearch_cluster_name is defined
+      - elasticsearch_nodes_group is defined
+  tags: [elasticsearch, always]
 
+- block:
     - name: Download ElasticSearch
       get_url: >
         url=https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/{{ elasticsearch_version }}/elasticsearch-{{ elasticsearch_version }}.deb
         dest=/tmp/elasticsearch-{{ elasticsearch_version }}.deb
-      tags: packages
 
     - name: Install ElasticSearch
       apt: >
         deb=/tmp/elasticsearch-{{ elasticsearch_version }}.deb state=present
       become: yes
-      tags: packages
 
     - name: Create ElasticSearch directories
       file: >
@@ -26,33 +24,31 @@
       with_items:
         - '{{ elasticsearch_data_directory }}'
         - '{{ elasticsearch_log_directory }}'
-      tags: packages
+  tags: [elasticsearch, packages]
 
-    - name: Configure ElasticSearch
-      template: >
-        src=elasticsearch.{{ elasticsearch_version }}.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml mode=644
-      become: yes
-      notify: reload elasticsearch
-      tags: config
+- name: Configure ElasticSearch
+  template: >
+    src=elasticsearch.{{ elasticsearch_version }}.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml mode=644
+  become: yes
+  notify: reload elasticsearch
+  tags: [elasticsearch, config]
 
+- block:
     - name: Start ElasticSearch service
       service: >
         name=elasticsearch state=started enabled=yes
       become: yes
-      tags: services
 
     - meta: flush_handlers
 
     - name: Wait for ElasticSearch to be ready
       wait_for: >
         host={{ ansible_default_ipv4.address }} port={{ elasticsearch_port|int }} connect_timeout=1 delay=0 timeout=10
-      tags: services
 
     - name: Retrieve ElasticSearch configuration
       uri: >
         url=http://{{ ansible_default_ipv4.address }}:{{ elasticsearch_port|int }} return_content=yes
       register: elasticsearch_check_result
-      tags: services
 
     - name: Check ElasticSearch configuration
       assert:
@@ -60,8 +56,4 @@
           - "elasticsearch_check_result.json.version.number == '{{ elasticsearch_version }}'"
           - "elasticsearch_check_result.json.cluster_name == '{{ elasticsearch_cluster_name }}'"
           - "elasticsearch_check_result.json.name == '{{ elasticsearch_node_name }}'"
-      tags: services
-  when: elasticsearch_has_run is undefined
-
-- set_fact: elasticsearch_has_run=yes
-  tags: always
+  tags: [elasticsearch, services]

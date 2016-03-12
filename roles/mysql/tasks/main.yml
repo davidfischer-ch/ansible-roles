@@ -5,8 +5,7 @@
   service: >
     name=mysql state=started enabled=yes
   become: yes
-  tags: services
-  when: mysql_has_run is undefined
+  tags: [mysql, services]
 
 - block:
     - name: Copy user my.cnf file with root credentials
@@ -30,8 +29,4 @@
       mysql_db: >
         name=test state=absent
   become: yes
-  tags: config
-  when: mysql_has_run is undefined
-
-- set_fact: mysql_has_run=yes
-  tags: always
+  tags: [mysql, config]

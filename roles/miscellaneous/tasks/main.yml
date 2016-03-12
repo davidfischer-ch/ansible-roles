@@ -38,8 +38,7 @@
       sysctl: >
         name=vm.swappiness value={{ vm_swappiness|int }} sysctl_set=yes state=present
   become: yes
-  tags: packages
-  when: miscellaneous_has_run is undefined
+  tags: [miscellaneous, packages]
 
 - block:
     - name: Set the default locale
@@ -60,27 +59,27 @@
         dpkg-reconfigure locales -f noninteractive &&
         update-locale LANG={{ locale }} LC_ALL={{ locale }}
   become: yes
-  tags: config
-  when: miscellaneous_has_run is undefined and locale|length > 0
+  tags: [miscellaneous, config]
+  when: locale|length > 0
 
 - block:
     - name: Set local time zone
       copy: >
         content={{ timezone }} dest=/etc/timezone
       notify: update tzdata
-      tags: config
+      tags: [miscellaneous, config]
 
     - name: Install NTP
       apt: >
         name=ntp state=latest
-      tags: packages
+      tags: [miscellaneous, packages]
 
     - name: Start NTP service
       service: >
         name=ntp state=started enabled=yes
-      tags: services
+      tags: [miscellaneous, services]
   become: yes
-  when: miscellaneous_has_run is undefined and timezone|length > 0
+  when: timezone|length > 0
 
 - block:
     - name: Install usefull system tools
@@ -93,8 +92,4 @@
         name={{ item }} state=latest
       with_items: '{{ development_tools }}'
   become: yes
-  tags: packages
-  when: miscellaneous_has_run is undefined
-
-- set_fact: miscellaneous_has_run=yes
-  tags: always
+  tags: [miscellaneous, packages]

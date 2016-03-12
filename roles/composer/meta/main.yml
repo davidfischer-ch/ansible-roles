@@ -2,7 +2,7 @@
 
 dependencies:
   - role: github
-    when: composer_has_run is undefined
+    tags: [composer, dependencies]
 
   - role: php
-    when: composer_has_run is undefined
+    tags: [composer, dependencies]

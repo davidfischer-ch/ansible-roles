@@ -4,4 +4,4 @@ dependencies:
   - role: requirements
     apt_requirements:
       - openssl
-    when: openssl_has_run is undefined
+    tags: [openssl, dependencies]

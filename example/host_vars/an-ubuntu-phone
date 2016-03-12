@@ -14,6 +14,7 @@ kernel_packages: []
 system_tools: []
 upgrade_packages: no
 
+# FIXME since _has_run conditions has been removed, this doesn't work anymore:
 bootstrap_has_run: yes  # hack to skip bootstrap
 python_has_run: yes     # hack to skip setup of Python packages
 ufw_has_run: yes        # hack to skip setup of UFW

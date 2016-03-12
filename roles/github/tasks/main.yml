@@ -10,8 +10,4 @@
       lineinfile: >
         dest=/etc/hosts regexp=' github.com$' line='{{ github_ip }} github.com' create=yes
       become: yes
-  tags: config
-  when: github_has_run is undefined
-
-- set_fact: github_has_run=yes
-  tags: always
+  tags: [github, config]

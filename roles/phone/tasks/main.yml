@@ -17,8 +17,4 @@
       register: cleanup_result
       when: keyboards is defined and keyboards
   become: yes
-  tags: packages
-  when: phone_has_run is undefined
-
-- set_fact: phone_has_run=yes
-  tags: always
+  tags: [phone, packages]

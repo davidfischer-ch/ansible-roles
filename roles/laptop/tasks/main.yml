@@ -16,15 +16,12 @@
         - tlp
         - tlp-rdw
   become: yes
-  tags: packages
-  when: laptop_has_run is undefined and laptop_with_tlp|bool
+  tags: [laptop, packages]
+  when: laptop_with_tlp|bool
 
 - name: Start TLP power management daemon
   command: >
     tlp start
   become: yes
-  tags: services
-  when: laptop_has_run is undefined and laptop_with_tlp|bool
-
-- set_fact: laptop_has_run=yes
-  tags: always
+  tags: [laptop, services]
+  when: laptop_with_tlp|bool

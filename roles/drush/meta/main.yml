@@ -2,7 +2,7 @@
 
 dependencies:
   - role: github
-    when: drush_has_run is undefined
+    tags: [drush, dependencies]
 
   - role: php
-    when: drush_has_run is undefined
+    tags: [drush, dependencies]

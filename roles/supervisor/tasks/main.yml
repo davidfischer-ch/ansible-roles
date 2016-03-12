@@ -14,8 +14,7 @@
       notify: restart supervisor
       register: supervisor_upgrade_result
   become: yes
-  tags: packages
-  when: supervisor_has_run is undefined
+  tags: [supervisor, packages]
 
 - block:
     - name: Create Supervisor directories
@@ -41,15 +40,10 @@
 
     - meta: flush_handlers
   become: yes
-  tags: config
-  when: supervisor_has_run is undefined
+  tags: [supervisor, config]
 
 - name: Start Supervisor service
   service: >
     name=supervisor state=started enabled=yes
   become: yes
-  tags: services
-  when: supervisor_has_run is undefined
-
-- set_fact: supervisor_has_run=yes
-  tags: always
+  tags: [supervisor, services]

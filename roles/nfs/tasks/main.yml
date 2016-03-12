@@ -19,10 +19,6 @@
       notify: reload nfs-kernel-server
       with_dict: '{{ nfs_exports }}'
   become: yes
-  tags: config
-  when: nfs_has_run is undefined
-
-- set_fact: nfs_has_run=yes
-  tags: always
+  tags: [nfs, shares]
 
 # FIXME configure exports?

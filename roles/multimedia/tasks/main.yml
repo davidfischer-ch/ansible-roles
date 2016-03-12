@@ -34,8 +34,4 @@
       command: >
         /usr/share/doc/libdvdread4/install-css.sh
   become: yes
-  tags: packages
-  when: multimedia_has_run is undefined
-
-- set_fact: multimedia_has_run=yes
-  tags: always
+  tags: [multimedia, packages]

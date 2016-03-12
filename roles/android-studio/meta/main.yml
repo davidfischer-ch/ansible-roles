@@ -11,4 +11,4 @@ dependencies:
       - android-tools-adb
       - oracle-java8-installer
       - qemu-kvm
-    when: android_studio_has_run is undefined
+    tags: [android-studio, dependencies]

@@ -10,8 +10,7 @@
   file: >
     name={{ owncloud_data_directory }} owner=www-data group=www-data state=directory
   become: yes
-  tags: packages
-  when: owncloud_has_run is undefined
+  tags: [owncloud, packages]
 
 - block:
     - name: Enable ownCloud apt repository
@@ -34,8 +33,7 @@
         - libapache2-mod-php5
         - owncloud
   become: yes
-  tags: packages
-  when: owncloud_has_run is undefined
+  tags: [owncloud, packages]
 
 - block:
     - name: Enable Apache 2 modules
@@ -73,8 +71,7 @@
         src=/etc/apache2/sites-available/owncloud.conf dest=/etc/apache2/sites-enabled/owncloud.conf state=link
       notify: reload apache2
   become: yes
-  tags: config
-  when: owncloud_has_run is undefined
+  tags: [owncloud, config]
 
 - block:
     - name: Setup ownCloud MySQL database
@@ -85,8 +82,4 @@
       mysql_user: >
         name=owncloud host=localhost password={{ owncloud_mysql_password }} priv=owncloud.*:ALL state=present
   become: yes
-  tags: database
-  when: owncloud_has_run is undefined
-
-- set_fact: owncloud_has_run=yes
-  tags: always
+  tags: [owncloud, databases]

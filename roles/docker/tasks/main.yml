@@ -2,20 +2,13 @@
 ---
 
 - include: 1-packages.yml
-  tags: packages
-  when: docker_has_run is undefined
+  tags: [docker, packages]
 
 - include: 2-config.yml
-  tags: config
-  when: docker_has_run is undefined
+  tags: [docker, config]
 
 - include: 3-services.yml
-  tags: services
-  when: docker_has_run is undefined
+  tags: [docker, services]
 
 - include: 4-images.yml
-  tags: images
-  when: docker_has_run is undefined
-
-- set_fact: docker_has_run=yes
-  tags: always
+  tags: [docker, images]

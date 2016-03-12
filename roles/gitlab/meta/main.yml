@@ -25,14 +25,17 @@ dependencies:
       - pkg-config
       - python-docutils
       - zlib1g-dev
-    when: gitlab_has_run is undefined and gitlab_install_mode == 'manual'
+    tags: [gitlab, dependencies]
+    when: gitlab_install_mode == 'manual'
 
   - role: requirements
     apt_requirements:
       - ca-certificates
       - openssh-server
-    when: gitlab_has_run is undefined and gitlab_install_mode == 'omnibus'
+    tags: [gitlab, dependencies]
+    when: gitlab_install_mode == 'omnibus'
 
   - role: ufw
     ufw_rules: '{{ gitlab_ufw_rules }}'
-    when: gitlab_has_run is undefined and gitlab_ufw_rules
+    tags: [gitlab, dependencies]
+    when: gitlab_ufw_rules

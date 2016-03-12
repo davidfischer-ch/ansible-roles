@@ -5,4 +5,4 @@ dependencies:
     apt_requirements:
       - vagrant
       - vagrant-lxc
-    when: vagrant_has_run is undefined
+    tags: [vagrant, dependencies]

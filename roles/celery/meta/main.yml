@@ -2,7 +2,7 @@
 
 dependencies:
   - role: python
-    when: celery_has_run is undefined
+    tags: [celery, dependencies]
 
   - role: supervisor
-    when: celery_has_run is undefined
+    tags: [celery, dependencies]

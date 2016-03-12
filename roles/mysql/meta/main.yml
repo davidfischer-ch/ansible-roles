@@ -7,4 +7,4 @@ dependencies:
       - mysql-server
       - python-mysqldb
       - libapache2-mod-auth-mysql
-    when: mysql_has_run is undefined
+    tags: [mysql, dependencies]

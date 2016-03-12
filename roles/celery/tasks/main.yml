@@ -19,8 +19,7 @@
         name={{ item.value.name }} state=present
       with_dict: '{{ celery_services }}'
   become: yes
-  tags: config
-  when: celery_has_run is undefined
+  tags: [celery, config]
 
 - block:
     - name: Start celery services
@@ -57,8 +56,4 @@
     #   when: celery_start_result|failed
     #   with_dict: '{{ celery_services }}'
   become: yes
-  tags: services
-  when: celery_has_run is undefined
-
-- set_fact: celery_has_run=yes
-  tags: always
+  tags: [celery, services]

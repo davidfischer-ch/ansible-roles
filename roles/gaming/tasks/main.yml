@@ -4,9 +4,5 @@
   apt: >
     name={{ item }} state=latest
   become: yes
-  tags: packages
-  when: gaming_has_run is undefined
+  tags: [gaming, packages]
   with_items: '{{ gaming_packages }}'
-
-- set_fact: gaming_has_run=yes
-  tags: always

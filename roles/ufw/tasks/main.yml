@@ -12,8 +12,7 @@
         state=enabled logging={{ ufw_logging }} policy={{ ufw_policy }}
       notify: reload ufw
   become: yes
-  tags: config
-  when: ufw_has_run is undefined
+  tags: [ufw, rules]
 
 # http://docs.ansible.com/ansible/ufw_module.html
 # FIXME find a better way to pass parameters to module like python's kwargs?
@@ -39,8 +38,5 @@
     port: '{{ item.port|default(omit) }}'  # to_port
   become: yes
   notify: reload ufw
-  tags: config
+  tags: [ufw, rules]
   with_items: '{{ ufw_rules }}'
-
-- set_fact: ufw_has_run=yes
-  tags: always

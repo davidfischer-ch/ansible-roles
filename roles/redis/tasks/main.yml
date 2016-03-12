@@ -15,8 +15,4 @@
         redis-benchmark -q -n 10000 -c 50 -P 12
       always_run: yes
       changed_when: no
-  tags: config
-  when: redis_has_run is undefined
-
-- set_fact: redis_has_run=yes
-  tags: always
+  tags: [redis, config]

@@ -18,18 +18,14 @@
       tags: flush_extra
       when: postgresql_config_result|changed or postgresql_allow_result|changed
   become: yes
-  tags: config
-  when: postgresql_has_run is undefined
+  tags: [postgresql, config]
 
 - name: Start PostgreSQL service
   service: >
     name=postgresql state=started enabled=yes
   become: yes
-  tags: services
-  when: postgresql_has_run is undefined
+  tags: [postgresql, services]
 
 - include: databases.yml
-  when: postgresql_has_run is undefined and postgresql_is_master|bool
-
-- set_fact: postgresql_has_run=yes
-  tags: always
+  tags: [postgresql, databases]
+  when: postgresql_is_master|bool

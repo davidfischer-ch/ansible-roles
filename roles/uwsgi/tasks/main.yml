@@ -13,8 +13,7 @@
 
     - meta: flush_handlers
   become: yes
-  tags: packages
-  when: uwsgi_has_run is undefined
+  tags: [uwsgi, packages]
 
 - block:
     - name: Start uWSGI service
@@ -27,8 +26,7 @@
         name=uwsgi state=restarted enabled=yes
       when: uwsgi_start_result|failed
   become: yes
-  tags: services
-  when: uwsgi_has_run is undefined
+  tags: [uwsgi, services]
 
 - name: Trigger uWSGI restart
   command: >
@@ -36,8 +34,7 @@
   always_run: yes
   changed_when: yes
   notify: restart uwsgi
-  tags: update
-  when: uwsgi_has_run is undefined
+  tags: [uwsgi, update]
 
 - block:
     - name: Setup the uWSGI applications
@@ -56,7 +53,4 @@
       notify: reload uwsgi
       with_dict: '{{ uwsgi_apps }}'
   become: yes
-  tags: config
-
-- set_fact: uwsgi_has_run=yes
-  tags: always
+  tags: [uwsgi, applications]

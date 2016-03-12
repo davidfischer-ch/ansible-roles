@@ -18,8 +18,4 @@
       authorized_key: >
         user={{ user }} key="{{ lookup('file', item) }}"
       with_items: '{{ ssh_authorized_keys }}'
-  tags: bootstrap
-  when: bootstrap_has_run is undefined
-
-- set_fact: bootstrap_has_run=yes
-  tags: always
+  tags: [bootstrap, config]

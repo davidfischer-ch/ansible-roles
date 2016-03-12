@@ -2,4 +2,4 @@
 
 dependencies:
   - role: gpac
-    when: multimedia_has_run is undefined
+    tags: [multimedia, dependencies]

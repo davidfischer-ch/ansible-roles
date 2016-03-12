@@ -2,7 +2,7 @@
 
 dependencies:
   - role: github
-    when: veracrypt_has_run is undefined
+    tags: [veracrypt, dependencies]
 
   - role: requirements
     apt_requirements:
@@ -18,4 +18,4 @@ dependencies:
       - libwxgtk3.0-0v5
       - libwxgtk3.0-0v5-dbg
       - libwxgtk3.0-dev
-    when: veracrypt_has_run is undefined
+    tags: [veracrypt, dependencies]

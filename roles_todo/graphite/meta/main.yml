@@ -6,6 +6,8 @@ dependencies:
       - port: "{{ graphite_port }}"
         proto: tcp
         rule: allow
+    tags: [graphite, dependencies]
+
   - role: requirements
     apt_requirements:
        - build-essential
@@ -15,3 +17,4 @@ dependencies:
        - python-pip
        - python-virtualenv
        - supervisor
+    tags: [graphite, dependencies]

@@ -4,8 +4,9 @@ dependencies:
   - role: requirements
     apt_requirements:
       - rabbitmq-server
-    when: rabbitmq_has_run is undefined
+    tags: [rabbitmq, dependencies]
 
   - role: ufw
     ufw_rules: '{{ rabbitmq_ufw_rules }}'
-    when: rabbitmq_has_run is undefined and rabbitmq_ufw_rules
+    tags: [rabbitmq, dependencies]
+    when: rabbitmq_ufw_rules

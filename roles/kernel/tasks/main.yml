@@ -11,16 +11,11 @@
 
     - set_fact:
         kernel_config: '{{ kernel_config_result.stdout|default({}) }}'
-  tags: always
-  when: kernel_has_run is undefined
+  tags: [kernel, always]
 
 - name: Install GNU/Linux kernel packages
   apt: >
     name={{ item }} state=latest
   become: yes
-  tags: packages
-  when: kernel_has_run is undefined
+  tags: [kernel, packages]
   with_items: '{{ kernel_packages }}'
-
-- set_fact: kernel_has_run=yes
-  tags: always

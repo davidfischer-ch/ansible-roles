@@ -45,8 +45,4 @@
       args:
         chdir: '{{ tools_src_directory }}/gexiv2'
       become: yes
-  tags: packages
-  when: gexiv2_has_run is undefined
-
-- set_fact: gexiv2_has_run=yes
-  tags: always
+  tags: [gexiv2, packages]

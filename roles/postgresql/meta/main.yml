@@ -9,8 +9,9 @@ dependencies:
     apt_requirements: '{{ postgresql_packages }}'
     pip2_requirements:
       - psycopg2
-    when: postgresql_has_run is undefined
+    tags: [postgresql, dependencies]
 
   - role: ufw
     ufw_rules: '{{ postgresql_ufw_rules }}'
-    when: postgresql_has_run is undefined and postgresql_ufw_rules
+    tags: [postgresql, dependencies]
+    when: postgresql_ufw_rules

@@ -23,8 +23,4 @@
     # - name: Enrich the bash startup file with completion and aliases
     #   command: >
     #     yes | drush init --bg
-  tags: packages
-  when: drush_has_run is undefined
-
-- set_fact: drush_has_run=yes
-  tags: always
+  tags: [drush, packages]

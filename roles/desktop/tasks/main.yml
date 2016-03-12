@@ -15,8 +15,7 @@
         line='deb-src http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
         state=present
   become: yes
-  tags: config
-  when: desktop_has_run is undefined
+  tags: [desktop, config]
 
 - block:
     # Miscellaneous
@@ -92,8 +91,4 @@
         name={{ item }} state=latest
       with_items: '{{ web_packages }}'
   become: yes
-  tags: packages
-  when: desktop_has_run is undefined
-
-- set_fact: desktop_has_run=yes
-  tags: always
+  tags: [desktop, packages]

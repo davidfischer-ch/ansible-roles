@@ -2,7 +2,7 @@
 
 dependencies:
   - role: github
-    when: nginx_has_run is undefined
+    tags: [nginx, dependencies]
 
   - role: requirements
     apt_build_requirements:
@@ -15,11 +15,13 @@ dependencies:
       - unzip
       - zlib1g
       - zlib1g-dev
-    when: nginx_has_run is undefined
+    tags: [nginx, dependencies]
 
   - role: supervisor
-    when: nginx_has_run is undefined and nginx_daemon_mode == 'supervisor'
+    tags: [nginx, dependencies]
+    when: nginx_daemon_mode == 'supervisor'
 
   - role: ufw
     ufw_rules: '{{ nginx_ufw_rules }}'
-    when: nginx_has_run is undefined and nginx_ufw_rules
+    tags: [nginx, dependencies]
+    when: nginx_ufw_rules

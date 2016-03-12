@@ -5,4 +5,4 @@ dependencies:
     apt_requirements: '{{ php_packages }}'
     ppa_requirements:
       - ppa:ondrej/php  # For PHP 7
-    when: php_has_run is undefined
+    tags: [php, dependencies]

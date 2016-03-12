@@ -4,8 +4,9 @@ dependencies:
   - role: requirements
     apt_requirements:
       - nfs-kernel-server
-    when: nfs_has_run is undefined
+    tags: [nfs, dependencies]
 
   - role: ufw
     ufw_rules: '{{ nfs_ufw_rules }}'
-    when: nfs_has_run is undefined and nfs_ufw_rules
+    tags: [nfs, dependencies]
+    when: nfs_ufw_rules

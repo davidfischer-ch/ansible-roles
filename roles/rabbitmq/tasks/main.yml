@@ -5,17 +5,13 @@
   service: >
     name=rabbitmq-server state=started enabled=yes
   become: yes
-  tags: services
-  when: rabbitmq_has_run is undefined
-
-- name: Remove guest RabbitMQ user
-  rabbitmq_user: >
-    user=guest state=absent
-  become: yes
-  tags: config
-  when: rabbitmq_has_run is undefined and rabbitmq_is_master|bool
+  tags: [rabbitmq, services]
 
 - block:
+    - name: Remove guest RabbitMQ user
+      rabbitmq_user: >
+        user=guest state=absent
+
     - name: Setup our RabbitMQ vhost
       rabbitmq_vhost: >
         name=/ state=present
@@ -25,8 +21,5 @@
         user={{ rabbitmq_user }} password={{ rabbitmq_password }} vhost=/
         configure_priv=.* read_priv=.* write_priv=.* state=present
   become: yes
-  tags: config
-  when: rabbitmq_has_run is undefined and rabbitmq_is_master|bool
-
-- set_fact: rabbitmq_has_run=yes
-  tags: always
+  tags: [rabbitmq, vhosts]
+  when: rabbitmq_is_master|bool

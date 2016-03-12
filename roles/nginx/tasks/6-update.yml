@@ -1,8 +1,0 @@
----
-
-- name: Trigger Nginx reload
-  command: >
-    ls /dev/null
-  always_run: yes
-  changed_when: yes
-  notify: '{{ nginx_daemon_mode }} reload nginx'

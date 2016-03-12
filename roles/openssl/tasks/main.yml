@@ -10,8 +10,5 @@
   args:
     creates: '{{ ssl_cert_crt_filename }}'
   become: yes
-  tags: config
-  when: openssl_has_run is undefined and ssl_cert_key_filename is defined and ssl_cert_key_filename
-
-- set_fact: openssl_has_run=yes
-  tags: always
+  tags: [openssl, config]
+  when: ssl_cert_key_filename is defined and ssl_cert_key_filename

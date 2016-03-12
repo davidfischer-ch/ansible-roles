@@ -7,8 +7,7 @@
         fail2ban-client -V | grep -o 'Fail2Ban v[0-9]\.[0-9]' | cut -dv -f 2
       always_run: yes
       changed_when: no
-      register:
-        fail2ban_version
+      register: fail2ban_version
 
     - set_fact:
         fail2ban_conf_suffix: "{% if fail2ban_version.stdout|version_compare('0.9', '>=') %}new{% else %}old{% endif %}"
@@ -20,15 +19,10 @@
       template: >
         src=jail.conf.{{ fail2ban_conf_suffix }}.j2 dest=/etc/fail2ban/jail.conf mode=644
       become: yes
-  tags: config
-  when: fail2ban_has_run is undefined
+  tags: [fail2ban, config]
 
 - name: Start fail2ban service
   service: >
     name=fail2ban state=started enabled=yes
   become: yes
-  tags: services
-  when: fail2ban_has_run is undefined
-
-- set_fact: fail2ban_has_run=yes
-  tags: always
+  tags: [fail2ban, services]

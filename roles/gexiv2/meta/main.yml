@@ -6,4 +6,4 @@ dependencies:
       - autoconf
       - gobject-introspection
       - libgirepository1.0-dev
-    when: gexiv2_has_run is undefined
+    tags: [gexiv2, dependencies]

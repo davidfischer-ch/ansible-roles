@@ -4,25 +4,25 @@
   command: >
     {{ graphite_bin_directory }}/bin/python /opt/graphite/bin/django-admin.py check
   become: yes
-  tags: unit_test_extra
+  tags: [graphite, unit_test_extra]
 
 # - name: Flush the database
 #   command: >
 #     graphite-manage flush
 #   become: yes
-#   tags: flush
+#   tags: [graphite, flush]
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses)
 
 # - name: Create the super-user
 #   shell: >
 #     echo "from django.contrib.auth.models import User; User.objects.create_superuser('{{ superuser.name }}', '{{ superuser.email }}', '{{ superuser.password }}')" | graphite-manage shell
 #   become: yes
-#   tags: [flush_extra, database]
+#   tags: [graphite, flush_extra, databases]
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses) and superuser
 
 # - name: Create the database
 #   command: >
 #     graphite-manage syncdb
 #   become: yes
-#   tags: [flush_extra, database]
+#   tags: [graphite, flush_extra, databases]
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses)

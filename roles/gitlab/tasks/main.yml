@@ -12,8 +12,7 @@
         that:
           - "gitlab_install_mode in ['manual', 'omnibus']"
           - git_version.stdout is undefined or git_version.stdout.split(' ')[-1]|version_compare('1.7.10', '>=')
-  tags: always
-  when: gitlab_has_run is undefined
+  tags: [gitlab, always]
 
 - block:
     - name: Install Kerberos package
@@ -26,8 +25,8 @@
     #     name=postfix state=latest
     #   when: gitlab_postfix_enabled|bool
   become: yes
-  tags: packages
-  when: gitlab_has_run is undefined and gitlab_install_mode == 'manual'
+  tags: [gitlab, packages]
+  when: gitlab_install_mode == 'manual'
 
 - block:
     - name: Download Omnibus setup script
@@ -43,8 +42,8 @@
 
     - debug:
         msg='You must execute sudo gitlab-ctl reconfigure (root, 5iveL!fe)'
-  tags: packages
-  when: gitlab_has_run is undefined and gitlab_install_mode == 'omnibus'
+  tags: [gitlab, packages]
+  when: gitlab_install_mode == 'omnibus'
 
 - block:
     - name: Configure GitLab URL
@@ -96,8 +95,4 @@
       changed_when: "'  - ' in gitlab_reconfigure_result.stderr"
       register: gitlab_reconfigure_result
   become: yes
-  tags: config
-  when: gitlab_has_run is undefined
-
-- set_fact: gitlab_has_run=yes
-  tags: always
+  tags: [gitlab, config]

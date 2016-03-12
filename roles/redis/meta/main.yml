@@ -2,7 +2,7 @@
 
 dependencies:
   - role: github
-    when: redis_has_run is undefined
+    tags: [redis, dependencies]
 
   - role: requirements
     ppa_requirements:
@@ -16,8 +16,9 @@ dependencies:
     # Install redis for Redis Ansible modules
     # pip_requirements:
     #   - redis
-    when: redis_has_run is undefined
+    tags: [redis, dependencies]
 
   - role: ufw
     ufw_rules: '{{ redis_ufw_rules }}'
-    when: redis_has_run is undefined and redis_ufw_rules
+    tags: [redis, dependencies]
+    when: redis_ufw_rules

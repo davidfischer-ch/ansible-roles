@@ -21,8 +21,4 @@
         cordova
       always_run: yes
       changed_when: no
-  tags: packages
-  when: cordova_has_run is undefined
-
-- set_fact: cordova_has_run=yes
-  tags: always
+  tags: [cordova, packages]

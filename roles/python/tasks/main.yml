@@ -34,8 +34,4 @@
         name=virtualenv executable=pip{{ item[0] }} state=latest
       with_items: '{{ python_versions }}'
   become: yes
-  tags: packages
-  when: python_has_run is undefined
-
-- set_fact: python_has_run=yes
-  tags: always
+  tags: [python, packages]

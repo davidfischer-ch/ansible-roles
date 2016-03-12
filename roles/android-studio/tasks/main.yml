@@ -4,8 +4,4 @@
   lineinfile: >
     dest=/home/{{ user }}/.bashrc regexp='Register Android SDK tools' state=present
     line='export PATH="$PATH:{{ android_sdk_tools_directory }}" # Register Android SDK tools'
-  tags: config
-  when: android_studio_has_run is undefined
-
-- set_fact: android_studio_has_run=yes
-  tags: always
+  tags: [android-studio, config]

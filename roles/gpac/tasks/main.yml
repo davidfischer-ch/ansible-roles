@@ -32,11 +32,7 @@
       args:
         chdir: '{{ tools_src_directory }}/gpac'
       become: yes
-  tags: packages
-  when: gpac_has_run is undefined
-
-- set_fact: gpac_has_run=yes
-  tags: always
+  tags: [gpac, packages]
 
 # Current configure gives:
 

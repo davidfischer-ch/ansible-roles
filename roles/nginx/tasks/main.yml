@@ -8,35 +8,200 @@
 
     - assert:
         that: "nginx_daemon_mode in ['supervisor', 'systemv']"
-  tags: always
-  when: nginx_has_run is undefined
+  tags: [nginx, always]
 
-- include: 1-daemon.yml
-  tags: config
-  when: nginx_has_run is undefined
+- block:
+    - name: Create Nginx daemon group
+      group: >
+        name={{ nginx_daemon_group }} system=yes state=present
 
-- include: 2-pagespeed.yml
-  tags: packages
-  when: nginx_has_run is undefined and nginx_pagespeed_enabled|bool
+    - name: Create Nginx daemon user
+      user: >
+        name={{ nginx_daemon_user }} group={{ nginx_daemon_group }} createhome=no system=yes state=present
+  become: yes
+  tags: [nginx, config]
 
-- include: 3-packages.yml
-  tags: packages
-  when: nginx_has_run is undefined
+- include: pagespeed.yml
+  tags: [nginx, packages]
+  when: nginx_pagespeed_enabled|bool
 
-- include: 4-config.yml
-  tags: config
-  when: nginx_has_run is undefined
+- block:
+    - name: Create Nginx source directories
+      file: >
+        name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
+      become: yes
+      with_items:
+        - '{{ tools_src_directory }}/nginx'
+        - '{{ tools_src_directory }}/nginx-upload-module'
+        - '{{ tools_src_directory }}/nginx-upload-progress-module'
+        - '{{ tools_src_directory }}/nginx-zip-module'
+        - '{{ tools_src_directory }}'
 
-- include: 5-services.yml
-  tags: services
-  when: nginx_has_run is undefined
+    - name: Clone Nginx source code
+      git: >
+        repo=https://github.com/nginx/nginx.git
+        dest={{ tools_src_directory }}/nginx
+        force=yes
+        version={{ nginx_version }}
+      notify: '{{ nginx_daemon_mode }} restart nginx'
 
-- include: 6-update.yml
-  tags: update
-  when: nginx_has_run is undefined
+    - block:
+        - name: Clone Upload module source code
+          git: >
+            repo=https://github.com/vkholodkov/nginx-upload-module.git
+            dest={{ tools_src_directory }}/nginx-upload-module
+            force=yes
+            version={{ nginx_upload_module_version }}
+          notify: '{{ nginx_daemon_mode }} restart nginx'
 
-- include: 7-sites.yml
-  tags: [config, sites]
+        - name: Clone Upload Progress module source code
+          git: >
+            repo=https://github.com/masterzen/nginx-upload-progress-module.git
+            dest={{ tools_src_directory }}/nginx-upload-progress-module
+            force=yes
+            version={{ nginx_upload_progress_module_version }}
+          notify: '{{ nginx_daemon_mode }} restart nginx'
+      when: nginx_upload_module_enabled|bool
 
-- set_fact: nginx_has_run=yes
-  tags: always
+    - name: Clone Zip module source code
+      git: >
+        repo=https://github.com/evanmiller/mod_zip.git
+        dest={{ tools_src_directory }}/nginx-zip-module
+        force=yes
+        version={{ nginx_zip_module_version }}
+      notify: '{{ nginx_daemon_mode }} restart nginx'
+      when: nginx_zip_module_enabled|bool
+
+    - name: Configure Nginx build process
+      command: >
+        ./auto/configure
+          --prefix=/usr/share/nginx
+          --conf-path=/etc/nginx/nginx.conf
+          --http-log-path=/var/log/nginx/access.log
+          --error-log-path=/var/log/nginx/error.log
+          --lock-path=/var/lock/nginx.lock
+          --pid-path=/run/nginx.pid
+          --http-client-body-temp-path=/var/lib/nginx/body
+          --http-fastcgi-temp-path=/var/lib/nginx/fastcgi
+          --http-proxy-temp-path=/var/lib/nginx/proxy
+          --http-scgi-temp-path=/var/lib/nginx/scgi
+          --http-uwsgi-temp-path=/var/lib/nginx/uwsgi
+          {{ nginx_build_flags|join(' ') }}
+          {% if nginx_upload_module_enabled %}
+          --add-module={{ tools_src_directory }}/nginx-upload-module
+          --add-module={{ tools_src_directory }}/nginx-upload-progress-module
+          {% endif %}
+          {% if nginx_zip_module_enabled %}
+          --add-module={{ tools_src_directory }}/nginx-zip-module
+          {% endif %}
+          {{ nginx_pagespeed_configure }}
+      args:
+        chdir: '{{ tools_src_directory }}/nginx'
+
+    - name: Build Nginx from source
+      command: >
+        make -j{{ ansible_processor_cores }}
+      args:
+        chdir: '{{ tools_src_directory }}/nginx'
+
+    - block:
+        - name: Install Nginx from source
+          command: >
+            make install
+          args:
+            chdir: '{{ tools_src_directory }}/nginx'
+
+        - name: Make Nginx binary executable
+          file: >
+            name={{ nginx_daemon_path }} mode=755 state=file
+      become: yes
+  tags: [nginx, packages]
+
+- block:
+    - name: Configure Nginx
+      template: >
+        src={{ nginx_config_file }} dest=/etc/nginx/nginx.conf mode=644
+      notify: '{{ nginx_daemon_mode }} reload nginx'
+
+    - name: Create Nginx directories
+      file: >
+        name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
+        state=directory
+      with_items:
+        - { name: '/etc/nginx/sites-enabled/' }
+        - { name: '/var/lib/nginx/' }
+        - { name: '/var/log/nginx/', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
+
+    - name: Remove default site
+      file: >
+        path=/etc/nginx/sites-enabled/default state=absent
+      notify: '{{ nginx_daemon_mode }} reload nginx'
+
+    - block:
+        - name: Configure Nginx service
+          template: >
+            src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
+          notify: '{{ nginx_daemon_mode }} restart nginx'
+
+        - name: Install Nginx service
+          supervisorctl: >
+            name=nginx state=present
+      when: "nginx_daemon_mode == 'supervisor'"
+
+    - name: Configure Nginx service
+      template: >
+        src=init.d.j2 dest=/etc/init.d/nginx mode=755
+      notify: '{{ nginx_daemon_mode }} restart nginx'
+      when: "nginx_daemon_mode == 'systemv'"
+  become: yes
+  tags: [nginx, config]
+
+- block:
+    - name: Start Nginx service
+      supervisorctl: >
+        name=nginx state=started
+      ignore_errors: yes
+      register: nginx_start_result
+
+    - name: Restart Nginx service
+      supervisorctl: >
+        name=nginx state=restarted
+      when: nginx_start_result|failed
+  become: yes
+  tags: [nginx, services]
+  when: "nginx_daemon_mode == 'supervisor'"
+
+- name: Start Nginx service
+  service: >
+    name=nginx state=started enabled=yes
+  become: yes
+  tags: [nginx, services]
+  when: "nginx_daemon_mode == 'systemv'"
+
+- name: Trigger Nginx reload
+  command: >
+    ls /dev/null
+  always_run: yes
+  changed_when: yes
+  notify: '{{ nginx_daemon_mode }} reload nginx'
+  tags: [nginx, update]
+
+- block:
+    - name: Setup the Nginx sites
+      template: >
+        src={{ item.value.config_file }} dest=/etc/nginx/sites-enabled/{{ item.value.name }}.conf mode=644
+      notify: '{{ nginx_daemon_mode }} reload nginx'
+      with_dict: '{{ nginx_sites }}'
+
+    - name: Create the Nginx sites logs directory
+      file: >
+        name=/var/log/nginx/{{ item.value.name }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755
+        recurse=yes state=directory
+      with_dict: '{{ nginx_sites }}'
+
+    - name: Check Nginx config
+      command: >
+        {{ nginx_daemon_path }} -t
+      always_run: yes
+  become: yes
+  tags: [nginx, sites]

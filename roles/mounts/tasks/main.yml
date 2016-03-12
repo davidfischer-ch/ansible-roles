@@ -6,8 +6,7 @@
     name={{ item }} state=latest
   with_items: '{{ filesystem_packages }}'
   become: yes
-  tags: packages
-  when: mounts_has_run is undefined
+  tags: [mounts, packages]
 
 - block:
     - name: Create mount directories
@@ -59,8 +58,4 @@
       when: item.value.check|bool and item.value.fstype != 'swap'
       with_dict: '{{ mounts }}'
   become: yes
-  tags: mounts
-  when: mounts_has_run is undefined
-
-- set_fact: mounts_has_run=yes
-  tags: always
+  tags: [mounts, shares]

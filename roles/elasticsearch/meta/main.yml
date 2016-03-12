@@ -1,7 +1,6 @@
 ---
 
 dependencies:
-
   - role: requirements
     apt_requirements:
       - openjdk-7-jre-headless
@@ -9,8 +8,9 @@ dependencies:
       #- wget
     pip_requirements:
       - httplib2
-    when: elasticsearch_has_run is undefined
+    tags: [elasticsearch, dependencies]
 
   - role: ufw
     ufw_rules: '{{ elasticsearch_ufw_rules }}'
-    when: elasticsearch_has_run is undefined and elasticsearch_ufw_rules
+    tags: [elasticsearch, dependencies]
+    when: elasticsearch_ufw_rules

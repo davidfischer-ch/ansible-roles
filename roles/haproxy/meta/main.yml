@@ -2,7 +2,7 @@
 
 dependencies:
   - role: github
-    when: haproxy_has_run is undefined
+    tags: [haproxy, dependencies]
 
   - role: requirements
     apt_build_requirements:
@@ -15,8 +15,9 @@ dependencies:
       - libssl-dev
       - zlib1g
       - zlib1g-dev
-    when: haproxy_has_run is undefined
+    tags: [haproxy, dependencies]
 
   - role: ufw
     ufw_rules: '{{ haproxy_ufw_rules }}'
-    when: haproxy_has_run is undefined and nginx_ufw_rules
+    tags: [haproxy, dependencies]
+    when: nginx_ufw_rules

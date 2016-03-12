@@ -17,15 +17,13 @@
     virtualenv -p python2.7 --system-site-packages {{ graphite_bin_directory }}
   args:
     creates: "{{ graphite_bin_directory }}"
-  tags: packages
-  when: graphite_has_run is undefined
+  tags: [graphite, packages]
 
 - name: Install requirements into virtualenv
   pip: >
     name={{ item }} state=present virtualenv={{ graphite_bin_directory }}
     extra_args='--install-option="--prefix={{ graphite_bin_directory }} --install-lib={{ graphite_bin_directory }}/lib"'
-  tags: packages
-  when: graphite_has_run is undefined
+  tags: [graphite, packages]
   with_items:
     - cairocffi
     - carbon
@@ -40,6 +38,7 @@
     src={{ graphite_bin_directory }}/lib/python2.7/site-packages/cairocffi
     dest={{ graphite_bin_directory }}/lib/python2.7/site-packages/cairo
     state=link
+  tags: [graphite, packages]
 
 # Configuration
 
@@ -48,7 +47,7 @@
     src={{ item }}
     dest={{ graphite_bin_directory }}/conf/{{ item|basename|pathname }}
     mode=644
-  tags: config
+  tags: [graphite, config]
   with_fileglob:
     - ../templates/*.conf.j2
     - ../templates/*.wsgi.j2
@@ -59,6 +58,4 @@
     dest={{ graphite_bin_directory }}/webapp/graphite/local_settings.py
     mode=644
   become: yes
-  tags: config
-
-- set_fact: graphite_has_run=yes
+  tags: [graphite, config]

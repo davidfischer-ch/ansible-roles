@@ -29,7 +29,4 @@
       file: >
         src={{ tools_src_directory }}/veracrypt/src/Main/veracrypt dest=/usr/local/bin/veracrypt state=link
       become: yes
-  when: veracrypt_has_run is undefined
-
-- set_fact: veracrypt_has_run=yes
-  tags: always
+  tags: [veracrypt, packages]

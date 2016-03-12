@@ -20,8 +20,4 @@
       with_items:
         - owncloud-client
   become: yes
-  tags: packages
-  when: owncloud_client_has_run is undefined
-
-- set_fact: owncloud_client_has_run=yes
-  tags: always
+  tags: [owncloud-client, packages]

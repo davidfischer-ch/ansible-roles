@@ -11,8 +11,4 @@
         php /tmp/composer-setup.php -- --install-dir={{ composer_path|dirname }} --filename={{ composer_path|basename }}
                                        {{ (composer_version == 'latest')|ternary('', '--version=' + composer_version) }}
       become: yes
-  tags: packages
-  when: composer_has_run is undefined
-
-- set_fact: composer_has_run=yes
-  tags: always
+  tags: [composer, packages]

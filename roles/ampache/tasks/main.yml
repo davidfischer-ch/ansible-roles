@@ -42,8 +42,7 @@
       become: yes
       changed_when: "'Nothing to install or update' not in ampache_install_result.stderr"
       register: ampache_install_result
-  tags: packages
-  when: ampache_has_run is undefined
+  tags: [ampache, packages]
 
 - block:
     - name: Create Ampache directories
@@ -92,8 +91,7 @@
         src=/etc/apache2/sites-available/ampache.conf dest=/etc/apache2/sites-enabled/ampache.conf state=link
       notify: reload apache2
   become: yes
-  tags: config
-  when: ampache_has_run is undefined
+  tags: [ampache, config]
 
 - block:
     - name: Setup Ampache MySQL database
@@ -124,8 +122,4 @@
       register: ampache_register_result
       with_items: ampache_users
   become: yes
-  tags: database
-  when: ampache_has_run is undefined
-
-- set_fact: ampache_has_run=yes
-  tags: always
+  tags: [ampache, databases]

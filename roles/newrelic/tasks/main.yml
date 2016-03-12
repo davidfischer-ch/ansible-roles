@@ -27,15 +27,14 @@
         name=newrelic-sysmond state=absent
       when: newrelic_license_key|length == 0
   become: yes
-  tags: packages
-  when: newrelic_has_run is undefined
+  tags: [newrelic, packages]
 
 - name: Configure New Relic System Monitor
   command: >
     nrsysmond-config --set license_key={{ newrelic_license_key }}
   become: yes
-  tags: config
-  when: newrelic_has_run is undefined and newrelic_license_key|length > 0
+  tags: [newrelic, config]
+  when: newrelic_license_key|length > 0
 
 - block:
     - name: Start New Relic System Monitor service
@@ -49,8 +48,4 @@
       ignore_errors: yes
       when: newrelic_license_key|length == 0
   become: yes
-  tags: services
-  when: newrelic_has_run is undefined
-
-- set_fact: newrelic_has_run=yes
-  tags: always
+  tags: [newrelic, services]

@@ -1,7 +1,8 @@
 ---
 
+allow_duplicates: yes
 dependencies:
   - role: requirements
     apt_requirements:
       - ufw
-    when: ufw_has_run is undefined
+    tags: [ufw, dependencies]
