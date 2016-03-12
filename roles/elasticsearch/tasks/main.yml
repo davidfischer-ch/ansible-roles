@@ -15,15 +15,14 @@
     - name: Install ElasticSearch
       apt: >
         deb=/tmp/elasticsearch-{{ elasticsearch_version }}.deb state=present
-      become: yes
 
     - name: Create ElasticSearch directories
       file: >
         name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=750
-      become: yes
       with_items:
         - '{{ elasticsearch_data_directory }}'
         - '{{ elasticsearch_log_directory }}'
+  become: yes
   tags: [elasticsearch, packages]
 
 - name: Configure ElasticSearch
