@@ -1,3 +1,4 @@
+ufw_enabled: yes
 ufw_logging: 'off'
 ufw_policy: deny
 ufw_rules: []

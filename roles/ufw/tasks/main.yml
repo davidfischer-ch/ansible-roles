@@ -9,7 +9,7 @@
 
     - name: Configure UFW
       ufw: >
-        state=enabled logging={{ ufw_logging }} policy={{ ufw_policy }}
+        state={{ ufw_enabled|bool|ternary('enabled', 'disabled') }} logging={{ ufw_logging }} policy={{ ufw_policy }}
       notify: reload ufw
   become: yes
   tags: [ufw, rules]
