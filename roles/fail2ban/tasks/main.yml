@@ -10,7 +10,7 @@
       register: fail2ban_version
 
     - set_fact:
-        fail2ban_conf_suffix: "{% if fail2ban_version.stdout|version_compare('0.9', '>=') %}new{% else %}old{% endif %}"
+        fail2ban_conf_suffix: "{{ fail2ban_version.stdout|version_compare('0.9', '>=')|ternary('new', 'old') }}"
 
     - debug: >
         msg='fail2ban version {{ fail2ban_version.stdout }}, detected as {{ fail2ban_conf_suffix }}'
@@ -23,6 +23,6 @@
 
 - name: Start fail2ban service
   service: >
-    name=fail2ban state=started enabled=yes
+    name=fail2ban state={{ fail2ban_enabled|bool|ternary('started', 'stopped') }} enabled={{ fail2ban_enabled|bool }}
   become: yes
   tags: [fail2ban, services]
