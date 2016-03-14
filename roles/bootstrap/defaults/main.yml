@@ -1,2 +1,3 @@
+bootstrap_enabled: yes
 ssh_authorized_keys:
   - ~/.ssh/id_rsa.pub

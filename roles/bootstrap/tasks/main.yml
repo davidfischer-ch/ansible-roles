@@ -19,3 +19,4 @@
         user={{ user }} key="{{ lookup('file', item) }}"
       with_items: '{{ ssh_authorized_keys }}'
   tags: [bootstrap, config]
+  when: bootstrap_enabled|bool
