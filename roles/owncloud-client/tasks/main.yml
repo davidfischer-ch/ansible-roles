@@ -16,7 +16,7 @@
 
     - name: Install ownCloud packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - owncloud-client
   become: yes

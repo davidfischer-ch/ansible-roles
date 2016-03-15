@@ -24,11 +24,11 @@
 
     - name: Install libreoffice
       apt: >
-        name=libreoffice-common install_recommends=no state=latest
+        name=libreoffice-common install_recommends=no state=present
 
     - name: Install ownCloud packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - libapache2-mod-php5
         - owncloud

@@ -25,27 +25,27 @@
 
     - name: Install requirements with apt
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ apt_requirements }}'
 
     - name: Install requirements with npm
       npm: >
-        name={{ item }} global=yes production=yes state=latest
+        name={{ item }} global=yes production=yes state=present
       with_items: '{{ npm_requirements }}'
 
     - name: Install requirements with pip
       pip: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ pip_requirements }}'
 
     - name: Install requirements with pip2
       pip: >
-        name={{ item }} executable=pip2 state=latest
+        name={{ item }} executable=pip2 state=present
       with_items: '{{ pip2_requirements }}'
 
     - name: Install requirements with pip3
       pip: >
-        name={{ item }} executable=pip3 state=latest
+        name={{ item }} executable=pip3 state=present
       with_items: '{{ pip3_requirements }}'
   become: yes
   tags: packages

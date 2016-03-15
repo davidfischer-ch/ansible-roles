@@ -9,7 +9,7 @@
 - block:
     - name: Install PostGIS
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - postgis
         - 'postgresql-{{ postgresql_version }}-postgis-2.1'
@@ -17,7 +17,7 @@
 
     - name: Install geolocation prerequisites required for all back-ends
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - binutils
         - libgeos-3.4.2
@@ -26,7 +26,7 @@
 
     - name: Install geolocation prerequisites required for PostgreSQL and SQLite
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - libproj-dev
         - proj-bin
@@ -34,7 +34,7 @@
 
     - name: Install geolocation prerequisites optional but required for SQLite
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - gdal-bin
         - libgdal1-dev
@@ -42,7 +42,7 @@
 
     - name: install optional IP-based geolocation library
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - libgeoip1
   become: yes

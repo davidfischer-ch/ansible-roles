@@ -11,7 +11,7 @@
 
     - name: Install TLP power management packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items:
         - tlp
         - tlp-rdw

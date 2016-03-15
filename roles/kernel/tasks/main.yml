@@ -15,7 +15,7 @@
 
 - name: Install GNU/Linux kernel packages
   apt: >
-    name={{ item }} state=latest
+    name={{ item }} state=present
   become: yes
   tags: [kernel, packages]
   with_items: '{{ kernel_packages }}'

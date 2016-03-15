@@ -31,7 +31,7 @@
 
     - name: Install extra Debian packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ extra_packages }}'
 
     - name: Set swappiness
@@ -71,7 +71,7 @@
 
     - name: Install NTP
       apt: >
-        name=ntp state=latest
+        name=ntp state=present
       tags: [miscellaneous, packages]
 
     - name: Start NTP service
@@ -84,12 +84,12 @@
 - block:
     - name: Install usefull system tools
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ system_tools }}'
 
     - name: Install building and development tools
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ development_tools }}'
   become: yes
   tags: [miscellaneous, packages]

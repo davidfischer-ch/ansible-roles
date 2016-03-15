@@ -2,7 +2,7 @@
 
 - name: Install gaming packages
   apt: >
-    name={{ item }} state=latest
+    name={{ item }} state=present
   become: yes
   tags: [gaming, packages]
   with_items: '{{ gaming_packages }}'

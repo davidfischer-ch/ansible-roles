@@ -3,7 +3,7 @@
 - block:
     - name: Install building and development tools
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ python_packages }}'
 
     - name: Download pip bootstrap script
@@ -31,7 +31,7 @@
 
     - name: Install virtualenv
       pip: >
-        name=virtualenv executable=pip{{ item[0] }} state=latest
+        name=virtualenv executable=pip{{ item[0] }} state=present
       with_items: '{{ python_versions }}'
   become: yes
   tags: [python, packages]

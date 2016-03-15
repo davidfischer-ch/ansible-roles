@@ -7,7 +7,7 @@
 - block:
     - name: Install Ampache packages
       apt: >
-        name=ampache state=latest
+        name=ampache state=present
       become: yes
 
     - name: Create Ampache source directories

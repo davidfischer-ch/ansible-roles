@@ -19,7 +19,7 @@
 
         - name: Install New Relic System Monitor
           apt: >
-            name=newrelic-sysmond state=latest
+            name=newrelic-sysmond state=present
       when: newrelic_license_key|length > 0
 
     - name: Remove New Relic System Monitor

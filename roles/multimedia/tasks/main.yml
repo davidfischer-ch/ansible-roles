@@ -8,27 +8,27 @@
 
     - name: Install imaging packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ imaging_packages }}'
 
     - name: Install audio related packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ audio_packages }}'
 
     - name: Install video related packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ video_packages }}'
 
     - name: Install media players packages
       apt: >
-        name={{ item }} state=latest
+        name={{ item }} state=present
       with_items: '{{ media_player_packages }}'
 
     - name: Install encrypted DVD playback packages
       apt: >
-        name=libdvdread4 state=latest
+        name=libdvdread4 state=present
 
     - name: Enable encrypted DVD playback
       command: >
