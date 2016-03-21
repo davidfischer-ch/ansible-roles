@@ -16,7 +16,4 @@ This playbook is covering multiple use-cases:
 
 Most are generic enough to be usable as-is.
 
-Some roles requires `pytoolbox <https://github.com/davidfischer-ch/pytoolbox>`_.
-So install requirements with pip{2,3}, defined in ``requirements.pip{2,3}``.
-
 2014-2016 - David Fischer
