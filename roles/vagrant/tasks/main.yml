@@ -24,6 +24,7 @@
       script: >
         update-machine-id /tmp {{ item.key }} {{ item.value.provider }}
       changed_when: >
+        vagrant_ids_result|success and
         (vagrant_ids_result.stdout|from_json).new and
         (vagrant_ids_result.stdout|from_json).new != (vagrant_ids_result.stdout|from_json).old
       register: vagrant_ids_result
