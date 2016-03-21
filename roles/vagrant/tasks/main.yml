@@ -13,21 +13,23 @@
       changed_when: "'to update' in vagrant_outdated_result.stdout"
       register: vagrant_outdated_result
 
-    - name: Update machines
-      command: >
-        vagrant box update
-      args:
-        chdir: /tmp
-      when: vagrant_outdated_result|changed
+    - name: Save machines specifications into a file
+      copy: >
+        dest=/tmp/vagrant_machines.yml content='{{ vagrant_machines|to_yaml }}'
 
-    - name: Update machines IDs
+    - name: Detect machines IDs
       script: >
-        update-machine-id /tmp {{ item.key }} {{ item.value.provider }}
-      changed_when: >
-        vagrant_ids_result|success and
-        (vagrant_ids_result.stdout|from_json).new and
-        (vagrant_ids_result.stdout|from_json).new != (vagrant_ids_result.stdout|from_json).old
+        set-machines-ids /tmp/vagrant_machines.yml
+      changed_when: no
       register: vagrant_ids_result
+
+    - name: Update machines specifications
+      set_fact:
+        vagrant_machines: '{{ vagrant_ids_result.stdout|from_json }}'
+
+    - name: Update machines IDs file
+      copy: >
+        dest=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }}/id content={{ item.value.uuid }} force=yes
       with_dict: '{{ vagrant_machines }}'
 
     - name: Provision machines
