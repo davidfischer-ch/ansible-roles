@@ -4,4 +4,4 @@ dependencies:
   - role: requirements
     apt_requirements: '{{ php_packages }}'
     tags: [php, dependencies]
-    ppa_requirements: '{{ (php_apt_repository|bool)|ternary([php_apt_repository], []) }}'
+    ppa_requirements: '{{ (php_apt_repository|length > 0)|ternary([php_apt_repository], []) }}'

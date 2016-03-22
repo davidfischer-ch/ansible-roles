@@ -1,4 +1,4 @@
-php_apt_repository: null  # ppa:ondrej/php For PHP 7
+php_apt_repository: ''  # ppa:ondrej/php For PHP 7
 php_options: {}
 php_packages:
   - php5
