@@ -1,14 +1,11 @@
 ---
 
 dependencies:
+  - role: postgresql-client
+    tags: [postgresql, dependencies]
+
   - role: requirements
-    key_requirements:
-      - https://www.postgresql.org/media/keys/ACCC4CF8.asc
-    ppa_requirements:
-      - 'deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main'
     apt_requirements: '{{ postgresql_packages }}'
-    pip2_requirements:
-      - psycopg2
     tags: [postgresql, dependencies]
 
   - role: ufw

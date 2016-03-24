@@ -1,0 +1,4 @@
+postgresql_client_packages:
+  - libpq-dev
+  - 'postgresql-client-{{ postgresql_version }}'
+postgresql_version: 9.3
