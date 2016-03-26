@@ -2,10 +2,10 @@
 
 dependencies:
   - role: python
-    tags: [uwsg, dependencies]
+    tags: [uwsgi, dependencies]
 
   - role: requirements
     apt_requirements:
       - uwsgi
       - uwsgi-plugin-python3
-    tags: [uwsg, dependencies]
+    tags: [uwsgi, dependencies]
