@@ -9,6 +9,15 @@
   tags: [mounts, packages]
 
 - block:
+    - name: Create file system
+      filesystem: >
+        dev={{ item.value.source }}
+        fstype={{ item.value.fstype }}
+        opts={{ item.value.create_options|default(omit) }}
+        resizefs={{ item.value.resize|default(false)|bool }}
+      when: item.value.source|length > 0 and item.value.fstype != 'swap' and item.value.create|default(false)|bool
+      with_dict: '{{ mounts }}'
+
     - name: Create mount directories
       file: >
         name={{ item.value.directory }}
