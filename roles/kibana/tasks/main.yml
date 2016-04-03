@@ -1,0 +1,31 @@
+# https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04
+---
+
+- name: Configure Kibana
+  template: >
+    src={{ item }} dest=/opt/kibana/config/kibana.yml mode=644
+  become: yes
+  notify: reload kibana
+  tags: [kibana, config]
+  with_first_found:
+    - 'kibana.{{ kibana_version }}.yml.j2'
+    - 'kibana.{{ kibana_version[0] }}.yml.j2'
+
+- block:
+    - name: Start Kibana service
+      service: >
+        name=kibana state=started enabled=yes
+      become: yes
+
+    - meta: flush_handlers
+
+    - name: Wait for Kibana to be ready
+      wait_for: >
+        host={{ ansible_default_ipv4.address }} port={{ kibana_port|int }} connect_timeout=1 delay=0 timeout=10
+
+    - name: Check Kibana home page
+      uri: >
+        url=http://{{ ansible_default_ipv4.address }}:{{ kibana_port|int }} return_content=yes
+      failed_when: "'kibana' not in kibana_check_result.content"
+      register: kibana_check_result
+  tags: [kibana, services]

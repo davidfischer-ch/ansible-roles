@@ -1,0 +1,21 @@
+kibana_base_path: ''
+kibana_bind_address: 0.0.0.0
+kibana_default_app_ip: discover
+kibana_elasticsearch_ping_timeout: 1500
+kibana_elasticsearch_request_timeout: 300000
+kibana_elasticsearch_shard_timeout: 0
+kibana_elasticsearch_startup_timeout: 5000
+kibana_elasticsearch_preserve_host: yes
+kibana_elasticsearch_ssl_verify: yes
+kibana_elasticsearch_url: 'http://localhost:{{ elasticsearch_port|default(9200)|int }}'
+kibana_index: .kibana
+kibana_interface: null
+kibana_max_payload_bytes: 1048576
+kibana_port: 5601
+kibana_version: 4.4.2
+kibana_ufw_rules:
+  - direction: in
+    interface: '{{ kibana_interface or omit }}'
+    port: '{{ kibana_port }}'
+    proto: tcp
+    rule: allow
