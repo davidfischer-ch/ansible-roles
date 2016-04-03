@@ -1,3 +1,4 @@
+# https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04
 ---
 
 - assert:
@@ -6,31 +7,24 @@
       - elasticsearch_nodes_group is defined
   tags: [elasticsearch, always]
 
-- block:
-    - name: Download ElasticSearch
-      get_url: >
-        url=https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/{{ elasticsearch_version }}/elasticsearch-{{ elasticsearch_version }}.deb
-        dest=/tmp/elasticsearch-{{ elasticsearch_version }}.deb
-
-    - name: Install ElasticSearch
-      apt: >
-        deb=/tmp/elasticsearch-{{ elasticsearch_version }}.deb state=present
-
-    - name: Create ElasticSearch directories
-      file: >
-        name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=750
-      with_items:
-        - '{{ elasticsearch_data_directory }}'
-        - '{{ elasticsearch_log_directory }}'
+- name: Create ElasticSearch directories
+  file: >
+    name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=755
+  with_items:
+    - '{{ elasticsearch_data_directory }}'
+    - '{{ elasticsearch_log_directory }}'
   become: yes
   tags: [elasticsearch, packages]
 
 - name: Configure ElasticSearch
   template: >
-    src=elasticsearch.{{ elasticsearch_version }}.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml mode=644
+    src={{ item }} dest=/etc/elasticsearch/elasticsearch.yml mode=644
   become: yes
   notify: reload elasticsearch
   tags: [elasticsearch, config]
+  with_first_found:
+    - 'elasticsearch.{{ elasticsearch_version }}.yml.j2'
+    - 'elasticsearch.{{ elasticsearch_version[0] }}.yml.j2'
 
 - block:
     - name: Start ElasticSearch service

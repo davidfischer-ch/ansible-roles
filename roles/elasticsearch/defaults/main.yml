@@ -6,7 +6,7 @@ elasticsearch_node_name: '{{ inventory_hostname }}'
 elasticsearch_node_attributes: {}
 elasticsearch_node_settings: {}
 elasticsearch_port: 9200
-elasticsearch_version: 2.2.0
+elasticsearch_version: 2.3.0
 elasticsearch_ufw_rules:
   - direction: in
     interface: '{{ elasticsearch_interface or omit }}'
