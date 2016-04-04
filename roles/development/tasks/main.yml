@@ -3,7 +3,7 @@
 # FIXME install package control, gitgutter ... configure ...
 
 - block:
-    - name: Install ScudCloud PPA repository
+    - name: Install ScudCloud apt repository
       apt_repository: >
         repo=ppa:rael-gc/scudcloud state=present update_cache=yes
       when: "'scudcloud' in devops_packages"
@@ -19,13 +19,13 @@
       with_items: '{{ programming_packages }}'
 
     - block:
-        - name: Download sublime text 3
+        - name: Download Sublime Text 3
           get_url: >
             url=https://download.sublimetext.com/sublime-text_build-{{ sublime_text_version }}_amd64.deb
             dest=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
           become: no
 
-        - name: Install sublime text 3
+        - name: Install Sublime Text 3
           apt: >
             deb=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
       when: sublime_text_version is defined and sublime_text_version

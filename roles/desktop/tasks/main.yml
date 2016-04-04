@@ -20,14 +20,14 @@
 - block:
     # Miscellaneous
 
-    - name: Install Nemo PPA repository
+    - name: Install Nemo apt repository
       apt_repository: >
         repo=ppa:webupd8team/nemo state=present update_cache=yes
       when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
 
     # Desktop
 
-    - name: Install Ubuntu desktop packages
+    - name: Install Ubuntu packages
       package: >
         name={{ item }} state=present
       with_items:
@@ -38,12 +38,12 @@
         - libavcodec-extra
         - ubuntu-standard
 
-    - name: Install desktop and office packages
+    - name: Install office packages
       package: >
         name={{ item }} state=present
       with_items: '{{ office_packages }}'
 
-    - name: Install Ubuntu desktop and office packages
+    - name: Install Ubuntu desktop packages
       package: >
         name={{ item }} state=present
       with_items: '{{ ubuntu_desktop_packages }}'
