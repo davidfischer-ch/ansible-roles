@@ -1,11 +1,6 @@
 ---
 
 dependencies:
-  - role: requirements
-    apt_requirements:
-      - nfs-kernel-server
-    tags: [nfs, dependencies]
-
   - role: ufw
     ufw_rules: '{{ nfs_ufw_rules }}'
     tags: [nfs, dependencies]

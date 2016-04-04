@@ -1,7 +1,0 @@
----
-
-dependencies:
-  - role: requirements
-    apt_requirements:
-      - fail2ban
-    tags: [fail2ban, dependencies]

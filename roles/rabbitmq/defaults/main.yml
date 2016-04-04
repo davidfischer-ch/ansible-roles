@@ -1,4 +1,6 @@
 rabbitmq_interface: null
+rabbitmq_packages:
+  - rabbitmq-server
 rabbitmq_port: 5672
 rabbitmq_ufw_rules:
   - direction: in

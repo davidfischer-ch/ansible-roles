@@ -1,0 +1,3 @@
+uwsgi_packages:
+  - uwsgi
+  - uwsgi-plugin-python3

@@ -24,4 +24,5 @@
     # - name: Enrich the bash startup file with completion and aliases
     #   command: >
     #     yes | drush init --bg
+  become: yes
   tags: [drush, packages]

@@ -2,11 +2,10 @@
 ---
 
 - block:
-    - name: Install extra PPA repositories
+    - name: Install extra apt repositories
       apt_repository: >
-        repo={{ item }} state=present
-      register: extra_ppa_result
-      with_items: '{{ extra_ppa_repos }}'
+        repo={{ item }} update_cache=yes state=present
+      with_items: '{{ extra_apt_repositories }}'
 
     - name: Fix any previously running Debian packages upgrade
       command: >
@@ -28,7 +27,11 @@
       changed_when: upgrade_cleanup_result.stdout_lines|length > 7
       register: upgrade_cleanup_result
       when: upgrade_packages|bool
+  become: yes
+  tags: [miscellaneous, packages]
+  when: "ansible_pkg_mgr == 'apt'"
 
+- block:
     - name: Install extra packages
       package: >
         name={{ item }} state=present

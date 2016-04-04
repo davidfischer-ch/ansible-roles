@@ -1,3 +1,4 @@
+docker_apt_key: 58118E89F3A912897C070ADBF76221572C52609D
 docker_apt_repository: 'deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main'
 docker_compose_checksum: e843627e511a7acb2b26eaa1b2f84d1289acd7e280a222c7f5e701b54b40df0b
 docker_compose_path: /usr/local/bin/docker-compose

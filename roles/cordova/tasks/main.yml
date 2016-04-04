@@ -2,6 +2,18 @@
 ---
 
 - block:
+    - name: Install Cordova packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ cordova_packages }}'
+
+    - name: Install Cordova npm packages
+      npm: >
+        name={{ item }} global=yes production=yes state=present
+      become: yes
+      with_items: '{{ cordova_npm_packages }}'
+
     - name: Check node command is available
       command: >
         node

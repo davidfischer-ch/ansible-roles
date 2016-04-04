@@ -11,6 +11,8 @@ ampache_lastfm_api_key: ''
 ampache_lastfm_api_secret: ''
 ampache_lastfm_show_converts: yes
 ampache_lastfm_show_similar: yes
+ampache_packages:
+  - ampache
 ampache_port: '{{ ampache_ssl_enabled|bool|ternary(443, 80) }}'
 ampache_ssl_enabled: no
 ampache_ssl_force: no

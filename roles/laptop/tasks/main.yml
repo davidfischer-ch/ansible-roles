@@ -1,7 +1,7 @@
 ---
 
 - block:
-    - name: Install TLP power management PPA repositories
+    - name: Install TLP power management apt repository
       apt_repository: >
         repo=ppa:linrunner/tlp state=present update_cache=yes
 

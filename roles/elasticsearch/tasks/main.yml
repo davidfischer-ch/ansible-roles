@@ -7,12 +7,28 @@
       - elasticsearch_nodes_group is defined
   tags: [elasticsearch, always]
 
-- name: Create ElasticSearch directories
-  file: >
-    name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=755
-  with_items:
-    - '{{ elasticsearch_data_directory }}'
-    - '{{ elasticsearch_log_directory }}'
+- block:
+    - name: Register ElasticSearch apt key
+      apt_key: >
+        url={{ elasticsearch_apt_key }} state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install ElasticSearch apt repository
+      apt_repository: >
+        repo={{ elasticsearch_apt_repository }} update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install ElasticSearch packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ elasticsearch_packages }}'
+
+    - name: Create ElasticSearch directories
+      file: >
+        name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=755
+      with_items:
+        - '{{ elasticsearch_data_directory }}'
+        - '{{ elasticsearch_log_directory }}'
   become: yes
   tags: [elasticsearch, packages]
 

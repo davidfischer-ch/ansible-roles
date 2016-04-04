@@ -4,19 +4,6 @@ dependencies:
   - role: github
     tags: [haproxy, dependencies]
 
-  - role: requirements
-    apt_build_requirements:
-      - haproxy
-    apt_requirements:
-      - build-essential
-      - libpcre3
-      - libpcre3-dev
-      - libssl1.0.0
-      - libssl-dev
-      - zlib1g
-      - zlib1g-dev
-    tags: [haproxy, dependencies]
-
   - role: ufw
     ufw_rules: '{{ haproxy_ufw_rules }}'
     tags: [haproxy, dependencies]

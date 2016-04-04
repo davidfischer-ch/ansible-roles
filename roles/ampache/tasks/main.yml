@@ -5,13 +5,12 @@
 - block:
     - name: Install Ampache packages
       package: >
-        name=ampache state=present
-      become: yes
+        name={{ item }} state=present
+      with_items: '{{ ampache_packages }}'
 
     - name: Create Ampache source directories
       file: >
         name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
-      become: yes
       with_items:
         - '{{ tools_src_directory }}/ampache'
         - '{{ tools_src_directory }}'
@@ -22,13 +21,13 @@
         dest={{ tools_src_directory }}/ampache
         force=yes
         version={{ ampache_version }}
+      become: no
 
     - name: Install Ampache from source
       command: >
         rsync -ah -lH --delete {{ tools_src_directory }}/ampache/ /usr/share/ampache/www2/ --exclude=.git
         --exclude=lib/components --exclude=lib/vendor --exclude=config/ampache.cfg.php
         --exclude=channel/.htaccess --exclude=play/.htaccess --exclude=rest/.htaccess
-      become: yes
       changed_when: ampache_install_result.stdout|length > 1
       register: ampache_install_result
 
@@ -37,9 +36,9 @@
         composer install --prefer-source --no-interaction
       args:
         chdir: '{{ ampache_web_directory }}'
-      become: yes
       changed_when: "'Nothing to install or update' not in ampache_install_result.stderr"
       register: ampache_install_result
+  become: yes
   tags: [ampache, packages]
 
 - block:

@@ -1,11 +1,6 @@
 ---
 
 dependencies:
-  - role: requirements
-    apt_requirements:
-      - rabbitmq-server
-    tags: [rabbitmq, dependencies]
-
   - role: ufw
     ufw_rules: '{{ rabbitmq_ufw_rules }}'
     tags: [rabbitmq, dependencies]

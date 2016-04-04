@@ -6,7 +6,7 @@
     - name: Install ScudCloud apt repository
       apt_repository: >
         repo=ppa:rael-gc/scudcloud state=present update_cache=yes
-      when: "'scudcloud' in devops_packages"
+      when: "ansible_pkg_mgr == 'apt' and 'scudcloud' in devops_packages"
 
     - name: Install DevOps packages
       package: >
@@ -28,6 +28,6 @@
         - name: Install Sublime Text 3
           apt: >
             deb=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
-      when: sublime_text_version is defined and sublime_text_version
+      when: "ansible_pkg_mgr == 'apt' and sublime_text_version|bool"
   become: yes
   tags: [development, packages]

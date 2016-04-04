@@ -24,11 +24,13 @@
 - block:
     - name: Register Docker apt key
       apt_key: >
-        keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D state=present
+        keyserver=hkp://p80.pool.sks-keyservers.net:80 id={{ docker_apt_key }} state=present
+      when: "ansible_pkg_mgr == 'apt'"
 
     - name: Register Docker apt repository
       apt_repository: >
         repo='{{ docker_apt_repository }}' update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Docker Engine packages
       package: >

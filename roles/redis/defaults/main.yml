@@ -1,4 +1,12 @@
+redis_apt_repository:
+  - ppa:chris-lea/redis-server
 redis_interface: null
+redis_packages:
+  - python-apt
+  - python-pycurl
+  - python-software-properties
+  - redis-server
+  - software-properties-common
 redis_port: 6379
 redis_ufw_rules:
   - direction: in

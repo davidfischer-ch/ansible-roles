@@ -1,1 +1,3 @@
 fail2ban_enabled: yes
+fail2ban_packages:
+  - fail2ban

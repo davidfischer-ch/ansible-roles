@@ -1,0 +1,4 @@
+owncloud_client_apt_key: 'http://download.opensuse.org/repositories/isv:ownCloud:desktop/xUbuntu_{{ ansible_distribution_version }}/Release.key'
+owncloud_client_apt_repository: 'deb http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/xUbuntu_{{ ansible_distribution_version }}/ /'
+owncloud_client_packages:
+  - owncloud-client

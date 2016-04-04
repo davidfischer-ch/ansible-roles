@@ -1,5 +1,8 @@
 ---
 
+- debug: msg='WARNING This role is deprecated! Please reimplement required tasks.'
+  tags: always
+
 - block:
     - name: Register apt keys
       apt_key: >

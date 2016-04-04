@@ -2,6 +2,12 @@
 ---
 
 - block:
+    - name: Install GPAC build packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ gpac_build_packages }}'
+
     - name: Create GPAC source directories
       file: >
         name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory

@@ -1,8 +1,3 @@
 ---
 
 allow_duplicates: yes
-dependencies:
-  - role: requirements
-    apt_requirements:
-      - ufw
-    tags: [ufw, dependencies]

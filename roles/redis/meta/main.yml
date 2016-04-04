@@ -4,20 +4,6 @@ dependencies:
   - role: github
     tags: [redis, dependencies]
 
-  - role: requirements
-    ppa_requirements:
-      - ppa:chris-lea/redis-server
-    apt_requirements:
-      - python-apt
-      - python-pycurl
-      - python-software-properties
-      - redis-server
-      - software-properties-common
-    # Install redis for Redis Ansible modules
-    # pip_requirements:
-    #   - redis
-    tags: [redis, dependencies]
-
   - role: ufw
     ufw_rules: '{{ redis_ufw_rules }}'
     tags: [redis, dependencies]

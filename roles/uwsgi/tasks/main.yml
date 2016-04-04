@@ -2,6 +2,11 @@
 ---
 
 - block:
+    - name: Install uWSGI packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ uwsgi_packages }}'
+
     - name: Upgrade uWSGI
       pip: >
         executable=pip3 name=uwsgi state=latest

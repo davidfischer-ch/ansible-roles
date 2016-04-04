@@ -13,6 +13,14 @@ nginx_build_flags:
   - '--with-http_sub_module'
   - '--with-http_xslt_module'
   - '--with-http_auth_request_module'
+nginx_build_packages:
+  # https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
+  - build-essential
+  - libpcre3
+  - libpcre3-dev
+  - unzip
+  - zlib1g
+  - zlib1g-dev
 nginx_config_file: nginx.conf.j2
 nginx_daemon_group: www-data
 nginx_daemon_path: /usr/share/nginx/sbin/nginx

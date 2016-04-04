@@ -1,7 +1,0 @@
----
-
-dependencies:
-  - role: requirements
-    apt_requirements:
-      - openssl
-    tags: [openssl, dependencies]

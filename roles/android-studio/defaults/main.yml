@@ -1,1 +1,10 @@
+android_studio_apt_repositories:
+  - ppa:paolorotolo/android-studio
+  - ppa:webupd8team/java
+android_studio_packages:
+  - android-emulator
+  - android-studio
+  - android-tools-adb
+  - oracle-java8-installer
+  - qemu-kvm
 android_sdk_tools_directory: '/home/{{ user }}/Android/Sdk/tools'

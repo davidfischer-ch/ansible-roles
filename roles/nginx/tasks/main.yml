@@ -11,6 +11,22 @@
   tags: [nginx, always]
 
 - block:
+    - name: Install Nginx build dependencies
+      apt: >
+        name=nginx state=build-dep
+      changed_when: nginx_build_dep_result.stdout_lines|length > 4
+      register: nginx_build_dep_result
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Nginx build packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ nginx_build_packages }}'
+  become: yes
+  tags: [nginx, packages]
+
+- block:
     - name: Create Nginx daemon group
       group: >
         name={{ nginx_daemon_group }} system=yes state=present

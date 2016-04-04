@@ -1,15 +1,6 @@
 ---
 
 dependencies:
-  - role: requirements
-    key_requirements:
-      - https://packages.elastic.co/GPG-KEY-elasticsearch
-    ppa_requirements:
-      - 'deb http://packages.elastic.co/kibana/{{ kibana_version[:3] }}/debian stable main'
-    apt_requirements:
-      - 'kibana={{ kibana_version }}'
-    tags: [kibana, dependencies]
-
   - role: ufw
     ufw_rules: '{{ kibana_ufw_rules }}'
     tags: [kibana, dependencies]

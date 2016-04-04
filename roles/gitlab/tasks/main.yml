@@ -1,6 +1,21 @@
 ---
 
 - block:
+    - name: Install GitLab (manual install) packages
+      package: >
+        name={{ item }} state=present
+      when: gitlab_install_mode == 'manual'
+      with_items: '{{ gitlab_manual_depend_packages }}'
+
+    - name: Install GitLab (Omnibus install) packages
+      package: >
+        name={{ item }} state=present
+      when: gitlab_install_mode == 'omnibus'
+      with_items: '{{ gitlab_omnibus_depend_packages }}'
+  become: yes
+  tags: [gitlab, packages]
+
+- block:
     - name: Detect Git version
       command:
         git --version

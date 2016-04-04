@@ -1,7 +1,14 @@
 ---
 
+- name: Install Vagrant packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [vagrant, packages]
+  with_items: '{{ vagrant_packages }}'
+
 - block:
-    - name: Generate vagrant file
+    - name: Generate Vagrant file
       template: >
         src=Vagrantfile.j2 dest=/tmp/Vagrantfile mode=644
 
@@ -43,13 +50,13 @@
   tags: [vagrant, provision]
 
 - block:
-    - name: Get installed vagrant plugins
+    - name: Get installed Vagrant plugins
       command: >
         vagrant plugin list
       changed_when: no
       register: vagrant_plugin_result
 
-    - name: Install vagrant plugins
+    - name: Install Vagrant plugins
       command: >
         vagrant plugin install vagrant-{{ item }}
       with_items: '{{ vagrant_plugins }}'

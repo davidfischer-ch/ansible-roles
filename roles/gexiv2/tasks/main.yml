@@ -2,6 +2,12 @@
 ---
 
 - block:
+    - name: Install GExiv2 build packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ gexiv2_build_packages }}'
+
     - name: Create GExiv2 source directory
       file: >
         name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory

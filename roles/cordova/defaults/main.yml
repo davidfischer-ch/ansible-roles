@@ -1,0 +1,5 @@
+cordova_packages:
+  - nodejs
+  - npm
+cordova_npm_packages:
+  - cordova

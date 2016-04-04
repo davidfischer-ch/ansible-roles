@@ -4,10 +4,6 @@ dependencies:
   - role: postgresql-client
     tags: [postgresql, dependencies]
 
-  - role: requirements
-    apt_requirements: '{{ postgresql_packages }}'
-    tags: [postgresql, dependencies]
-
   - role: ufw
     ufw_rules: '{{ postgresql_ufw_rules }}'
     tags: [postgresql, dependencies]

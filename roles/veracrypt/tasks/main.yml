@@ -2,6 +2,12 @@
 ---
 
 - block:
+    - name: Install VeraCrypt build packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ veracrypt_build_packages }}'
+
     - name: Create VeraCrypt source directories
       file: >
         name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory

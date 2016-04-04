@@ -1,2 +1,15 @@
+veracrypt_build_packages:
+  - build-essential
+  - pkg-config
+  - makeself
+  - nasm
+  - libfuse2
+  - libfuse-dev
+  - libwxbase3.0-0v5
+  - libwxbase3.0-0v5-dbg
+  - libwxbase3.0-dev
+  - libwxgtk3.0-0v5
+  - libwxgtk3.0-0v5-dbg
+  - libwxgtk3.0-dev
 veracrypt_version: VeraCrypt_1.17
 tools_src_directory: /usr/local/src

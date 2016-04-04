@@ -1,6 +1,13 @@
 # Install and configure UFW
 ---
 
+- name: Install UFW packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [ufw, packages]
+  with_items: '{{ ufw_packages }}'
+
 - block:
     - name: Allow ssh
       ufw: >

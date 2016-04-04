@@ -1,5 +1,19 @@
 ---
 
+- block:
+    - name: Install Android Studio apt repositories
+      apt_repository: >
+        repo={{ item }} state=present update_cache=yes
+      when: "ansible_pkg_mgr == 'apt'"
+      with_items: '{{ android_studio_apt_repositories }}'
+
+    - name: Install Android Studio packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ android_studio_packages }}'
+  become: yes
+  tags: [android-studio, packages]
+
 - name: Add Android SDK tools to PATH
   lineinfile: >
     dest=/home/{{ user }}/.bashrc regexp='Register Android SDK tools' state=present

@@ -1,6 +1,13 @@
 # Install and configure MySQL
 ---
 
+- name: Install MySQL packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [mysql, packages]
+  with_items: '{{ mysql_packages }}'
+
 - name: start MySQL service
   service: >
     name=mysql state=started enabled=yes

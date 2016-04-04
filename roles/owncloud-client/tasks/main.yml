@@ -2,22 +2,19 @@
 ---
 
 - block:
-    - name: Enable ownCloud client apt repository
-      template:
-        src=owncloud-client.list
-        dest=/etc/apt/sources.list.d/owncloud-client.list
-        mode=644
-      register: owncloud_client_repo_result
+    - name: Register ownCloud client apt key
+      apt_key: >
+        url={{ owncloud_client_apt_key }} state=present
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
 
-    - name: Update Debian packages cache
-      apt: update_cache=yes
-      when: owncloud_client_repo_result|changed
+    - name: Install ownCloud client apt repository
+      apt_repository: >
+        repo={{ owncloud_client_apt_repository }} update_cache=yes state=present
+      when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
 
-    - name: Install ownCloud packages
+    - name: Install ownCloud client packages
       package: >
         name={{ item }} state=present
-      with_items:
-        - owncloud-client
+      with_items: '{{ owncloud_client_packages }}'
   become: yes
   tags: [owncloud-client, packages]

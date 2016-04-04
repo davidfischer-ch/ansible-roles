@@ -1,5 +1,12 @@
 ---
 
+- name: Install NFS Kernel Server packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [nfs, packages]
+  with_items: '{{ nfs_packages }}'
+
 - block:
     - name: Configure NFS Kernel Server
       template: >

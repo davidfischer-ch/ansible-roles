@@ -3,7 +3,7 @@ development_tools:
   - checkinstall
   - git
   - mercurial
-extra_ppa_repos: []
+extra_apt_repositories: []
 extra_packages: []
 locale: ''
 system_tools:

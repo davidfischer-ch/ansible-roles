@@ -1,3 +1,5 @@
+elasticsearch_apt_key: https://packages.elastic.co/GPG-KEY-elasticsearch
+elasticsearch_apt_repository: 'deb http://packages.elastic.co/elasticsearch/{{ elasticsearch_version[0] }}.x/debian stable main'
 elasticsearch_bind_address: 0.0.0.0
 elasticsearch_data_directory: /var/data/elasticsearch
 elasticsearch_interface: null
@@ -5,6 +7,9 @@ elasticsearch_log_directory: /var/log/elasticsearch
 elasticsearch_node_name: '{{ inventory_hostname }}'
 elasticsearch_node_attributes: {}
 elasticsearch_node_settings: {}
+elasticsearch_packages:
+  - 'elasticsearch={{ elasticsearch_version }}'
+  - openjdk-7-jre-headless
 elasticsearch_port: 9200
 elasticsearch_version: 2.3.0
 elasticsearch_ufw_rules:

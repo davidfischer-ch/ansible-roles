@@ -1,6 +1,13 @@
 # Install and configure PostgreSQL including setup our user & database
 ---
 
+- name: Install PostgreSQL packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [postgresql, packages]
+  with_items: '{{ postgresql_packages }}'
+
 - block:
     - name: Configure PostgreSQL
       template: >

@@ -4,19 +4,6 @@ dependencies:
   - role: github
     tags: [nginx, dependencies]
 
-  - role: requirements
-    apt_build_requirements:
-      - nginx
-    apt_requirements:
-      # https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
-      - build-essential
-      - libpcre3
-      - libpcre3-dev
-      - unzip
-      - zlib1g
-      - zlib1g-dev
-    tags: [nginx, dependencies]
-
   - role: supervisor
     tags: [nginx, dependencies]
     when: nginx_daemon_mode == 'supervisor'

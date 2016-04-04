@@ -16,10 +16,3 @@ dependencies:
     ufw_rules: '{{ owncloud_ufw_rules }}'
     tags: [owncloud, dependencies]
     when: owncloud_ufw_rules
-
-  - role: requirements
-    key_requirements:
-      - 'http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_{{ ansible_distribution_version }}/Release.key'
-    apt_requirements:
-      - python-mysqldb
-    tags: [owncloud, dependencies]

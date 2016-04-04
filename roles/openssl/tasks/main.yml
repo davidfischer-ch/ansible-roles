@@ -2,6 +2,13 @@
 # # https://software.opensuse.org/download/package?project=isv:ownCloud:desktop&package=owncloud-client
 ---
 
+- name: Install OpenSSL packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [openssl, packages]
+  with_items: '{{ openssl_packages }}'
+
 - name: Create self-signed SSL certificate
   command: >
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj

@@ -1,12 +1,23 @@
 # Install and configure PHP
 ---
 
-- name: Remove unwanted PHP packages
-  package: >
-    name={{ item }} state=absent
+- block:
+    - name: Install PHP apt repository
+      apt_repository: >
+        repo={{ php_apt_repository }} update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt' and php_apt_repository|length > 0"
+
+    - name: Install PHP packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ php_packages }}'
+
+    - name: Remove unwanted PHP packages
+      package: >
+        name={{ item }} state=absent
+      with_items: '{{ php_unwanted_packages }}'
   become: yes
   tags: [php, packages]
-  with_items: '{{ php_unwanted_packages }}'
 
 - name: Configure PHP
   lineinfile: >

@@ -6,21 +6,20 @@
 
 ---
 
-- name: Create ownCloud data directory
-  file: >
-    name={{ owncloud_data_directory }} owner=www-data group=www-data state=directory
-  become: yes
-  tags: [owncloud, packages]
-
 - block:
-    - name: Enable ownCloud apt repository
-      template:
-        src=owncloud.list dest=/etc/apt/sources.list.d/owncloud.list mode=644
-      register: owncloud_repo_result
+    - name: Create ownCloud data directory
+      file: >
+        name={{ owncloud_data_directory }} owner=www-data group=www-data state=directory
 
-    - name: Update Debian packages cache
-      apt: update_cache=yes
-      when: owncloud_repo_result|changed
+    - name: Register ownCloud apt key
+      apt_key: >
+        url={{ owncloud_apt_key }} state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install ownCloud apt repository
+      apt_repository: >
+        repo={{ owncloud_apt_repository }} update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install LibreOffice packages
       apt: >
@@ -29,9 +28,7 @@
     - name: Install ownCloud packages
       package: >
         name={{ item }} state=present
-      with_items:
-        - libapache2-mod-php5
-        - owncloud
+      with_items: '{{ owncloud_packages }}'
   become: yes
   tags: [owncloud, packages]
 

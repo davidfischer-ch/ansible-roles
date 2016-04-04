@@ -3,19 +3,3 @@
 dependencies:
   - role: github
     tags: [veracrypt, dependencies]
-
-  - role: requirements
-    apt_requirements:
-      - build-essential
-      - pkg-config
-      - makeself
-      - nasm
-      - libfuse2
-      - libfuse-dev
-      - libwxbase3.0-0v5
-      - libwxbase3.0-0v5-dbg
-      - libwxbase3.0-dev
-      - libwxgtk3.0-0v5
-      - libwxgtk3.0-0v5-dbg
-      - libwxgtk3.0-dev
-    tags: [veracrypt, dependencies]

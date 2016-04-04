@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: requirements
-    key_requirements:
-      - http://download.opensuse.org/repositories/isv:ownCloud:desktop/xUbuntu_{{ ansible_distribution_version }}/Release.key
-    tags: [owncloud-client, dependencies]
-    when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15

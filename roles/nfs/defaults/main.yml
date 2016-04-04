@@ -1,4 +1,7 @@
+nfs_exports: {}
 nfs_interface: null
+nfs_packages:
+  - nfs-kernel-server
 nfs_ufw_rules:
   - direction: in
     interface: '{{ nfs_interface or omit }}'
@@ -15,4 +18,3 @@ nfs_ufw_rules:
     port: 4001  # rpc.mountd
     proto: any  # tcp/udp
     rule: allow
-nfs_exports: {}

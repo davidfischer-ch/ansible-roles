@@ -58,6 +58,7 @@
       command: >
         apt-file update
       become: no
+      when: "ansible_pkg_mgr == 'apt'"
 
     - name: Remove bumblebee packages
       package: >

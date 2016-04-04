@@ -3,19 +3,14 @@
 
 - block:
     - block:
-        - name: Register New Relic apt repository
-          copy: >
-            src=newrelic.list dest=/etc/apt/sources.list.d/newrelic.list mode=644
-          register: newrelic_ppa_result
-
+        # FIXME use apt_key module
         - name: Trust New Relic GPG key
           shell: >
             wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
 
-        - name: Update the Debian packages cache
-          apt: >
-            update_cache=yes
-          when: newrelic_ppa_result|changed
+        - name: Install New Relic apt repository
+          apt_repository: >
+            repo={{ newrelic_apt_repository }} update_cache=yes state=present
 
         - name: Install New Relic System Monitor
           package: >

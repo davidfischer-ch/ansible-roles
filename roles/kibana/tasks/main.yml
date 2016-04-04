@@ -1,6 +1,24 @@
 # https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04
 ---
 
+- block:
+    - name: Register Kibana apt key
+      apt_key: >
+        url={{ kibana_apt_key }} state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Kibana apt repository
+      apt_repository: >
+        repo={{ kibana_apt_repository }} update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Kibana packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ kibana_packages }}'
+  become: yes
+  tags: [kibana, packages]
+
 - name: Configure Kibana
   template: >
     src={{ item }} dest=/opt/kibana/config/kibana.yml mode=644

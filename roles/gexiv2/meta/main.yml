@@ -1,9 +1,0 @@
----
-
-dependencies:
-  - role: requirements
-    apt_requirements:
-      - autoconf
-      - gobject-introspection
-      - libgirepository1.0-dev
-    tags: [gexiv2, dependencies]

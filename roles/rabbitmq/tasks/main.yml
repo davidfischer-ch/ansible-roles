@@ -1,6 +1,13 @@
 # Install and configure RabbitMQ including our user & vhost
 ---
 
+- name: Install RabbitMQ packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [rabbitmq, packages]
+  with_items: '{{ rabbitmq_packages }}'
+
 - name: Start RabbitMQ service
   service: >
     name=rabbitmq-server state=started enabled=yes

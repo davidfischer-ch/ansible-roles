@@ -4,7 +4,7 @@
     - name: Add webupd8 repository to install the pulseaudio equalizer
       apt_repository: >
         repo=ppa:nilarimogard/webupd8 state=present update_cache=yes
-      when: "'pulseaudio-equalizer' in audio_packages"
+      when: "ansible_pkg_mgr == 'apt' and 'pulseaudio-equalizer' in audio_packages"
 
     - name: Install imaging packages
       package: >
