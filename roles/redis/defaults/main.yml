@@ -1,5 +1,4 @@
-redis_apt_repository:
-  - ppa:chris-lea/redis-server
+redis_apt_repository: 'ppa:chris-lea/redis-server'
 redis_interface: null
 redis_packages:
   - python-apt
