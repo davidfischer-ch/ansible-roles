@@ -18,8 +18,3 @@ dependencies:
     ufw_rules: '{{ ampache_ufw_rules }}'
     tags: [ampache, dependencies]
     when: ampache_ufw_rules
-
-  - role: requirements
-    apt_requirements:
-      - python-mysqldb
-    tags: [ampache, dependencies]
