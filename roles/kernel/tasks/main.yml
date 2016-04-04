@@ -14,7 +14,7 @@
   tags: [kernel, always]
 
 - name: Install GNU/Linux kernel packages
-  apt: >
+  package: >
     name={{ item }} state=present
   become: yes
   tags: [kernel, packages]

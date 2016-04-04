@@ -22,12 +22,12 @@
       apt: update_cache=yes
       when: owncloud_repo_result|changed
 
-    - name: Install libreoffice
+    - name: Install LibreOffice packages
       apt: >
         name=libreoffice-common install_recommends=no state=present
 
     - name: Install ownCloud packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - libapache2-mod-php5

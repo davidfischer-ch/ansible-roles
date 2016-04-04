@@ -2,8 +2,8 @@
 ---
 
 - block:
-    - name: Remove Supervisor Debian package
-      apt: >
+    - name: Remove Supervisor package
+      package: >
         name=supervisor state=absent
 
     - name: Install Supervisor with pip

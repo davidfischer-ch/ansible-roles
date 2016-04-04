@@ -18,12 +18,12 @@
           when: newrelic_ppa_result|changed
 
         - name: Install New Relic System Monitor
-          apt: >
+          package: >
             name=newrelic-sysmond state=present
       when: newrelic_license_key|length > 0
 
     - name: Remove New Relic System Monitor
-      apt: >
+      package: >
         name=newrelic-sysmond state=absent
       when: newrelic_license_key|length == 0
   become: yes

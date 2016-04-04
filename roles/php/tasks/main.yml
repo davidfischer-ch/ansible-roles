@@ -2,7 +2,7 @@
 ---
 
 - name: Remove unwanted PHP packages
-  apt: >
+  package: >
     name={{ item }} state=absent
   become: yes
   tags: [php, packages]

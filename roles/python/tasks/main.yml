@@ -2,7 +2,7 @@
 
 - block:
     - name: Install building and development tools
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ python_packages }}'
 

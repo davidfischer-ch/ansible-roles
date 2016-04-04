@@ -6,11 +6,11 @@
         repo=ppa:linrunner/tlp state=present update_cache=yes
 
     - name: Remove laptop-mode-tools package
-      apt: >
+      package: >
         name=laptop-mode-tools state=absent
 
     - name: Install TLP power management packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - tlp

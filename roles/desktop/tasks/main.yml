@@ -28,7 +28,7 @@
     # Desktop
 
     - name: Install Ubuntu desktop packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - '{{ desktop_package }}'
@@ -39,18 +39,18 @@
         - ubuntu-standard
 
     - name: Install desktop and office packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ office_packages }}'
 
     - name: Install Ubuntu desktop and office packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ ubuntu_desktop_packages }}'
       when: desktop_package == 'ubuntu-desktop'
 
     - name: Install system packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ system_packages }}'
 
@@ -60,34 +60,34 @@
       become: no
 
     - name: Remove bumblebee packages
-      apt: >
+      package: >
         name={{ item }} state=absent
       with_items:
         - bumblebee
         - bumblebee-nvidia
 
     - name: Install files utilities packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ file_utility_packages }}'
 
     - name: Install java packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ java_packages }}'
 
     - name: Install miscellaneous packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ miscellaneous_packages }}'
 
     - name: Install virtualization packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ virtualization_packages }}'
 
     - name: Install web packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ web_packages }}'
   become: yes

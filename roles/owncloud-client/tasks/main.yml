@@ -15,7 +15,7 @@
       when: owncloud_client_repo_result|changed
 
     - name: Install ownCloud packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - owncloud-client

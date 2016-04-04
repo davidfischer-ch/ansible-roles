@@ -2,7 +2,7 @@
 ---
 
 - name: Install file-system packages
-  apt: >
+  package: >
     name={{ item }} state=present
   with_items: '{{ filesystem_packages }}'
   become: yes

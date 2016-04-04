@@ -29,8 +29,8 @@
       register: upgrade_cleanup_result
       when: upgrade_packages|bool
 
-    - name: Install extra Debian packages
-      apt: >
+    - name: Install extra packages
+      package: >
         name={{ item }} state=present
       with_items: '{{ extra_packages }}'
 
@@ -70,7 +70,7 @@
       tags: [miscellaneous, config]
 
     - name: Install NTP
-      apt: >
+      package: >
         name=ntp state=present
       tags: [miscellaneous, packages]
 
@@ -83,12 +83,12 @@
 
 - block:
     - name: Install usefull system tools
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ system_tools }}'
 
     - name: Install building and development tools
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ development_tools }}'
   become: yes

@@ -16,12 +16,12 @@
 
 - block:
     - name: Install Kerberos package
-      apt: >
+      package: >
         name=libkrb5-dev state=present
       when: gitlab_kerberos_enabled|bool
 
     # - name: Install postfix server
-    #   apt: >
+    #   package: >
     #     name=postfix state=present
     #   when: gitlab_postfix_enabled|bool
   become: yes
@@ -36,7 +36,7 @@
       notify: execute omnibus
 
     - name: Install GitLab Community Edition
-      apt: >
+      package: >
         name=gitlab-ce state=present
       become: yes
 

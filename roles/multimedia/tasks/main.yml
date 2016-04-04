@@ -7,27 +7,27 @@
       when: "'pulseaudio-equalizer' in audio_packages"
 
     - name: Install imaging packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ imaging_packages }}'
 
     - name: Install audio related packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ audio_packages }}'
 
     - name: Install video related packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ video_packages }}'
 
     - name: Install media players packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ media_player_packages }}'
 
     - name: Install encrypted DVD playback packages
-      apt: >
+      package: >
         name=libdvdread4 state=present
 
     - name: Enable encrypted DVD playback

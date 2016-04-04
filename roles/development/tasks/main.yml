@@ -8,13 +8,13 @@
         repo=ppa:rael-gc/scudcloud state=present update_cache=yes
       when: "'scudcloud' in devops_packages"
 
-    - name: Install devops packages
-      apt: >
+    - name: Install DevOps packages
+      package: >
         name={{ item }} state=present
       with_items: '{{ devops_packages }}'
 
     - name: Install programming packages
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items: '{{ programming_packages }}'
 

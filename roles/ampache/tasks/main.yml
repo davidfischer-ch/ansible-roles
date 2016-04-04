@@ -1,12 +1,10 @@
 # Install and configure Ampache
-
 # https://github.com/ampache/ampache/wiki/Installation
-
 ---
 
 - block:
     - name: Install Ampache packages
-      apt: >
+      package: >
         name=ampache state=present
       become: yes
 

@@ -30,8 +30,8 @@
       apt_repository: >
         repo='{{ docker_apt_repository }}' update_cache=yes state=present
 
-    - name: Install Docker Engine with apt
-      apt: >
+    - name: Install Docker Engine packages
+      package: >
         name={{ item }} state=present
       with_items: '{{ docker_packages }}'
   become: yes

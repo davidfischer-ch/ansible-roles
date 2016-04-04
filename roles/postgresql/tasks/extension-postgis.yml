@@ -7,8 +7,8 @@
   with_dict: '{{ postgresql_databases }}'
 
 - block:
-    - name: Install PostGIS
-      apt: >
+    - name: Install PostGIS packages
+      package: >
         name={{ item }} state=present
       with_items:
         - postgis
@@ -16,7 +16,7 @@
         - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
 
     - name: Install geolocation prerequisites required for all back-ends
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - binutils
@@ -25,7 +25,7 @@
         - libgeos-dev
 
     - name: Install geolocation prerequisites required for PostgreSQL and SQLite
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - libproj-dev
@@ -33,7 +33,7 @@
         - proj-data
 
     - name: Install geolocation prerequisites optional but required for SQLite
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - gdal-bin
@@ -41,7 +41,7 @@
         - python3-gdal
 
     - name: install optional IP-based geolocation library
-      apt: >
+      package: >
         name={{ item }} state=present
       with_items:
         - libgeoip1
