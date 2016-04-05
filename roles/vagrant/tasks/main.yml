@@ -26,6 +26,11 @@
       set_fact:
         vagrant_machines: '{{ vagrant_ids_result.stdout|from_json }}'
 
+    - name: Create machines metadata directories
+      file: >
+        name=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }} state=directory
+      with_dict: '{{ vagrant_machines }}'
+
     - name: Update machines IDs file
       copy: >
         dest=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }}/id content={{ item.value.uuid }} force=yes
