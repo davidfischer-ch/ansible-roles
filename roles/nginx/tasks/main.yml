@@ -59,7 +59,6 @@
         dest={{ tools_src_directory }}/nginx
         force=yes
         version={{ nginx_version }}
-      notify: '{{ nginx_daemon_mode }} restart nginx'
 
     - block:
         - name: Clone Upload module source code
@@ -68,7 +67,6 @@
             dest={{ tools_src_directory }}/nginx-upload-module
             force=yes
             version={{ nginx_upload_module_version }}
-          notify: '{{ nginx_daemon_mode }} restart nginx'
 
         - name: Clone Upload Progress module source code
           git: >
@@ -76,7 +74,6 @@
             dest={{ tools_src_directory }}/nginx-upload-progress-module
             force=yes
             version={{ nginx_upload_progress_module_version }}
-          notify: '{{ nginx_daemon_mode }} restart nginx'
       when: nginx_upload_module_enabled|bool
 
     - name: Clone Zip module source code
@@ -85,12 +82,11 @@
         dest={{ tools_src_directory }}/nginx-zip-module
         force=yes
         version={{ nginx_zip_module_version }}
-      notify: '{{ nginx_daemon_mode }} restart nginx'
       when: nginx_zip_module_enabled|bool
 
-    - name: Configure Nginx build process
-      command: >
-        ./auto/configure
+    - name: Set Nginx build configuration
+      set_fact:
+        nginx_build_cfg: >
           --prefix=/usr/share/nginx
           --conf-path=/etc/nginx/nginx.conf
           --http-log-path=/var/log/nginx/access.log
@@ -111,14 +107,38 @@
           --add-module={{ tools_src_directory }}/nginx-zip-module
           {% endif %}
           {{ nginx_pagespeed_configure }}
+
+    - name: Set Nginx build environment
+      set_fact:
+        nginx_build_env: >
+          {{ nginx_build_cfg }}
+          {{ nginx_version }}
+          {{ nginx_upload_module_version|default('') }}
+          {{ nginx_upload_progress_module_version|default('') }}
+          {{ nginx_zip_module_version|default('') }}
+
+    - name: Detect if Nginx must be reinstalled
+      command: >
+        cat '{{ tools_src_directory }}/nginx.build.cfg'
+      always_run: yes
+      changed_when: >
+        nginx_build_env|trim != nginx_build.stdout|default('')|trim
+      failed_when: no
+      register: nginx_build
+
+    - name: Configure Nginx build process
+      command: >
+        ./auto/configure {{ nginx_build_cfg }}
       args:
         chdir: '{{ tools_src_directory }}/nginx'
+      when: nginx_build|changed
 
     - name: Build Nginx from source
       command: >
         make -j{{ ansible_processor_cores }}
       args:
         chdir: '{{ tools_src_directory }}/nginx'
+      when: nginx_build|changed
 
     - block:
         - name: Install Nginx from source
@@ -130,7 +150,19 @@
         - name: Make Nginx binary executable
           file: >
             name={{ nginx_daemon_path }} mode=755 state=file
+
+        - name: Save build environment
+          copy: >
+            content={{ nginx_build_env }} dest={{ tools_src_directory }}/nginx.build.cfg
+
+        - name: Trigger Nginx restart
+          command: >
+            ls /dev/null
+          always_run: yes
+          changed_when: yes
+          notify: '{{ nginx_daemon_mode }} restart nginx'
       become: yes
+      when: nginx_build|changed
   tags: [nginx, packages]
 
 - block:
@@ -219,5 +251,6 @@
       command: >
         {{ nginx_daemon_path }} -t
       always_run: yes
+      changed_when: no
   become: yes
   tags: [nginx, sites]
