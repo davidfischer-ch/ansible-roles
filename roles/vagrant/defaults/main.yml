@@ -5,3 +5,4 @@ vagrant_packages:
 vagrant_plugins:
   - vbox-snapshot
 vagrant_snapshots: {}
+vagrant_update_boxes: yes

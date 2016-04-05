@@ -12,14 +12,6 @@
       template: >
         src=Vagrantfile.j2 dest=/tmp/Vagrantfile mode=644
 
-    - name: Check machines are up-to-date
-      command: >
-        vagrant box outdated
-      args:
-        chdir: /tmp
-      changed_when: "'to update' in vagrant_outdated_result.stdout"
-      register: vagrant_outdated_result
-
     - name: Save machines specifications into a file
       copy: >
         dest=/tmp/vagrant_machines.yml content='{{ vagrant_machines|to_yaml }}'
@@ -38,6 +30,22 @@
       copy: >
         dest=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }}/id content={{ item.value.uuid }} force=yes
       with_dict: '{{ vagrant_machines }}'
+
+    - name: Check boxes are up-to-date
+      command: >
+        vagrant box outdated
+      args:
+        chdir: /tmp
+      always_run: yes
+      changed_when: "vagrant_update_boxes|bool and 'to update' in vagrant_outdated_result.stdout"
+      register: vagrant_outdated_result
+
+    - name: Update boxes
+      command: >
+        vagrant box update
+      args:
+        chdir: /tmp
+      when: vagrant_outdated_result|changed
 
     - name: Provision machines
       command: >
