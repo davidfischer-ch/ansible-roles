@@ -19,9 +19,27 @@
   become: yes
   tags: [php, packages]
 
-- name: Configure PHP
-  lineinfile: >
-    dest=/etc/php{{ php_version }}/apache2/php.ini regexp='^;?{{ item.key }} =' line='{{ item.key }} = {{ item.value }}' state=present
-  become: yes
+- block:
+    - name: Find PHP configuration files
+      command: >
+        find /etc/php{{ php_version }} /etc/php/{{ php_version }} -name php.ini -type f
+      always_run: yes
+      changed_when: no
+      failed_when: no
+      register: php_find_result
+
+    - set_fact:
+        php_config_files: '{{ php_find_result.stdout_lines|default([]) }}'
+
+    - assert:
+        that:
+          php_config_files|length > 0
+
+    - name: Configure PHP
+      lineinfile: >
+        dest={{ item.0 }} regexp='^;?{{ item.1 }} =' line='{{ item.1 }} = {{ item.2 }}' state=present
+      become: yes
+      with_nested:
+        - '{{ php_config_files }}'
+        - '{{ php_options.items() }}'
   tags: [php, config]
-  with_dict: '{{ php_options }}'
