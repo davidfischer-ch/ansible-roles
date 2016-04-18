@@ -176,6 +176,7 @@
         name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
         state=directory
       with_items:
+        - { name: '/etc/nginx/sites-auth/' }
         - { name: '/etc/nginx/sites-enabled/' }
         - { name: '/var/lib/nginx/' }
         - { name: '/var/log/nginx/', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
@@ -239,6 +240,13 @@
       template: >
         src={{ item.value.config_file }} dest=/etc/nginx/sites-enabled/{{ item.value.name }}.conf mode=644
       notify: '{{ nginx_daemon_mode }} reload nginx'
+      with_dict: '{{ nginx_sites }}'
+
+    - name: Setup the Nginx site basic authentication
+      template: >
+        src={{ item.value.auth_file }} dest=/etc/nginx/sites-auth/{{ item.value.name }}.conf mode=644
+      notify: '{{ nginx_daemon_mode }} reload nginx'
+      when: item.value.auth_file is defined
       with_dict: '{{ nginx_sites }}'
 
     - name: Create the Nginx sites logs directory
