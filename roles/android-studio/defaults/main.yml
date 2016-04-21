@@ -7,4 +7,4 @@ android_studio_packages:
   - android-tools-adb
   - oracle-java8-installer
   - qemu-kvm
-android_sdk_tools_directory: '/home/{{ user }}/Android/Sdk/tools'
+android_sdk_tools_directory: '{{ ansible_user_dir }}/Android/Sdk/tools'
