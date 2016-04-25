@@ -68,7 +68,7 @@
 - block:
     - name: Set local time zone
       copy: >
-        content={{ timezone }} dest=/etc/timezone
+        content='{{ timezone }}\n' dest=/etc/timezone
       notify: update tzdata
       tags: [miscellaneous, config]
 
