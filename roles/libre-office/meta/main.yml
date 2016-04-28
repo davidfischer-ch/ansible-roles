@@ -1,0 +1,5 @@
+---
+
+dependencies:
+  - role: supervisor
+    tags: [libre-office, dependencies]

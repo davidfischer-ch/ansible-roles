@@ -1,0 +1,35 @@
+---
+
+- name: Install Libre Office packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  with_items: '{{ libre_office_packages }}'
+  tags: [libre-office, packages]
+
+- block:
+    - name: Create Libre Office daemon group
+      group: >
+        name={{ libre_office_daemon_group }} system=yes state=present
+
+    - name: Create Libre Office daemon user
+      user: >
+        name={{ libre_office_daemon_user }} group={{ libre_office_daemon_group }}
+        createhome=no home=/tmp system=yes state=present
+
+    - name: Configure Libre Office service
+      template: >
+        src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/libre-office.conf mode=644
+      notify: restart libre-office
+
+    - name: Install Libre Office service
+      supervisorctl: >
+        name=libre-office state=present
+  become: yes
+  tags: [libre-office, config]
+
+- name: Start Libre Office service
+  supervisorctl: >
+    name=libre-office state=started
+  become: yes
+  tags: [libre-office, services]

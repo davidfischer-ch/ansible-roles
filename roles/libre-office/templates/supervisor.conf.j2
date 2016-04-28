@@ -1,0 +1,15 @@
+; ======================
+;  Libre Office service
+; ======================
+
+[program:libre-office]
+command=/usr/bin/soffice --nologo --nofirststartwizard --headless --norestore --invisible --accept=socket,host=localhost,port={{ libre_office_port|int }},tcpNoDelay=1;urp;
+directory=/tmp
+numprocs=1
+user={{ libre_office_daemon_user }}
+group={{ libre_office_daemon_group }}
+stdout_logfile=/var/log/supervisor/libre-office-stdout.log
+stderr_logfile=/var/log/supervisor/libre-office-stderr.log
+autostart=true
+autorestart=true
+startsecs=5
