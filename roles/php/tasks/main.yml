@@ -40,6 +40,6 @@
         dest={{ item.0 }} regexp='^;?{{ item.1 }} =' line='{{ item.1 }} = {{ item.2 }}' state=present
       become: yes
       with_nested:
-        - '{{ php_config_files }}'
-        - '{{ php_options.items() }}'
+        - '{{ php_config_files|default([]) }}'
+        - '{{ php_options.items()|default([]) }}'
   tags: [php, config]
