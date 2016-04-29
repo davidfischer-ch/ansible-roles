@@ -54,4 +54,3 @@
     name=aeroo-docs state=started
   become: yes
   tags: [aeroo-docs, services]
-
