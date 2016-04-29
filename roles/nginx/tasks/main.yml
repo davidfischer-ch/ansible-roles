@@ -2,12 +2,8 @@
 # https://blog.engineyard.com/2011/useful-rewrites-for-nginx
 ---
 
-- block:
-    - debug: >
-        var=nginx_daemon_mode
-
-    - assert:
-        that: "nginx_daemon_mode in ['supervisor', 'systemv']"
+- assert:
+    that: nginx_daemon_mode in nginx_daemon_modes
   tags: [nginx, always]
 
 - block:
