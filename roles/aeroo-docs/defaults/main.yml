@@ -1,0 +1,13 @@
+aeroo_docs_app_directory: /opt/aeroo/aeroo_docs
+aeroo_docs_daemon_group: '{{ aeroo_docs_daemon_user }}'
+aeroo_docs_daemon_user: aeroo-docs
+aeroo_docs_libre_office_host: localhost
+aeroo_docs_libre_office_port: 8100
+aeroo_docs_log_directory: /var/log/aeroo_docs
+aeroo_docs_port: 8989
+# libreoffice-script-provider-python
+aeroo_docs_python_packages:
+  - daemonize
+  - jsonrpc2
+aeroo_docs_repository_url: https://github.com/aeroo/aeroo_docs.git
+aeroo_docs_version: master

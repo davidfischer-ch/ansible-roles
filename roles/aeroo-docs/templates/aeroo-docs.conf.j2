@@ -1,0 +1,13 @@
+[start]
+interface = localhost
+port = {{ aeroo_docs_port|int }}
+oo-server = {{ aeroo_docs_libre_office_host }}
+oo-port = {{ aeroo_docs_libre_office_port|int }}
+spool-directory = /tmp/aeroo-docs
+spool-expire = 1800
+log-file = {{ aeroo_docs_log_directory }}/daemon.log
+pid-file = /tmp/daemon.pid
+
+[simple-auth]
+username = {{ aeroo_docs_username }}
+password = {{ aeroo_docs_password }}
