@@ -14,6 +14,7 @@ ampache_lastfm_show_similar: yes
 ampache_packages:
   - ampache
 ampache_port: '{{ ampache_ssl_enabled|bool|ternary(443, 80) }}'
+ampache_repository_url: https://github.com/ampache/ampache.git
 ampache_ssl_enabled: no
 ampache_ssl_force: no
 ampache_tmp_directory: /tmp/ampache

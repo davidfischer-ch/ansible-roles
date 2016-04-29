@@ -15,10 +15,7 @@
 
     - name: Clone GPAC source code
       git: >
-        repo=https://github.com/gpac/gpac.git
-        dest={{ tools_src_directory }}/gpac
-        force=yes
-        version={{ gpac_version }}
+        repo={{ gpac_repository_url }} dest={{ tools_src_directory }}/gpac force=yes version={{ gpac_version }}
 
     - name: Configure GPAC build process
       command: >

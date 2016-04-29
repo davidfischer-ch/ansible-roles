@@ -18,9 +18,7 @@
 
     - name: Clone VeraCrypt source code
       git: >
-        repo=https://github.com/veracrypt/VeraCrypt.git
-        dest={{ tools_src_directory }}/veracrypt
-        force=yes
+        repo={{ veracrypt_repository_url }} dest={{ tools_src_directory }}/veracrypt force=yes
         version={{ veracrypt_version }}
 
     - name: Build VeraCrypt from source

@@ -17,6 +17,7 @@ haproxy_http_port: 80
 haproxy_https_port: 443
 haproxy_interface: null
 haproxy_max_connections: null
+haproxy_repository_url: https://github.com/haproxy/haproxy.git
 haproxy_retries: 3
 haproxy_ssl_cert: ''
 haproxy_stats_enabled: no

@@ -22,10 +22,7 @@
 
     - name: Clone HAProxy source code
       git: >
-        repo=https://github.com/haproxy/haproxy.git
-        dest={{ tools_src_directory }}/haproxy
-        force=yes
-        version={{ haproxy_version }}
+        repo={{ haproxy_repository_url }} dest={{ tools_src_directory }}/haproxy force=yes version={{ haproxy_version }}
       become: no
 
     - name: Build HAProxy from source

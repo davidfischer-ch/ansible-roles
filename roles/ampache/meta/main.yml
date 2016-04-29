@@ -6,6 +6,7 @@ dependencies:
 
   - role: github
     tags: [ampache, dependencies]
+    when: "'github' in ampache_repository_url"
 
   - role: mysql
     tags: [ampache, dependencies]

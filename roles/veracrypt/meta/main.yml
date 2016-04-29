@@ -3,3 +3,4 @@
 dependencies:
   - role: github
     tags: [veracrypt, dependencies]
+    when: "'github' in veracrypt_repository_url"

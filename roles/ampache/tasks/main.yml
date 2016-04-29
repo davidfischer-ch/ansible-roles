@@ -17,10 +17,7 @@
 
     - name: Clone Ampache source code
       git: >
-        repo=https://github.com/ampache/ampache.git
-        dest={{ tools_src_directory }}/ampache
-        force=yes
-        version={{ ampache_version }}
+        repo={{ ampache_repository_url }} dest={{ tools_src_directory }}/ampache force=yes version={{ ampache_version }}
       become: no
 
     - name: Install Ampache from source

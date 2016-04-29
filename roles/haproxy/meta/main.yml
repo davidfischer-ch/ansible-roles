@@ -3,6 +3,7 @@
 dependencies:
   - role: github
     tags: [haproxy, dependencies]
+    when: "'github' in haproxy_repository_url"
 
   - role: ufw
     ufw_rules: '{{ haproxy_ufw_rules }}'
