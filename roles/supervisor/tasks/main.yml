@@ -6,13 +6,11 @@
       package: >
         name=supervisor state=absent
 
-    - name: Install Supervisor with pip
+    - name: Install Supervisor Python packages
       pip: >
-        name='git+https://github.com/Supervisor/supervisor.git@{{ supervisor_version }}#egg=supervisor'
-        executable=pip2 extra_args=-U
-      changed_when: "'supervisor {{ supervisor_release }} is already' not in supervisor_upgrade_result.stdout"
+        name={{ item }} executable=pip2 extra_args=-U
       notify: restart supervisor
-      register: supervisor_upgrade_result
+      with_items: '{{ supervisor_python_packages }}'
   become: yes
   tags: [supervisor, packages]
 
