@@ -9,7 +9,8 @@
 
     - name: Create Aeroo Docs daemon user
       user: >
-        name={{ aeroo_docs_daemon_user }} group={{ aeroo_docs_daemon_group }} createhome=no system=yes state=present
+        name={{ aeroo_docs_daemon_user }} group={{ aeroo_docs_daemon_group }}
+        createhome=no home=/tmp system=yes state=present
   become: yes
   tags: [aeroo-docs, config]
 
