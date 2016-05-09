@@ -24,6 +24,6 @@ media_player_packages:
   - smplayer
   - vlc
   - x264
-  - xbmc
+  - kodi
 video_packages:
   - openshot
