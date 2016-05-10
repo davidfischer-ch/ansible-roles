@@ -5,33 +5,17 @@
 - hosts:
     - desktop
     - laptop
-    - phone
-  roles:
-    - owncloud-client
-  tags:
-    - owncloud-step
-
-- hosts:
-    - desktop
-    - laptop
   roles:
     - desktop
     - development
     - multimedia
-  tags:
-    - utilities-step
 
 - hosts:
     - laptop
   roles:
     - laptop
-  tags:
-    - utilities-step
 
 - hosts:
     - phone
   roles:
     - phone
-  tags:
-    - utilities-step
-

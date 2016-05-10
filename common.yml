@@ -9,11 +9,8 @@
     - miscellaneous
     - kernel
     - python
-  tags:
-    - bootstrap-step
 
 - hosts:
     - all
   roles:
     - mounts
-  tags: mounts-step

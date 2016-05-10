@@ -6,50 +6,36 @@
     - newrelic
   roles:
     - newrelic
-  tags:
-    - newrelic-step
 
 - hosts:
     - caching
   roles:
     - redis
-  tags:
-    - caching-step
 
 - hosts:
     - database
   roles:
     - postgresql
-  tags:
-    - database-step
 
 - hosts:
     - messaging
   roles:
     - rabbitmq
-  tags:
-    - messaging-step
 
 # - hosts:
 #     - monitoring
 #   roles:
 #     - graphite
-#   tags:
-#     - monitoring-step
 
 - hosts:
     - proxy
   roles:
     - haproxy
-  tags:
-    - proxy-step
 
 - hosts:
     - storage
   roles:
     - nfs
-  tags:
-    - storage-step
 
 - hosts:
     - web
@@ -57,20 +43,14 @@
   roles:
     - <here-the-role-for-your-django-app>
   max_fail_percentage: 0
-  tags:
-    - application-step
 
 - hosts:
     - web
   roles:
     - nginx
     - uwsgi
-  tags:
-    - application-step
 
 - hosts:
     - worker
   roles:
     - celery
-  tags:
-    - application-step
