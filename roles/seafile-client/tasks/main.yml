@@ -1,0 +1,14 @@
+---
+
+- block:
+    - name: Download Seafile client
+      get_url: >
+        url=https://bintray.com/artifact/download/seafile-org/seafile/seafile_{{ seafile_client_version }}_amd64.deb
+        dest={{ tools_src_directory }}/seafile_{{ seafile_client_version }}_amd64.deb force=no
+
+    - name: Install Seafile client package
+      apt: >
+        deb={{ tools_src_directory }}/seafile_{{ seafile_client_version }}_amd64.deb state=present
+  become: yes
+  tags: [seafile-client, packages]
+  when: ansible_pkg_mgr == 'apt'
