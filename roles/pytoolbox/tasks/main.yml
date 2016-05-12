@@ -1,0 +1,14 @@
+---
+
+- block:
+    - name: Install pytoolbox packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ pytoolbox_packages }}'
+
+    - name: Install pytoolbox Python packages
+      pip: >
+        name="pytoolbox{{ pytoolbox_version|regex_replace('^latest$', '') }}" executable=pip{{ item }} state=present
+      with_items: '{{ pytoolbox_python_versions }}'
+  become: yes
+  tags: [pytoolbox, packages]

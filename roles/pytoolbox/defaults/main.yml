@@ -1,0 +1,11 @@
+pytoolbox_packages:
+  - gir1.2-gexiv2-0.10
+  - libexiv2-dev
+  - liblzma-dev
+  - libxml2-dev
+  - libxslt-dev
+  - libyaml-dev
+  - libz-dev
+  - python-gi
+pytoolbox_python_versions: '{{ python_versions }}'
+pytoolbox_version: latest
