@@ -5,12 +5,12 @@ nfs_packages:
 nfs_ufw_rules:
   - direction: in
     interface: '{{ nfs_interface or omit }}'
-    port: nfs
+    port: 2049  # nfsd
     proto: any  # tcp/udp
     rule: allow
   - direction: in
     interface: '{{ nfs_interface or omit }}'
-    port: sunrpc
+    port: 111   # portmapper
     proto: any  # tcp/udp
     rule: allow
   - direction: in
