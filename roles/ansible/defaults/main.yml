@@ -1,4 +1,9 @@
 the_ansible_modules: []
+the_ansible_modules_packages:
+  amazon: []
+the_ansible_modules_python_packages:
+  amazon:
+    - boto
 the_ansible_packages:
   - keychain
   - libffi6
@@ -6,8 +11,3 @@ the_ansible_packages:
   - libffi-dev
   - libssl-dev
 the_ansible_version: latest
-the_ansible_modules_packages:
-  amazon: []
-the_ansible_modules_python_packages:
-  amazon:
-    - boto
