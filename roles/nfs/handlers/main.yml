@@ -4,3 +4,4 @@
   service: >
     name=nfs-kernel-server state=reloaded
   become: yes
+  when: nfs_server_enabled|bool

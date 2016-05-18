@@ -1,22 +1,52 @@
+# Install and configure NFS Client and Server (optional)
+# https://wiki.debian.org/SecuringNFS
 ---
 
-- name: Install NFS Kernel Server packages
-  package: >
-    name={{ item }} state=present
-  become: yes
-  tags: [nfs, packages]
-  with_items: '{{ nfs_packages }}'
+- name: FIXME Ensure default ports are used for some services
+  assert:
+    that:
+      - nfs_callback_daemon_port|int == 32764
+      - nfs_daemon_port|int == 2049
+      - nfs_lock_daemon_port|int == 32768
+  tags: [nfs, always]
 
 - block:
-    - name: Configure NFS Kernel Server
+    - name: Install NFS Client packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ nfs_client_packages }}'
+
+    - name: Install NFS Server packages
+      package: >
+        name={{ item }} state=present
+      when: nfs_server_enabled|bool
+      with_items: '{{ nfs_server_packages }}'
+  become: yes
+  tags: [nfs, packages]
+
+- block:
+    - name: Configure NFS Client
+      template: >
+        src={{ item }}.j2 dest=/etc/default/{{ item }} mode=644
+      notify: reload nfs-kernel-server
+      with_items:
+        - nfs-common
+        - quota
+
+    - name: Configure NFS Server
       template: >
         src=nfs-kernel-server.j2 dest=/etc/default/nfs-kernel-server mode=644
       notify: reload nfs-kernel-server
+      when: nfs_server_enabled|bool
+  become: yes
+  tags: [nfs, config]
 
+- block:
     - name: Create shared directories
       file: >
         path={{ item.value.path }} owner={{ item.value.user|default(user) }} group={{ item.value.group|default(group) }}
         mode={{ item.value.mode|default(755) }} state=directory
+      when: nfs_server_enabled|bool
       with_dict: '{{ nfs_exports }}'
 
     - name: Setup shared directories
@@ -24,8 +54,7 @@
         dest=/etc/exports regexp="ansible-roles-key-{{ item.key }}" state={{ item.value.state|default('present') }}
         line="{{ item.value.path }} {{ item.value.rules|join(' ') }}  # ansible-roles-key-{{ item.key }}"
       notify: reload nfs-kernel-server
+      when: nfs_server_enabled|bool
       with_dict: '{{ nfs_exports }}'
   become: yes
   tags: [nfs, shares]
-
-# FIXME configure exports?
