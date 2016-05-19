@@ -9,8 +9,4 @@
     - miscellaneous
     - kernel
     - python
-
-- hosts:
-    - all
-  roles:
     - mounts
