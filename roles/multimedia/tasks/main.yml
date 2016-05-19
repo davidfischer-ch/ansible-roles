@@ -30,8 +30,14 @@
       package: >
         name=libdvdread4 state=present
 
+    - name: Retrieve encrypted DVD playback script
+      stat: >
+        path=/usr/share/doc/libdvdread4/install-css.sh
+      register: dvd_script
+
     - name: Enable encrypted DVD playback
       command: >
         /usr/share/doc/libdvdread4/install-css.sh
+      when: dvd_script.stat.exists
   become: yes
   tags: [multimedia, packages]
