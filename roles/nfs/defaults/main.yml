@@ -24,6 +24,7 @@ nfs_stat_listen_daemon_port: 32766
 
 # Server
 nfs_server_enabled: yes
+nfs_bind_daemon_port: 111
 nfs_callback_daemon_port: 32764
 nfs_daemon_count: 8
 nfs_daemon_options: ''
@@ -36,6 +37,11 @@ nfs_mount_daemon_port: 32767
 nfs_server_packages:
   - nfs-kernel-server
 nfs_server_ufw_rules:
+  - direction: in
+    interface: '{{ nfs_interface or omit }}'
+    port: '{{ nfs_bind_daemon_port|int }}'
+    proto: any
+    rule: allow
   - direction: in
     interface: '{{ nfs_interface or omit }}'
     port: '{{ nfs_callback_daemon_port|int }}'
