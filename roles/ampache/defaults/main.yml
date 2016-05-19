@@ -7,6 +7,10 @@ ampache_memory_cache: yes
 ampache_metadata_directory: /var/ampache/metadata
 ampache_mysql_host: localhost
 ampache_mysql_port: 3306
+ampache_php_packages:
+  - php5
+  - php5-curl
+  - php5-gd
 ampache_lastfm_api_key: ''
 ampache_lastfm_api_secret: ''
 ampache_lastfm_show_converts: yes

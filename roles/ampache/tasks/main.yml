@@ -1,5 +1,6 @@
 # Install and configure Ampache
 # https://github.com/ampache/ampache/wiki/Installation
+# FIXME do not install MySQL on Ampache nodes but use delegate or MySQL through the command line to setup DB & user
 ---
 
 - block:

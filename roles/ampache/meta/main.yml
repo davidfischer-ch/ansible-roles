@@ -8,12 +8,16 @@ dependencies:
     tags: [ampache, dependencies]
     when: "'github' in ampache_repository_url"
 
-  - role: mysql
+  - role: php
+    php_packages: '{{ ampache_php_packages }}'
     tags: [ampache, dependencies]
 
   - role: openssl
     tags: [ampache, dependencies]
     when: ampache_ssl_enabled|bool
+
+  - role: mysql
+    tags: [ampache, dependencies]
 
   - role: ufw
     ufw_rules: '{{ ampache_ufw_rules }}'
