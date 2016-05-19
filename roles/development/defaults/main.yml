@@ -1,7 +1,7 @@
 devops_packages:
   - ansible
   - juju-local
-  - libzmq3
+  - libzmq5
   - scudcloud
   - vagrant
 programming_packages:
