@@ -25,11 +25,10 @@
 
 - name: Download PageSpeed module source code
   get_url: >
-    url='{{ item.url }}' dest='{{ tools_src_directory }}/{{ item.file }}' force=no
-    sha256sum={{ item.sha256_checksum }} validate_certs=no
+    url={{ item.url }} dest={{ tools_src_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }} force=no
   with_items: '{{ nginx_pagespeed_items }}'
 
 - name: Extract PageSpeed module source code
   unarchive: >
-    src='{{ tools_src_directory }}/{{ item.file }}' dest='{{ tools_src_directory }}/{{ item.path }}' copy=no
+    src={{ tools_src_directory }}/{{ item.file }} dest={{ tools_src_directory }}/{{ item.path }} copy=no
   with_items: '{{ nginx_pagespeed_items }}'
