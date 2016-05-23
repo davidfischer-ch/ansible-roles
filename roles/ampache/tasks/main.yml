@@ -9,12 +9,9 @@
         name={{ item }} state=present
       with_items: '{{ ampache_packages }}'
 
-    - name: Create Ampache source directories
+    - name: Create tools source directory
       file: >
-        name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
-      with_items:
-        - '{{ tools_src_directory }}/ampache'
-        - '{{ tools_src_directory }}'
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
 
     - name: Clone Ampache source code
       git: >
@@ -36,7 +33,6 @@
         chdir: '{{ ampache_web_directory }}'
       changed_when: "'Nothing to install or update' not in ampache_install_result.stderr"
       register: ampache_install_result
-  become: yes
   tags: [ampache, packages]
 
 - block:

@@ -19,7 +19,6 @@
     - name: Install Nginx build packages
       package: >
         name={{ item }} state=present
-      become: yes
       with_items: '{{ nginx_build_packages }}'
   become: yes
   tags: [nginx, packages]
@@ -40,16 +39,10 @@
   when: nginx_pagespeed_enabled|bool
 
 - block:
-    - name: Create Nginx source directories
+    - name: Create tools source directory
       file: >
-        name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
       become: yes
-      with_items:
-        - '{{ tools_src_directory }}/nginx'
-        - '{{ tools_src_directory }}/nginx-upload-module'
-        - '{{ tools_src_directory }}/nginx-upload-progress-module'
-        - '{{ tools_src_directory }}/nginx-zip-module'
-        - '{{ tools_src_directory }}'
 
     - name: Clone Nginx source code
       git: >

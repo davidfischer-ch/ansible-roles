@@ -2,6 +2,10 @@
 ---
 
 - block:
+    - name: Create tools source directory
+      file: >
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
+
     - name: Download Drupal Shell
       get_url: >
         url=https://github.com/drush-ops/drush/releases/download/{{ drush_version }}/drush.phar force=no

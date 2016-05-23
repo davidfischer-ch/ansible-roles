@@ -8,12 +8,10 @@
       become: yes
       with_items: '{{ gexiv2_build_packages }}'
 
-    - name: Create GExiv2 source directory
+    - name: Create tools source directory
       file: >
-        name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
       become: yes
-      with_items:
-        - '{{ tools_src_directory }}/gexiv2'
 
     - name: Remove old GExiv2 package
       package: >

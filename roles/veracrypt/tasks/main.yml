@@ -8,13 +8,10 @@
       become: yes
       with_items: '{{ veracrypt_build_packages }}'
 
-    - name: Create VeraCrypt source directories
+    - name: Create tools source directory
       file: >
-        name={{ item }} owner={{ user }} group={{ group }} mode=755 recurse=no state=directory
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
       become: yes
-      with_items:
-        - '{{ tools_src_directory }}/veracrypt'
-        - '{{ tools_src_directory }}'
 
     - name: Clone VeraCrypt source code
       git: >

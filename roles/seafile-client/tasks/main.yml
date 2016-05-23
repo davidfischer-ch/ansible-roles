@@ -1,6 +1,10 @@
 ---
 
 - block:
+    - name: Create tools source directory
+      file: >
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
+
     - name: Download Seafile client
       get_url: >
         url=https://bintray.com/artifact/download/seafile-org/seafile/seafile_{{ seafile_client_version }}_amd64.deb

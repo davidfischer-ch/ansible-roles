@@ -8,9 +8,9 @@
       become: yes
       with_items: '{{ gpac_build_packages }}'
 
-    - name: Create GPAC source directories
+    - name: Create tools source directory
       file: >
-        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 recurse=yes state=directory
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
       become: yes
 
     - name: Clone GPAC source code
