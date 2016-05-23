@@ -1,0 +1,23 @@
+---
+
+- block:
+    - name: Install jMeter packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ jmeter_packages }}'
+
+    - name: Create tools source directories
+      file: >
+        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
+      become: yes
+
+    - name: Download jMeter binary package
+      get_url: >
+        url=http://ftp.ps.pl/pub/apache//jmeter/binaries/apache-jmeter-{{ jmeter_version }}.tgz force=no
+        dest={{ tools_src_directory }}/apache-jmeter-{{ jmeter_version }}.tgz
+
+    - name: Extract jMeter binary package
+      unarchive: >
+        src={{ tools_src_directory }}/apache-jmeter-{{ jmeter_version }}.tgz dest={{ tools_src_directory }} copy=no
+  tags: [jmeter, packages]

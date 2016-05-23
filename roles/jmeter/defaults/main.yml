@@ -1,0 +1,4 @@
+jmeter_packages:
+  - openjdk-7-jre-headless
+jmeter_version: 3.0
+tools_src_directory: /usr/local/src
