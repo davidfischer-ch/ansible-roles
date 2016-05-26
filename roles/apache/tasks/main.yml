@@ -1,0 +1,56 @@
+# Install and configure Apache 2
+---
+
+- assert:
+    that:
+      apache_log_level in apache_log_levels
+  tags: [apache, always]
+
+- name: Install Apache packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [apache, packages]
+  with_items: '{{ apache_packages }}'
+
+- block:
+    - name: Configure Apache
+      template: >
+        src={{ apache_config_file }} dest=/etc/apache2/apache2.conf mode=600
+      notify: reload apache
+
+    - name: Enable Apache modules
+      apache2_module: >
+        name={{ item }} state=present
+      notify: restart apache
+      with_items: '{{ apache_modules }}'
+  become: yes
+  tags: [apache, config]
+
+- name: Start Apache service
+  service: >
+    name=apache2 state=started enabled=yes
+  become: yes
+  tags: [apache, services]
+
+- block:
+    - name: Setup Apache sites
+      template: >
+        src={{ item.value.config_file }} dest=/etc/apache2/sites-available/{{ item.value.name }}.conf mode=644
+      notify: reload apache
+      with_dict: '{{ apache_sites }}'
+
+    - name: Enable Apache sites
+      file: >
+        src=/etc/apache2/sites-available/{{ item.value.name }}.conf
+        dest=/etc/apache2/sites-enabled/{{ item.value.name }}.conf state=link
+      notify: reload apache
+      with_dict: '{{ apache_sites }}'
+
+    - name: Disable unwanted sites
+      file: >
+        name=/etc/apache2/sites-enabled/{{ item }}.conf state=absent
+      notify: reload apache
+      with_items: '{{ apache_disabled_sites }}'
+  become: yes
+  tags: [apache, sites]

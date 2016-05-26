@@ -1,0 +1,12 @@
+mariadb_bind_address: 127.0.0.1
+mariadb_interface: null
+mariadb_packages:
+  - 'mariadb-server-{{ mariadb_version }}'
+mariadb_port: 3306
+mariadb_version: 10.1
+mariadb_ufw_rules:
+  - direction: in
+    interface: '{{ mariadb_interface or omit }}'
+    port: '{{ mariadb_port }}'
+    proto: tcp
+    rule: allow

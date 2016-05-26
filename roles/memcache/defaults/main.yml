@@ -1,0 +1,9 @@
+memcache_interface: null
+memcache_packages:
+  - memcached
+memcache_port: 11211
+memcache_ufw_rules:
+  - direction: in
+    interface: '{{ memcache_interface or omit }}'
+    port: '{{ memcache_port }}'
+    rule: allow

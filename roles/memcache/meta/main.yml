@@ -1,0 +1,7 @@
+---
+
+dependencies:
+  - role: ufw
+    ufw_rules: '{{ memcache_ufw_rules }}'
+    tags: [memcache, dependencies]
+    when: memcache_ufw_rules

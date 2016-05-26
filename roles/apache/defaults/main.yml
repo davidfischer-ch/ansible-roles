@@ -1,0 +1,16 @@
+apache_config_file: apache2.conf.j2
+apache_disabled_sites:
+  - 000-default
+  - default-ssl
+apache_hostname_lookup_enabled: no
+apache_keep_alive_enabled: yes
+apache_keep_alive_max_requests: 100
+apache_keep_alive_timeout: 5
+apache_log_level: warn
+apache_modules:
+  - rewrite
+  - ssl
+apache_packages:
+  - apache2
+apache_request_timeout: 300
+apache_sites: {}

@@ -1,0 +1,51 @@
+---
+
+- assert:
+    that:
+      - mariadb_root_password is defined
+  tags: [mariadb, always]
+
+- block:
+    - name: Install MariaDB packages
+      package: >
+        name={{ item }} state=present
+      tags: packages
+      with_items: '{{ mariadb_packages }}'
+
+    - name: Configure MariaDB
+      template: >
+        src=server.{{ mariadb_version }}.my.cnf.j2 dest=/etc/mysql/my.cnf mode=644
+      notify: restart mariadb
+      tags: config
+
+    - name: Start MariaDB service
+      service: >
+        name=mysql state=started enabled=yes
+      tags: services
+
+    - name: Copy user my.cnf file with root credentials
+      template: >
+        src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+      tags: config
+
+    - name: Configure MariaDB root password
+      mysql_user: >
+        name=root host={{ item }} password={{ mariadb_root_password }} check_implicit_admin=yes state=present
+      tags: config
+      with_items:
+        - '{{ ansible_hostname }}'
+        - localhost
+        - 127.0.0.1
+        - ::1
+
+    - name: Remove anonymous MariaDB user
+      mysql_user: >
+        name='' state=absent
+      tags: config
+
+    - name: Remove MariaDB test database
+      mysql_db: >
+        name=test state=absent
+      tags: config
+  become: yes
+  tags: mariadb

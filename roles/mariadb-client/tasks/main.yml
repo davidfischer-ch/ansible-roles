@@ -1,0 +1,23 @@
+---
+
+- block:
+    - name: Install MySQL python packages
+      package: >
+        name=python-mysqldb state=present
+
+    - name: Register MariaDB apt key
+      apt_key: >
+        keyserver=hkp://keyserver.ubuntu.com:80 id=0xcbcb082a1bb943db state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Register MariaDB apt repository
+      apt_repository: >
+        repo='{{ mariadb_apt_repository }}' update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install MariaDB client packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ mariadb_client_packages }}'
+  become: yes
+  tags: [mariadb-client, packages]
