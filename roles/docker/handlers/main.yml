@@ -4,7 +4,7 @@
   command: >
     shutdown -r now 'Triggered by Ansible'
   ignore_errors: yes
-  async: 0
+  async: 1
   poll: 0
   become: yes
 
