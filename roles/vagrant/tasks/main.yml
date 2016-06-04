@@ -72,8 +72,8 @@
     - name: Install Vagrant plugins
       command: >
         vagrant plugin install vagrant-{{ item }}
-      with_items: '{{ vagrant_plugins }}'
       when: item not in vagrant_plugin_result.stdout
+      with_items: '{{ vagrant_plugins }}'
   tags: [vagrant, packages]
 
 - block:
