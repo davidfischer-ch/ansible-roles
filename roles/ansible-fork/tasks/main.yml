@@ -1,0 +1,22 @@
+---
+
+- block:
+    # FIXME see https://github.com/ansible/ansible-modules-core/pull/3337
+    - name: Clone Ansible modules core source code
+      git: >
+        repo=https://github.com/davidfischer-ch/ansible-modules-core
+        dest={{ ansible_user_dir }}/ansible-modules-core force=yes version=devel
+      tags: update
+
+    - name: Install Ansible modules from source
+      command: >
+        rsync {{ ansible_user_dir }}/ansible-modules-core/{{ item }} --checksum
+              /usr/local/lib/python2.7/dist-packages/ansible/modules/core/{{ item }}
+      changed_when: lmadmin_rsync_result.stdout_lines|length > 2
+      register: lmadmin_rsync_result
+      with_items:
+        - cloud/amazon/iam_cert.py
+        - cloud/amazon/rds.py
+      tags: update
+  become: yes
+  tags: [ansible, packages]
