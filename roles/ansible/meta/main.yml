@@ -1,0 +1,6 @@
+---
+
+dependencies:
+  - role: github
+    tags: [ansible, dependencies]
+    when: the_ansible_from_source|bool

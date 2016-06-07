@@ -6,9 +6,16 @@
         name={{ item }} state=present
       with_items: '{{ the_ansible_packages }}'
 
-    - name: Install Ansible Python package
+    - name: Install Ansible Python package from source
+      pip: >
+        name="git+https://github.com/{{ the_ansible_github_username }}/ansible.git@{{ the_ansible_version|regex_replace('^latest$', 'devel') }}#egg=ansible"
+        executable=pip2 state=latest
+      when: the_ansible_from_source|bool
+
+    - name: Install Ansible Python package from release
       pip: >
         name="ansible{{ the_ansible_version|regex_replace('^latest$', '') }}" executable=pip2 state=present
+      when: not the_ansible_from_source|bool
 
     # FIXME may iterate over the_ansible_modules and use map('extract', ...)
 
