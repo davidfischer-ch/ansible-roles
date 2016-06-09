@@ -8,9 +8,9 @@
 
     - name: Install Supervisor Python packages
       pip: >
-        name={{ item }} executable=pip2 extra_args=-U
+        name=supervisor executable=pip2 state={{ (supervisor_version == 'latest')|ternary('latest', omit) }}
+        version={{ (supervisor_version == 'latest')|ternary(omit, supervisor_version) }}
       notify: restart supervisor
-      with_items: '{{ supervisor_python_packages }}'
   become: yes
   tags: [supervisor, packages]
 

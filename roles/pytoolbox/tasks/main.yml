@@ -8,7 +8,8 @@
 
     - name: Install pytoolbox Python packages
       pip: >
-        name="pytoolbox{{ pytoolbox_version|regex_replace('^latest$', '') }}" executable=pip{{ item }} state=present
+        name=pytoolbox executable=pip{{ item }} state={{ (pytoolbox_version == 'latest')|ternary('latest', omit) }}
+        version={{ (pytoolbox_version == 'latest')|ternary(omit, pytoolbox_version) }}
       with_items: '{{ pytoolbox_python_versions }}'
   become: yes
   tags: [pytoolbox, packages]

@@ -3,4 +3,5 @@ postgresql_apt_repository: 'deb http://apt.postgresql.org/pub/repos/apt/ {{ ansi
 postgresql_client_packages:
   - libpq-dev
   - 'postgresql-client-{{ postgresql_version }}'
+postgresql_psycopg2_version: latest
 postgresql_version: 9.3

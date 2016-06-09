@@ -26,12 +26,14 @@
 
     - name: Install setuptools
       pip: >
-        name=setuptools executable=pip{{ item[0] }}
+        name=setuptools executable=pip{{ item[0] }} state={{ (python_setuptools_version == 'latest')|ternary('latest', omit) }}
+        version={{ (python_setuptools_version == 'latest')|ternary(omit, python_setuptools_version) }}
       with_items: '{{ python_versions }}'
 
     - name: Install virtualenv
       pip: >
-        name=virtualenv executable=pip{{ item[0] }} state=present
+        name=virtualenv executable=pip{{ item[0] }} state={{ (python_virtualenv_version == 'latest')|ternary('latest', omit) }}
+        version={{ (python_virtualenv_version == 'latest')|ternary(omit, python_virtualenv_version) }}
       with_items: '{{ python_versions }}'
   become: yes
   tags: [python, packages]

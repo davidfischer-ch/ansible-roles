@@ -14,7 +14,8 @@
 
     - name: Install Ansible Python package from release
       pip: >
-        name="ansible{{ the_ansible_version|regex_replace('^latest$', '') }}" executable=pip2 state=present
+        name=ansible executable=pip2 state={{ (the_ansible_version == 'latest')|ternary('latest', omit) }}
+        version={{ (the_ansible_version == 'latest')|ternary(omit, the_ansible_version) }}
       when: not the_ansible_from_source|bool
 
     # FIXME may iterate over the_ansible_modules and use map('extract', ...)

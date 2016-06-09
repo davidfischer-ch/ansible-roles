@@ -19,6 +19,7 @@
 
     - name: Install PostgreSQL python packages
       pip: >
-        name=psycopg2 executable=pip2 state=present
+        name=psycopg2 executable=pip2 state={{ (postgresql_psycopg2_version == 'latest')|ternary('latest', omit) }}
+        version={{ (postgresql_psycopg2_version == 'latest')|ternary(omit, postgresql_psycopg2_version) }}
   become: yes
   tags: [postgresql-client, packages]

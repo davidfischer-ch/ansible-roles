@@ -1,4 +1,2 @@
 supervisor_dod_time: 10
-supervisor_python_packages:
-  - 'supervisor=={{ supervisor_version }}'
 supervisor_version: 3.2.3  # 26/03/2016
