@@ -35,7 +35,7 @@
   tags: [nginx, config]
 
 - include: pagespeed.yml
-  when: nginx_pagespeed_enabled|bool
+  when: nginx_pagespeed_module_enabled|bool
 
 - block:
     - name: Clone Nginx source code
@@ -91,7 +91,7 @@
           {% if nginx_zip_module_enabled %}
           --add-module={{ local_source_directory }}/nginx-zip-module
           {% endif %}
-          {{ nginx_pagespeed_configure }}
+          {{ nginx_pagespeed_module_configure }}
 
     - name: Set Nginx build environment
       set_fact:

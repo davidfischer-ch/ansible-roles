@@ -1,3 +1,4 @@
+# source code
 nginx_build_flags:
   - '--with-pcre-jit'
   - '--with-ipv6'
@@ -21,22 +22,25 @@ nginx_build_packages:
   - unzip
   - zlib1g
   - zlib1g-dev
+# daemon
 nginx_config_file: nginx.conf.j2
 nginx_daemon_group: www-data
 nginx_daemon_path: /usr/share/nginx/sbin/nginx
 nginx_daemon_user: www-data
-nginx_interface: null
-nginx_pagespeed_cache_directory: /var/nginx_pagespeed_cache
-nginx_pagespeed_configure: ''
-nginx_pagespeed_enabled: no
-nginx_port: 80
 nginx_start_result: {}
+nginx_worker_processes: 4
+# modules
+nginx_pagespeed_module_cache_directory: /var/nginx_pagespeed_cache
+nginx_pagespeed_module_configure: ''
+nginx_pagespeed_module_enabled: no
+nginx_upload_module_enabled: no
+nginx_zip_module_enabled: no
+# networking
+nginx_interface: null
+nginx_port: 80
 nginx_ufw_rules:
   - direction: in
     interface: '{{ nginx_interface or omit }}'
     port: '{{ nginx_port }}'
     proto: tcp
     rule: allow
-nginx_upload_module_enabled: no
-nginx_worker_processes: 4
-nginx_zip_module_enabled: no
