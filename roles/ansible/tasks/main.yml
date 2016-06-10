@@ -9,7 +9,7 @@
     - name: Install Ansible Python package from source
       pip: >
         name="git+https://github.com/{{ the_ansible_github_username }}/ansible.git@{{ the_ansible_version|regex_replace('^latest$', 'devel') }}#egg=ansible"
-        executable=pip2 state=latest
+        executable=pip2 extra_args='--src {{ local_source_directory }}' state=latest
       when: the_ansible_from_source|bool
 
     - name: Install Ansible Python package from release
