@@ -13,7 +13,7 @@
         file: 'nginx-pagespeed-library-{{ nginx_pagespeed_module_version }}.zip'
         path: '{{ nginx_pagespeed_module_name }}'
         sha256_checksum: '{{ nginx_pagespeed_library_module_checksum }}'
-    nginx_pagespeed_configure: '--add-module={{ tools_src_directory }}/{{ nginx_pagespeed_module_name }}'
+    nginx_pagespeed_configure: '--add-module={{ local_source_directory }}/{{ nginx_pagespeed_module_name }}'
 
 - name: Create PageSpeed source directories
   file: >
@@ -21,14 +21,14 @@
   become: yes
   with_items:
     - '{{ nginx_pagespeed_cache_directory }}'
-    - '{{ tools_src_directory }}/{{ nginx_pagespeed_module_name }}/psol'
+    - '{{ local_source_directory }}/{{ nginx_pagespeed_module_name }}/psol'
 
 - name: Download PageSpeed module source code
   get_url: >
-    url={{ item.url }} dest={{ tools_src_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }} force=no
+    url={{ item.url }} dest={{ local_source_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }} force=no
   with_items: '{{ nginx_pagespeed_items }}'
 
 - name: Extract PageSpeed module source code
   unarchive: >
-    src={{ tools_src_directory }}/{{ item.file }} dest={{ tools_src_directory }}/{{ item.path }} copy=no
+    src={{ local_source_directory }}/{{ item.file }} dest={{ local_source_directory }}/{{ item.path }} copy=no
   with_items: '{{ nginx_pagespeed_items }}'

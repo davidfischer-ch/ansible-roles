@@ -40,4 +40,3 @@ nginx_ufw_rules:
 nginx_upload_module_enabled: no
 nginx_worker_processes: 4
 nginx_zip_module_enabled: no
-tools_src_directory: /usr/local/src

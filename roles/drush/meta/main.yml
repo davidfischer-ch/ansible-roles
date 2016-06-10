@@ -6,3 +6,6 @@ dependencies:
 
   - role: php
     tags: [drush, dependencies]
+
+  - role: local-source
+    tags: [drush, dependencies]

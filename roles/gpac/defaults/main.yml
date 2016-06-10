@@ -31,4 +31,3 @@ gpac_build_packages:
   - zlib1g-dev
 gpac_repository_url: https://github.com/gpac/gpac.git
 gpac_version: v0.6.0  # 19/02/2016
-tools_src_directory: /usr/local/src

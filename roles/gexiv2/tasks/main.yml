@@ -8,11 +8,6 @@
       become: yes
       with_items: '{{ gexiv2_build_packages }}'
 
-    - name: Create tools source directory
-      file: >
-        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
-      become: yes
-
     - name: Remove old GExiv2 package
       package: >
         name=gir1.2-gexiv2-0.10 state=absent
@@ -21,32 +16,32 @@
     - name: Clone GExiv2 source code
       git: >
         repo=https://git.gnome.org/browse/gexiv2
-        dest={{ tools_src_directory }}/gexiv2
+        dest={{ local_source_directory }}/gexiv2
         force=yes
         version={{ gexiv2_version }}
 
     - name: Generate GExiv2 build configuration
       command: >
-        {{ tools_src_directory }}/gexiv2/autogen.sh
+        {{ local_source_directory }}/gexiv2/autogen.sh
       args:
-        chdir: '{{ tools_src_directory }}/gexiv2'
+        chdir: '{{ local_source_directory }}/gexiv2'
 
     - name: Configure GExiv2 build process
       command: >
-        {{ tools_src_directory }}/gexiv2/configure --enable-introspection
+        {{ local_source_directory }}/gexiv2/configure --enable-introspection
       args:
-        chdir: '{{ tools_src_directory }}/gexiv2'
+        chdir: '{{ local_source_directory }}/gexiv2'
 
     - name: Build GExiv2 from source
       command: >
         make -j{{ ansible_processor_cores }}
       args:
-        chdir: '{{ tools_src_directory }}/gexiv2'
+        chdir: '{{ local_source_directory }}/gexiv2'
 
     - name: Install GExiv2 from source
       command: >
         make install
       args:
-        chdir: '{{ tools_src_directory }}/gexiv2'
+        chdir: '{{ local_source_directory }}/gexiv2'
       become: yes
   tags: [gexiv2, packages]

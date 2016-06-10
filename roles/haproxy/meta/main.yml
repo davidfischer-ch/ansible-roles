@@ -5,6 +5,9 @@ dependencies:
     tags: [haproxy, dependencies]
     when: "'github' in haproxy_repository_url"
 
+  - role: local-source
+    tags: [haproxy, dependencies]
+
   - role: ufw
     ufw_rules: '{{ haproxy_ufw_rules }}'
     tags: [haproxy, dependencies]

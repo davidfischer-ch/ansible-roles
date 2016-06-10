@@ -4,6 +4,9 @@ dependencies:
   - role: github
     tags: [nginx, dependencies]
 
+  - role: local-source
+    tags: [nginx, dependencies]
+
   - role: supervisor
     tags: [nginx, dependencies]
     when: nginx_daemon_mode == 'supervisor'

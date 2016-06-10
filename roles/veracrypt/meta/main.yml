@@ -4,3 +4,6 @@ dependencies:
   - role: github
     tags: [veracrypt, dependencies]
     when: "'github' in veracrypt_repository_url"
+
+  - role: local-source
+    tags: [veracrypt, dependencies]

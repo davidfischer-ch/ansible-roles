@@ -39,4 +39,3 @@ haproxy_ufw_rules:
     proto: tcp
     rule: allow
 haproxy_version: v1.6.0  # 10/11/2015
-tools_src_directory: /usr/local/src

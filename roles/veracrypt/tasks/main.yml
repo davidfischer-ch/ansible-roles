@@ -8,26 +8,21 @@
       become: yes
       with_items: '{{ veracrypt_build_packages }}'
 
-    - name: Create tools source directory
-      file: >
-        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
-      become: yes
-
     - name: Clone VeraCrypt source code
       git: >
-        repo={{ veracrypt_repository_url }} dest={{ tools_src_directory }}/veracrypt force=yes
+        repo={{ veracrypt_repository_url }} dest={{ local_source_directory }}/veracrypt force=yes
         version={{ veracrypt_version }}
 
     - name: Build VeraCrypt from source
       command: >
         make -j{{ ansible_processor_cores }}
       args:
-        chdir: '{{ tools_src_directory }}/veracrypt/src'
+        chdir: '{{ local_source_directory }}/veracrypt/src'
       changed_when: veracrypt_make_result.stdout_lines|length > 0
       register: veracrypt_make_result
 
     - name: Create VeraCrypt symlink
       file: >
-        src={{ tools_src_directory }}/veracrypt/src/Main/veracrypt dest=/usr/local/bin/veracrypt state=link
+        src={{ local_source_directory }}/veracrypt/src/Main/veracrypt dest=/usr/local/bin/veracrypt state=link
       become: yes
   tags: [veracrypt, packages]

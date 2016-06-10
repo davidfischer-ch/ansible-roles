@@ -18,26 +18,21 @@
       become: yes
       with_items: '{{ haproxy_build_packages }}'
 
-    - name: Create tools source directory
-      file: >
-        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
-      become: yes
-
     - name: Clone HAProxy source code
       git: >
-        repo={{ haproxy_repository_url }} dest={{ tools_src_directory }}/haproxy force=yes version={{ haproxy_version }}
+        repo={{ haproxy_repository_url }} dest={{ local_source_directory }}/haproxy force=yes version={{ haproxy_version }}
 
     - name: Build HAProxy from source
       command: >
         make -j{{ ansible_processor_cores }} TARGET={{ haproxy_build_target }} {{ haproxy_build_flags }}
       args:
-        chdir: '{{ tools_src_directory }}/haproxy'
+        chdir: '{{ local_source_directory }}/haproxy'
 
     - name: Install HAProxy from source
       command: >
         make install-{{ item }}
       args:
-        chdir: '{{ tools_src_directory }}/haproxy'
+        chdir: '{{ local_source_directory }}/haproxy'
       become: yes
       with_items:
         - bin

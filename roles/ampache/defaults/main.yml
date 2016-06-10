@@ -32,4 +32,3 @@ ampache_users: []
 ampache_version: master
 ampache_web_directory: /usr/share/ampache/www2
 ampache_web_path: /ampache
-tools_src_directory: /usr/local/src

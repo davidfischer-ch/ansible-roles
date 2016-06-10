@@ -39,15 +39,10 @@
   when: nginx_pagespeed_enabled|bool
 
 - block:
-    - name: Create tools source directory
-      file: >
-        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
-      become: yes
-
     - name: Clone Nginx source code
       git: >
         repo=https://github.com/nginx/nginx.git
-        dest={{ tools_src_directory }}/nginx
+        dest={{ local_source_directory }}/nginx
         force=yes
         version={{ nginx_version }}
 
@@ -55,14 +50,14 @@
         - name: Clone Upload module source code
           git: >
             repo=https://github.com/vkholodkov/nginx-upload-module.git
-            dest={{ tools_src_directory }}/nginx-upload-module
+            dest={{ local_source_directory }}/nginx-upload-module
             force=yes
             version={{ nginx_upload_module_version }}
 
         - name: Clone Upload Progress module source code
           git: >
             repo=https://github.com/masterzen/nginx-upload-progress-module.git
-            dest={{ tools_src_directory }}/nginx-upload-progress-module
+            dest={{ local_source_directory }}/nginx-upload-progress-module
             force=yes
             version={{ nginx_upload_progress_module_version }}
       when: nginx_upload_module_enabled|bool
@@ -70,7 +65,7 @@
     - name: Clone Zip module source code
       git: >
         repo=https://github.com/evanmiller/mod_zip.git
-        dest={{ tools_src_directory }}/nginx-zip-module
+        dest={{ local_source_directory }}/nginx-zip-module
         force=yes
         version={{ nginx_zip_module_version }}
       when: nginx_zip_module_enabled|bool
@@ -91,11 +86,11 @@
           --http-uwsgi-temp-path=/var/lib/nginx/uwsgi
           {{ nginx_build_flags|join(' ') }}
           {% if nginx_upload_module_enabled %}
-          --add-module={{ tools_src_directory }}/nginx-upload-module
-          --add-module={{ tools_src_directory }}/nginx-upload-progress-module
+          --add-module={{ local_source_directory }}/nginx-upload-module
+          --add-module={{ local_source_directory }}/nginx-upload-progress-module
           {% endif %}
           {% if nginx_zip_module_enabled %}
-          --add-module={{ tools_src_directory }}/nginx-zip-module
+          --add-module={{ local_source_directory }}/nginx-zip-module
           {% endif %}
           {{ nginx_pagespeed_configure }}
 
@@ -110,7 +105,7 @@
 
     - name: Detect if Nginx must be reinstalled
       command: >
-        cat '{{ tools_src_directory }}/nginx.build.cfg'
+        cat '{{ local_source_directory }}/nginx.build.cfg'
       always_run: yes
       changed_when: >
         nginx_build_env|trim != nginx_build.stdout|default('')|trim
@@ -121,14 +116,14 @@
       command: >
         ./auto/configure {{ nginx_build_cfg }}
       args:
-        chdir: '{{ tools_src_directory }}/nginx'
+        chdir: '{{ local_source_directory }}/nginx'
       when: nginx_build|changed
 
     - name: Build Nginx from source
       command: >
         make -j{{ ansible_processor_cores }}
       args:
-        chdir: '{{ tools_src_directory }}/nginx'
+        chdir: '{{ local_source_directory }}/nginx'
       when: nginx_build|changed
 
     - block:
@@ -136,7 +131,7 @@
           command: >
             make install
           args:
-            chdir: '{{ tools_src_directory }}/nginx'
+            chdir: '{{ local_source_directory }}/nginx'
 
         - name: Make Nginx binary executable
           file: >
@@ -144,7 +139,7 @@
 
         - name: Save build environment
           copy: >
-            content={{ nginx_build_env }} dest={{ tools_src_directory }}/nginx.build.cfg
+            content={{ nginx_build_env }} dest={{ local_source_directory }}/nginx.build.cfg
 
         - name: Trigger Nginx restart
           command: >

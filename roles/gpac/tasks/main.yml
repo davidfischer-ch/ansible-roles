@@ -8,32 +8,27 @@
       become: yes
       with_items: '{{ gpac_build_packages }}'
 
-    - name: Create tools source directory
-      file: >
-        name={{ tools_src_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
-      become: yes
-
     - name: Clone GPAC source code
       git: >
-        repo={{ gpac_repository_url }} dest={{ tools_src_directory }}/gpac force=yes version={{ gpac_version }}
+        repo={{ gpac_repository_url }} dest={{ local_source_directory }}/gpac force=yes version={{ gpac_version }}
 
     - name: Configure GPAC build process
       command: >
-        {{ tools_src_directory }}/gpac/configure
+        {{ local_source_directory }}/gpac/configure
       args:
-        chdir: '{{ tools_src_directory }}/gpac'
+        chdir: '{{ local_source_directory }}/gpac'
 
     - name: Build GPAC from source
       command: >
         make -j{{ ansible_processor_cores }}
       args:
-        chdir: '{{ tools_src_directory }}/gpac'
+        chdir: '{{ local_source_directory }}/gpac'
 
     - name: Install GPAC from source
       command: >
         make install
       args:
-        chdir: '{{ tools_src_directory }}/gpac'
+        chdir: '{{ local_source_directory }}/gpac'
       become: yes
   tags: [gpac, packages]
 
