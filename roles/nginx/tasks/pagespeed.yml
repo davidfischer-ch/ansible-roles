@@ -1,34 +1,36 @@
 ---
 
-- set_fact:
-    nginx_pagespeed_module_name: 'ngx_pagespeed-release-{{ nginx_pagespeed_module_version }}-beta'
+- block:
+    - set_fact:
+        nginx_pagespeed_module_name: 'ngx_pagespeed-release-{{ nginx_pagespeed_module_version }}-beta'
 
-- set_fact:
-    nginx_pagespeed_items:
-      - url: 'https://github.com/pagespeed/ngx_pagespeed/archive/release-{{ nginx_pagespeed_module_version }}-beta.zip'
-        file: 'nginx-pagespeed-module-{{ nginx_pagespeed_module_version }}.zip'
-        path: ''
-        sha256_checksum: '{{ nginx_pagespeed_module_checksum }}'
-      - url: 'https://dl.google.com/dl/page-speed/psol/{{ nginx_pagespeed_module_version }}.tar.gz'
-        file: 'nginx-pagespeed-library-{{ nginx_pagespeed_module_version }}.zip'
-        path: '{{ nginx_pagespeed_module_name }}'
-        sha256_checksum: '{{ nginx_pagespeed_library_module_checksum }}'
-    nginx_pagespeed_configure: '--add-module={{ local_source_directory }}/{{ nginx_pagespeed_module_name }}'
+    - set_fact:
+        nginx_pagespeed_items:
+          - url: 'https://github.com/pagespeed/ngx_pagespeed/archive/release-{{ nginx_pagespeed_module_version }}-beta.zip'
+            file: 'nginx-pagespeed-module-{{ nginx_pagespeed_module_version }}.zip'
+            path: ''
+            sha256_checksum: '{{ nginx_pagespeed_module_checksum }}'
+          - url: 'https://dl.google.com/dl/page-speed/psol/{{ nginx_pagespeed_module_version }}.tar.gz'
+            file: 'nginx-pagespeed-library-{{ nginx_pagespeed_module_version }}.zip'
+            path: '{{ nginx_pagespeed_module_name }}'
+            sha256_checksum: '{{ nginx_pagespeed_library_module_checksum }}'
+        nginx_pagespeed_configure: '--add-module={{ local_source_directory }}/{{ nginx_pagespeed_module_name }}'
 
-- name: Create PageSpeed source directories
-  file: >
-    name={{ item }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755 recurse=yes state=directory
+    - name: Create PageSpeed source directories
+      file: >
+        name={{ item }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755 recurse=yes state=directory
+      with_items:
+        - '{{ nginx_pagespeed_cache_directory }}'
+        - '{{ local_source_directory }}/{{ nginx_pagespeed_module_name }}/psol'
+
+    - name: Download PageSpeed module source code
+      get_url: >
+        url={{ item.url }} dest={{ local_source_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }} force=no
+      with_items: '{{ nginx_pagespeed_items }}'
+
+    - name: Extract PageSpeed module source code
+      unarchive: >
+        src={{ local_source_directory }}/{{ item.file }} dest={{ local_source_directory }}/{{ item.path }} copy=no
+      with_items: '{{ nginx_pagespeed_items }}'
   become: yes
-  with_items:
-    - '{{ nginx_pagespeed_cache_directory }}'
-    - '{{ local_source_directory }}/{{ nginx_pagespeed_module_name }}/psol'
-
-- name: Download PageSpeed module source code
-  get_url: >
-    url={{ item.url }} dest={{ local_source_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }} force=no
-  with_items: '{{ nginx_pagespeed_items }}'
-
-- name: Extract PageSpeed module source code
-  unarchive: >
-    src={{ local_source_directory }}/{{ item.file }} dest={{ local_source_directory }}/{{ item.path }} copy=no
-  with_items: '{{ nginx_pagespeed_items }}'
+  tags: [nginx, packages]

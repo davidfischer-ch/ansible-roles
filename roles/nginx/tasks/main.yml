@@ -35,7 +35,6 @@
   tags: [nginx, config]
 
 - include: pagespeed.yml
-  tags: [nginx, packages]
   when: nginx_pagespeed_enabled|bool
 
 - block:
@@ -147,8 +146,8 @@
           always_run: yes
           changed_when: yes
           notify: '{{ nginx_daemon_mode }} restart nginx'
-      become: yes
       when: nginx_build|changed
+  become: yes
   tags: [nginx, packages]
 
 - block:

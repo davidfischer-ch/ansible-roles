@@ -5,7 +5,6 @@
     - name: Install GPAC build packages
       package: >
         name={{ item }} state=present
-      become: yes
       with_items: '{{ gpac_build_packages }}'
 
     - name: Clone GPAC source code
@@ -29,7 +28,7 @@
         make install
       args:
         chdir: '{{ local_source_directory }}/gpac'
-      become: yes
+  become: yes
   tags: [gpac, packages]
 
 # Current configure gives:

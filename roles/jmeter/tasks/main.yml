@@ -4,7 +4,6 @@
     - name: Install jMeter packages
       package: >
         name={{ item }} state=present
-      become: yes
       with_items: '{{ jmeter_packages }}'
 
     - name: Download jMeter binary package
@@ -15,4 +14,5 @@
     - name: Extract jMeter binary package
       unarchive: >
         src={{ local_source_directory }}/apache-jmeter-{{ jmeter_version }}.tgz dest={{ local_source_directory }} copy=no
+  become: yes
   tags: [jmeter, packages]

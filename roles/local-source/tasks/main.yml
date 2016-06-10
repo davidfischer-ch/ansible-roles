@@ -2,6 +2,6 @@
 
 - name: Create local source directory
   file: >
-    name={{ local_source_directory }} owner={{ user }} group={{ group }} mode=755 state=directory
+    name={{ local_source_directory }} mode=755 state=directory
   become: yes
   tags: [local-source, packages]

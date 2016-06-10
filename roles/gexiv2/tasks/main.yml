@@ -5,13 +5,11 @@
     - name: Install GExiv2 build packages
       package: >
         name={{ item }} state=present
-      become: yes
       with_items: '{{ gexiv2_build_packages }}'
 
     - name: Remove old GExiv2 package
       package: >
         name=gir1.2-gexiv2-0.10 state=absent
-      become: yes
 
     - name: Clone GExiv2 source code
       git: >
@@ -43,5 +41,5 @@
         make install
       args:
         chdir: '{{ local_source_directory }}/gexiv2'
-      become: yes
+  become: yes
   tags: [gexiv2, packages]

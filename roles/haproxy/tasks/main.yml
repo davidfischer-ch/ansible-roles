@@ -7,7 +7,6 @@
     - name: Install HAProxy build dependencies
       apt: >
         name=haproxy state=build-dep
-      become: yes
       changed_when: haproxy_build_dep_result.stdout_lines|length > 4
       register: haproxy_build_dep_result
       when: "ansible_pkg_mgr == 'apt'"
@@ -15,7 +14,6 @@
     - name: Install HAProxy build packages
       package: >
         name={{ item }} state=present
-      become: yes
       with_items: '{{ haproxy_build_packages }}'
 
     - name: Clone HAProxy source code
@@ -33,11 +31,11 @@
         make install-{{ item }}
       args:
         chdir: '{{ local_source_directory }}/haproxy'
-      become: yes
       with_items:
         - bin
         - man
         # - doc  # stderr: install: cannot stat ‘doc/haproxy-en.txt’: No such file or directory
+  become: yes
   tags: [haproxy, packages]
 
 - block:

@@ -5,7 +5,6 @@
     - name: Install VeraCrypt build packages
       package: >
         name={{ item }} state=present
-      become: yes
       with_items: '{{ veracrypt_build_packages }}'
 
     - name: Clone VeraCrypt source code
@@ -24,5 +23,5 @@
     - name: Create VeraCrypt symlink
       file: >
         src={{ local_source_directory }}/veracrypt/src/Main/veracrypt dest=/usr/local/bin/veracrypt state=link
-      become: yes
+  become: yes
   tags: [veracrypt, packages]
