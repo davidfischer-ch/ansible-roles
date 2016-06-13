@@ -15,6 +15,12 @@ apache_log_level: warn
 apache_macros: {}
 apache_macros_file: macro.conf.j2
 apache_ports_file: ports.conf.j2
+apache_modules:
+  - macro
+  - rewrite
+  - ssl
+apache_packages:
+  - apache2
 apache_request_timeout: 300
 # networking
 apache_interface: null
