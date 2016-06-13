@@ -19,6 +19,11 @@
         src={{ apache_config_file }} dest=/etc/apache2/apache2.conf mode=600
       notify: reload apache
 
+    - name: Configure Apache macros
+      template: >
+        src={{ apache_macros_file }} dest=/etc/apache2/mods-available/macro.conf mode=644
+      notify: reload apache
+
     - name: Enable Apache modules
       apache2_module: >
         name={{ item }} state=present
