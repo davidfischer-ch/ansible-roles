@@ -1,0 +1,25 @@
+---
+
+- assert:
+    that:
+      - postfix_hostname is defined
+  tags: [postfix, always]
+
+- name: Install postfix packages
+  package: >
+    name={{ postfix_package }} state=present
+  become: yes
+  tags: [postfix, packages]
+
+- block:
+    - name: Configure postfix mail name
+      copy: >
+        content='{{ postfix_mailname }}' dest=/etc/mailname owner=root group=root mode=644
+      notify: reload postfix
+
+    - name: Configure postfix
+      template: >
+        src=main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root mode=644
+      notify: reload postfix
+  become: yes
+  tags: [postfix, config]
