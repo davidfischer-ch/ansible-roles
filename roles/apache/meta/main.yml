@@ -1,0 +1,7 @@
+---
+
+dependencies:
+  - role: ufw
+    ufw_rules: '{{ apache_ufw_rules }}'
+    tags: [apache, dependencies]
+    when: apache_ufw_rules

@@ -1,7 +1,12 @@
+# packages
+apache_modules:
+  - macro
+  - rewrite
+  - ssl
+apache_packages:
+  - apache2
+# miscellaneous configuration
 apache_config_file: apache2.conf.j2
-apache_disabled_sites:
-  - 000-default
-  - default-ssl
 apache_hostname_lookup_enabled: no
 apache_keep_alive_enabled: yes
 apache_keep_alive_max_requests: 100
@@ -9,11 +14,25 @@ apache_keep_alive_timeout: 5
 apache_log_level: warn
 apache_macros: {}
 apache_macros_file: macro.conf.j2
-apache_modules:
-  - macro
-  - rewrite
-  - ssl
-apache_packages:
-  - apache2
+apache_ports_file: ports.conf.j2
 apache_request_timeout: 300
+# networking
+apache_interface: null
+apache_port: 80
+apache_port_ssl: 443
+apache_ufw_rules:
+  - direction: in
+    interface: '{{ apache_interface or omit }}'
+    port: '{{ apache_port }}'
+    proto: tcp
+    rule: allow
+  - direction: in
+    interface: '{{ apache_interface or omit }}'
+    port: '{{ apache_port_ssl }}'
+    proto: tcp
+    rule: allow
+# sites
 apache_sites: {}
+apache_disabled_sites:
+  - 000-default
+  - default-ssl
