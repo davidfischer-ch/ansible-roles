@@ -7,12 +7,26 @@
         name={{ user }} shell=/bin/bash state=present
       become: yes
 
-    - name: Add user to password-less sudoers
-      template: >
-        src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
-        owner=root group=root mode=440 validate='visudo -cf %s'
+    - name: Detect if sudoers.d exists
+      stat: >
+        path=/etc/sudoers.d
       become: yes
-      when: "user != 'root'"
+      register: bootstrap_sudoers_directory
+
+    - block:
+        - name: Add user to password-less sudoers
+          template: >
+            src=sudoers-user.j2 dest=/etc/sudoers.d/{{ user }}-sudoer
+            owner=root group=root mode=440 validate='visudo -cf %s'
+          when: bootstrap_sudoers_directory.stat.exists|bool
+
+        - name: Add user to password-less sudoers
+          lineinfile: >
+            dest=/etc/sudoers regexp='^{{ user }} ' line='{{ user }} ALL=(ALL) NOPASSWD: ALL'
+            owner=root group=root mode=440 validate='visudo -cf %s'
+          when: not bootstrap_sudoers_directory.stat.exists|bool
+      become: yes
+      when: user != 'root'
 
     - name: Enable password-less ssh
       authorized_key: >
