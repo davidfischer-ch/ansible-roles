@@ -11,11 +11,6 @@
       package: >
         name={{ item }} state=present
       with_items: '{{ php_packages }}'
-
-    - name: Remove unwanted PHP packages
-      package: >
-        name={{ item }} state=absent
-      with_items: '{{ php_unwanted_packages }}'
   become: yes
   tags: [php, packages]
 
