@@ -40,32 +40,26 @@
 - block:
     - name: Clone Nginx source code
       git: >
-        repo=https://github.com/nginx/nginx.git
-        dest={{ local_source_directory }}/nginx
-        force=yes
+        repo=https://github.com/nginx/nginx.git dest={{ local_source_directory }}/nginx force=yes
         version={{ nginx_version }}
 
     - block:
         - name: Clone Upload module source code
           git: >
             repo=https://github.com/vkholodkov/nginx-upload-module.git
-            dest={{ local_source_directory }}/nginx-upload-module
-            force=yes
+            dest={{ local_source_directory }}/nginx-upload-module force=yes
             version={{ nginx_upload_module_version }}
 
         - name: Clone Upload Progress module source code
           git: >
             repo=https://github.com/masterzen/nginx-upload-progress-module.git
-            dest={{ local_source_directory }}/nginx-upload-progress-module
-            force=yes
+            dest={{ local_source_directory }}/nginx-upload-progress-module force=yes
             version={{ nginx_upload_progress_module_version }}
       when: nginx_upload_module_enabled|bool
 
     - name: Clone Zip module source code
       git: >
-        repo=https://github.com/evanmiller/mod_zip.git
-        dest={{ local_source_directory }}/nginx-zip-module
-        force=yes
+        repo=https://github.com/evanmiller/mod_zip.git dest={{ local_source_directory }}/nginx-zip-module force=yes
         version={{ nginx_zip_module_version }}
       when: nginx_zip_module_enabled|bool
 

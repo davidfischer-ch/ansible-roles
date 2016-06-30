@@ -13,9 +13,7 @@
 
     - name: Clone GExiv2 source code
       git: >
-        repo=https://git.gnome.org/browse/gexiv2
-        dest={{ local_source_directory }}/gexiv2
-        force=yes
+        repo=https://git.gnome.org/browse/gexiv2 dest={{ local_source_directory }}/gexiv2 force=yes
         version={{ gexiv2_version }}
 
     - name: Generate GExiv2 build configuration
