@@ -1,0 +1,61 @@
+# Install exFAT file-system
+---
+
+- block:
+    - name: Install exFAT packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ exfat_packages }}'
+
+    - name: Clone exFAT source code
+      git: >
+        repo=https://github.com/relan/exfat.git dest={{ local_source_directory }}/exfat force=yes
+        version={{ exfat_version }}
+
+    - name: Set exFAT build environment
+      set_fact:
+        exfat_build_env: >
+          {{ exfat_build_cfg }}
+          {{ exfat_version }}
+
+    - name: Detect if exFAT must be reinstalled
+      command: >
+        cat '{{ local_source_directory }}/exfat.build.cfg'
+      always_run: yes
+      changed_when: >
+        exfat_build_env|trim != exfat_build.stdout|default('')|trim
+      failed_when: no
+      register: exfat_build
+
+    - block:
+        - name: Reset exFAT build process
+          command: >
+            autoreconf --install
+          args:
+            chdir: '{{ local_source_directory }}/exfat'
+
+        - name: Configure exFAT build process
+          command: >
+            ./configure {{ exfat_build_cfg }}
+          args:
+            chdir: '{{ local_source_directory }}/exfat'
+
+        - name: Build exFAT from source
+          command: >
+            make -j{{ ansible_processor_cores }}
+          args:
+            chdir: '{{ local_source_directory }}/exfat'
+          when: exfat_build|changed
+
+        - name: Install exFAT from source
+          command: >
+            make install
+          args:
+            chdir: '{{ local_source_directory }}/exfat'
+
+        - name: Save build environment
+          copy: >
+            content={{ exfat_build_env }} dest={{ local_source_directory }}/exfat.build.cfg
+      when: exfat_build|changed
+  become: yes
+  tags: [exfat, packages]
