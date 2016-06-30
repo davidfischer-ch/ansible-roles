@@ -1,0 +1,20 @@
+varnish_version: 4.1
+varnish_use_default_vcl: yes
+varnish_default_vcl_template_path: default.vcl.j2
+varnish_default_backend_host: 127.0.0.1
+varnish_default_backend_port: 8080
+varnish_secret: 14bac2e6-1e34-4770-8078-974373b76c90
+varnish_storage: malloc,256m
+varnish_sysvinit_config_path: /etc/default
+varnish_systemd_config_path: /etc/systemd/system
+# networking
+varnish_admin_bind_address: 127.0.0.1
+varnish_admin_port: 6082
+varnish_interface: null
+varnish_port: 80
+varnish_ufw_rules:
+  - direction: in
+    interface: '{{ varnish_interface or omit }}'
+    port: '{{ varnish_port }}'
+    proto: tcp
+    rule: allow
