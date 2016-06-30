@@ -1,0 +1,45 @@
+# Install and configure Varnish
+---
+
+- block:
+    - name: Add Varnish apt key
+      apt_key: url=http://repo.varnish-cache.org/debian/GPG-key.txt state=present
+      when: ansible_distribution_release != "xenial"
+
+    - name: Add Varnish apt repository
+      apt_repository:
+        repo: "deb http://repo.varnish-cache.org/ubuntu {{ ansible_distribution_release }} varnish-{{ varnish_version }}"
+        state: present
+      when: ansible_distribution_release != "xenial"
+
+    - name: Install Varnish
+      apt: name=varnish state=installed
+  become: yes
+  tags: [varnish, packages]
+
+- block:
+    - name: Copy Varnish configuration (sysvinit)
+      template: >
+        src=varnish.j2 dest={{ varnish_sysvinit_config_path }}/varnish mode=0644
+
+    - name: Create Varnish configuration directory
+      file: >
+        name=/etc/varnish state=directory
+
+    - name: Configure Varnish default VCL
+      template: >
+        src={{ varnish_default_vcl_template_path }} dest=/etc/varnish/default.vcl mode=644
+      notify: restart varnish
+
+    - name: Configure Varnish secret
+      copy: >
+        content={{ varnish_secret }} dest=/etc/varnish/secret mode=0644
+      notify: restart varnish
+  become: yes
+  tags: [varnish, config]
+
+- name: Ensure Varnish is started and set to run on startup.
+  service: >
+    name=varnish state=started enabled=yes
+  become: yes
+  tags: [varnish, services]
