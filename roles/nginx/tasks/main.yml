@@ -111,21 +111,19 @@
       failed_when: no
       register: nginx_build
 
-    - name: Configure Nginx build process
-      command: >
-        ./auto/configure {{ nginx_build_cfg }}
-      args:
-        chdir: '{{ local_source_directory }}/nginx'
-      when: nginx_build|changed
-
-    - name: Build Nginx from source
-      command: >
-        make -j{{ ansible_processor_cores }}
-      args:
-        chdir: '{{ local_source_directory }}/nginx'
-      when: nginx_build|changed
-
     - block:
+        - name: Configure Nginx build process
+          command: >
+            ./auto/configure {{ nginx_build_cfg }}
+          args:
+            chdir: '{{ local_source_directory }}/nginx'
+
+        - name: Build Nginx from source
+          command: >
+            make -j{{ ansible_processor_cores }}
+          args:
+            chdir: '{{ local_source_directory }}/nginx'
+
         - name: Install Nginx from source
           command: >
             make install
