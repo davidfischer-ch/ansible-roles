@@ -25,10 +25,58 @@
   become: yes
   become_user: postgres
 
-- include: extension-hstore.yml
-- include: extension-postgis.yml
+- block:
+    - name: Install PostGIS packages
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - postgis
+        - 'postgresql-{{ postgresql_version }}-postgis-2.1'
+        - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
+
+    - name: Install geolocation prerequisites required for all back-ends
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - binutils
+        - libgeos-3.4.2
+        - libgeos-c1
+        - libgeos-dev
+
+    - name: Install geolocation prerequisites required for PostgreSQL and SQLite
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - libproj-dev
+        - proj-bin
+        - proj-data
+
+    - name: Install geolocation prerequisites optional but required for SQLite
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - gdal-bin
+        - libgdal1-dev
+        - python3-gdal
+
+    - name: install optional IP-based geolocation library
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - libgeoip1
+  become: yes
+  tags: packages
+  when: "'postgis' in postgresql_databases.values()|selectattr('extensions', 'defined')|map(attribute='extensions')|join()"
 
 - block:
+    - name: Enable extensions to the PostgreSQL databases
+      postgresql_ext: >
+        db={{ item.0.name }} name={{ item.1 }} state=present
+      tags: flush_extra
+      with_subelements:
+        - "{{ postgresql_databases.values()|selectattr('extensions', 'defined')|list }}"
+        - extensions
+
     - name: Remove PostgreSQL unit-test databases
       postgresql_db: >
         name=test_{{ item.value.name }} state=absent
