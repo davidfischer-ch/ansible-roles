@@ -1,0 +1,18 @@
+# Elect a master node
+---
+
+- block:
+    - name: Define master node (1/2)
+      command: >
+        echo '{{ inventory_hostname }}'
+      always_run: yes
+      changed_when: no
+      register: is_master_result
+      run_once: yes
+
+    - name: Define master node (2/2)
+      set_fact:
+        '{{ is_master_variable }}': '{{ is_master_result.stdout == inventory_hostname }}'
+
+    - debug: var={{ is_master_variable }}
+  tags: always
