@@ -32,7 +32,7 @@
 
     - name: Configure Varnish default VCL
       template: >
-        src={{ varnish_default_vcl_file }} dest=/etc/varnish/default.vcl mode=644
+        src={{ varnish_default_vcl_config_file }} dest=/etc/varnish/default.vcl mode=644
       notify: restart varnish
   become: yes
   tags: [varnish, config]
