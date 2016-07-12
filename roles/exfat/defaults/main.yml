@@ -1,5 +1,5 @@
 exfat_build_cfg: ''
-exfat_packages:
+exfat_build_packages:
   - autoconf
   - automake
   - gcc

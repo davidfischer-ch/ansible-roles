@@ -2,10 +2,10 @@
 ---
 
 - block:
-    - name: Install exFAT packages
+    - name: Install exFAT build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ exfat_packages }}'
+      with_items: '{{ exfat_build_packages }}'
 
     - name: Clone exFAT source code
       git: >
