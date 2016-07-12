@@ -1,0 +1,64 @@
+---
+
+- block:
+    - name: Install rsync build dependencies
+      apt: >
+        name=rsync state=build-dep
+      changed_when: rsync_build_dep_result.stdout_lines|length > 4
+      register: rsync_build_dep_result
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install rsync build packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ rsync_build_packages }}'
+
+    - name: Download rsync source code
+      get_url: >
+        url=https://download.samba.org/pub/rsync/src/rsync-{{ rsync_version }}.tar.gz force=no
+        dest={{ local_source_directory }}/rsync-{{ rsync_version }}.tar.gz
+
+    - name: Extract rsync source code
+      unarchive: >
+        src={{ local_source_directory }}/rsync-{{ rsync_version }}.tar.gz dest={{ local_source_directory }} copy=no
+
+    - name: Set rsync build environment
+      set_fact:
+        rsync_build_env: >
+          {{ rsync_build_cfg }}
+          {{ rsync_version }}
+
+    - name: Detect if rsync must be reinstalled
+      command: >
+        cat '{{ local_source_directory }}/rsync.build.cfg'
+      always_run: yes
+      changed_when: >
+        rsync_build_env|trim != rsync_build.stdout|default('')|trim
+      failed_when: no
+      register: rsync_build
+
+    - block:
+        - name: Configure rsync build process
+          command: >
+            ./configure {{ rsync_build_cfg }}
+          args:
+            chdir: '{{ local_source_directory }}/rsync-{{ rsync_version }}'
+
+        - name: Build rsync from source
+          command: >
+            make -j{{ ansible_processor_cores }}
+          args:
+            chdir: '{{ local_source_directory }}/rsync-{{ rsync_version }}'
+
+        - name: Install rsync from source
+          command: >
+            make install
+          args:
+            chdir: '{{ local_source_directory }}/rsync-{{ rsync_version }}'
+
+        - name: Save build environment
+          copy: >
+            content={{ rsync_build_env }} dest={{ local_source_directory }}/rsync.build.cfg
+      when: rsync_build|changed
+  become: yes
+  tags: [rsync, packages]
