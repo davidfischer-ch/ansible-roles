@@ -45,7 +45,6 @@
             make -j{{ ansible_processor_cores }}
           args:
             chdir: '{{ local_source_directory }}/exfat'
-          when: exfat_build|changed
 
         - name: Install exFAT from source
           command: >
