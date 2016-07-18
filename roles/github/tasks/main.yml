@@ -4,7 +4,7 @@
     - name: Add GitHub public key to known_hosts file
       lineinfile: >
         dest={{ ansible_user_dir }}/.ssh/known_hosts regexp=^github.com
-        line='github.com,207.97.227.239 ssh-rsa {{ github_rsa }}' create=yes
+        line='github.com,{{ github_ip }} ssh-rsa {{ github_rsa }}' create=yes
 
     - name: Add GitHub IP address to hosts file
       lineinfile: >
