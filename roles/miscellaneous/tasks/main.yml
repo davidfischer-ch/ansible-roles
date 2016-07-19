@@ -34,8 +34,8 @@
 - name: Install extra packages
   package: >
     name={{ item }} state=present
-  with_items: '{{ extra_packages }}'
   become: yes
+  with_items: '{{ extra_packages }}'
   tags: [miscellaneous, packages]
 
 - name: Set swappiness
