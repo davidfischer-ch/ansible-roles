@@ -6,6 +6,7 @@ development_tools:
 extra_apt_repositories: []
 extra_packages: []
 locale: ''
+net_tcp_sack: no  # for security reasons (http://serverfault.com/questions/10955/when-to-turn-tcp-sack-off)
 system_tools:
   - htop
   - iftop
