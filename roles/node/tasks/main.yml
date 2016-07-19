@@ -1,0 +1,23 @@
+---
+
+- block:
+    - name: Install node packages
+      package: >
+        name={{ item }} state=present
+      become: yes
+      with_items: '{{ node_packages }}'
+
+    - name: Check node command is available
+      command: >
+        node
+      always_run: yes
+      changed_when: node_command_result|failed
+      ignore_errors: yes
+      register: node_command_result
+
+    - name: Add symlink nodejs = node
+      file: >
+        src=/usr/bin/nodejs dest=/usr/bin/node state=link
+      become: yes
+      when: node_command_result|failed
+  tags: [node, packages]
