@@ -1,0 +1,7 @@
+---
+
+dependencies:
+  - role: ufw
+    ufw_rules: '{{ mysql_ufw_rules }}'
+    tags: [mysql, dependencies]
+    when: mysql_ufw_rules

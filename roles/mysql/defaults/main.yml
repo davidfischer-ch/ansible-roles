@@ -1,5 +1,34 @@
+# packages
 mysql_packages:
   - libapache2-mod-auth-mysql
   - mysql-server
   - php5-mysql
   - python-mysqldb
+# miscellaneous configuration
+mysql_base_directory: /usr
+mysql_config_file: daemon.my.cnf.j2
+mysql_data_directory: /var/lib/mysql
+mysql_dump_max_allowed_packet: 16M
+mysql_expire_logs_days: 10
+mysql_isamchk_key_buffer: 16M
+mysql_key_buffer: 16M
+mysql_max_allowed_packet: 16M
+mysql_max_binlog_size: 100M
+mysql_messages_directory: /usr/share/mysql
+mysql_pid_file: /var/run/mysqld/mysqld.pid
+mysql_query_cache_limit: 1M
+mysql_query_cache_size: 16M
+mysql_socket_file: /var/run/mysqld/mysqld.sock
+mysql_temp_directory: /tmp
+mysql_thread_cache_size: 8
+mysql_thread_stack: 192K
+# networking
+mysql_bind_address: 0.0.0.0
+mysql_interface: null
+mysql_port: 80
+mysql_ufw_rules:
+  - direction: in
+    interface: '{{ mysql_interface or omit }}'
+    port: '{{ mysql_port }}'
+    proto: tcp
+    rule: allow

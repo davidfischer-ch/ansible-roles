@@ -15,9 +15,14 @@
   tags: [mysql, services]
 
 - block:
+    - name: Configure MySQL
+      template: >
+        src={{ mysql_config_file }} dest=/etc/mysql/my.cnf owner=root group=root mode=0600
+      notify: restart mysql
+
     - name: Copy user my.cnf file with root credentials
       template: >
-        src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+        src=root.my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
 
     - name: Configure MySQL root password
       mysql_user: >
