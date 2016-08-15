@@ -14,13 +14,14 @@
         fail2ban-client -V | grep -o 'Fail2Ban v[0-9]\.[0-9]' | cut -dv -f 2
       always_run: yes
       changed_when: no
-      register: fail2ban_version
+      register: _fail2ban_version
 
     - set_fact:
-        fail2ban_conf_suffix: "{{ fail2ban_version.stdout|version_compare('0.9', '>=')|ternary('new', 'old') }}"
+        fail2ban_version: '{{ _fail2ban_version.stdout }}'
+        fail2ban_conf_suffix: "{{ _fail2ban_version.stdout|version_compare('0.9', '>=')|ternary('new', 'old') }}"
 
     - debug: >
-        msg='fail2ban version {{ fail2ban_version.stdout }}, detected as {{ fail2ban_conf_suffix }}'
+        msg='fail2ban version {{ fail2ban_version }}, detected as {{ fail2ban_conf_suffix }}'
 
     - name: Configure fail2ban rules
       template: >
