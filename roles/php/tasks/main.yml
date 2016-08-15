@@ -21,10 +21,10 @@
       always_run: yes
       changed_when: no
       failed_when: no
-      register: php_find_result
+      register: _php_find
 
     - set_fact:
-        php_config_files: '{{ php_find_result.stdout_lines|default([]) }}'
+        php_config_files: '{{ _php_find.stdout_lines|default([]) }}'
 
     - assert:
         that:

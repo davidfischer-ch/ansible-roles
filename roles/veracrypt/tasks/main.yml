@@ -17,8 +17,8 @@
         make -j{{ ansible_processor_cores }}
       args:
         chdir: '{{ local_source_directory }}/veracrypt/src'
-      changed_when: veracrypt_make_result.stdout_lines|length > 0
-      register: veracrypt_make_result
+      changed_when: _veracrypt_make.stdout_lines|length > 0
+      register: _veracrypt_make
 
     - name: Create VeraCrypt symlink
       file: >

@@ -12,18 +12,18 @@
     - name: Configure PostgreSQL
       template: >
         src={{ postgresql_config_file }} dest=/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf mode=644
-      register: postgresql_config_result
+      register: _postgresql_config
 
     - name: Configure PostgreSQL allowed hosts
       template: >
         src=pg_hba.conf.j2 dest=/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf mode=644
-      register: postgresql_allow_result
+      register: _postgresql_allow
 
     - name: Restart PostgreSQL service
       service: >
         name=postgresql state=restarted enabled=yes
       tags: flush_extra
-      when: postgresql_config_result|changed or postgresql_allow_result|changed
+      when: _postgresql_config|changed or _postgresql_allow|changed
   become: yes
   tags: [postgresql, config]
 

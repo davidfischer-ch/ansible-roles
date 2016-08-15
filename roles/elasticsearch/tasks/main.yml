@@ -57,12 +57,12 @@
     - name: Retrieve ElasticSearch configuration
       uri: >
         url=http://{{ ansible_default_ipv4.address }}:{{ elasticsearch_port|int }} return_content=yes
-      register: elasticsearch_check_result
+      register: _elasticsearch_check
 
     - name: Check ElasticSearch configuration
       assert:
         that:
-          - "elasticsearch_check_result.json.version.number == '{{ elasticsearch_version }}'"
-          - "elasticsearch_check_result.json.cluster_name == '{{ elasticsearch_cluster_name }}'"
-          - "elasticsearch_check_result.json.name == '{{ elasticsearch_node_name }}'"
+          - "_elasticsearch_check.json.version.number == '{{ elasticsearch_version }}'"
+          - "_elasticsearch_check.json.cluster_name == '{{ elasticsearch_cluster_name }}'"
+          - "_elasticsearch_check.json.name == '{{ elasticsearch_node_name }}'"
   tags: [elasticsearch, services]

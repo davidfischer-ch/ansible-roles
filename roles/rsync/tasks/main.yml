@@ -4,8 +4,8 @@
     - name: Install rsync build dependencies
       apt: >
         name=rsync state=build-dep
-      changed_when: rsync_build_dep_result.stdout_lines|length > 4
-      register: rsync_build_dep_result
+      changed_when: _rsync_build_dep.stdout_lines|length > 4
+      register: _rsync_build_dep
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install rsync build packages

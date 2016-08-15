@@ -26,14 +26,14 @@
       supervisorctl: >
         name={{ item.value.name }} state=started
       ignore_errors: yes
-      register: celery_start_result
+      register: _celery_start
       with_dict: '{{ celery_services }}'
 
     - name: Restart celery services
       shell: >
         supervisorctl restart {{ item.value.name }} &
       tags: [services, update]
-      when: celery_start_result|failed
+      when: _celery_start|failed
       with_dict: '{{ celery_services }}'
 
     - name: Wait until celery services are running
@@ -41,10 +41,10 @@
         supervisorctl status {{ item.value.name }}
       always_run: yes
       changed_when: no
-      failed_when: "'FATAL' in celery_wait_result.stdout"
-      register: celery_wait_result
+      failed_when: "'FATAL' in _celery_wait.stdout"
+      register: _celery_wait
       tags: [services, update]
-      until: "'RUNNING' in celery_wait_result.stdout"
+      until: "'RUNNING' in _celery_wait.stdout"
       with_dict: '{{ celery_services }}'
 
     # - name: Restart celery services
@@ -53,7 +53,7 @@
     #   async: 360  # FIXME lookup plugins (with_*) cannot be used with async tasks
     #   poll: 5
     #   tags: [services, update]
-    #   when: celery_start_result|failed
+    #   when: _celery_start|failed
     #   with_dict: '{{ celery_services }}'
   become: yes
   tags: [celery, services]

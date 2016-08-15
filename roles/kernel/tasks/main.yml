@@ -7,10 +7,10 @@
         get-kernel-config
       always_run: yes
       changed_when: no
-      register: kernel_config_result
+      register: _kernel_config
 
     - set_fact:
-        kernel_config: '{{ kernel_config_result.stdout|default({}) }}'
+        kernel_config: '{{ _kernel_config.stdout|default({}) }}'
   tags: [kernel, always]
 
 - name: Install GNU/Linux kernel packages

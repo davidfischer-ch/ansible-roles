@@ -20,11 +20,11 @@
       script: >
         set-machines-ids /tmp/vagrant_machines.yml
       changed_when: no
-      register: vagrant_ids_result
+      register: _vagrant_ids
 
     - name: Update machines specifications
       set_fact:
-        vagrant_machines: '{{ vagrant_ids_result.stdout|from_json }}'
+        vagrant_machines: '{{ _vagrant_ids.stdout|from_json }}'
 
     - name: Create machines metadata directories
       file: >
@@ -42,23 +42,23 @@
       args:
         chdir: /tmp
       always_run: yes
-      changed_when: "vagrant_update_boxes|bool and 'to update' in vagrant_outdated_result.stdout"
-      register: vagrant_outdated_result
+      changed_when: "vagrant_update_boxes|bool and 'to update' in _vagrant_outdated.stdout"
+      register: _vagrant_outdated
 
     - name: Update boxes
       command: >
         vagrant box update
       args:
         chdir: /tmp
-      when: vagrant_outdated_result|changed
+      when: _vagrant_outdated|changed
 
     - name: Provision machines
       command: >
         vagrant up --provider {{ item.value.provider }} {{ item.key }}
       args:
         chdir: /tmp
-      changed_when: "'already running' not in vagrant_up_result.stdout"
-      register: vagrant_up_result
+      changed_when: "'already running' not in _vagrant_up.stdout"
+      register: _vagrant_up
       with_dict: '{{ vagrant_machines }}'
   tags: [vagrant, provision]
 
@@ -67,12 +67,12 @@
       command: >
         vagrant plugin list
       changed_when: no
-      register: vagrant_plugin_result
+      register: _vagrant_plugin
 
     - name: Install Vagrant plugins
       command: >
         vagrant plugin install vagrant-{{ item }}
-      when: item not in vagrant_plugin_result.stdout
+      when: item not in _vagrant_plugin.stdout
       with_items: '{{ vagrant_plugins }}'
   tags: [vagrant, packages]
 

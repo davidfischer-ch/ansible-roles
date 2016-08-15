@@ -11,13 +11,13 @@
       command: >
         node
       always_run: yes
-      changed_when: node_command_result|failed
+      changed_when: _node_command|failed
       ignore_errors: yes
-      register: node_command_result
+      register: _node_command
 
     - name: Add symlink nodejs = node
       file: >
         src=/usr/bin/nodejs dest=/usr/bin/node state=link
       become: yes
-      when: node_command_result|failed
+      when: _node_command|failed
   tags: [node, packages]

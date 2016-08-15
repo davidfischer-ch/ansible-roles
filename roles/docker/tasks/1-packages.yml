@@ -49,6 +49,6 @@
 # - name: Check Docker Compose version
 #   shell:
 #     docker-compose version --short
-#   register: docker_compose_version_result
-#   failed_when: docker_compose_version_result.stdout != docker_compose_version
+#   register: _docker_compose_version
+#   failed_when: _docker_compose_version.stdout != docker_compose_version
 #   become: yes  # FIXME calling docker as simple user is not yet working

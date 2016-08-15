@@ -12,8 +12,8 @@
     - name: Install Nginx build dependencies
       apt: >
         name=nginx state=build-dep
-      changed_when: nginx_build_dep_result.stdout_lines|length > 4
-      register: nginx_build_dep_result
+      changed_when: _nginx_build_dep.stdout_lines|length > 4
+      register: _nginx_build_dep
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Nginx build packages
@@ -187,12 +187,12 @@
       supervisorctl: >
         name=nginx state=started
       ignore_errors: yes
-      register: nginx_start_result
+      register: _nginx_start
 
     - name: Restart Nginx service
       supervisorctl: >
         name=nginx state=restarted
-      when: nginx_start_result|failed
+      when: _nginx_start|failed
   become: yes
   tags: [nginx, services]
   when: "nginx_daemon_mode == 'supervisor'"

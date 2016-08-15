@@ -1,9 +1,6 @@
 postgresql_allocated_ram: 2048  # In megabytes
-postgresql_allow_result: {}
 postgresql_authentication_rules: []
 postgresql_config_file: 'postgresql.{{ postgresql_version }}.conf.j2'
-postgresql_config_result:
-  changed: yes
 postgresql_effective_cache_size: '{{ postgresql_allocated_ram // 2 }}MB'
 postgresql_interface: null
 postgresql_listen_addresses:
@@ -26,3 +23,7 @@ postgresql_ufw_rules:
     rule: allow
 postgresql_version: 9.3
 postgresql_work_mem: '{{ 2 * postgresql_allocated_ram // postgresql_max_connections }}MB'
+# private
+_postgresql_allow: {}
+_postgresql_config:
+  changed: yes

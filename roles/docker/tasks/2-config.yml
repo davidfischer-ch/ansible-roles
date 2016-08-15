@@ -27,11 +27,11 @@
         cat /proc/cmdline
       always_run: yes
       become: no
-      changed_when: "'cgroup_enable=memory' not in cmdline_result.stdout"
+      changed_when: "'cgroup_enable=memory' not in _docker_cmdline.stdout"
       notify:
         - restart
         - wait started
-      register: cmdline_result
+      register: _docker_cmdline
 
     # Allow our user to communicate with docker daemon without sudo
 

@@ -18,16 +18,16 @@
         rsync -ah -lH --delete {{ local_source_directory }}/ampache/ /usr/share/ampache/www2/ --exclude=.git
         --exclude=lib/components --exclude=lib/vendor --exclude=config/ampache.cfg.php
         --exclude=channel/.htaccess --exclude=play/.htaccess --exclude=rest/.htaccess
-      changed_when: ampache_install_result.stdout|length > 1
-      register: ampache_install_result
+      changed_when: _ampache_install.stdout|length > 1
+      register: _ampache_install
 
     - name: Install Ampache dependencies
       command: >
         composer install --prefer-source --no-interaction
       args:
         chdir: '{{ ampache_web_directory }}'
-      changed_when: "'Nothing to install or update' not in ampache_install_result.stderr"
-      register: ampache_install_result
+      changed_when: "'Nothing to install or update' not in _ampache_install.stderr"
+      register: _ampache_install
   become: yes
   tags: [ampache, packages]
 
@@ -84,7 +84,7 @@
     - name: Setup Ampache MySQL database
       mysql_db: >
         name=ampache state=present
-      register: ampache_database_result
+      register: _ampache_database
 
     - name: Setup Ampache MySQL user
       mysql_user: >
@@ -93,7 +93,7 @@
     - name: Initialize Ampache MySQL database
       shell: >
         mysql -uampache -p{{ ampache_mysql_password }} ampache < {{ ampache_web_directory }}/sql/ampache.sql
-      when: ampache_database_result|changed
+      when: _ampache_database|changed
 
     # FIXME generate passwords - https://github.com/ampache/ampache/blob/develop/lib/class/user.class.php#L982
     # FIXME create preferences - https://github.com/ampache/ampache/blob/develop/lib/class/user.class.php#L1085
@@ -104,9 +104,9 @@
             '{{ item.username }}', '{{ item.fullname }}', '{{ item.email }}', '{{ item.password }}',
             {{ item.is_admin|bool|ternary(100, 25)}}
         );"
-      changed_when: "'Duplicate' not in ampache_register_result.stderr"
-      failed_when: ampache_register_result|failed and 'Duplicate' not in ampache_register_result.stderr
-      register: ampache_register_result
+      changed_when: "'Duplicate' not in _ampache_register.stderr"
+      failed_when: _ampache_register|failed and 'Duplicate' not in _ampache_register.stderr
+      register: _ampache_register
       with_items: ampache_users
   become: yes
   tags: [ampache, databases]

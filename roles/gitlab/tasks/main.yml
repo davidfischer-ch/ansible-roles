@@ -66,14 +66,14 @@
         dest=/etc/gitlab/gitlab.rb regexp='^external_url \S+'
         line="external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
       notify: restart gitlab
-      register: gitlab_url_result
+      register: _gitlab_url
 
     - name: Configure GitLab port
       lineinfile: >
         dest=/etc/gitlab/gitlab.rb regexp="^#?\s*nginx\\['listen_port'\\]"
         line="nginx['listen_port'] = {{ gitlab_port|int }}"
       notify: restart gitlab
-      register: gitlab_port_result
+      register: _gitlab_port
 
     - name: Check GitLab data directory
       file: >
@@ -86,20 +86,20 @@
       lineinfile: >
         dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+' line="git_data_dir '{{ gitlab_data_directory }}'"
       notify: restart gitlab
-      register: gitlab_data_result
+      register: _gitlab_data
 
     - name: Configure GitLab (settings)
       lineinfile: >
         dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
         line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}" backup=yes
       notify: restart gitlab
-      register: gitlab_setings_result
+      register: _gitlab_setings
       with_items: gitlab_settings
 
     - name: Stop GitLab services to free up some memory
       command: >
         gitlab-ctl stop {{ item }}
-      when: gitlab_url_result|changed or gitlab_port_result|changed or gitlab_data_result|changed or gitlab_setings_result|changed
+      when: _gitlab_url|changed or _gitlab_port|changed or _gitlab_data|changed or _gitlab_setings|changed
       with_items:
         - unicorn
         - sidekiq
@@ -107,7 +107,7 @@
     - name: Generate GitLab configuration
       command: >
         gitlab-ctl reconfigure
-      changed_when: "'  - ' in gitlab_reconfigure_result.stderr"
-      register: gitlab_reconfigure_result
+      changed_when: "'  - ' in _gitlab_reconfigure.stderr"
+      register: _gitlab_reconfigure
   become: yes
   tags: [gitlab, config]

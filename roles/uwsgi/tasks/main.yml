@@ -24,12 +24,12 @@
     - name: Start uWSGI service
       service: >
         name=uwsgi state=started enabled=yes
-      register: uwsgi_start_result
+      register: _uwsgi_start
 
     - name: Restart uWSGI service
       service: >
         name=uwsgi state=restarted enabled=yes
-      when: uwsgi_start_result|failed
+      when: _uwsgi_start|failed
   become: yes
   tags: [uwsgi, services]
 

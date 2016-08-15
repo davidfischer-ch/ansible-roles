@@ -15,9 +15,9 @@
     - name: Install pip
       command: >
         python{{ item }} /tmp/get-pip-{{ item }}.py {{ python_get_pip_options }} pip{{ python_pip_version }}
-      changed_when: "'already up-to-date' not in get_pip_result.stdout|default('') and 'are using pip' not in get_pip_result.stderr|default('')"
-      failed_when: "get_pip_result|failed and 'are using pip' not in get_pip_result.stderr|default('')"
-      register: get_pip_result
+      changed_when: "'already up-to-date' not in _get_pip.stdout|default('') and 'are using pip' not in _get_pip.stderr|default('')"
+      failed_when: "_get_pip|failed and 'are using pip' not in _get_pip.stderr|default('')"
+      register: _get_pip
       with_items: '{{ python_versions }}'
 
     - name: Set pip default version

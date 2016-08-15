@@ -18,7 +18,7 @@
       shell: >
         echo 'stats settings' | nc localhost 11211
       changed_when: no
-      failed_when: memcache_settings_result|failed or memcache_settings_result.stderr|length > 0
-      register: memcache_settings_result
+      failed_when: _memcache_settings|failed or _memcache_settings.stderr|length > 0
+      register: _memcache_settings
   become: yes
   tags: [memcache, services]

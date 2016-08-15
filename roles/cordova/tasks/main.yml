@@ -18,15 +18,15 @@
       command: >
         node
       always_run: yes
-      changed_when: cordova_node_result|failed
+      changed_when: _cordova_node|failed
       ignore_errors: yes
-      register: cordova_node_result
+      register: _cordova_node
 
     - name: Add symlink nodejs = node
       file: >
         src=/usr/bin/nodejs dest=/usr/bin/node state=link
       become: yes
-      when: cordova_node_result|failed
+      when: _cordova_node|failed
 
     - name: Check cordova command is available
       command: >

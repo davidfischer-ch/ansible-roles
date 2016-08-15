@@ -44,6 +44,6 @@
     - name: Check Kibana home page
       uri: >
         url=http://{{ ansible_default_ipv4.address }}:{{ kibana_port|int }} return_content=yes
-      failed_when: "'kibana' not in kibana_check_result.content"
-      register: kibana_check_result
+      failed_when: "'kibana' not in _kibana_check.content"
+      register: _kibana_check
   tags: [kibana, services]
