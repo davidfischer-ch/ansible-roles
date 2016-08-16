@@ -37,10 +37,16 @@ nginx_zip_module_enabled: no
 # networking
 nginx_interface: null
 nginx_port: 80
+nginx_port_ssl: 443
 nginx_ufw_rules:
   - direction: in
     interface: '{{ nginx_interface or omit }}'
     port: '{{ nginx_port }}'
+    proto: tcp
+    rule: allow
+  - direction: in
+    interface: '{{ nginx_interface or omit }}'
+    port: '{{ nginx_port_ssl }}'
     proto: tcp
     rule: allow
 # private
