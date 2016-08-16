@@ -45,7 +45,7 @@
 
     - name: Toggle TCP Selective Acknowledgment
       sysctl:
-        name=net.ipv4.tcp_sack= value={{ net_tcp_sack|bool|ternary(1, 0) }} sysctl_set=yes state=present
+        name=net.ipv4.tcp_sack value={{ net_tcp_sack|bool|ternary(1, 0) }} sysctl_set=yes state=present
   become: yes
   tags: [miscellaneous, config]
 
