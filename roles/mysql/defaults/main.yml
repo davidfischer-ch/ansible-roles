@@ -25,7 +25,7 @@ mysql_thread_stack: 192K
 # networking
 mysql_bind_address: 0.0.0.0
 mysql_interface: null
-mysql_port: 80
+mysql_port: 3306
 mysql_ufw_rules:
   - direction: in
     interface: '{{ mysql_interface or omit }}'
