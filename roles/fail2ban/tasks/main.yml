@@ -1,6 +1,12 @@
 # Install and configure fail2ban
 ---
 
+- assert:
+    that:
+      - fail2ban_backend in fail2ban_backends
+      - fail2ban_dns_mode in fail2ban_dns_modes
+  tags: [fail2ban, always]
+
 - name: Install fail2ban packages
   package: >
     name={{ item }} state=present

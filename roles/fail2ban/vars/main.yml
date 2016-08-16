@@ -1,0 +1,10 @@
+fail2ban_backends:
+  - auto
+  - gamin
+  - polling
+  - pyinotify
+  - systemd
+fail2ban_dns_modes:
+  - 'no'
+  - 'yes'
+  - warn

@@ -1,3 +1,14 @@
 fail2ban_enabled: yes
 fail2ban_packages:
   - fail2ban
+# configuration
+fail2ban_backend: auto
+fail2ban_ban_time: 600
+fail2ban_dns_mode: warn
+fail2ban_email_destination: root@localhost
+fail2ban_email_sender: root@localhost
+fail2ban_find_time: 600
+fail2ban_ignore_ips:
+  - 127.0.0.1/8
+fail2ban_log_encoding: auto
+fail2ban_max_retries: 5

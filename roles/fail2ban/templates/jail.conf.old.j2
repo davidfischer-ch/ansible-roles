@@ -18,15 +18,15 @@
 # "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
 # ban a host which matches an address in this list. Several addresses can be
 # defined using space separator.
-ignoreip = 127.0.0.1/8
+ignoreip = {{ fail2ban_ignore_ips|join(' ') }}
 
 # "bantime" is the number of seconds that a host is banned.
-bantime  = 600
+bantime  = {{ fail2ban_ban_time|int }}
 
 # A host is banned if it has generated "maxretry" during the last "findtime"
 # seconds.
-findtime = 600
-maxretry = 3
+findtime = {{ fail2ban_find_time|int }}
+maxretry = {{ fail2ban_max_retries|int }}
 
 # "backend" specifies the backend used to get files modification.
 # Available options are "pyinotify", "gamin", "polling" and "auto".
@@ -39,7 +39,7 @@ maxretry = 3
 # polling:   uses a polling algorithm which does not require external libraries.
 # auto:      will try to use the following backends, in order:
 #            pyinotify, gamin, polling.
-backend = auto
+backend = {{ fail2ban_backend }}
 
 # "usedns" specifies if jails should trust hostnames in logs,
 #   warn when reverse DNS lookups are performed, or ignore all hostnames in logs
@@ -49,12 +49,12 @@ backend = auto
 #        but it will be logged as a warning.
 # no:    if a hostname is encountered, will not be used for banning,
 #        but it will be logged as info.
-usedns = warn
+usedns = {{ fail2ban_dns_mode }}
 
 #
 # Destination email address used solely for the interpolations in
 # jail.{conf,local} configuration files.
-destemail = root@localhost
+destemail = {{ fail2ban_email_destination }}
 
 #
 # Name of the sender for mta actions
@@ -208,7 +208,7 @@ maxretry = 6
 [apache]
 
 enabled  = false
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 filter   = apache-auth
 logpath  = /var/log/apache*/*error.log
 maxretry = 6
@@ -218,7 +218,7 @@ maxretry = 6
 [apache-multiport]
 
 enabled   = false
-port      = http,https
+port      = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 filter    = apache-auth
 logpath   = /var/log/apache*/*error.log
 maxretry  = 6
@@ -226,7 +226,7 @@ maxretry  = 6
 [apache-noscript]
 
 enabled  = false
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 filter   = apache-noscript
 logpath  = /var/log/apache*/*error.log
 maxretry = 6
@@ -234,7 +234,7 @@ maxretry = 6
 [apache-overflows]
 
 enabled  = false
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 filter   = apache-overflows
 logpath  = /var/log/apache*/*error.log
 maxretry = 2
@@ -277,7 +277,7 @@ logpath = /var/log/lighttpd/error.log
 
 enabled = false
 filter  = nginx-http-auth
-port    = http,https
+port    = {{ nginx_port|default('http') }},{{ nginx_port_ssl|default('https') }}
 logpath = /var/log/nginx/error.log
 
 # Monitor roundcube server
@@ -401,7 +401,7 @@ logpath = /var/log/mail.log
 
 enabled  = false
 filter   = mysqld-auth
-port     = 3306
+port     = {{ mysql_port|default(3306) }}
 logpath  = /var/log/mysqld.log
 
 

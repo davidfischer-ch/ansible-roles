@@ -47,7 +47,7 @@ before = paths-debian.conf
 # "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
 # ban a host which matches an address in this list. Several addresses can be
 # defined using space separator.
-ignoreip = 127.0.0.1/8
+ignoreip = {{ fail2ban_ignore_ips|join(' ') }}
 
 # External command that will take an tagged arguments to ignore, e.g. <ip>,
 # and return true if the IP is to be ignored. False otherwise.
@@ -56,14 +56,14 @@ ignoreip = 127.0.0.1/8
 ignorecommand =
 
 # "bantime" is the number of seconds that a host is banned.
-bantime  = 600
+bantime  = {{ fail2ban_ban_time|int }}
 
 # A host is banned if it has generated "maxretry" during the last "findtime"
 # seconds.
-findtime  = 600
+findtime  = {{ fail2ban_find_time|int }}
 
 # "maxretry" is the number of failures before a host get banned.
-maxretry = 5
+maxretry = {{ fail2ban_max_retries|int }}
 
 # "backend" specifies the backend used to get files modification.
 # Available options are "pyinotify", "gamin", "polling", "systemd" and "auto".
@@ -84,7 +84,7 @@ maxretry = 5
 #       for which logs are present only in its own log files, specify some other
 #       backend for that jail (e.g. polling) and provide empty value for
 #       journalmatch. See https://github.com/fail2ban/fail2ban/issues/959#issuecomment-74901200
-backend = auto
+backend = {{ fail2ban_backend }}
 
 # "usedns" specifies if jails should trust hostnames in logs,
 #   warn when DNS lookups are performed, or ignore all hostnames in logs
@@ -94,14 +94,14 @@ backend = auto
 #        but it will be logged as a warning.
 # no:    if a hostname is encountered, will not be used for banning,
 #        but it will be logged as info.
-usedns = warn
+usedns = {{ fail2ban_dns_mode }}
 
 # "logencoding" specifies the encoding of the log files handled by the jail
 #   This is used to decode the lines from the log file.
 #   Typical examples:  "ascii", "utf-8"
 #
 #   auto:   will use the system locale setting
-logencoding = auto
+logencoding = {{ fail2ban_log_encoding }}
 
 # "enabled" enables the jails.
 #  By default all jails are disabled, and it should stay this way.
@@ -126,10 +126,10 @@ filter = %(__name__)s
 
 # Destination email address used solely for the interpolations in
 # jail.{conf,local,d/*} configuration files.
-destemail = root@localhost
+destemail = {{ fail2ban_email_destination }}
 
 # Sender email address used solely for some actions
-sender = root@localhost
+sender = {{ fail2ban_email_sender }}
 
 # E-mail action. Since 0.8.1 Fail2Ban uses sendmail MTA for the
 # mailing. Change mta configuration parameter to mail if you want to
@@ -245,14 +245,14 @@ maxretry = 5
 
 [apache-auth]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_error_log)s
 
 
 [apache-badbots]
 # Ban hosts which agent identifies spammer robots crawling the web
 # for email addresses. The mail outputs are buffered.
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_access_log)s
 bantime  = 172800
 maxretry = 1
@@ -260,35 +260,35 @@ maxretry = 1
 
 [apache-noscript]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_error_log)s
 maxretry = 6
 
 
 [apache-overflows]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_error_log)s
 maxretry = 2
 
 
 [apache-nohome]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_error_log)s
 maxretry = 2
 
 
 [apache-botsearch]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_error_log)s
 maxretry = 2
 
 
 [apache-fakegooglebot]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_access_log)s
 maxretry = 1
 ignorecommand = %(ignorecommands_dir)s/apache-fakegooglebot <ip>
@@ -296,24 +296,24 @@ ignorecommand = %(ignorecommands_dir)s/apache-fakegooglebot <ip>
 
 [apache-modsecurity]
 
-port     = http,https
+port     = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath  = %(apache_error_log)s
 maxretry = 2
 
 [apache-shellshock]
 
-port    = http,https
+port    = {{ apache_port|default('http') }},{{ apache_port_ssl|default('https') }}
 logpath = %(apache_error_log)s
 maxretry = 1
 
 [nginx-http-auth]
 
-port    = http,https
+port    = {{ nginx_port|default('http') }},{{ nginx_port_ssl|default('https') }}
 logpath = %(nginx_error_log)s
 
 [nginx-botsearch]
 
-port     = http,https
+port     = {{ nginx_port|default('http') }},{{ nginx_port_ssl|default('https') }}
 logpath  = %(nginx_error_log)s
 maxretry = 2
 
@@ -684,7 +684,7 @@ maxretry = 10
 # log-error=/var/log/mysqld.log
 [mysqld-auth]
 
-port     = 3306
+port     = {{ mysql_port|default(3306) }}
 logpath  = %(mysql_log)s
 maxretry = 5
 
