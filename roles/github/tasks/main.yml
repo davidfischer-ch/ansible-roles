@@ -1,6 +1,10 @@
 ---
 
 - block:
+    - name: Retrieve GitHub IP address if necessary
+      set_fact:
+        github_ip: "{{ github_ip|default(lookup('dig', 'github.com')) }}"
+
     - name: Add GitHub public key to known_hosts file
       lineinfile: >
         dest={{ ansible_user_dir }}/.ssh/known_hosts regexp=^github.com
