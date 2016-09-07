@@ -1,3 +1,5 @@
+apache_daemon_group: www-data
+apache_daemon_user: www-data
 apache_log_levels:
   - alert
   - crit
