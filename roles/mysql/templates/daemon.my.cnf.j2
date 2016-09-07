@@ -81,9 +81,7 @@ log_error = {{ mysql_error_log_file }}
 log_slow_queries = {{ mysql_slow_query_log_file }}
 slow_query_log   = {{ mysql_slow_query_log_enabled|bool|ternary(1, 0) }}
 long_query_time  = {{ mysql_slow_query_time|int }}
-{% if not mysql_query_log_use_indexes|bool %}
-log-queries-not-using-indexes
-{% endif %}
+{{ mysql_query_log_use_indexes|bool|ternary('', 'log-queries-not-using-indexes') }}
 #
 # The following can be used as easy to replay backup logs or for replication.
 # note: if you are setting up a replication slave, see README.Debian about
@@ -114,18 +112,12 @@ max_binlog_size   = {{ mysql_bin_log_max_size }}
 # ssl-key=/etc/mysql/server-key.pem
 
 [mysqldump]
-{% if mysql_dump_quick|bool %}
-quick
-{% endif %}
-{% if mysql_dump_quote_names|bool %}
-quote-names
-{% endif %}
+{{ mysql_dump_quick|bool|ternary('quick', '') }}
+{{ mysql_dump_quote_names|bool|ternary('quote-names', '') }}
 max_allowed_packet = {{ mysql_dump_packet_max_size }}
 
 [mysql]
-{% if not mysql_auto_rehash|bool %}
-no-auto-rehash
-{% endif %}
+{{ mysql_auto_rehash|bool|ternary('', 'no-auto-rehash') }}
 
 [isamchk]
 key_buffer = {{ mysql_isamchk_key_buffer_size }}
