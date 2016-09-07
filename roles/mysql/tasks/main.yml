@@ -1,6 +1,11 @@
 # Install and configure MySQL
 ---
 
+- assert:
+    that:
+      - mysql_query_cache_type in mysql_query_cache_types
+  tags: [mysql, always]
+
 - name: Install MySQL packages
   package: >
     name={{ item }} state=present
