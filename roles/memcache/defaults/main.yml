@@ -1,6 +1,28 @@
-memcache_interface: null
+# packages
 memcache_packages:
   - memcached
+# miscellaneous configuration
+memcache_backlog_queue_limit: 1024
+memcache_binding_protocol: auto
+memcache_cas_enabled: yes
+memcache_chunk_size_growth_factor: 1.25
+memcache_config_file: memcached.conf.j2
+memcache_connection_max_processes: 20
+memcache_key_value_flags_min_space: 48
+memcache_log_file: /var/log/memcached.log
+memcache_max_connections: 1024
+memcache_maximize_core_file_limit: no
+memcache_memory_cap: 64
+memcache_memory_preallocate: no
+memcache_memory_purge: yes
+memcache_memory_use_large_pages: no
+memcache_pid_file: /var/run/memcached.pid
+memcache_sasl_enabled: no
+memcache_threads: '{{ ansible_processor_cores }}'
+memcache_verbosity_level: off
+# networking
+memcache_bind_address: 127.0.0.1
+memcache_interface: null
 memcache_port: 11211
 memcache_ufw_rules:
   - direction: in

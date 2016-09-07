@@ -1,0 +1,10 @@
+memcache_daemon_user: memcache
+memcache_verbosity_levels:
+  off: ''
+  warning: '-v'
+  info: '-vv'
+  debug: '-vvv'
+memcache_binding_protocols:
+  - ascii
+  - auto
+  - binary

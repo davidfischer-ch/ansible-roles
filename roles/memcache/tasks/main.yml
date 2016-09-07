@@ -1,11 +1,24 @@
 ---
 
+- assert:
+    that:
+      - memcache_binding_protocol in memcache_binding_protocols
+      - memcache_verbosity_level in memcache_verbosity_levels
+  tags: [memcache, always]
+
 - name: Install memcache packages
   package: >
     name={{ item }} state=present
   become: yes
   tags: [memcache, packages]
   with_items: '{{ memcache_packages }}'
+
+- name: Configure memcache
+  template: >
+    src={{ memcache_config_file }} dest=/etc/memcached.conf owner=root group=root mode=0644
+  become: yes
+  notify: restart memcache
+  tags: [memcache, config]
 
 - block:
     - name: Start memcache service
@@ -16,7 +29,7 @@
 
     - name: Read memcache settings
       shell: >
-        echo 'stats settings' | nc localhost 11211
+        echo 'stats settings' | nc localhost {{ memcache_port }}
       changed_when: no
       failed_when: _memcache_settings|failed or _memcache_settings.stderr|length > 0
       register: _memcache_settings
