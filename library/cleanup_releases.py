@@ -12,7 +12,7 @@ module: cleanup_releases
 author: "David Fischer (@davidfischer-ch)"
 short_description: Remove oldest releases directories named according to an incremental pattern such as a date-time.
 description:
-  - This module will remove oldest releases directories given found in a releases directory.
+  - This module will remove oldest releases directories found in a releases directory.
   - This module should be called at the end of the release process.
 options:
   directory:
