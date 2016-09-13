@@ -11,14 +11,16 @@ system_tools:
   - htop
   - iftop
   - iotop
-  - openssh-server # to update it
   - ncdu
+  - openssh-server # to update it
+  - p7zip-full
   - preload
   - rsync
-  - p7zip-full
   - screen
   - sshfs
   - tree
+  - unzip
+  - tar
 timezone: ''
 upgrade_packages: yes
 upgrade_packages_cache_valid_time: 3600
