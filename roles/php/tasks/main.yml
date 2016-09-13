@@ -16,19 +16,39 @@
 
 - block:
     - name: Find PHP configuration files
-      command: >
-        find /etc/php{{ php_version }} /etc/php/{{ php_version }} -name php.ini -type f
-      always_run: yes
-      changed_when: no
-      failed_when: no
+      find:
+        file_type: file
+        paths:
+          - '/etc/php{{ php_version }}'
+          - '/etc/php/{{ php_version }}'
+        patterns: php.ini
+        recurse: yes
       register: _php_find
 
+    - name: Find PHP enabled modules
+      find:
+        file_type: file
+        paths:
+          - '/etc/php{{ php_version }}/apache2/conf.d'
+          - '/etc/php/{{ php_version }}/apache2/conf.d'
+        patterns: '*.ini'
+      register: _php_enabled_modules
+
     - set_fact:
-        php_config_files: '{{ _php_find.stdout_lines|default([]) }}'
+        php_config_files: "{{ _php_find.files|map(attribute='path')|list }}"
+        _php_enabled_modules: "{{ _php_enabled_modules.files|map(attribute='path')|join(' ') }}"
 
     - assert:
         that:
           php_config_files|length > 0
+
+    - name: Enable PHP modules
+      command: >
+        php{{ php_version }}enmod {{ item }}
+      become: yes
+      changed_when: item not in _php_enabled_modules
+      notify: restart apache
+      with_items: '{{ php_modules }}'
 
     - name: Configure PHP
       lineinfile: >
