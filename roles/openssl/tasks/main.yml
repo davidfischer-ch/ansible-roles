@@ -11,7 +11,7 @@
 
 - name: Create self-signed SSL certificate
   command: >
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj
+    openssl req -x509 -nodes -days {{ ssl_cert_days|int }} -newkey rsa:2048 -subj
     "/C={{ ssl_cert_country }}/ST={{ ssl_cert_state }}/L={{ ssl_cert_locality }}/O={{ ssl_cert_organization }}/OU={{ ssl_cert_organization_unit }}/CN={{ domain }}"
     -keyout {{ ssl_cert_key_filename }} -out {{ ssl_cert_crt_filename }}
   args:

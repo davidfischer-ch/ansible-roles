@@ -1,2 +1,3 @@
 openssl_packages:
   - openssl
+ssl_cert_days: 365
