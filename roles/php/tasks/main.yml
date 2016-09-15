@@ -46,8 +46,8 @@
       command: >
         php{{ php_version }}enmod {{ item }}
       become: yes
-      changed_when: item not in _php_enabled_modules
       notify: restart apache
+      when: item not in _php_enabled_modules
       with_items: '{{ php_modules }}'
 
     - name: Configure PHP
