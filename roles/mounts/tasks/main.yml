@@ -61,6 +61,17 @@
       when: item.value.check|bool and item.value.fstype != 'swap'
       with_dict: '{{ mounts }}'
 
+    - name: Check required NFS service is reachable
+      command: >
+        rpcinfo -u {{ item.value.source|split(':')[0] }} status
+      always_run: yes
+      changed_when: no
+      failed_when: "'ready and waiting' not in _mounts_rpcinfo.stdout"
+      register: _mounts_rpcinfo
+      run_once: yes
+      when: item.value.check|bool and item.value.fstype == 'nfs'
+      with_dict: '{{ mounts }}'
+
     - name: Final cleanup
       file: >
         name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
