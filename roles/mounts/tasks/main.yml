@@ -63,7 +63,7 @@
 
     - name: Check required NFS service is reachable
       command: >
-        rpcinfo -u {{ item.value.source|split(':')[0] }} status
+        rpcinfo -u {{ item.value.source|regex_replace(':[^:]+$', '') }} status
       always_run: yes
       changed_when: no
       failed_when: "'ready and waiting' not in _mounts_rpcinfo.stdout"
