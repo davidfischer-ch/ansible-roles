@@ -1,7 +1,12 @@
 ---
 
 - hosts:
-    - all
+    - localhost
+  roles:
+    - register-ssh-hosts
+
+- hosts:
+    - all:!localhost
   roles:
     - bootstrap
     - fail2ban

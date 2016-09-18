@@ -1,0 +1,39 @@
+---
+
+- block:
+    - name: Create SSH configuration directory
+      file:
+        name={{ lookup('env', 'HOME') }}/.ssh mode=700 state=directory
+
+    - name: Configure SSH client
+      blockinfile: >
+        dest={{ lookup('env', 'HOME') }}/.ssh/config create=yes marker='# {mark} ANSIBLE MANAGED BLOCK all'
+      args:
+        block: >
+          Host *
+              IdentitiesOnly yes
+
+    - name: Set SSH private key file mode
+      file: >
+        name={{ hostvars[item].ansible_ssh_private_key_file }} mode=600
+      when: hostvars[item].ansible_ssh_private_key_file is defined
+      with_inventory_hostnames: ''
+
+    - name: Register the hosts in the SSH config file
+      blockinfile: >
+        dest={{ lookup('env', 'HOME') }}/.ssh/config marker='# {mark} ANSIBLE MANAGED BLOCK {{ item }}'
+      args:
+        block: >
+          Host {{ item }}
+              HostName {{ hostvars[item].ansible_host }}
+              Port {{ hostvars[item].ansible_port|default(22) }}
+              User {{ hostvars[item].ansible_user }}
+              IdentityFile {{ hostvars[item].ansible_ssh_private_key_file }}
+              IdentitiesOnly yes
+      when: >
+        hostvars[item].register_host|default(False)|bool and
+        hostvars[item].ansible_host is defined and
+        hostvars[item].ansible_user is defined and
+        hostvars[item].ansible_ssh_private_key_file is defined
+      with_inventory_hostnames: ''
+  tags: [register-ssh-hosts, ssh, config]
