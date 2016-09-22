@@ -1,5 +1,12 @@
 ---
 
+- name: Install GitHub python packages
+  pip: >
+    name={{ item }} executable=pip2 state=present
+  become: yes
+  tags: [github, packages]
+  with_items: '{{ github_python_packages }}'
+
 - block:
     - name: Retrieve GitHub IP address if necessary
       set_fact:
