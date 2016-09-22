@@ -11,7 +11,7 @@ elasticsearch_packages:
   - 'elasticsearch={{ elasticsearch_version }}'
   - openjdk-7-jre-headless
 elasticsearch_port: 9200
-elasticsearch_version: 2.3.0
+elasticsearch_version: 2.4.0
 elasticsearch_ufw_rules:
   - direction: in
     interface: '{{ elasticsearch_interface or omit }}'
