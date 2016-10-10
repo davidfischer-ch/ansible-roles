@@ -28,6 +28,7 @@
     - name: Find PHP enabled modules
       find:
         file_type: file
+        follow: yes
         paths:
           - '/etc/php{{ php_version }}/apache2/conf.d'
           - '/etc/php/{{ php_version }}/apache2/conf.d'
