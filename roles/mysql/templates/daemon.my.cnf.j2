@@ -48,16 +48,24 @@ bind-address = {{ mysql_bind_address }}
 #
 # * Fine Tuning
 #
-key_buffer              = {{ mysql_key_buffer_size }}
-max_allowed_packet      = {{ mysql_packet_max_size }}
-thread_stack            = {{ mysql_thread_stack_size }}
-thread_cache_size       = {{ mysql_thread_cache_size|int }}
+innodb_buffer_pool_size        = {{ mysql_innodb_buffer_pool_size }}
+innodb_flush_log_at_trx_commit = {{ mysql_innodb_flush_log_at_trx_commit|int }}
+join_buffer_size               = {{ mysql_join_buffer_size }}
+key_buffer_size                = {{ mysql_key_buffer_size }}
+max_allowed_packet             = {{ mysql_packet_max_size }}
+max_connections                = {{ mysql_max_connections|int }}
+max_heap_table_size            = {{ mysql_max_heap_table_size }}
+max_tmp_tables                 = {{ mysql_temp_max_tables|int }}
+open_files_limit               = {{ mysql_open_files_limit|int }}
+table_definition_cache         = {{ mysql_table_definition_cache|int }}
+table_open_cache               = {{ mysql_table_open_cache|int }}
+thread_cache_size              = {{ mysql_thread_cache_size|int }}
+thread_concurrency             = {{ mysql_thread_concurrency|int }}
+thread_stack                   = {{ mysql_thread_stack_size }}
+tmp_table_size                 = {{ mysql_temp_table_size }}
 # This replaces the startup script and checks MyISAM tables if needed
 # the first time they are touched
-myisam-recover          = BACKUP
-max_connections         = {{ mysql_max_connections|int }}
-#table_cache            = 64
-thread_concurrency      = {{ mysql_thread_concurrency|int }}
+myisam-recover = BACKUP
 #
 # * Query Cache Configuration
 #
