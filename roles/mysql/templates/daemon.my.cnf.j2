@@ -128,7 +128,7 @@ max_allowed_packet = {{ mysql_dump_packet_max_size }}
 {{ mysql_auto_rehash|bool|ternary('', 'no-auto-rehash') }}
 
 [isamchk]
-key_buffer = {{ mysql_isamchk_key_buffer_size }}
+key_buffer_size = {{ mysql_isamchk_key_buffer_size }}
 
 #
 # * IMPORTANT: Additional settings that can override those from this file!
