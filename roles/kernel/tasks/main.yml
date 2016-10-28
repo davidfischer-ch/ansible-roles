@@ -10,7 +10,8 @@
       register: _kernel_config
 
     - set_fact:
-        kernel_config: '{{ _kernel_config.stdout|default({}) }}'
+        # [-1] is an hack to filter the boring 'bash: warning: setlocale: ...
+        kernel_config: '{{ _kernel_config.stdout_lines[-1]|default({}) }}'
   tags: [kernel, always]
 
 - name: Install GNU/Linux kernel packages
