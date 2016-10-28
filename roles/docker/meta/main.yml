@@ -4,6 +4,10 @@ dependencies:
   - role: kernel
     tags: [docker, dependencies]
 
+  - role: python
+    tags: [docker, dependencies]
+    when: docker_install_engine|bool
+
   - role: ufw
     ufw_rules: '{{ docker_engine_ufw_rules }}'
     tags: [docker, dependencies]
