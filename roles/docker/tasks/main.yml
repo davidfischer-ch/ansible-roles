@@ -62,8 +62,6 @@
 # Setup memory and swap accounting
 
 - block:
-    - debug: var=kernel_config
-
     - name: Check GNU/Linux Kernel supports memory/swap accounting
       assert:
         that:
