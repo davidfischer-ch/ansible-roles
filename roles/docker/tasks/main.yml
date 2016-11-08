@@ -88,6 +88,7 @@
       become: no
       changed_when: "'cgroup_enable=memory' not in _docker_cmdline.stdout"
       notify:
+        - update grub
         - restart
         - wait started
       register: _docker_cmdline
