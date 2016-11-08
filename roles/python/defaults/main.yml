@@ -12,5 +12,5 @@ python_pip_version: '>=7,<8'
 python_setuptools_version: latest
 python_versions:
   - '2.7'
-  - '3.4'
+  - '3.5'
 python_virtualenv_version: latest
