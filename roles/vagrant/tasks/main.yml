@@ -61,6 +61,13 @@
       changed_when: "'already running' not in _vagrant_up.stdout"
       register: _vagrant_up
       with_dict: '{{ vagrant_machines }}'
+  always:
+    # FIXME less verbose output https://github.com/ansible/ansible/issues/5564
+    - name: Cleanup machines SSH authentication footprints
+      known_hosts: >
+        name={{ item.item.value.host_public }} state=absent
+      when: item|changed
+      with_items: '{{ _vagrant_up.results|default([]) }}'
   tags: [vagrant, provision]
 
 - block:
