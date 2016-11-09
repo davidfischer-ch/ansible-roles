@@ -19,6 +19,7 @@
     - name: Detect machines IDs
       script: >
         set-machines-ids /tmp/vagrant_machines.yml
+      always_run: yes
       changed_when: no
       register: _vagrant_ids
 
@@ -66,6 +67,7 @@
     - name: Get installed Vagrant plugins
       command: >
         vagrant plugin list
+      always_run: yes
       changed_when: no
       register: _vagrant_plugin
 
@@ -82,6 +84,7 @@
         vagrant snapshot list {{ item.key }}
       args:
         chdir: /tmp
+      always_run: yes
       changed_when: no
       register: vagrant_snapshot_list
       with_dict: '{{ vagrant_snapshots }}'
