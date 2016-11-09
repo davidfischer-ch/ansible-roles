@@ -1,0 +1,17 @@
+---
+
+- block:
+    - name: Create PageSpeed cache directory
+      file: >
+        name={{ apache_pagespeed_module_cache_directory }}
+        owner={{ apache_daemon_user }} group={{ apache_daemon_group }} mode=755 state=directory
+
+    - name: Download PageSpeed module
+      get_url: >
+        url={{ apache_pagespeed_module_url }} dest={{ local_source_directory }} force=no
+
+    - name: Install PageSpeed module package
+      apt: >
+        deb={{ local_source_directory }}/{{ apache_pagespeed_module_url|basename }} state=present
+  become: yes
+  tags: [apache, packages]

@@ -13,6 +13,9 @@
   tags: [apache, packages]
   with_items: '{{ apache_packages }}'
 
+- include: pagespeed.yml
+  when: apache_pagespeed_module_enabled|bool
+
 - block:
     - name: Detect Apache version
       shell: apache2 -v | egrep -o 'Apache/[0-9]\.[0-9]\.[0-9]' | cut -d'/' -f2

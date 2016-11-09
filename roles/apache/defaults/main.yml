@@ -1,8 +1,4 @@
 # packages
-apache_modules:
-  - macro
-  - rewrite
-  - ssl
 apache_packages:
   - apache2
 # miscellaneous configuration
@@ -16,6 +12,14 @@ apache_macros: {}
 apache_macros_file: macro.conf.j2
 apache_ports_file: ports.conf.j2
 apache_request_timeout: 300
+# modules
+apache_modules:
+  - macro
+  - rewrite
+  - ssl
+apache_pagespeed_module_cache_directory: /var/apache_pagespeed_cache
+apache_pagespeed_module_enabled: no
+apache_pagespeed_module_url: 'https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-{{ apache_pagespeed_module_version }}_current_amd64.deb'
 # networking
 apache_interface: null
 apache_port: 80
