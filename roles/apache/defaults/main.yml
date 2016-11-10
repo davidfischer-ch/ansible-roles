@@ -19,6 +19,7 @@ apache_modules:
   - ssl
 apache_pagespeed_module_cache_directory: /var/cache/apache_pagespeed
 apache_pagespeed_module_enabled: no
+apache_pagespeed_module_include_file: pagespeed.conf.j2
 apache_pagespeed_module_url: 'https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-{{ apache_pagespeed_module_version }}_current_amd64.deb'
 # networking
 apache_interface: null
