@@ -3,6 +3,7 @@
 AddOutputFilterByType MOD_PAGESPEED_OUTPUT_FILTER text/html
 
 ModPagespeed On
+ModPagespeedFileCachePath "{{ apache_pagespeed_module_cache_directory }}"
 ModPagespeedInheritVHostConfig On
 ModPagespeedXHeaderValue "-"
 {% endif %}
