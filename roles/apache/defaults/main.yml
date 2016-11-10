@@ -18,6 +18,7 @@ apache_modules:
   - rewrite
   - ssl
 apache_pagespeed_module_cache_directory: /var/apache_pagespeed_cache
+apache_pagespeed_module_enabled: no
 apache_pagespeed_module_url: 'https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-{{ apache_pagespeed_module_version }}_current_amd64.deb'
 # networking
 apache_interface: null

@@ -14,7 +14,7 @@
   with_items: '{{ apache_packages }}'
 
 - include: pagespeed.yml
-  when: "'pagespeed' in apache_modules"
+  when: apache_pagespeed_module_enabled|bool
 
 - block:
     - name: Detect Apache version
