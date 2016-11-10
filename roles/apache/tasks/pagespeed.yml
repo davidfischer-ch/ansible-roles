@@ -8,7 +8,8 @@
 
     - name: Download PageSpeed module
       get_url: >
-        url={{ apache_pagespeed_module_url }} dest={{ local_source_directory }} force=no
+        url={{ apache_pagespeed_module_url }} force=no
+        dest={{ local_source_directory }}/{{ apache_pagespeed_module_url|basename }}
 
     - name: Install PageSpeed module package
       apt: >
