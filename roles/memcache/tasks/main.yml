@@ -29,7 +29,7 @@
 
     - name: Read memcache settings
       shell: >
-        echo 'stats settings' | nc localhost {{ memcache_port }}
+        echo 'stats settings' | nc {{ memcache_bind_addresses|first }} {{ memcache_port }}
       changed_when: no
       failed_when: _memcache_settings|failed or _memcache_settings.stderr|length > 0
       register: _memcache_settings

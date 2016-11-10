@@ -13,7 +13,7 @@ logfile {{ memcache_log_file }}
 -P {{ memcache_pid_file }}
 {{ memcache_verbosity_levels[memcache_verbosity_level] }}
 
--l {{ memcache_bind_address }}
+-l {{ memcache_bind_addresses|join(',') }}
 -B {{ memcache_binding_protocol }}
 -u {{ memcache_daemon_user }}
 -p {{ memcache_port|int }}

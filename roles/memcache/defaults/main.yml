@@ -21,7 +21,8 @@ memcache_sasl_enabled: no
 memcache_threads: '{{ ansible_processor_cores }}'
 memcache_verbosity_level: off
 # networking
-memcache_bind_address: 127.0.0.1
+memcache_bind_addresses:
+  - 127.0.0.1
 memcache_interface: null
 memcache_port: 11211
 memcache_ufw_rules:
