@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+
+"""
+Enable a PHP module
+"""
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import itertools, os, subprocess, sys
+
+from pytoolbox import argparse
+from pytoolbox.filesystem import find_recursive
+
+
+def main():
+    if os.getuid() != 0:
+        raise NotImplementedError('You must run this script as root!')
+
+    parser = argparse.HelpArgumentParser(epilog=__doc__)
+    parser.add_argument('php_version')
+    parser.add_argument('module')
+    args = parser.parse_args()
+
+    files_before = set(get_php_configuration_files(args.php_version))
+    subprocess.check_call(['php{0.php_version}enmod'.format(args), args.module])
+    files_after = set(get_php_configuration_files(args.php_version))
+    sys.stdout.write('' if files_after == files_before else 'changed')
+
+
+def get_php_configuration_files(version):
+    return set(itertools.chain.from_iterable(find_recursive(p, '*') for p in (
+        '/etc/php{0}'.format(version), '/etc/php/{0}'.format(version)
+    )))
+
+if __name__ == '__main__':
+    main()
