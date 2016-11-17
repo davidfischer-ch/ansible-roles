@@ -29,9 +29,9 @@ def main():
 
 
 def get_php_configuration_files(version):
-    return set(itertools.chain.from_iterable(find_recursive(p, '*') for p in (
+    return itertools.chain.from_iterable(find_recursive(p, '*') for p in (
         '/etc/php{0}'.format(version), '/etc/php/{0}'.format(version)
-    )))
+    ))
 
 if __name__ == '__main__':
     main()
