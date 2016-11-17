@@ -51,7 +51,7 @@
     - name: Remove ownCloud default site
       file: >
         name=/etc/apache2/{{ item }}.conf state=absent
-      notify: reload apache2
+      notify: reload apache
       with_items:
         - conf-available/owncloud
         - conf-enabled/owncloud
@@ -61,12 +61,12 @@
     - name: Configure ownCloud site
       template: >
         src=owncloud.conf.j2 dest=/etc/apache2/sites-available/owncloud.conf owner=root group=root mode=644
-      notify: reload apache2
+      notify: reload apache
 
     - name: Enable ownCloud site
       file: >
         src=/etc/apache2/sites-available/owncloud.conf dest=/etc/apache2/sites-enabled/owncloud.conf state=link
-      notify: reload apache2
+      notify: reload apache
   become: yes
   tags: [owncloud, config]
 
