@@ -57,5 +57,5 @@
       become: yes
       with_nested:
         - '{{ php_config_files|default([]) }}'
-        - '{{ php_options.items()|default([]) }}'
+        - '{{ php_options.items()|default([])|list }}'
   tags: [php, config]
