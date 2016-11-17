@@ -47,7 +47,7 @@
       command: >
         php{{ php_version }}enmod {{ item }}
       become: yes
-      notify: restart apache
+      notify: php_modules_changed
       when: item not in _php_enabled_modules
       with_items: '{{ php_modules }}'
 
