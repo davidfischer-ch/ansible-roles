@@ -60,7 +60,7 @@
 
     - name: Wait for Logstash to be ready
       wait_for: >
-        host={{ ansible_default_ipv4.address }} port={{ logstash_port|int }} connect_timeout=1 delay=0 timeout=10
+        host={{ ansible_default_ipv4.address }} port={{ logstash_port|int }} connect_timeout=1 delay=0 timeout=20
 
     - name: Retrieve Logstash configuration
       uri: >
