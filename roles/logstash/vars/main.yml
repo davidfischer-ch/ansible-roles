@@ -1,0 +1,7 @@
+logstash_log_levels:
+  - debug
+  - error
+  - fatal
+  - info
+  - trace
+  - warn

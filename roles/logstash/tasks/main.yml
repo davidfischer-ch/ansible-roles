@@ -1,0 +1,62 @@
+# https://www.elastic.co/guide/en/kibana/current/deb.html
+# https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04
+---
+
+- assert:
+    that:
+      - logstash_log_level in logstash_log_levels
+  tags: [logstash, always]
+
+- block:
+    - name: Register Logstash apt key
+      apt_key: >
+        url={{ logstash_apt_key }} state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Logstash apt repository
+      apt_repository: >
+        repo={{ logstash_apt_repository }} update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Logstash packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ logstash_packages }}'
+
+    - name: Create Logstash directories
+      file: >
+        name={{ item }} state=directory owner=logstash group=logstash mode=755
+      with_items:
+        - '{{ logstash_data_directory }}'
+        - '{{ logstash_log_directory }}'
+  become: yes
+  tags: [logstash, packages]
+
+- name: Configure Logstash
+  template: >
+    src={{ item }} dest=/etc/logstash/logstash.yml mode=644
+  become: yes
+  notify: reload logstash
+  tags: [logstash, config]
+  with_first_found:
+    - 'logstash.{{ logstash_version }}.yml.j2'
+    - 'logstash.{{ logstash_version[0] }}.yml.j2'
+
+- block:
+    - name: Start Logstash service
+      service: >
+        name=logstash state=started enabled=yes
+      become: yes
+
+    - meta: flush_handlers
+
+    - name: Wait for Logstash to be ready
+      wait_for: >
+        host={{ ansible_default_ipv4.address }} port={{ logstash_port|int }} connect_timeout=1 delay=0 timeout=10
+
+    - name: Check Logstash service
+      uri: >
+        url=http://{{ ansible_default_ipv4.address }}:{{ logstash_port|int }} return_content=yes
+      failed_when: _logstash_check|failed or _logstash_check.content != 'This is not a HTTP port'
+      register: _logstash_check
+  tags: [logstash, services]
