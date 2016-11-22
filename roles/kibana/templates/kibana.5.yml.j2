@@ -97,3 +97,7 @@ elasticsearch.startupTimeout: {{ kibana_elasticsearch_startup_timeout|int }}
 # Set the interval in milliseconds to sample system and process performance
 # metrics. Minimum is 100ms. Defaults to 5000.
 #ops.interval: 5000
+
+{% if kibana_node_settings|length > 0 %}
+{{ kibana_node_settings|to_nice_yaml }}
+{% endif %}

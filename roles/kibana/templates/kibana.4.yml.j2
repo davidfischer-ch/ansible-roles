@@ -79,3 +79,7 @@ elasticsearch.startupTimeout: {{ kibana_elasticsearch_startup_timeout|int }}
 # Set the value of this setting to true to log all events, including system usage information
 # and all requests.
 # logging.verbose: false
+
+{% if kibana_node_settings|length > 0 %}
+{{ kibana_node_settings|to_nice_yaml }}
+{% endif %}

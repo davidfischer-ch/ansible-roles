@@ -13,6 +13,7 @@ kibana_elasticsearch_url: 'http://localhost:{{ elasticsearch_port|default(9200)|
 kibana_index: .kibana
 kibana_interface: null
 kibana_max_payload_bytes: 1048576
+kibana_node_settings: {}
 kibana_packages:
   - 'kibana={{ kibana_version }}'
 kibana_port: 5601
