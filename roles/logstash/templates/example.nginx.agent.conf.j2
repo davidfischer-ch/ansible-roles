@@ -1,0 +1,56 @@
+input {
+ file {
+    type => "nginx_access"
+    path => "/var/log/nginx/**/*access*.log"
+    start_position => beginning
+  }
+}
+
+input {
+ file {
+    type => "nginx_error"
+    path => "/var/log/nginx/**/*error*.log"
+    start_position => beginning
+  }
+}
+
+filter {
+  if [type] == "nginx_access" {
+    grok {
+      match => {
+        "message" => "%{IPORHOST:clientip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{URIPATHPARAM:request}(?: HTTP/%{NUMBER:httpversion})?|-)\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) \"(?:%{URI:referrer}|-)\" %{QS:agent}%{GREEDYDATA}"
+      }
+    }
+    date {
+      match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+    }
+  }
+  if [type] == "nginx_error" {
+    grok {
+      match => {
+        "message" => "(?<timestamp>%{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}[- ]%{TIME}) \[%{LOGLEVEL:severity}\] %{POSINT:pid}#%{NUMBER}: %{GREEDYDATA:errormessage}(?:, client: (?<client>%{IP}|%{HOSTNAME}))(?:, server: %{IPORHOST:server})(?:, request: %{QS:request})?(?:, upstream: \"(?<upstream>[^\"]+)\")?(?:, host: %{QS:host})?(?:, referrer: \"%{URI:referrer}\")?"
+      }
+    }
+    date {
+      match => [ "timestamp", "YYYY/MM/dd HH:mm:s" ]
+    }
+  }
+  if [clientip]  {
+    geoip {
+      source => "clientip"
+      target => "geoip"
+      add_field => [ "[geoip][coordinates]", "%{[geoip][longitude]}" ]
+      add_field => [ "[geoip][coordinates]", "%{[geoip][latitude]}"  ]
+    }
+    mutate {
+      convert => [ "[geoip][coordinates]", "float" ]
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
+    index => "{{ item.elasticsearch_index }}-%{+YYYY.MM.dd}"
+  }
+}
