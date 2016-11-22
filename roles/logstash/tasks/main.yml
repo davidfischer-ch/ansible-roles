@@ -62,9 +62,15 @@
       wait_for: >
         host={{ ansible_default_ipv4.address }} port={{ logstash_port|int }} connect_timeout=1 delay=0 timeout=10
 
-    - name: Check Logstash service
+    - name: Retrieve Logstash configuration
       uri: >
         url=http://{{ ansible_default_ipv4.address }}:{{ logstash_port|int }} return_content=yes
-      failed_when: _logstash_check|failed or _logstash_check.content != 'This is not a HTTP port'
       register: _logstash_check
+    - debug: var=_logstash_check
+
+    - name: Check Logstash configuration
+      assert:
+        that:
+          - "_logstash_check.json.version == '{{ logstash_version }}'"
+      when: _logstash_check.content_type == 'application/json'
   tags: [logstash, services]
