@@ -1,0 +1,15 @@
+# Install and configure Java
+---
+
+- block:
+    - name: Install Java apt repository
+      apt_repository: >
+        repo={{ java_apt_repository }} update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt' and java_apt_repository|length > 0"
+
+    - name: Install Java packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ java_packages }}'
+  become: yes
+  tags: [java, packages]
