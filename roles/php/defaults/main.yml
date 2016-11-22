@@ -2,5 +2,5 @@ php_apt_repository: ''  # ppa:ondrej/php For PHP 7
 php_modules: []
 php_options: {}
 php_packages:
-  - php{{ php_version }}-cli
+  - 'php{{ php_version }}-cli'
 php_version: 5
