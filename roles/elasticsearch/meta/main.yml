@@ -1,6 +1,9 @@
 ---
 
 dependencies:
+  - role: java
+    tags: [elasticsearch, dependencies]
+
   - role: ufw
     ufw_rules: '{{ elasticsearch_ufw_rules }}'
     tags: [elasticsearch, dependencies]
