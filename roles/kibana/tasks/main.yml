@@ -22,7 +22,7 @@
 
 - name: Configure Kibana
   template: >
-    src={{ item }} dest=/opt/kibana/config/kibana.yml mode=644
+    src={{ item }} dest=/etc/kibana/kibana.yml mode=644
   become: yes
   notify: reload kibana
   tags: [kibana, config]
