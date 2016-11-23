@@ -1,6 +1,6 @@
 input {
  file {
-    type => "nginx_access"
+    type => "nginx-access"
     path => "/var/log/nginx/**/*access*.log"
     start_position => beginning
   }
@@ -8,31 +8,35 @@ input {
 
 input {
  file {
-    type => "nginx_error"
+    type => "nginx-error"
     path => "/var/log/nginx/**/*error*.log"
     start_position => beginning
   }
 }
 
 filter {
-  if [type] == "nginx_access" {
+  if [type] == "nginx-access" {
     grok {
-      match => {
-        "message" => "%{IPORHOST:clientip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{URIPATHPARAM:request}(?: HTTP/%{NUMBER:httpversion})?|-)\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) \"(?:%{URI:referrer}|-)\" %{QS:agent}%{GREEDYDATA}"
-      }
+      match => [
+        "message", "%{IPORHOST:clientip} %{USER:ident} %{USER:auth} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{URIPATHPARAM:request}(?: HTTP/%{NUMBER:httpversion})?|-)\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) \"(?:%{URI:referrer}|-)\" %{QS:agent}%{GREEDYDATA}"
+      ]
+      remove_field => [ "message" ]
     }
     date {
       match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+      remove_field => [ "timestamp" ]
     }
   }
-  if [type] == "nginx_error" {
+  if [type] == "nginx-error" {
     grok {
-      match => {
-        "message" => "(?<timestamp>%{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}[- ]%{TIME}) \[%{LOGLEVEL:severity}\] %{POSINT:pid}#%{NUMBER}: %{GREEDYDATA:errormessage}(?:, client: (?<client>%{IP}|%{HOSTNAME}))(?:, server: %{IPORHOST:server})(?:, request: %{QS:request})?(?:, upstream: \"(?<upstream>[^\"]+)\")?(?:, host: %{QS:host})?(?:, referrer: \"%{URI:referrer}\")?"
-      }
+      match => [
+        "message", "(?<timestamp>%{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}[- ]%{TIME}) \[%{LOGLEVEL:severity}\] %{POSINT:pid}#%{NUMBER}: %{GREEDYDATA:errormessage}(?:, client: (?<client>%{IP}|%{HOSTNAME}))(?:, server: %{IPORHOST:server})(?:, request: %{QS:request})?(?:, upstream: \"(?<upstream>[^\"]+)\")?(?:, host: %{QS:host})?(?:, referrer: \"%{URI:referrer}\")?"
+      ]
+      remove_field => [ "message" ]
     }
     date {
       match => [ "timestamp", "YYYY/MM/dd HH:mm:s" ]
+      remove_field => [ "timestamp" ]
     }
   }
   if [clientip]  {
@@ -42,15 +46,13 @@ filter {
       add_field => [ "[geoip][coordinates]", "%{[geoip][longitude]}" ]
       add_field => [ "[geoip][coordinates]", "%{[geoip][latitude]}"  ]
     }
-    mutate {
-      convert => [ "[geoip][coordinates]", "float" ]
-    }
+    mutate { convert => [ "[geoip][coordinates]", "float" ] }
   }
 }
 
 output {
   elasticsearch {
     hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
-    index => "{{ item.elasticsearch_index }}-%{+YYYY.MM.dd}"
+    index => "{{ item.elasticsearch_index }}"
   }
 }
