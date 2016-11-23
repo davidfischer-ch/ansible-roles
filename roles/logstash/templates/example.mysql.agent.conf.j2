@@ -23,46 +23,52 @@ input {
 }
 
 filter {
-  # Capture user, optional host and optional ip fields sample log file lines:
-  # User@Host: logstash[logstash] @ localhost [127.0.0.1]
-  # User@Host: logstash[logstash] @  [127.0.0.1]
-  grok {
-    match => [ "message", "^# User@Host: %{USER:user}(?:[[^]]+])?s+@s+%{IPORHOST:host}?s+[%{IP:ip}?]" ]
-    remove_field => [ "message" ]
-  }
+  if [type] == "mysql-slow" {
+    # Capture user, optional host and optional ip fields sample log file lines:
+    # User@Host: logstash[logstash] @ localhost [127.0.0.1]
+    # User@Host: logstash[logstash] @  [127.0.0.1]
+    grok {
+      match => [ "message", "^# User@Host: %{USER:user}(?:[[^]]+])?s+@s+%{IPORHOST:host}?s+[%{IP:ip}?]" ]
+      remove_field => [ "message" ]
+    }
 
-  # Capture query time, lock time, rows returned and rows examined sample log file lines:
-  # Query_time: 102.413328  Lock_time: 0.000167 Rows_sent: 0  Rows_examined: 1970
-  # Query_time: 1.113464  Lock_time: 0.000128 Rows_sent: 1  Rows_examined: 0
-  grok {
-    match => [
-      "message", "^# Query_time: %{NUMBER:duration:float}s+Lock_time: %{NUMBER:lock_wait:float} Rows_sent: %{NUMBER:results:int} s*Rows_examined: %{NUMBER:scanned:int}"
-    ]
-    remove_field => [ "message" ]
-  }
-  grok {
-    match => [ "message", "^SET timestamp=%{NUMBER:timestamp};" ]
-    remove_field => [ "message" ]
-  }
-  date {
-    match => [ "timestamp", "UNIX" ]
-    remove_field => [ "timestamp" ]
+    # Capture query time, lock time, rows returned and rows examined sample log file lines:
+    # Query_time: 102.413328  Lock_time: 0.000167 Rows_sent: 0  Rows_examined: 1970
+    # Query_time: 1.113464  Lock_time: 0.000128 Rows_sent: 1  Rows_examined: 0
+    grok {
+      match => [
+        "message", "^# Query_time: %{NUMBER:duration:float}s+Lock_time: %{NUMBER:lock_wait:float} Rows_sent: %{NUMBER:results:int} s*Rows_examined: %{NUMBER:scanned:int}"
+      ]
+      remove_field => [ "message" ]
+    }
+    grok {
+      match => [ "message", "^SET timestamp=%{NUMBER:timestamp};" ]
+      remove_field => [ "message" ]
+    }
+    date {
+      match => [ "timestamp", "UNIX" ]
+      remove_field => [ "timestamp" ]
+    }
   }
 }
 
 filter {
-  # drop sleep events
-  grok {
-    match => [ "message", "SELECT SLEEP" ]
-    tag_on_failure => []  # prevent default _grokparsefailure tag on real records
-    add_tag => [ "sleep_drop" ]
+  if [type] == "mysql-slow" {
+    # drop sleep events
+    grok {
+      match => [ "message", "SELECT SLEEP" ]
+      tag_on_failure => []  # prevent default _grokparsefailure tag on real records
+      add_tag => [ "sleep_drop" ]
+    }
+    if "sleep_drop" in [tags] { drop {} }
   }
-  if "sleep_drop" in [tags] { drop {} }
 }
 
 output {
-  elasticsearch {
-    hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
-    index => "{{ item.elasticsearch_index }}"
+  if [type] == "mysql-slow" {
+    elasticsearch {
+      hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
+      index => "{{ item.elasticsearch_index }}"
+    }
   }
 }
