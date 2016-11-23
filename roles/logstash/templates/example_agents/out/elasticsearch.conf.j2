@@ -1,0 +1,6 @@
+output {
+  elasticsearch {
+    hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
+    index => "{{ item.elasticsearch_index }}"
+  }
+}
