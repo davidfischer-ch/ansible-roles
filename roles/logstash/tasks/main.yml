@@ -58,15 +58,13 @@
 
     - meta: flush_handlers
 
-    - name: Wait for Logstash to be ready
-      wait_for: >
-        host={{ ansible_default_ipv4.address }} port={{ logstash_port|int }} connect_timeout=1 delay=0 timeout=20
-
     - name: Retrieve Logstash configuration
       uri: >
         url=http://{{ ansible_default_ipv4.address }}:{{ logstash_port|int }} return_content=yes
+      delay: '{{ logstash_check_delay|int }}'
       register: _logstash_check
-    - debug: var=_logstash_check
+      retries: '{{ logstash_check_retries|int }}'
+      until: _logstash_check|success
 
     - name: Check Logstash configuration
       assert:

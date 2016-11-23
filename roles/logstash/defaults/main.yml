@@ -2,6 +2,8 @@ logstash_agents: []
 logstash_apt_key: https://packages.elastic.co/GPG-KEY-elasticsearch
 logstash_apt_repository: 'deb https://artifacts.elastic.co/packages/{{ logstash_version[0] }}.x/apt stable main'
 logstash_bind_address: 0.0.0.0
+logstash_check_delay: 20
+logstash_check_retries: 30
 logstash_data_directory: /var/lib/logstash
 logstash_interface: null
 logstash_log_directory: /var/log/logstash
