@@ -49,12 +49,3 @@ filter {
     mutate { convert => [ "[geoip][coordinates]", "float" ] }
   }
 }
-
-output {
-  if [type] in ["nginx-access", "nginx-error"] {
-    elasticsearch {
-      hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
-      index => "{{ item.elasticsearch_index }}"
-    }
-  }
-}

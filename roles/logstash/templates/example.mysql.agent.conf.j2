@@ -63,12 +63,3 @@ filter {
     if "sleep_drop" in [tags] { drop {} }
   }
 }
-
-output {
-  if [type] == "mysql-slow" {
-    elasticsearch {
-      hosts => ["{{ item.elasticsearch_host }}:{{ item.elasticsearch_port|int }}"]
-      index => "{{ item.elasticsearch_index }}"
-    }
-  }
-}
