@@ -8,7 +8,7 @@ python_packages:
   - checkinstall
   - python-dev
   - python3-dev
-python_pip_version: '>=7,<8'
+python_pip_version: ''
 python_setuptools_version: latest
 python_versions:
   - '2.7'
