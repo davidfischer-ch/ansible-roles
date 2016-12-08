@@ -11,23 +11,44 @@
       git: >
         repo={{ gpac_repository_url }} dest={{ local_source_directory }}/gpac force=yes version={{ gpac_version }}
 
-    - name: Configure GPAC build process
-      command: >
-        {{ local_source_directory }}/gpac/configure
-      args:
-        chdir: '{{ local_source_directory }}/gpac'
+    - name: Set GPAC build environment
+      set_fact:
+        gpac_build_env: >
+          {{ gpac_version }}
 
-    - name: Build GPAC from source
+    - name: Detect if GPAC must be reinstalled
       command: >
-        make -j{{ ansible_processor_cores }}
-      args:
-        chdir: '{{ local_source_directory }}/gpac'
+        cat '{{ local_source_directory }}/gpac.build.cfg'
+      always_run: yes
+      changed_when: >
+        gpac_build_env|trim != gpac_build.stdout|default('')|trim
+      failed_when: no
+      register: gpac_build
 
-    - name: Install GPAC from source
-      command: >
-        make install
-      args:
-        chdir: '{{ local_source_directory }}/gpac'
+    - block:
+        - name: Configure GPAC build process
+          command: >
+            {{ local_source_directory }}/gpac/configure
+          args:
+            chdir: '{{ local_source_directory }}/gpac'
+
+        - name: Build GPAC from source
+          command: >
+            make -j{{ ansible_processor_cores }}
+          args:
+            chdir: '{{ local_source_directory }}/gpac'
+
+        - name: Install GPAC from source
+          command: >
+            make install
+          args:
+            chdir: '{{ local_source_directory }}/gpac'
+
+        - name: Save build environment
+          copy: >
+            content={{ gpac_build_env }} dest={{ local_source_directory }}/gpac.build.cfg
+
+      when: gpac_build|changed
   become: yes
   tags: [gpac, packages]
 
