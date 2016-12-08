@@ -7,8 +7,8 @@ file_utility_packages:
   - tofrodos
   - unoconv
 java_packages:
-  - icedtea-7-plugin
-  - openjdk-7-jre
+  - icedtea-8-plugin
+  - openjdk-8-jre
 miscellaneous_packages:
   - stellarium
 office_packages:
