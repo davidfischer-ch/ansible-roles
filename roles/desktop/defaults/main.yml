@@ -19,7 +19,6 @@ office_packages:
   - xournal
 ubuntu_desktop_packages:
   - compizconfig-settings-manager
-  - nautilus-open-terminal
   - nemo
   - nemo-fileroller
   - unity-tweak-tool
