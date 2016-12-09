@@ -31,6 +31,12 @@
         src={{ apache_config_file }} dest=/etc/apache2/apache2.conf mode=600
       notify: reload apache
 
+    - name: Setup Apache extra configuration
+      template: >
+        src={{ item.value.config_file }} dest=/etc/apache2/conf.d/{{ item.value.name }}.conf mode=644
+      notify: reload apache
+      with_dict: '{{ apache_extra_config_files }}'
+
     - name: Configure Apache ports
       template: >
         src={{ apache_ports_file }} dest=/etc/apache2/ports.conf mode=600

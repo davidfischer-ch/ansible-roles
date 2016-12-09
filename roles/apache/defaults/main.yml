@@ -3,6 +3,7 @@ apache_packages:
   - apache2
 # miscellaneous configuration
 apache_config_file: 'apache{{ apache_version[:3] }}.conf.j2'
+apache_extra_config_files: {}
 apache_hostname_lookup_enabled: no
 apache_keep_alive_enabled: yes
 apache_keep_alive_max_requests: 100
