@@ -10,7 +10,7 @@
 
     - name: Install Kibana apt repository
       apt_repository: >
-        repo={{ kibana_apt_repository }} update_cache=yes state=present
+        repo={{ kibana_apt_repository }} filename=ansible_roles_elk_stack update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Kibana packages

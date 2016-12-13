@@ -9,7 +9,7 @@
 
         - name: Install Varnish apt repository
           apt_repository: >
-            repo={{ varnish_apt_repository }} update_cache=yes state=present
+            repo={{ varnish_apt_repository }} filename=ansible_roles_varnish update_cache=yes state=present
       when: ansible_pkg_mgr == 'apt' and ansible_distribution_major_version|int < 16
 
     - name: Install Varnish packages

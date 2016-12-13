@@ -10,7 +10,7 @@
 
         - name: Install New Relic apt repository
           apt_repository: >
-            repo={{ newrelic_apt_repository }} update_cache=yes state=present
+            repo={{ newrelic_apt_repository }} filename=ansible_roles_newrelic update_cache=yes state=present
 
         - name: Install New Relic System Monitor
           package: >

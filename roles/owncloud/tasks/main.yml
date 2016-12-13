@@ -18,7 +18,7 @@
 
     - name: Install ownCloud apt repository
       apt_repository: >
-        repo={{ owncloud_apt_repository }} update_cache=yes state=present
+        repo={{ owncloud_apt_repository }} filename=ansible_roles_owncloud update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install LibreOffice packages

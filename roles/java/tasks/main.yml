@@ -4,7 +4,7 @@
 - block:
     - name: Install Java apt repository
       apt_repository: >
-        repo={{ java_apt_repository }} update_cache=yes state=present
+        repo={{ java_apt_repository }} filename=ansible_roles_java update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt' and java_apt_repository|length > 0"
 
     - name: Install Java packages

@@ -32,7 +32,7 @@
 
     - name: Register Docker apt repository
       apt_repository: >
-        repo='{{ docker_apt_repository }}' update_cache=yes state=present
+        repo={{ docker_apt_repository }} filename=ansible_roles_docker update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Docker Engine packages

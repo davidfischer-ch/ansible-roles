@@ -4,7 +4,7 @@
 - block:
     - name: Install PHP apt repository
       apt_repository: >
-        repo={{ php_apt_repository }} update_cache=yes state=present
+        repo={{ php_apt_repository }} filename=ansible_roles_php update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt' and php_apt_repository|length > 0"
 
     - name: Install PHP packages

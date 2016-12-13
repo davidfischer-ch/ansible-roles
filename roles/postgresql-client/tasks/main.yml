@@ -9,7 +9,7 @@
 
     - name: Install PostgreSQL apt repository
       apt_repository: >
-        repo={{ postgresql_apt_repository }} update_cache=yes state=present
+        repo={{ postgresql_apt_repository }} filename=ansible_roles_postgresql_client update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install PostgreSQL client packages

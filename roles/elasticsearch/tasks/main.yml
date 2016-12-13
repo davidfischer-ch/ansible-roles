@@ -16,7 +16,7 @@
 
     - name: Install ElasticSearch apt repository
       apt_repository: >
-        repo={{ elasticsearch_apt_repository }} update_cache=yes state=present
+        repo={{ elasticsearch_apt_repository }} filename=ansible_roles_elk_stack update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install ElasticSearch packages
