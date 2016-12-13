@@ -3,7 +3,7 @@
 - block:
     - name: Install Android Studio apt repositories
       apt_repository: >
-        repo={{ item }} state=present update_cache=yes
+        repo={{ item }} update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
       with_items: '{{ android_studio_apt_repositories }}'
 
