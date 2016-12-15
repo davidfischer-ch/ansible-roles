@@ -26,6 +26,6 @@
     - name: Benchmark Redis
       command: >
         redis-benchmark -q -n 10000 -c 50 -P 12
-      always_run: yes
       changed_when: no
+      check_mode: no
   tags: [redis, config]

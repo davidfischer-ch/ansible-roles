@@ -22,8 +22,8 @@
     - name: Check node command is available
       command: >
         node
-      always_run: yes
       changed_when: _node_command|failed
+      check_mode: no
       ignore_errors: yes
       register: _node_command
 
@@ -35,8 +35,8 @@
     - name: Check node version
       command: >
         node --version
-      always_run: yes
       changed_when: no
+      check_mode: no
       failed_when: _node_version|failed or _node_version.stdout[1:node_version|length+1] != node_version
       register: _node_version
   become: yes

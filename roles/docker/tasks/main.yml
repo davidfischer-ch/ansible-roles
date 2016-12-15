@@ -84,9 +84,9 @@
     - name: Check memory/swap accounting is active
       command: >
         cat /proc/cmdline
-      always_run: yes
       become: no
       changed_when: "'cgroup_enable=memory' not in _docker_cmdline.stdout"
+      check_mode: no
       notify:
         - update grub
         - restart

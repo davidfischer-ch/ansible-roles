@@ -5,8 +5,8 @@
     - name: Get current GNU/Linux Kernel configuration
       script: >
         get-kernel-config
-      always_run: yes
       changed_when: no
+      check_mode: no
       register: _kernel_config
 
     - set_fact:

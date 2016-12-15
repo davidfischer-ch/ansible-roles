@@ -99,9 +99,9 @@
     - name: Detect if Nginx must be reinstalled
       command: >
         cat '{{ local_source_directory }}/nginx.build.cfg'
-      always_run: yes
       changed_when: >
         nginx_build_env|trim != nginx_build.stdout|default('')|trim
+      check_mode: no
       failed_when: no
       register: nginx_build
 
@@ -135,8 +135,8 @@
         - name: Trigger Nginx restart
           command: >
             ls /dev/null
-          always_run: yes
           changed_when: yes
+          check_mode: no
           notify: '{{ nginx_daemon_mode }} restart nginx'
       when: nginx_build|changed
   become: yes
@@ -207,8 +207,8 @@
 - name: Trigger Nginx reload
   command: >
     ls /dev/null
-  always_run: yes
   changed_when: yes
+  check_mode: no
   notify: '{{ nginx_daemon_mode }} reload nginx'
   tags: [nginx, update]
 
@@ -235,7 +235,7 @@
     - name: Check Nginx config
       command: >
         {{ nginx_daemon_path }} -t
-      always_run: yes
       changed_when: no
+      check_mode: no
   become: yes
   tags: [nginx, sites]

@@ -14,8 +14,8 @@
     - name: Check Drupal Shell
       command: >
         {{ local_source_directory }}/drush-{{ drush_version }}.phar core-status
-      always_run: yes
       changed_when: no
+      check_mode: no
 
     - name: Install Drupal Shell
       file: >

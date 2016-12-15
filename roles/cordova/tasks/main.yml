@@ -17,8 +17,8 @@
     - name: Check node command is available
       command: >
         node
-      always_run: yes
       changed_when: _cordova_node|failed
+      check_mode: no
       ignore_errors: yes
       register: _cordova_node
 
@@ -31,6 +31,6 @@
     - name: Check cordova command is available
       command: >
         cordova
-      always_run: yes
       changed_when: no
+      check_mode: no
   tags: [cordova, packages]

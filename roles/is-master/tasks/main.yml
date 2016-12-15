@@ -5,8 +5,8 @@
     - name: Define master node (1/2)
       command: >
         echo '{{ inventory_hostname }}'
-      always_run: yes
       changed_when: no
+      check_mode: no
       register: _is_master
       run_once: yes
 

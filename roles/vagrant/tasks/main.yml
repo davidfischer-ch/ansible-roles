@@ -19,8 +19,8 @@
     - name: Detect machines IDs
       script: >
         set-machines-ids /tmp/vagrant_machines.yml
-      always_run: yes
       changed_when: no
+      check_mode: no
       register: _vagrant_ids
 
     - name: Update machines specifications
@@ -42,8 +42,8 @@
         vagrant box outdated
       args:
         chdir: /tmp
-      always_run: yes
       changed_when: "vagrant_update_boxes|bool and 'to update' in _vagrant_outdated.stdout"
+      check_mode: no
       register: _vagrant_outdated
 
     - name: Update boxes
@@ -74,8 +74,8 @@
     - name: Get installed Vagrant plugins
       command: >
         vagrant plugin list
-      always_run: yes
       changed_when: no
+      check_mode: no
       register: _vagrant_plugin
 
     - name: Install Vagrant plugins
@@ -91,8 +91,8 @@
         vagrant snapshot list {{ item.key }}
       args:
         chdir: /tmp
-      always_run: yes
       changed_when: no
+      check_mode: no
       register: vagrant_snapshot_list
       with_dict: '{{ vagrant_snapshots }}'
 

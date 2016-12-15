@@ -21,9 +21,9 @@
     - name: Detect if exFAT must be reinstalled
       command: >
         cat '{{ local_source_directory }}/exfat.build.cfg'
-      always_run: yes
       changed_when: >
         exfat_build_env|trim != exfat_build.stdout|default('')|trim
+      check_mode: no
       failed_when: no
       register: exfat_build
 
