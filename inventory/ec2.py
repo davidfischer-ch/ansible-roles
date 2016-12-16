@@ -322,6 +322,15 @@ class Ec2Inventory(object):
         else:
             self.all_rds_instances = False
 
+        try:
+            self.elasticache_cluster_id = config.get('ec2', 'elasticache_cluster_id')
+        except:
+            self.elasticache_cluster_id = None
+        try:
+            self.rds_subnet_group = config.get('ec2', 'rds_subnet_group')
+        except:
+            self.rds_subnet_group = None
+
         # Return all ElastiCache replication groups? (if ElastiCache is enabled)
         if config.has_option('ec2', 'all_elasticache_replication_groups') and self.elasticache_enabled:
             self.all_elasticache_replication_groups = config.getboolean('ec2', 'all_elasticache_replication_groups')
@@ -488,9 +497,9 @@ class Ec2Inventory(object):
         for region in self.regions:
             self.get_instances_by_region(region)
             if self.rds_enabled:
-                self.get_rds_instances_by_region(region)
+                self.get_rds_instances_by_region(region, self.rds_subnet_group)
             if self.elasticache_enabled:
-                self.get_elasticache_clusters_by_region(region)
+                self.get_elasticache_clusters_by_region(region, self.elasticache_cluster_id)
                 self.get_elasticache_replication_groups_by_region(region)
             if self.include_rds_clusters:
                 self.include_rds_clusters_by_region(region)
@@ -570,7 +579,7 @@ class Ec2Inventory(object):
                 error = "Error connecting to %s backend.\n%s" % (backend, e.message)
             self.fail_with_error(error, 'getting EC2 instances')
 
-    def get_rds_instances_by_region(self, region):
+    def get_rds_instances_by_region(self, region, subnet_group=None):
         ''' Makes an AWS API call to the list of RDS instances in a particular
         region '''
 
@@ -582,7 +591,8 @@ class Ec2Inventory(object):
                     instances = conn.get_all_dbinstances(marker=marker)
                     marker = instances.marker
                     for instance in instances:
-                        self.add_rds_instance(instance, region)
+                        if not subnet_group or instance.subnet_group.name == subnet_group:
+                            self.add_rds_instance(instance, region)
                     if not marker:
                         break
         except boto.exception.BotoServerError as e:
@@ -653,7 +663,7 @@ class Ec2Inventory(object):
 
         self.inventory['db_clusters'] = c_dict
 
-    def get_elasticache_clusters_by_region(self, region):
+    def get_elasticache_clusters_by_region(self, region, cluster_id=None):
         ''' Makes an AWS API call to the list of ElastiCache clusters (with
         nodes' info) in a particular region.'''
 
@@ -665,7 +675,7 @@ class Ec2Inventory(object):
             if conn:
                 # show_cache_node_info = True
                 # because we also want nodes' information
-                response = conn.describe_cache_clusters(None, None, None, True)
+                response = conn.describe_cache_clusters(cluster_id, None, None, True)
 
         except boto.exception.BotoServerError as e:
             error = e.reason
