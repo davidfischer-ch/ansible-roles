@@ -680,6 +680,8 @@ class Ec2Inventory(object):
         except boto.exception.BotoServerError as e:
             error = e.reason
 
+            if e.error_code == 'CacheClusterNotFound':
+                return
             if e.error_code == 'AuthFailure':
                 error = self.get_auth_error_message()
             if not e.reason == "Forbidden":
