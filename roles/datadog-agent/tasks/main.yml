@@ -1,0 +1,38 @@
+# https://app.datadoghq.com/signup/agent#ubuntu
+---
+
+- assert:
+    that:
+      - datadog_agent_api_key is defined
+  tags: [datadog-agent, always]
+
+- block:
+    - name: Register Datadog agent apt key
+      apt_key: >
+        keyserver=keyserver.ubuntu.com id=C7A7DA52 state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Datadog agent apt repository
+      apt_repository: >
+        repo={{ datadog_agent_apt_repository }} filename=ansible_roles_datadog_agent update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Datadog agent packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ datadog_agent_packages }}'
+  become: yes
+  tags: [datadog-agent, packages]
+
+- name: Configure Datadog agent
+  template: >
+    src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf mode=644
+  become: yes
+  notify: reload datadog-agent
+  tags: [datadog-agent, config]
+
+- name: Start Datadog agent service
+  service: >
+    name=datadog-agent state=started enabled=yes
+  become: yes
+  tags: [datadog-agent, services]
