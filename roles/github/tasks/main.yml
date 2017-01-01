@@ -8,17 +8,17 @@
   with_items: '{{ github_python_packages }}'
 
 - block:
-    - name: Retrieve GitHub IP address if necessary
+    - name: Lookup GitHub IP addresses if necessary
       set_fact:
-        github_ip: "{{ github_ip|default(lookup('dig', 'github.com')) }}"
+        github_ips: "{{ github_ips|default(lookup('dig', 'github.com').split(',')) }}"
 
     - name: Add GitHub public key to known_hosts file
       lineinfile: >
         dest={{ ansible_user_dir }}/.ssh/known_hosts regexp=^github.com
-        line='github.com,{{ github_ip }} ssh-rsa {{ github_rsa }}' create=yes
+        line='github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}' create=yes
 
-    - name: Add GitHub IP address to hosts file
+    - name: Add GitHub IP addresses to hosts file
       lineinfile: >
-        dest=/etc/hosts regexp=' github.com$' line='{{ github_ip }} github.com' create=yes
+        dest=/etc/hosts regexp=' github.com$' line='{{ github_ips|sort|first }} github.com' create=yes
       become: yes
   tags: [github, config]
