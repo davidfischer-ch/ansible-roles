@@ -29,7 +29,7 @@ server {
     access_log /var/log/nginx/{{ item.value.name }}/access.log;
     error_log /var/log/nginx/{{ item.value.name }}/error.log warn;
 
-    {% if nginx_pagespeed_enabled|bool %}
+    {% if nginx_pagespeed_module_enabled|bool %}
     pagespeed on;
     pagespeed DisableRewriteOnNoTransform on;  # default
     pagespeed LowercaseHtmlNames on;
@@ -40,8 +40,8 @@ server {
     pagespeed XHeaderValue "Powered By ngx_pagespeed";
 
     pagespeed RewriteLevel PassThrough;  # enable filters individually
-    pagespeed EnableFilters {{ nginx_pagespeed_filters|join(',') }};
-    pagespeed FileCachePath {{ nginx_pagespeed_cache_directory }};
+    pagespeed EnableFilters {{ nginx_pagespeed_module_filters|join(',') }};
+    pagespeed FileCachePath {{ nginx_pagespeed_module_cache_directory }};
     {% endif %}
 
     location /robots.txt {
