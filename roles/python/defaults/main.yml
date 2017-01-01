@@ -11,6 +11,6 @@ python_packages:
 python_pip_version: ''
 python_setuptools_version: latest
 python_versions:
-  - '2.7'
-  - '3.5'
+  - 2.7
+  - 3.5
 python_virtualenv_version: latest
