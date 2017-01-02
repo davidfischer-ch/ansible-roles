@@ -137,7 +137,7 @@
             ls /dev/null
           changed_when: yes
           check_mode: no
-          notify: '{{ nginx_daemon_mode }} restart nginx'
+          notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
       when: nginx_build|changed
   become: yes
   tags: [nginx, packages]
@@ -146,7 +146,7 @@
     - name: Configure Nginx
       template: >
         src={{ nginx_config_file }} dest=/etc/nginx/nginx.conf mode=644
-      notify: '{{ nginx_daemon_mode }} reload nginx'
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
 
     - name: Create Nginx directories
       file: >
@@ -161,13 +161,13 @@
     - name: Remove default site
       file: >
         path=/etc/nginx/sites-enabled/default state=absent
-      notify: '{{ nginx_daemon_mode }} reload nginx'
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
 
     - block:
         - name: Configure Nginx service
           template: >
             src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
-          notify: '{{ nginx_daemon_mode }} restart nginx'
+          notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
 
         - name: Install Nginx service
           supervisorctl: >
@@ -176,8 +176,14 @@
 
     - name: Configure Nginx service
       template: >
+        src=nginx.service.j2 dest=/etc/systemd/system/nginx.service mode=755
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
+      when: "nginx_daemon_mode == 'systemd'"
+
+    - name: Configure Nginx service
+      template: >
         src=init.d.j2 dest=/etc/init.d/nginx mode=755
-      notify: '{{ nginx_daemon_mode }} restart nginx'
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
       when: "nginx_daemon_mode == 'systemv'"
   become: yes
   tags: [nginx, config]
@@ -202,27 +208,27 @@
     name=nginx state=started enabled=yes
   become: yes
   tags: [nginx, services]
-  when: "nginx_daemon_mode == 'systemv'"
+  when: "nginx_daemon_mode != 'supervisor'"
 
 - name: Trigger Nginx reload
   command: >
     ls /dev/null
   changed_when: yes
   check_mode: no
-  notify: '{{ nginx_daemon_mode }} reload nginx'
+  notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
   tags: [nginx, update]
 
 - block:
     - name: Setup the Nginx sites
       template: >
         src={{ item.value.config_file }} dest=/etc/nginx/sites-enabled/{{ item.value.name }}.conf mode=644
-      notify: '{{ nginx_daemon_mode }} reload nginx'
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
       with_dict: '{{ nginx_sites }}'
 
     - name: Setup the Nginx site basic authentication
       template: >
         src={{ item.value.auth_file }} dest=/etc/nginx/sites-auth/{{ item.value.name }}.conf mode=644
-      notify: '{{ nginx_daemon_mode }} reload nginx'
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
       when: item.value.auth_file is defined
       with_dict: '{{ nginx_sites }}'
 

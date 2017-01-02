@@ -1,3 +1,4 @@
 nginx_daemon_modes:
-  - supervisor
-  - systemv
+  supervisor: supervisor
+  systemd: system
+  systemv: system

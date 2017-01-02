@@ -10,12 +10,12 @@
     supervisorctl signal HUP nginx
   become: yes
 
-- name: systemv restart nginx
+- name: system restart nginx
   service: >
     name=nginx state=restarted
   become: yes
 
-- name: systemv reload nginx
+- name: system reload nginx
   service: >
     name=nginx state=reloaded
   become: yes
