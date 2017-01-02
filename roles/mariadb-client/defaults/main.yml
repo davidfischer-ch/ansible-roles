@@ -1,4 +1,5 @@
 mariadb_apt_repository: 'deb http://mirror.jmu.edu/pub/mariadb/repo/{{ mariadb_version }}/ubuntu {{ ansible_distribution_release }} main'
+mariadb_apt_key: '0xF1656F24C74CD1D8'
 mariadb_client_packages:
   - 'mariadb-client-{{ mariadb_version }}'
 mariadb_version: 10.1

@@ -5,14 +5,14 @@
       package: >
         name=python-mysqldb state=present
 
-    - name: Register MariaDB apt key
-      apt_key: >
-        keyserver=hkp://keyserver.ubuntu.com:80 id=0xcbcb082a1bb943db state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - block:
+        - name: Register MariaDB apt key
+          apt_key: >
+            keyserver=hkp://keyserver.ubuntu.com:80 id={{ mariadb_apt_key }} state=present
 
-    - name: Register MariaDB apt repository
-      apt_repository: >
-        repo={{ mariadb_apt_repository }} filename=ansible_roles_mariadb_client update_cache=yes state=present
+        - name: Register MariaDB apt repository
+          apt_repository: >
+            repo={{ mariadb_apt_repository }} filename=ansible_roles_mariadb_client update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install MariaDB client packages
