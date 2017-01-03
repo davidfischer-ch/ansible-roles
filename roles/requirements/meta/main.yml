@@ -1,6 +1,0 @@
----
-
-allow_duplicates: yes
-dependencies:
-  - role: python
-    when: pip_requirements|length > 0 or pip2_requirements|length > 0 or pip3_requirements|length > 0
