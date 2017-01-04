@@ -23,7 +23,7 @@
         name={{ item.value.directory }}
         owner={{ item.value.user|default(user) }}
         group={{ item.value.group|default(group) }}
-        mode=755
+        mode={{ item.value.mode|default(755) }}
         state=directory
       when: "item.value.fstype != 'swap'"
       with_dict: '{{ mounts }}'
