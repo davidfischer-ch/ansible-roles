@@ -144,13 +144,6 @@ Variables::
         user: admin
         password: ****
         with_test: yes
-      graphite:
-        template: template0
-        clients:
-          - 127.0.0.1/32
-        name: graphite
-        user: graphite
-        password: ****
     postgresql_is_master: yes
     postgresql_master: 127.0.0.1
     postgresql_port: 5432
