@@ -25,11 +25,11 @@ Mounting a S3 bucket with s3fs
 
 PlayBook::
 
-- hosts:
-    - all:!localhost
-  roles:
-    - s3fs
-    - mounts
+    - hosts:
+        - all:!localhost
+      roles:
+        - s3fs
+        - mounts
 
 Variables::
 
