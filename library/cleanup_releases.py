@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-import os, re
+import os, re, shutil
 
 from ansible.module_utils.basic import AnsibleModule
-from pytoolbox.filesystem import try_remove
 
 DOCUMENTATION = r"""
 ---
@@ -74,7 +73,7 @@ def main():
     before = [{'path': r, 'state': get_state(r)} for r in oldest_releases]
     if not module.check_mode:
         for release in oldest_releases:
-            try_remove(release, recursive=True)
+            shutil.rmtree(release)
     module.exit_json(changed=bool(oldest_releases), diff={
         'after': [{'path': r, 'state': 'absent'} for r in oldest_releases], 'before': before
     })
