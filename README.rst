@@ -16,4 +16,32 @@ This playbook is covering multiple use-cases:
 
 Most are generic enough to be usable as-is.
 
+--------
+Examples
+--------
+
+Mounting a S3 bucket with s3fs
+==============================
+
+PlayBook::
+
+- hosts:
+    - all:!localhost
+  roles:
+    - s3fs
+    - mounts
+
+Variables::
+
+    mounts:
+      data:
+        check: yes
+        directory: /mnt/mybucket
+        user: root
+        group: root
+        mode: 777
+        fstype: fuse.s3fs
+        options: allow_other,endpoint=eu-west-1,iam_role=auto,storage_class=standard_ia
+        source: mybucketname:/some/path
+
 2014-2016 - David Fischer
