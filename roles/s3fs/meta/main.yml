@@ -1,0 +1,9 @@
+---
+
+dependencies:
+  - role: github
+    tags: [s3fs, dependencies]
+    when: "'github' in s3fs_repository_url"
+
+  - role: local-source
+    tags: [s3fs, dependencies]

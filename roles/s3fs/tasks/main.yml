@@ -1,0 +1,59 @@
+# https://github.com/s3fs-fuse/s3fs-fuse
+---
+
+- block:
+    - name: Install s3fs build packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ s3fs_build_packages }}'
+
+    - name: Clone s3fs source code
+      git: >
+        repo={{ s3fs_repository_url }} dest={{ local_source_directory }}/s3fs force=yes
+        version={{ s3fs_version }}
+
+    - name: Set s3fs build environment
+      set_fact:
+        s3fs_build_env: >
+          {{ s3fs_build_cfg }}
+          {{ s3fs_version }}
+
+    - name: Detect if s3fs must be reinstalled
+      command: >
+        cat '{{ local_source_directory }}/s3fs.build.cfg'
+      changed_when: >
+        s3fs_build_env|trim != s3fs_build.stdout|default('')|trim
+      check_mode: no
+      failed_when: no
+      register: s3fs_build
+
+    - block:
+        - name: Bootstrap s3fs build process
+          command: >
+            ./autogen.sh
+          args:
+            chdir: '{{ local_source_directory }}/s3fs'
+
+        - name: Configure s3fs build process
+          command: >
+            ./configure {{ s3fs_build_cfg }}
+          args:
+            chdir: '{{ local_source_directory }}/s3fs'
+
+        - name: Build s3fs from source
+          make:
+            chdir: '{{ local_source_directory }}/s3fs'
+            params:
+              NUM_THREADS: '{{ ansible_processor_cores }}'
+
+        - name: Install s3fs from source
+          make:
+            chdir: '{{ local_source_directory }}/s3fs'
+            target: install
+
+        - name: Save build environment
+          copy: >
+            content={{ s3fs_build_env }} dest={{ local_source_directory }}/s3fs.build.cfg
+      when: s3fs_build|changed
+  become: yes
+  tags: [s3fs, packages]
