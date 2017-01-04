@@ -163,7 +163,7 @@ Variables::
 
     uwsgi_apps:
       application:
-        name: <my-application-name-here>
+        name: <my-django-application-name-here>
         config_file: app.xml.j2
         path: '{{ production_symlink }}'
         project: <my-django-project-name-here>
