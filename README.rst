@@ -44,4 +44,4 @@ Variables::
         options: allow_other,endpoint=eu-west-1,iam_role=auto,storage_class=standard_ia
         source: mybucketname:/some/path
 
-2014-2016 - David Fischer
+2014-2017 - David Fischer
