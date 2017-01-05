@@ -193,7 +193,7 @@ Variables::
         group: root
         mode: 777
         fstype: fuse.s3fs
-        options: _netdev,allow_other,endpoint=eu-west-1,iam_role=auto,storage_class=standard_ia
+        options: _netdev,allow_other,noatime,endpoint=eu-west-1,iam_role=auto,max_stat_cache_size=60000,storage_class=standard_ia,use_sse
         source: mybucketname:/some/path
 
 2014-2017 - David Fischer
