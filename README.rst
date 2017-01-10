@@ -1,20 +1,23 @@
-================
-Ansible Playbook
-================
+===============
+Ansible Library
+===============
 
-Set of Ansible roles for deploying various services.
+Library of Ansible plugins and roles for deploying various services.
 
-This playbook is covering multiple use-cases:
+This library is covering multiple use-cases:
 
-* Deploying a full Django web stack
+* Deploying a full Django stack
+* Deploying a full LAMP stack
+* Deploying an ELK stack (work in progress)
 * Deploying an Ampache server
-* Deploying the ELK stack (work in progress)
 * Deploying a GitLab server using Omnibus
-* Deploying an ownCloud server
-* Installing a computer under Debian/Ubuntu
+* Deploying an ownCloud server or client
+* Deploying a SeaFile server or client
+* Installing a {development, multimedia, ...} computer under Debian/Ubuntu
 * Tweaking an Ubuntu Phone (never install nfs-client!)
+* ...
 
-Most are generic enough to be usable as-is.
+The roles are generic enough to be usable as-is.
 
 --------
 Examples
