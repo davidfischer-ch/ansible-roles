@@ -1,6 +1,6 @@
     ssl on;
-    ssl_certificate     /etc/ssl/site-{{ item.value.name }}.crt;
-    ssl_certificate_key /etc/ssl/site-{{ item.value.name }}.key;
+    ssl_certificate     sites-ssl/{{ item.value.name }}.crt;
+    ssl_certificate_key sites-ssl/{{ item.value.name }}.key;
 
     # Disable SSLv3 since it's less secure than TLS
     # http://en.wikipedia.org/wiki/Secure_Sockets_Layer#SSL_3.0

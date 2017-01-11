@@ -156,6 +156,7 @@
         - { name: '/etc/nginx/sites-auth/' }
         - { name: '/etc/nginx/sites-dhparam/' }
         - { name: '/etc/nginx/sites-enabled/' }
+        - { name: '/etc/nginx/sites-ssl/' }
         - { name: '/var/lib/nginx/' }
         - { name: '/var/log/nginx/', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
 
@@ -232,6 +233,16 @@
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
       when: item.value.auth_file is defined
       with_dict: '{{ nginx_sites }}'
+
+    - name: Setup the Nginx sites certificates
+      copy: >
+        src={{ item.0.ssl_files_prefix }}.{{ item.1 }} dest=/etc/nginx/sites-ssl/{{ item.0.name }}.{{ item.1 }}
+        owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=444
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
+      when: item.0.ssl_files_prefix is defined
+      with_nested:
+        - '{{ nginx_sites.values() }}'
+        - [crt, key]
 
     - name: Setup the Nginx sites Diffie-Hellman parameters
       command: >
