@@ -7,6 +7,8 @@
         src={{ item.value.config_file }}
         dest=/etc/supervisor/conf.d/{{ item.value.name }}.conf
         mode=644
+      loop_control:
+        label: '{{ item.value.name }}'
       notify: restart celery
       with_dict: '{{ celery_services }}'
 
@@ -17,6 +19,8 @@
     - name: Install celery services
       supervisorctl: >
         name={{ item.value.name }} state=present
+      loop_control:
+        label: '{{ item.value.name }}'
       with_dict: '{{ celery_services }}'
   become: yes
   tags: [celery, config]
@@ -26,12 +30,16 @@
       supervisorctl: >
         name={{ item.value.name }} state=started
       ignore_errors: yes
+      loop_control:
+        label: '{{ item.value.name }}'
       register: _celery_start
       with_dict: '{{ celery_services }}'
 
     - name: Restart celery services
       shell: >
         supervisorctl restart {{ item.value.name }} &
+      loop_control:
+        label: '{{ item.value.name }}'
       tags: [services, update]
       when: _celery_start|failed
       with_dict: '{{ celery_services }}'
@@ -42,6 +50,8 @@
       changed_when: no
       check_mode: no
       failed_when: "'FATAL' in _celery_wait.stdout"
+      loop_control:
+        label: '{{ item.value.name }}'
       register: _celery_wait
       tags: [services, update]
       until: "'RUNNING' in _celery_wait.stdout"

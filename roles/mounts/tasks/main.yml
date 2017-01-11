@@ -15,6 +15,8 @@
         fstype={{ item.value.fstype }}
         opts={{ item.value.create_options|default(omit) }}
         resizefs={{ item.value.resize|default(false)|bool }}
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length > 0 and item.value.fstype != 'swap' and item.value.create|default(false)|bool
       with_dict: '{{ mounts }}'
 
@@ -25,6 +27,8 @@
         group={{ item.value.group|default(group) }}
         mode={{ item.value.mode|default(755) }}
         state=directory
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: "item.value.fstype != 'swap'"
       with_dict: '{{ mounts }}'
 
@@ -35,6 +39,8 @@
         opts='{{ item.value.options }}'
         src={{ item.value.source }}
         state={{ (item.value.fstype == 'swap')|ternary('present', 'mounted') }}
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length > 0
       with_dict: '{{ mounts }}'
 
@@ -45,12 +51,16 @@
         opts='{{ item.value.options }}'
         src={{ item.value.source }}
         state={{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length == 0
       with_dict: '{{ mounts }}'
 
     - name: Check root can write and chown
       file: >
         name={{ item.value.directory }}/{{ inventory_hostname }} owner={{ user }} group={{ group }} mode=755 state=directory
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.check|bool and item.value.fstype != 'swap'
       with_dict: '{{ mounts }}'
 
@@ -58,6 +68,8 @@
       file: >
         name={{ item.value.directory }}/{{ inventory_hostname }}/{{ user }} state=directory
       become: no
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.check|bool and item.value.fstype != 'swap'
       with_dict: '{{ mounts }}'
 
@@ -67,6 +79,8 @@
       changed_when: no
       check_mode: no
       failed_when: "'ready and waiting' not in _mounts_rpcinfo.stdout"
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       register: _mounts_rpcinfo
       run_once: yes
       when: item.value.check|bool and item.value.fstype == 'nfs'
@@ -75,6 +89,8 @@
     - name: Final cleanup
       file: >
         name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.check|bool and item.value.fstype != 'swap'
       with_dict: '{{ mounts }}'
   become: yes

@@ -30,6 +30,8 @@
     - name: Create machines metadata directories
       file: >
         name=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }} state=directory
+      loop_control:
+        label: '{{ item.key }}'
       with_dict: '{{ vagrant_machines }}'
 
     - name: Update machines IDs file
@@ -59,6 +61,8 @@
       args:
         chdir: /tmp
       changed_when: "'already running' not in _vagrant_up.stdout"
+      loop_control:
+        label: '{{ item.key }}'
       register: _vagrant_up
       with_dict: '{{ vagrant_machines }}'
   always:
@@ -66,6 +70,8 @@
     - name: Cleanup machines SSH authentication footprints
       known_hosts: >
         name={{ item.item.value.host_public }} state=absent
+      loop_control:
+        label: '{{ item.item.key }}'
       when: item|changed
       with_items: '{{ _vagrant_up.results|default([]) }}'
   tags: [vagrant, provision]
@@ -93,6 +99,8 @@
         chdir: /tmp
       changed_when: no
       check_mode: no
+      loop_control:
+        label: '{{ item.key }}'
       register: vagrant_snapshot_list
       with_dict: '{{ vagrant_snapshots }}'
 
@@ -101,6 +109,8 @@
         vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
       args:
         chdir: /tmp
+      loop_control:
+        label: '{{ item.item.key }} snapshot {{ item.item.value }}'
       when: "' {{ item.item.value }} ' not in item.stdout"
       with_items: '{{ vagrant_snapshot_list.results|default([]) }}'
   tags: [vagrant, snapshots]
