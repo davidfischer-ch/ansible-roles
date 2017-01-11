@@ -227,7 +227,7 @@
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
       with_dict: '{{ nginx_sites }}'
 
-    - name: Setup the Nginx site basic authentication
+    - name: Setup the Nginx sites basic authentication
       template: >
         src={{ item.value.auth_file }} dest=/etc/nginx/sites-auth/{{ item.value.name }}.conf mode=644
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
