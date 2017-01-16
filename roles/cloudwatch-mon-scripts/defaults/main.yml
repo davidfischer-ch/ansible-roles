@@ -1,0 +1,11 @@
+cloudwatch_mon_scripts_only_on_ec2: yes
+cloudwatch_mon_scripts_packages:
+  - libdatetime-perl
+  - libwww-perl
+  - unzip
+cloudwatch_mon_scripts_report_arguments:
+  - --mem-util
+  - --disk-space-util
+  - --disk-path=/
+cloudwatch_mon_scripts_report_enabled: yes
+cloudwatch_mon_scripts_version: 1.2.1
