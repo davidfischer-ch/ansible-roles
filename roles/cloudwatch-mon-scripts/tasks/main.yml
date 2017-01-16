@@ -36,4 +36,4 @@
       tags: config
   become: yes
   tags: cloudwatch-mon-scripts
-  when: ec2_dns_name is defined or not cloudwatch_mon_scripts_only_on_ec2|bool
+  when: ec2_dns_name is defined or ansible_ec2_hostname is defined or not cloudwatch_mon_scripts_only_on_ec2|bool
