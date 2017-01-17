@@ -32,28 +32,28 @@
       when: "item.value.fstype != 'swap'"
       with_dict: '{{ mounts }}'
 
-    - name: Mount the shared directories
+    - name: Unmount the target directories
       mount: >
         fstype={{ item.value.fstype }}
         name={{ item.value.directory }}
-        opts='{{ item.value.options }}'
+        opts={{ item.value.options }}
+        src={{ item.value.source }}
+        state={{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}
+      loop_control:
+        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
+      when: item.value.source|length == 0 or 'bind' in item.value.options.split(',')
+      with_dict: '{{ mounts }}'
+
+    - name: Mount the target directories
+      mount: >
+        fstype={{ item.value.fstype }}
+        name={{ item.value.directory }}
+        opts={{ item.value.options }}
         src={{ item.value.source }}
         state={{ (item.value.fstype == 'swap')|ternary('present', 'mounted') }}
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length > 0
-      with_dict: '{{ mounts }}'
-
-    - name: Unmount the shared directories
-      mount: >
-        fstype={{ item.value.fstype }}
-        name={{ item.value.directory }}
-        opts='{{ item.value.options }}'
-        src={{ item.value.source }}
-        state={{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}
-      loop_control:
-        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
-      when: item.value.source|length == 0
       with_dict: '{{ mounts }}'
 
     - name: Check root can write and chown
