@@ -2,25 +2,17 @@
 ---
 
 - block:
-    - block:
-        # FIXME use apt_key module
-        - name: Trust New Relic GPG key
-          shell: >
-            wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -
+    - name: Trust New Relic GPG key
+      apt_key: >
+        keyserver=https://download.newrelic.com file=548C16BF.gpg state=present
 
-        - name: Install New Relic apt repository
-          apt_repository: >
-            repo={{ newrelic_apt_repository }} filename=ansible_roles_newrelic update_cache=yes state=present
+    - name: Install New Relic apt repository
+      apt_repository: >
+        repo={{ newrelic_apt_repository }} filename=ansible_roles_newrelic update_cache=yes state=present
 
-        - name: Install New Relic System Monitor
-          package: >
-            name=newrelic-sysmond state=present
-      when: newrelic_license_key|length > 0
-
-    - name: Remove New Relic System Monitor
+    - name: Install New Relic System Monitor
       package: >
-        name=newrelic-sysmond state=absent
-      when: newrelic_license_key|length == 0
+        name=newrelic-sysmond state=present
   become: yes
   tags: [newrelic, packages]
 
@@ -29,18 +21,18 @@
     nrsysmond-config --set license_key={{ newrelic_license_key }}
   become: yes
   tags: [newrelic, config]
-  when: newrelic_license_key|length > 0
+  when: newrelic_install_sysmon_agent|bool
 
 - block:
     - name: Start New Relic System Monitor service
       service: >
         name=newrelic-sysmond state=started enabled=yes
-      when: newrelic_license_key|length > 0
+      when: newrelic_install_sysmon_agent|bool
 
     - name: Stop New Relic System Monitor service
       service: >
         name=newrelic-sysmond state=stopped enabled=no
       ignore_errors: yes
-      when: newrelic_license_key|length == 0
+      when: not newrelic_install_sysmon_agent|bool
   become: yes
   tags: [newrelic, services]
