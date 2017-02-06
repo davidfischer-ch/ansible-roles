@@ -1,0 +1,13 @@
+---
+
+- block:
+    - name: Create daemon group
+      group: >
+        name={{ daemon_group }} system=yes state=present
+
+    - name: Create daemon user
+      user: >
+        name={{ daemon_user }} group={{ daemon_group }} comment='{{ daemon_comment }}'
+        home={{ daemon_directory }} createhome=no shell=/bin/bash system=yes state=present
+  become: yes
+  tags: daemon
