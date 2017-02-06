@@ -6,6 +6,7 @@
     that:
       - nginx_daemon_mode in nginx_daemon_modes
       - nginx_sites is defined
+      - nginx_version is defined
   tags: [nginx, always]
 
 - block:
