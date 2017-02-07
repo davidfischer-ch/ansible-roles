@@ -12,7 +12,8 @@
 
     - name: Setup PostgreSQL users
       postgresql_user: >
-        name={{ item.value.user }} password={{ item.value.password }} role_attr_flags=SUPERUSER,CREATEDB state=present
+        name={{ item.value.user }} password={{ item.value.password }} state=present
+        role_attr_flags={{ item.value.role_flags|default(['SUPERUSER', 'CREATEDB'])|join(',') }}
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush_extra
