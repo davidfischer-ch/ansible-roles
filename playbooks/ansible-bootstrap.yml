@@ -1,0 +1,18 @@
+---
+
+- hosts:
+    - ansible-bootstrap
+  gather_facts: no
+  tasks:
+    - name: Generate locale
+      raw: >
+        locale-gen {{ locale }}
+      become: yes
+
+    - name: Install Python
+      raw: >
+         apt-get -y install python
+      become: yes
+
+    - ec2_facts:
+      tags: always
