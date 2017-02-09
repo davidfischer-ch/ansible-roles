@@ -1,0 +1,13 @@
+# rsync from master application node to others
+
+# Generated
+- *.log
+- *.pyc
+- *.socket
+- *.sqlite3
+- __pycache__
+
+# Version control
+- .git
+- .hg
+- .svn

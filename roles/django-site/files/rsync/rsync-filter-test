@@ -1,0 +1,23 @@
+# rsync from source to unit-test directory
+
+# Generated
+- *.log
+- *.pyc
+- *.socket
+- *.sqlite3
+- __pycache__
+
+# Garbage
+- ._*
+- *~
+- *.DS_Store
+- desktop.ini
+- Thumbs.db
+
+# Version control
+- .git
+- .hg
+- .svn
+
+- /bower
+- /media

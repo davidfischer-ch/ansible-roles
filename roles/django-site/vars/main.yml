@@ -1,0 +1,5 @@
+djsite_release_modes:
+  - direct
+  - normal
+djsite_role_actions:
+  - setup

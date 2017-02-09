@@ -1,0 +1,7 @@
+# Multi-step deployment of a Django project
+---
+
+- block:
+    - include: facts.yml
+    - include: '{{ djsite_role_action }}.yml'
+  tags: django-site

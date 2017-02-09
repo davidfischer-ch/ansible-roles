@@ -1,0 +1,322 @@
+---
+
+- name: Install Application packages
+  package: >
+    name={{ item }} state=present
+  with_items: '{{ djsite_packages }}'
+  become: yes
+  tags: packages
+
+- block:
+    - name: Create Application directories
+      file: >
+        name={{ item.name }} owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode={{ item.mode }}
+        state=directory
+      with_items:
+        - { name: '{{ djsite_app_directory }}',                                    mode: 770 }
+        - { name: '{{ djsite_app_directory }}/.ssh',                               mode: 700 }
+        - { name: '{{ djsite_app_directory }}/data',                               mode: 770 }
+        - { name: '{{ djsite_app_directory }}/source',                             mode: 775 }
+        - { name: '{{ djsite_app_directory }}/releases',                           mode: 775 }
+        - { name: '{{ djsite_app_directory }}/test/server/bower/bower_components', mode: 775 }
+        - { name: '{{ djsite_data_directory }}/media',                             mode: 770 }
+        - { name: '{{ djsite_log_directory }}',                                    mode: 770 }
+
+    - name: Create link to Application media directory
+      file: >
+        src={{ djsite_data_directory }}/media dest={{ djsite_app_directory }}/test/server/media force=yes state=link
+
+    - name: Install Application repository SSH key pair
+      copy: >
+        src={{ item.path }} dest={{ djsite_app_directory }}/.ssh/{{ item.name }}
+        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=0600
+      loop_control:
+        label: '{{ item.name }}'
+      when: "'://' in djsite_repository_url"
+      with_items:
+        - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub' }
+        - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa' }
+
+    - name: Register Application repository RSA key
+      known_hosts: >
+        name={{ djsite_repository_host }} key='{{ djsite_repository_key }}' state=present
+      become_user: '{{ djsite_daemon_user }}'
+  become: yes
+  tags: config
+
+- block:
+    - name: Clone Application source code
+      git: >
+        repo={{ djsite_repository_url }} dest={{ djsite_app_directory }}/source force=yes version={{ djsite_version }}
+      when: not djsite_repository_is_local|bool
+      # FIXME Temporary hack to fix issue with git module
+      delay: 1
+      register: _djsite_git
+      retries: 3
+      until: _djsite_git|success
+
+    - name: Copy Application source code
+      synchronize: >
+        src={{ djsite_repository_url }}/ dest={{ djsite_app_directory }}/source/
+        checksum=yes delete=yes links=yes recursive=yes times=yes
+      args:
+        rsync_opts:
+          - '--chown {{ djsite_daemon_user }}:{{ djsite_daemon_group }} -og'
+      when: djsite_repository_is_local|bool
+
+    - name: Set Application source code ownership
+      file: >
+        name={{ djsite_app_directory }}/source owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
+        recurse=yes state=directory
+      become_user: root
+
+    - include: read-config.yml
+
+    - name: Cleanup the unit-test area
+      command: >
+        find {{ djsite_app_directory }}/test/server/ -depth \( -type d -name '__pycache__' -o -type f -name '*.pyc' \)
+        -exec rm -rf {} \;
+      tags: [update, unit_test_extra]
+
+    - name: Deploy the rsync exclusion rules
+      copy: >
+        src=rsync/ dest={{ djsite_data_directory }}/rsync/ owner={{ djsite_daemon_user }}
+        group={{ djsite_daemon_group }} mode=644 directory_mode=755
+      become_user: root
+      tags: packages
+
+    - name: Deploy the Application in the unit-test area
+      command: >
+        rsync {{ djsite_app_directory }}/source/{{ djsite_config.source_path }}/ {{ djsite_app_directory }}/test/server/
+        --archive --checksum --delete --hard-links --links
+        --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-test
+        {% for t in djsite_config.configuration_templates %} --exclude {{ t }}{% endfor %}
+      tags: [update, unit_test_extra]
+
+    - block:
+        - name: Create virtualenv
+          command: >
+            virtualenv -p python{{ djsite_config.python_version }} --no-site-packages
+            {{ djsite_app_directory }}/test/venv
+          args:
+            creates: '{{ djsite_app_directory }}/test/venv'
+
+        - name: Install Application Python packages
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/pip install {{ item }}
+          with_items: '{{ djsite_python_packages }}'
+
+        - name: Find Application requirement files
+          find: >
+            paths={{ djsite_app_directory }}/test/server follow=yes recurse=yes use_regex=yes
+            patterns=requirements\.[a-z]+\.[a-z0-9]+
+          register: _djsite_requirements
+
+        - name: Install requirements into virtualenv
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/pip install --exists-action w -r {{ item.path }}
+          loop_control:
+            label: '{{ item.path }}'
+          when: "item.path.split('.')[-1] == 'pip' + djsite_config.python_version[0]"
+          with_items: '{{ _djsite_requirements.files }}'
+      tags: virtualenv
+
+    - include: configure.yml
+
+    - name: Trigger update hook
+      include: '{{ djsite_update_tasks_file }}'
+      when: djsite_update_tasks_file|length > 0
+
+    - block:
+        - name: Make database migrations
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/python manage.py makemigrations {{ djsite_config.custom_applications|join(' ') }}
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server'
+
+        - name: Generate graphs of the models
+          shell: >
+            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py graph_models | dot -Tpng -omigrations/models.png
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server/{{ item }}'
+          when: djsite_graph_models_enabled|bool
+          with_items: '{{ djsite_config.custom_applications }}'
+
+        - name: Copy the database migrations in the local machine
+          synchronize: >
+            src={{ djsite_app_directory }}/test/server/{{ item }}/migrations/
+            dest={{ djsite_repository_url }}/{{ djsite_config.source_path }}/{{ item }}/migrations/
+            archive=yes checksum=yes delete=yes mode=pull
+          with_items: '{{ djsite_config.custom_applications }}'
+      tags: database
+      when: djsite_repository_is_local|bool
+
+    - block:
+        - name: Configure bower in non-interactive mode
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py bower_install --traceback -- --config.interactive=false
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server/{{ djsite_application }}'
+          tags: config
+
+        - name: Download web (js) packages with bower
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py bower_install --traceback -F
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server/{{ djsite_application }}'
+          failed_when: "'error' in _djsite_install.stderr"
+          register: _djsite_install
+          tags: packages
+      when: djsite_bower_enabled|bool
+
+    - block:
+        - name: Ccompile the assets (SASS/SCSS)
+          django_manage: >
+            command=compilescss
+            app_path={{ djsite_app_directory }}/test/server
+            virtualenv={{ djsite_app_directory }}/test/venv
+          when: djsite_sass_enabled|bool
+
+        - name: Collect the static files
+          django_manage: >
+            command=collectstatic
+            app_path={{ djsite_app_directory }}/test/server
+            virtualenv={{ djsite_app_directory }}/test/venv
+
+        - name: Compress the assets (CSS/JS)
+          django_manage: >
+            command=compress
+            app_path={{ djsite_app_directory }}/test/server
+            virtualenv={{ djsite_app_directory }}/test/venv
+          when: djsite_compress_enabled|bool and djsite_compress_offline|bool
+
+        - name: Compile translations
+          django_manage: >
+            command=compilemessages
+            app_path={{ djsite_app_directory }}/test/server
+            virtualenv={{ djsite_app_directory }}/test/venv
+      tags: [unit_test_extra, update]
+
+    - name: Check the applications for common errors
+      command: >
+        {{ djsite_app_directory }}/test/venv/bin/python manage.py check {{ djsite_config.custom_applications|join(' ')}}
+      args:
+        chdir: '{{ djsite_app_directory }}/test/server'
+      tags: unit_test_extra
+
+    - block:
+        - name: Reset the unit-tests coverage report
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/coverage erase
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server'
+
+        - name: Unit-test the application
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/coverage run {{ djsite_coverage_options|join(' ') }}
+            manage.py test {{ djsite_config.custom_applications|join(' ') }} --failfast --no-input
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server'
+
+        - name: Generate the unit-tests coverage report
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/coverage html -d {{ djsite_app_directory }}/test/cover/
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server'
+
+        - name: Copy the unit-tests coverage report in the local machine
+          synchronize: >
+            src={{ djsite_app_directory }}/test/cover/
+            dest={{ djsite_repository_url }}/{{ djsite_config.source_path }}/cover/
+            archive=yes checksum=yes delete=yes mode=pull
+
+        - name: Retrieve unit-tests coverage
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/coverage report | tail -n 1 | sed -r 's:.*\s+([0-9]+)%:\1:'
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server'
+          register: _djsite_coverage
+
+        - debug: >
+            msg='Coverage {{ _djsite_coverage.stdout }}% (min {{ djsite_coverage_minimum }}%)'
+
+        - name: Ensure unit-tests coverage is sufficient
+          fail: >
+            msg='Unit-tests coverage of {{ _djsite_coverage.stdout }}% is under the minimum set at {{ djsite_coverage_minimum }}%'
+          when: _djsite_coverage.stdout|int < djsite_coverage_minimum|int
+      tags: unit_test
+
+    - name: Migrate the database
+      django_manage: >
+        command=migrate
+        app_path={{ djsite_app_directory }}/test/server
+        virtualenv={{ djsite_app_directory }}/test/venv
+      tags: [database, flush_extra]
+
+    - name: Create the super-user
+      shell: >
+        echo "from django.contrib.auth.models import User; User.objects.create_superuser('{{ djsite_superuser.name }}', '{{ djsite_superuser.email }}', '{{ djsite_superuser.password }}')" | {{ djsite_app_directory }}/test/venv/bin/python ./manage.py shell
+      args:
+        chdir: '{{ djsite_app_directory }}/test/server'
+      tags: [database, flush_extra]
+  become: yes
+  become_user: '{{ djsite_daemon_user }}'
+  tags: update
+  when: djsite_is_master|bool
+
+# Release
+
+- block:
+    - name: Deploy test directory to shared test directory
+      command: >
+        rsync {{ djsite_app_directory }}/test/ {{ djsite_data_directory }}/test/
+        --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-sync
+      when: djsite_is_master|bool and not djsite_standalone|bool
+
+    - name: Deploy test directory from shared test directory
+      command: >
+        rsync {{ djsite_data_directory }}/test/ {{ djsite_app_directory }}/test/
+        --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-sync
+      when: not djsite_is_master|bool and not djsite_standalone|bool
+
+    - block:
+        - name: Create release directory
+          file: >
+            name={{ djsite_release_directory }} owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
+            mode=755 state=directory
+          become_user: root
+
+        - name: Deploy the application in release directory
+          command: >
+            rsync {{ djsite_app_directory }}/test/{{ item }}/ {{ djsite_release_directory }}/{{ item }}/
+            --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-release
+          with_items:
+            - server
+            - venv
+
+        - name: Relocate the virtualenv
+          virtualenv_relocate: >
+            source={{ djsite_app_directory }}/test/venv destination={{ djsite_release_directory }}/venv operation=none
+      rescue:
+        - name: Remove broken release directory
+          file: >
+            name={{ djsite_release_directory }} state=absent
+          become_user: root
+
+        - fail: >
+            msg='Release process failed!'
+      become: yes
+      become_user: '{{ djsite_daemon_user }}'
+      when: djsite_release_mode == 'normal'
+
+    - name: Switch production symlink
+      file: >
+        src={{ djsite_release_directory }} dest={{ djsite_app_directory }}/production state=link
+      become: yes
+
+    - name: Remove oldest releases directories
+      cleanup_releases: >
+        directory={{ djsite_app_directory }}/releases keep={{ djsite_max_releases|int + 1 }} regexp=[0-9]{14}
+      become: yes
+      when: djsite_release_mode == 'normal'
+  tags: update

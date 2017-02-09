@@ -1,0 +1,18 @@
+---
+
+dependencies:
+  - role: is-master
+    is_master_variable: djsite_is_master
+    tags: [django-site, always]
+
+  - role: daemon
+    daemon_user: '{{ djsite_daemon_user }}'
+    daemon_group: '{{ djsite_daemon_group }}'
+    daemon_directory: '{{ djsite_app_directory }}'
+    tags: [django-site, dependencies]
+
+  - role: github
+    tags: [django-site, dependencies]
+
+  - role: python
+    tags: [django-site, dependencies]

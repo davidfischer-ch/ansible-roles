@@ -1,0 +1,36 @@
+# dependencies
+djsite_packages:
+  - gettext
+djsite_python_packages:
+  - coverage
+djsite_file_requirements: []
+
+# instance parameters
+djsite_daemon_group: '{{ djsite_daemon_user }}'
+djsite_daemon_user: '{{ djsite_instance_name }}'
+djsite_debug_enabled: yes
+djsite_app_directory: '/var/app/{{ djsite_instance_name }}'
+djsite_data_directory: '/data/{{ djsite_instance_name }}'
+djsite_log_directory: '/var/log/{{ djsite_instance_name }}'
+
+# cache, database, storage and web server
+
+djsite_redirect_ssl: no
+djsite_ssl_enabled: no
+
+# miscellaneous settings
+djsite_bower_enabled: no
+djsite_compress_enabled: no
+djsite_compress_offline: no
+djsite_coverage_minimum: 64
+djsite_coverage_options:
+  - --branch
+  - --include=*/*
+  - --omit=*/migrations/*,*/tests/*
+djsite_graph_models_enabled: no
+djsite_sass_enabled: no
+
+djsite_release_mode: normal
+
+# Hooks
+djsite_update_tasks_file: ''

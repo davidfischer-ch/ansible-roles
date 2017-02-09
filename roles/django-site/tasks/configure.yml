@@ -1,0 +1,18 @@
+---
+
+- block:
+    - name: Copy application configuration templates locally
+      fetch: >
+        src={{ djsite_app_directory }}/test/server/{{ djsite_project }}/{{ item }}.j2 dest=/tmp/
+      register: _djsite_config_templates
+      with_items: '{{ djsite_config.configuration_templates }}'
+
+    - name: Configure the application
+      template: >
+        src={{ item.dest }} dest={{ djsite_app_directory }}/test/server/{{ djsite_project }}/{{ item.item }}
+        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=640
+      loop_control:
+        label: '{{ item.item }}'
+      with_items: '{{ _djsite_config_templates.results }}'
+  become: yes
+  tags: [unit_test_extra, update]

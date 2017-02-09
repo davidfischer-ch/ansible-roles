@@ -1,0 +1,81 @@
+upstream uwsgi {
+    server unix:///run/uwsgi/app/{{ item.value.name }}/socket;
+}
+
+server {
+    # Security - http://nginx.org/en/docs/http/request_processing.html
+    listen {{ nginx_port|int }};
+    return 444;
+}
+
+{% if item.value.domain_old is defined %}
+server {
+    listen {{ item.value.with_ssl|bool|ternary(nginx_port_ssl, nginx_port)|int }};
+    server_name {{ item.value.domain_old }};
+    rewrite ^ $scheme://{{ item.value.domain }}$request_uri permanent;
+}
+{% endif %}
+
+{% if item.value.with_ssl|bool and item.value.redirect_ssl|bool %}
+server {
+    listen {{ nginx_port|int }};
+    server_name {{ item.value.domain }} 127.0.0.1;
+    rewrite ^ https://$http_host$request_uri? permanent;
+}
+{% endif %}
+
+server {
+    listen {{ item.value.with_ssl|bool|ternary(nginx_port_ssl, nginx_port)|int }} {{ item.value.with_http2|default(false)|bool|ternary('http2', '') }};
+    server_name {{ item.value.domain }} 127.0.0.1;
+
+    {% if item.value.with_ssl|bool %}
+    {% include 'templates/site.ssl.conf.j2' %}
+    {% endif %}
+
+    gzip off;  # Security - http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf
+    gzip_proxied any;
+    gzip_types application/javascript application/json text/css text/javascript text/xml;
+
+    client_max_body_size 0;
+    access_log /var/log/nginx/{{ item.value.name }}/access.log;
+    error_log /var/log/nginx/{{ item.value.name }}/error.log warn;
+
+    location /robots.txt {
+        alias {{ djsite_app_directory }}/production/server/robots.txt;
+    }
+
+    location /favicon/ {
+        alias {{ djsite_app_directory }}/production/server/favicons/;
+    }
+
+    location /static/ {
+        access_log  off;
+        autoindex   on;
+        {% if not item.value.debug|bool %}
+        expires     max;
+        {% endif %}
+        gzip        on;
+        sendfile    off;  # Avoid Nginx serving outdated static files
+        alias {{ djsite_app_directory }}/production/server/static/;
+    }
+
+    location /media/ {
+        access_log  off;
+        autoindex   on;
+        gzip        on;
+        sendfile    off;  # Avoid Nginx serving outdated static files
+        alias {{ djsite_app_directory }}/production/server/media/;
+    }
+
+    location / {
+        client_max_body_size 100k;
+        include uwsgi_params;
+        uwsgi_pass uwsgi;
+    }
+
+    location @uwsgi {
+        client_max_body_size 100k;
+        include uwsgi_params;
+        uwsgi_pass uwsgi;
+    }
+}
