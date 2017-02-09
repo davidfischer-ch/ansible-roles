@@ -229,6 +229,7 @@
             src={{ djsite_app_directory }}/test/cover/
             dest={{ djsite_repository_url }}/{{ djsite_config.source_path }}/cover/
             archive=yes checksum=yes delete=yes mode=pull
+          when: djsite_repository_is_local|bool
 
         - name: Retrieve unit-tests coverage
           command: >
