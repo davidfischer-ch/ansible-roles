@@ -6,13 +6,14 @@
   tasks:
     - name: Generate locale
       raw: >
-        locale-gen {{ locale }}
+        echo 'NOT_CHANGED' || locale-gen {{ locale }}
       become: yes
+      changed_when: "'NOT_CHANGED' not in _locale_gen.stdout"
+      register: _locale_gen
 
     - name: Install Python
       raw: >
-         apt-get -y install python
+         which python && echo 'NOT_CHANGED' || apt-get -y install python
       become: yes
-
-    - ec2_facts:
-      tags: always
+      changed_when: "'NOT_CHANGED' not in _python_install.stdout"
+      register: _python_install
