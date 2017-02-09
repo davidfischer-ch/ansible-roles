@@ -15,4 +15,4 @@
         label: '{{ item.item }}'
       with_items: '{{ _djsite_config_templates.results }}'
   become: yes
-  tags: [unit_test_extra, update]
+  tags: [unit-test-extra, update]

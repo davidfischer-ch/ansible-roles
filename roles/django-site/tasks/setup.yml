@@ -76,7 +76,7 @@
       command: >
         find {{ djsite_app_directory }}/test/server/ -depth \( -type d -name '__pycache__' -o -type f -name '*.pyc' \)
         -exec rm -rf {} \;
-      tags: [update, unit_test_extra]
+      tags: [update, unit-test-extra]
 
     - name: Deploy the rsync exclusion rules
       copy: >
@@ -91,7 +91,7 @@
         --archive --checksum --delete --hard-links --links
         --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-test
         {% for t in djsite_config.configuration_templates %} --exclude {{ t }}{% endfor %}
-      tags: [update, unit_test_extra]
+      tags: [update, unit-test-extra]
 
     - block:
         - name: Create virtualenv
@@ -195,14 +195,14 @@
             command=compilemessages
             app_path={{ djsite_app_directory }}/test/server
             virtualenv={{ djsite_app_directory }}/test/venv
-      tags: [unit_test_extra, update]
+      tags: [unit-test-extra, update]
 
     - name: Check the applications for common errors
       command: >
         {{ djsite_app_directory }}/test/venv/bin/python manage.py check {{ djsite_config.custom_applications|join(' ')}}
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
-      tags: unit_test_extra
+      tags: unit-test-extra
 
     - block:
         - name: Reset the unit-tests coverage report
@@ -244,21 +244,21 @@
           fail: >
             msg='Unit-tests coverage of {{ _djsite_coverage.stdout }}% is under the minimum set at {{ djsite_coverage_minimum }}%'
           when: _djsite_coverage.stdout|int < djsite_coverage_minimum|int
-      tags: unit_test
+      tags: unit-test
 
     - name: Migrate the database
       django_manage: >
         command=migrate
         app_path={{ djsite_app_directory }}/test/server
         virtualenv={{ djsite_app_directory }}/test/venv
-      tags: [database, flush_extra]
+      tags: [database, flush-extra]
 
     - name: Create the super-user
       shell: >
         echo "from django.contrib.auth.models import User; User.objects.create_superuser('{{ djsite_superuser.name }}', '{{ djsite_superuser.email }}', '{{ djsite_superuser.password }}')" | {{ djsite_app_directory }}/test/venv/bin/python ./manage.py shell
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
-      tags: [database, flush_extra]
+      tags: [database, flush-extra]
   become: yes
   become_user: '{{ djsite_daemon_user }}'
   tags: update
