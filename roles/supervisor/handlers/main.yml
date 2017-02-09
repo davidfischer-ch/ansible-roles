@@ -1,6 +1,11 @@
 ---
 
-- name: restart supervisor
+- name: reload systemd
   command: >
-    service supervisor restart
+    systemctl daemon-reload
+  become: yes
+
+- name: restart supervisor
+  service: >
+    name=supervisor state=restarted
   become: yes

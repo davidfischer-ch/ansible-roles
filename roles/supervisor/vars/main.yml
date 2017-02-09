@@ -1,0 +1,3 @@
+supervisor_daemon_modes:
+  - systemd
+  - systemv

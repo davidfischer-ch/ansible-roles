@@ -180,7 +180,9 @@
     - name: Configure Nginx service
       template: >
         src=nginx.service.j2 dest=/etc/systemd/system/nginx.service mode=755
-      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
+      notify:
+        - reload systemd
+        - '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
       when: "nginx_daemon_mode == 'systemd'"
 
     - name: Configure Nginx service
