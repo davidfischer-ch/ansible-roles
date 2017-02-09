@@ -70,7 +70,7 @@ custom_applications:
   - pages
   - publications
 python_version: '3.5'
-source_path: src
+source_path: src/myproject
 ```
 
 PlayBook
