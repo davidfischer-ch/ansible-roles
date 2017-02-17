@@ -13,11 +13,19 @@
   tags: [memcache, packages]
   with_items: '{{ memcache_packages }}'
 
-- name: Configure memcache
-  template: >
-    src={{ memcache_config_file }} dest=/etc/memcached.conf owner=root group=root mode=0644
-  become: yes
-  notify: restart memcache
+- block:
+    - name: Create memcache directories
+      file: >
+        name={{ item }} owner={{ memcache_daemon_user }} group={{ memcache_daemon_group }} mode=755 state=directory
+      with_items:
+        - '{{ memcache_log_file|dirname }}'
+        - '{{ memcache_pid_file|dirname }}'
+
+    - name: Configure memcache
+      template: >
+        src={{ memcache_config_file }} dest=/etc/memcached.conf owner=root group=root mode=0644
+      become: yes
+      notify: restart memcache
   tags: [memcache, config]
 
 - block:
