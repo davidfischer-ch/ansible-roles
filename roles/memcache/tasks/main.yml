@@ -37,9 +37,15 @@
 
     - name: Read memcache settings
       shell: >
-        echo 'stats settings' | nc {{ memcache_bind_addresses|first }} {{ memcache_port }}
+        echo 'stats settings' | nc {{ memcache_bind_addresses|first }} {{ memcache_port }} -w {{ memcache_read_timeout|int }}
       changed_when: no
       failed_when: _memcache_settings|failed or _memcache_settings.stderr|length > 0
       register: _memcache_settings
+
+    - name: Check memcache settings
+      assert:
+        that:
+          - "'STAT growth_factor {{ memcache_chunk_size_growth_factor|float }}' in _memcache_settings.stdout_lines"
+          - "'STAT chunk_size {{ memcache_key_value_flags_min_space|int }}' in _memcache_settings.stdout_lines"
   become: yes
   tags: [memcache, services]

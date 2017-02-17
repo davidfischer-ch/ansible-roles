@@ -7,6 +7,7 @@ memcache_daemon_group: memcache
 memcache_daemon_user: memcache
 memcache_pid_file: /var/run/memcached/memcached.pid
 memcache_log_file: /var/log/memcached/memcached.log
+memcache_read_timeout: 2
 # miscellaneous configuration
 memcache_backlog_queue_limit: 1024
 memcache_binding_protocol: auto
