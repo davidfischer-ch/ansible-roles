@@ -24,8 +24,8 @@
     - name: Configure memcache
       template: >
         src={{ memcache_config_file }} dest=/etc/memcached.conf owner=root group=root mode=0644
-      become: yes
       notify: restart memcache
+  become: yes
   tags: [memcache, config]
 
 - block:
