@@ -7,17 +7,18 @@
         repo={{ item }} update_cache=yes state=present
       with_items: '{{ extra_apt_repositories }}'
 
+    - name: Fix any previously running Debian packages upgrade
+      command: >
+        dpkg --configure -a
+      changed_when: _upgrade_fix.stdout|length > 0
+      register: _upgrade_fix
+
+    - name: Install Debian tools
+      apt: >
+        name={{ item }} state=present
+      with_items: '{{ debian_tools }}'
+
     - block:
-        - name: Fix any previously running Debian packages upgrade
-          command: >
-            dpkg --configure -a
-          changed_when: _upgrade_fix.stdout|length > 0
-          register: _upgrade_fix
-
-        - name: Install aptitude
-          apt: >
-            name=aptitude state=present
-
         - name: Upgrade the Debian packages
           apt: >
             upgrade=full update_cache=yes cache_valid_time={{ upgrade_packages_cache_valid_time }}
