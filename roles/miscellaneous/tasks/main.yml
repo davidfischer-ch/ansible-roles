@@ -32,7 +32,7 @@
           register: _upgrade_cleanup
       when: upgrade_packages|bool
   become: yes
-  tags: [miscellaneous, packages]
+  tags: [miscellaneous, packages, upgrade]
   when: "ansible_pkg_mgr == 'apt'"
 
 - name: Install extra packages
