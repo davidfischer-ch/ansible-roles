@@ -10,7 +10,7 @@
     - name: Fix any previously running Debian packages upgrade
       command: >
         dpkg --configure -a
-      changed_when: _upgrade_fix.stdout|length > 0
+      changed_when: _upgrade_fix.stdout|default('')|length > 0
       register: _upgrade_fix
 
     - name: Install Debian tools
