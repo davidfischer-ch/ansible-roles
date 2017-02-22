@@ -1,20 +1,12 @@
-==================
-Role ansible-tower
-==================
+# Role ansible-tower
 
-------
-Status
-------
+## Status
 
 Alpha
 
+## Example
 
--------
-Example
--------
-
-Inventory
-=========
+### Inventory
 
 hosts:
 
@@ -85,8 +77,7 @@ ansible_tower_instance_name: tower-test
 ansible_tower_version: 3.0.3
 ```
 
-PlayBook
-========
+### PlayBook
 
 ```
 ---
