@@ -68,7 +68,7 @@ host_vars/local-tower-server:
 ```
 ansible_host: 192.168.56.2
 
-python_versions: []
+python_versions: []  # FIXME python role seem to break tower-manage (strangely running with Python 3 = fail)
 
 ansible_tower_admin_password: ****
 ansible_tower_cache_password: ****
