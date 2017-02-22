@@ -34,8 +34,8 @@
         label: '{{ item.name }}'
       when: "'://' in djsite_repository_url"
       with_items:
+        - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa'     }
         - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub' }
-        - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa' }
 
     - name: Register Application repository RSA key
       known_hosts: >
