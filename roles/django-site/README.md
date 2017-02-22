@@ -1,10 +1,6 @@
-================
-Role django-site
-================
+# Role django-site
 
-------
-Status
-------
+## Status
 
 Alpha
 
@@ -13,12 +9,9 @@ Not (yet) implemented:
 * Role actions such as configure, local-backup, local-restore, manage, ...
 * Mounting the data directory. I think this roles should not take this responsibility. When deploying more than one web host, make sure your PlayBook mount the data directory prior to calling this role.
 
--------
-Example
--------
+## Example
 
-Code Repository
-===============
+### Code Repository
 
 Structure:
 
@@ -73,8 +66,7 @@ python_version: '3.5'
 source_path: src/myproject
 ```
 
-PlayBook
-========
+### PlayBook
 
 ```
 ---
