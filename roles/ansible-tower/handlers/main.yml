@@ -1,0 +1,6 @@
+---
+
+- name: restart ansible tower
+  command: >
+    ansible-tower-service restart
+  become: yes

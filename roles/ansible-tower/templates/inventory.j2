@@ -1,0 +1,17 @@
+[primary]
+localhost ansible_connection=local
+
+[secondary]
+
+[database]
+
+[all:vars]
+admin_password={{ ansible_tower_admin_password }}
+redis_password={{ ansible_tower_cache_password }}
+
+pg_host=''
+pg_port=''
+
+pg_database={{ ansible_tower_database_name }}
+pg_username={{ ansible_tower_database_user }}
+pg_password={{ ansible_tower_database_password }}

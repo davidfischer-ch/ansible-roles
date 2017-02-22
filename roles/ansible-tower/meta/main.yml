@@ -1,0 +1,13 @@
+---
+
+dependencies:
+  - role: local-source
+    tags: [ansible-tower, dependencies]
+
+  - role: python
+    tags: [ansible-tower, dependencies]
+
+  - role: ufw
+    ufw_rules: '{{ ansible_tower_ufw_rules }}'
+    tags: [ansible-tower, dependencies]
+    when: ansible_tower_ufw_rules

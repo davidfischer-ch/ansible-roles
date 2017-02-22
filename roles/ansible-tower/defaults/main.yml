@@ -1,0 +1,26 @@
+# instance
+ansible_tower_config_file: local_settings.json.j2
+ansible_tower_database_name: '{{ ansible_tower_instance_name }}'
+ansible_tower_database_user: '{{ ansible_tower_instance_name }}'
+ansible_tower_setup_inventory_file: inventory.j2
+# networking
+ansible_tower_interface: null
+ansible_tower_port: 80
+ansible_tower_port_socket: 8080
+ansible_tower_port_ssl: 443
+ansible_tower_ufw_rules:
+  - direction: in
+    interface: '{{ ansible_tower_interface or omit }}'
+    port: '{{ ansible_tower_port }}'
+    proto: tcp
+    rule: allow
+  - direction: in
+    interface: '{{ ansible_tower_interface or omit }}'
+    port: '{{ ansible_tower_port_socket }}'
+    proto: tcp
+    rule: allow
+  - direction: in
+    interface: '{{ ansible_tower_interface or omit }}'
+    port: '{{ ansible_tower_port_ssl }}'
+    proto: tcp
+    rule: allow
