@@ -22,7 +22,7 @@
 
     - name: Set pip default version
       file: >
-        src={{ python_pip_path }}{{ python_default_version[0] }} dest={{ python_pip_path }} force=yes state=link
+        src={{ python_pip_path }}{{ (python_default_version|string)[0] }} dest={{ python_pip_path }} force=yes state=link
 
     - name: Install setuptools
       pip: >
