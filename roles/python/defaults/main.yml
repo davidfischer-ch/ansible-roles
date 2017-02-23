@@ -1,4 +1,4 @@
-python_default_version: '2.7'
+python_default_version: '{{ python_versions|first }}'
 python_pip_path: /usr/local/bin/pip
 python_get_pip_options: ''
 python_packages:
