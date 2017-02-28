@@ -1,0 +1,2 @@
+mysql_client_packages:
+  - 'mysql-client-{{ mysql_version }}'

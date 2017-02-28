@@ -1,0 +1,13 @@
+---
+
+- block:
+    - name: Install MySQL python packages
+      package: >
+        name=python-mysqldb state=present
+
+    - name: Install MySQL client packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ mysql_client_packages }}'
+  become: yes
+  tags: [mysql-client, packages]
