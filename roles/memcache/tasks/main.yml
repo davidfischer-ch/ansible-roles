@@ -25,6 +25,17 @@
       template: >
         src={{ memcache_config_file }} dest=/etc/memcached.conf owner=root group=root mode=0644
       notify: restart memcache
+
+    - name: Detect memcache init script
+      stat: >
+        path=/etc/init.d/memcached
+      register: _memcache_init_file
+
+    - name: Configure path to memcache process ID file
+      lineinfile: >
+        dest=/etc/init.d/memcached
+        regexp='  PIDFILE="/var/run/.*\${NAME}.pid"' line='  PIDFILE="/var/run/${NAME}/${NAME}.pid"'
+      when: _memcache_init_file.stat.exists
   become: yes
   tags: [memcache, config]
 
