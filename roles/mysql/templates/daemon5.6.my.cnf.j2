@@ -78,17 +78,17 @@ query_cache_type  = {{ mysql_query_cache_types[mysql_query_cache_type] }}
 # Both location gets rotated by the cronjob.
 # Be aware that this log type is a performance killer.
 # As of 5.1 you can enable the log at runtime!
-general_log_file = {{ mysql_general_log_file }}
 general_log      = {{ mysql_general_log_enabled|bool|ternary(1, 0) }}
+general_log_file = {{ mysql_general_log_file }}
 #
 # Error log - should be very few entries.
 #
 log_error = {{ mysql_error_log_file }}
 #
 # Here you can see queries with especially long duration
-log_slow_queries = {{ mysql_slow_query_log_file }}
-slow_query_log   = {{ mysql_slow_query_log_enabled|bool|ternary(1, 0) }}
-long_query_time  = {{ mysql_slow_query_time|int }}
+slow_query_log      = {{ mysql_slow_query_log_enabled|bool|ternary(1, 0) }}
+slow_query_log_file = {{ mysql_slow_query_log_file }}
+long_query_time     = {{ mysql_slow_query_time|int }}
 {{ mysql_query_log_use_indexes|bool|ternary('', 'log-queries-not-using-indexes') }}
 #
 # The following can be used as easy to replay backup logs or for replication.
@@ -128,7 +128,7 @@ max_allowed_packet = {{ mysql_dump_packet_max_size }}
 {{ mysql_auto_rehash|bool|ternary('', 'no-auto-rehash') }}
 
 [isamchk]
-key_buffer_size = {{ mysql_isamchk_key_buffer_size }}
+key_buffer = {{ mysql_isamchk_key_buffer_size }}
 
 #
 # * IMPORTANT: Additional settings that can override those from this file!
