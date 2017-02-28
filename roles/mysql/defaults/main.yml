@@ -1,7 +1,8 @@
 # packages
 mysql_packages:
   - libapache2-mod-auth-mysql
-  - mysql-server
+  - 'mysql-server-{{ mysql_version }}'
+  - 'mysql-server-core-{{ mysql_version }}'
   - php5-mysql
   - python-mysqldb
 # miscellaneous configuration
