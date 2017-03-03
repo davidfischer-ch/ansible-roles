@@ -58,7 +58,10 @@
     - name: Retrieve ElasticSearch configuration
       uri: >
         url=http://{{ ansible_default_ipv4.address }}:{{ elasticsearch_port|int }} return_content=yes
+      check_mode: no
       register: _elasticsearch_check
+
+    - debug: var=_elasticsearch_check
 
     - name: Check ElasticSearch configuration
       assert:
