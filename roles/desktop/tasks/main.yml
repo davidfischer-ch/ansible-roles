@@ -3,15 +3,17 @@
 - block:
     - name: Enable Canonical partners repository (binaries)
       lineinfile: >
-        path=/etc/apt/sources.list state=present
+        dest=/etc/apt/sources.list
         regexp='.*deb http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
         line='deb http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
+        state=present
 
     - name: Enable Canonical partners repository (sources)
       lineinfile: >
-        path=/etc/apt/sources.list state=present
+        dest=/etc/apt/sources.list
         regexp='.*deb-src http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
         line='deb-src http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
+        state=present
   become: yes
   tags: [desktop, config]
 

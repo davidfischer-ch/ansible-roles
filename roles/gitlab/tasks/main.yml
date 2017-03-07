@@ -63,14 +63,14 @@
 - block:
     - name: Configure GitLab URL
       lineinfile: >
-        path=/etc/gitlab/gitlab.rb regexp='^external_url \S+' state=present
+        dest=/etc/gitlab/gitlab.rb regexp='^external_url \S+'
         line="external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
       notify: restart gitlab
       register: _gitlab_url
 
     - name: Configure GitLab port
       lineinfile: >
-        path=/etc/gitlab/gitlab.rb regexp="^#?\s*nginx\\['listen_port'\\]" state=present
+        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*nginx\\['listen_port'\\]"
         line="nginx['listen_port'] = {{ gitlab_port|int }}"
       notify: restart gitlab
       register: _gitlab_port
@@ -84,16 +84,14 @@
 
     - name: Configure GitLab data directory
       lineinfile: >
-        path=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+' state=present
-        line="git_data_dir '{{ gitlab_data_directory }}'"
+        dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+' line="git_data_dir '{{ gitlab_data_directory }}'"
       notify: restart gitlab
       register: _gitlab_data
 
     - name: Configure GitLab (settings)
       lineinfile: >
-        path=/etc/gitlab/gitlab.rb backup=yes state=present
-        regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
-        line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}"
+        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
+        line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}" backup=yes
       notify: restart gitlab
       register: _gitlab_setings
       with_items: gitlab_settings

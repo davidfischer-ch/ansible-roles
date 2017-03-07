@@ -14,11 +14,11 @@
 
     - name: Add GitHub public key to known_hosts file
       lineinfile: >
-        path={{ ansible_user_dir }}/.ssh/known_hosts regexp=^github.com create=yes state=present
-        line='github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}'
+        dest={{ ansible_user_dir }}/.ssh/known_hosts regexp=^github.com
+        line='github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}' create=yes
 
     - name: Add GitHub IP addresses to hosts file
       lineinfile: >
-        path=/etc/hosts regexp=' github.com$' line='{{ github_ips|sort|first }} github.com' create=yes state=present
+        dest=/etc/hosts regexp=' github.com$' line='{{ github_ips|sort|first }} github.com' create=yes
       become: yes
   tags: [github, config]
