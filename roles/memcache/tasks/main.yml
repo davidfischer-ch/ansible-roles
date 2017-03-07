@@ -33,7 +33,7 @@
 
     - name: Configure path to memcache process ID file
       lineinfile: >
-        dest=/etc/init.d/memcached
+        path=/etc/init.d/memcached state=present
         regexp='  PIDFILE="/var/run/.*\${NAME}.pid"' line='  PIDFILE="/var/run/${NAME}/${NAME}.pid"'
       when: _memcache_init_file.stat.exists
   become: yes

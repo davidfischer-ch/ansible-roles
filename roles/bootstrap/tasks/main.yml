@@ -22,8 +22,8 @@
 
         - name: Add user to password-less sudoers
           lineinfile: >
-            dest=/etc/sudoers regexp='^{{ user }} ' line='{{ user }} ALL=(ALL) NOPASSWD: ALL'
-            owner=root group=root mode=440 validate='visudo -cf %s'
+            path=/etc/sudoers regexp='^{{ user }} ' line='{{ user }} ALL=(ALL) NOPASSWD: ALL'
+            owner=root group=root mode=440 validate='visudo -cf %s' state=present
           when: not bootstrap_sudoers_directory.stat.exists|bool
       become: yes
       when: user != 'root'

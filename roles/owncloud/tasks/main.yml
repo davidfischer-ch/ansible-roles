@@ -42,7 +42,7 @@
 
     - name: Configure Apache 2 options
       lineinfile: >
-        dest=/etc/apache2/apache2.conf regexp=^HostnameLookups line='HostnameLookups On'
+        path=/etc/apache2/apache2.conf regexp=^HostnameLookups line='HostnameLookups On' state=present
 
     - name: Configure ownCloud
       template: >

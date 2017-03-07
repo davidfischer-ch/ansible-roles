@@ -73,7 +73,7 @@
 
     - name: Enable the memory/swap accounting
       lineinfile: >
-        dest=/etc/default/grub regexp='GRUB_CMDLINE_LINUX=' backup=yes state=present
+        path=/etc/default/grub regexp='GRUB_CMDLINE_LINUX=' backup=yes state=present
         line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 noprompt"'
       notify: update grub
 
