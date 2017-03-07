@@ -22,8 +22,24 @@
 - block:
     - name: Configure MySQL
       template: >
-        src={{ mysql_config_file }} dest=/etc/mysql/my.cnf owner=root group=root mode=0600
+        src={{ mysql_config_file }} dest=/etc/mysql/my.cnf owner=root group=root mode=600
       notify: restart mysql
+
+    - name: Configure socket for Debian
+      replace: >
+        dest=/etc/mysql/debian.cnf owner=root group=root mode=600
+        regexp='^socket\s+=\s+\S+' replace='socket = {{ mysql_socket_file }}'
+      when: ansible_os_family == 'Debian'
+
+    - name: Remove default MySQL configuration
+      file: >
+        path=/etc/mysql/{{ item }} state=absent
+      notify: restart mysql
+      with_items:
+        - conf.d/mysql.cnf
+        - conf.d/mysqldump.cnf
+        - mysql.conf.d/mysqld.cnf
+        - mysql.conf.d/mysqld_safe_syslog.cnf
 
     - name: Copy user my.cnf file with root credentials
       template: >
