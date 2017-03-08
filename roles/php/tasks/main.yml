@@ -37,7 +37,7 @@
         scripts/php_enable_module {{ php_version }} {{ item }}
       become: yes
       changed_when: _php_enable_module.stdout|default('')|length > 0
-      notify: php_modules_changed
+      notify: php_config_changed
       register: _php_enable_module
       with_items: '{{ php_modules }}'
 
@@ -45,6 +45,7 @@
       lineinfile: >
         dest={{ item.0 }} regexp='^;?{{ item.1 }} =' line='{{ item.1 }} = {{ item.2 }}' state=present
       become: yes
+      notify: php_config_changed
       with_nested:
         - '{{ php_config_files|default([]) }}'
         - '{{ php_options.items()|default([])|list }}'
