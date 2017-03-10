@@ -258,11 +258,11 @@
         openssl dhparam -out /etc/nginx/sites-dhparam/{{ item.value.name }}.pem 2048
       args:
         creates: /etc/nginx/sites-dhparam/{{ item.value.name }}.pem
-      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
-      when: item.value.with_dhparam|default(false)|bool
-      with_dict: '{{ nginx_sites }}'
       loop_control:
         label: '{{ item.value.name }}'
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
+      when: item.value.with_dhparam|default(true)|bool
+      with_dict: '{{ nginx_sites }}'
 
     - name: Create the Nginx sites logs directory
       file: >
