@@ -15,6 +15,7 @@ apache_ports_file: ports.conf.j2
 apache_request_timeout: 300
 # modules
 apache_modules:
+  - headers
   - macro
   - rewrite
   - ssl
