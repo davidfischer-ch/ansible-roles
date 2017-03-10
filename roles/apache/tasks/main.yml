@@ -26,6 +26,15 @@
     - set_fact:
         apache_version: '{{ _apache_version.stdout }}'
 
+    - name: Create Apache directories
+      file: >
+        name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
+        state=directory
+      with_items:
+        - { name: '/etc/apache2/sites-auth/'    }
+        - { name: '/etc/apache2/sites-dhparam/' }
+        - { name: '/etc/apache2/sites-ssl/'     }
+
     - name: Configure Apache
       template: >
         src={{ apache_config_file }} dest=/etc/apache2/apache2.conf mode=600
@@ -62,7 +71,47 @@
   tags: [apache, services]
 
 - block:
-    - name: Setup Apache sites
+    - name: Setup the Apache sites basic authentication
+      template: >
+        src={{ item.value.auth_file }} dest=/etc/apache2/sites-auth/{{ item.value.name }}.conf mode=644
+      loop_control:
+        label: '{{ item.value.name }}'
+      notify: reload apache
+      when: item.value.auth_file is defined and item.value.auth_file
+      with_dict: '{{ apache_sites }}'
+
+    - name: Setup the Apache sites certificates
+      copy: >
+        src={{ item.0.ssl_files_prefix }}.{{ item.1 }} dest=/etc/apache2/sites-ssl/{{ item.0.name }}.{{ item.1 }}
+        owner={{ apache_daemon_user }} group={{ apache_daemon_group }} mode=444
+      loop_control:
+        label: '{{ item.0.name }} {{ item.1 }}'
+      notify: reload apache
+      when: item.0.ssl_files_prefix is defined and item.0.ssl_files_prefix
+      with_nested:
+        - '{{ apache_sites.values() }}'
+        - [crt, key]
+
+    - name: Setup the Apache sites Diffie-Hellman parameters
+      command: >
+        openssl dhparam -out /etc/apache2/sites-dhparam/{{ item.value.name }}.pem 2048
+      args:
+        creates: /etc/apache2/sites-dhparam/{{ item.value.name }}.pem
+      loop_control:
+        label: '{{ item.value.name }}'
+      notify: reload apache
+      when: item.value.with_dhparam|default(true)|bool
+      with_dict: '{{ apache_sites }}'
+
+    - name: Create the Apache sites logs directory
+      file: >
+        name=/var/log/apache2/{{ item.value.name }} owner={{ apache_daemon_user }} group={{ apache_daemon_group }} mode=755
+        recurse=yes state=directory
+      loop_control:
+        label: '{{ item.value.name }}'
+      with_dict: '{{ apache_sites }}'
+
+    - name: Setup the Apache sites
       template: >
         src={{ item.value.config_file }} dest=/etc/apache2/sites-available/{{ item.value.name }}.conf mode=644
       loop_control:
@@ -70,7 +119,7 @@
       notify: reload apache
       with_dict: '{{ apache_sites }}'
 
-    - name: Enable Apache sites
+    - name: Enable the Apache sites
       file: >
         src=/etc/apache2/sites-available/{{ item.value.name }}.conf
         dest=/etc/apache2/sites-enabled/{{ item.value.name }}.conf state=link
