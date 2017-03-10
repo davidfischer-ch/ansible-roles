@@ -154,11 +154,11 @@
         name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
         state=directory
       with_items:
-        - { name: '/etc/nginx/sites-auth/' }
+        - { name: '/etc/nginx/sites-auth/'    }
         - { name: '/etc/nginx/sites-dhparam/' }
         - { name: '/etc/nginx/sites-enabled/' }
-        - { name: '/etc/nginx/sites-ssl/' }
-        - { name: '/var/lib/nginx/' }
+        - { name: '/etc/nginx/sites-ssl/'     }
+        - { name: '/var/lib/nginx/'           }
         - { name: '/var/log/nginx/', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
 
     - name: Remove default site
@@ -238,7 +238,7 @@
       loop_control:
         label: '{{ item.value.name }}'
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
-      when: item.value.auth_file is defined
+      when: item.value.auth_file is defined and item.value.auth_file
       with_dict: '{{ nginx_sites }}'
 
     - name: Setup the Nginx sites certificates
@@ -248,7 +248,7 @@
       loop_control:
         label: '{{ item.0.name }} {{ item.1 }}'
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
-      when: item.0.ssl_files_prefix is defined
+      when: item.0.ssl_files_prefix is defined and item.0.ssl_files_prefix
       with_nested:
         - '{{ nginx_sites.values() }}'
         - [crt, key]
