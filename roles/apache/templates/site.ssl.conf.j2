@@ -1,0 +1,30 @@
+    SSLEngine on
+    SSLCertificateFile    sites-ssl/{{ item.value.name }}.crt
+    SSLCertificateKeyFile sites-ssl/{{ item.value.name }}.key
+
+    # Disable SSLv3 since it's less secure than TLS
+    # http://en.wikipedia.org/wiki/Secure_Sockets_Layer#SSL_3.0
+    SSLProtocol All -SSLv2 -SSLv3
+
+    # Enable server-side protection from BEAST attacks
+    # http://blog.ivanristic.com/2013/09/is-beast-still-a-threat.html
+    SSLHonorCipherOrder on
+
+    # Ciphers chosen for forward secrecy and compatibility
+    # http://blog.ivanristic.com/2013/08/configuring-apache-nginx-and-openssl-for-forward-secrecy.html
+    SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4
+
+    {% if item.value.with_dhparam|default(true)|bool and apache_version|version_compare('2.4.8', '>=') %}
+    # Diffie-Hellman parameter for DHE cipher suites, recommended 2048 bits
+    SSLOpenSSLConfCmd DHParameters sites-dhparam/{{ item.value.name }}.pem
+    {% else %}
+    # WARNING: Your version of Apache {{ apache_version }} do not support specifying Diffie-Hellman parameters
+    # Please upgrade to at least Apache 2.4.8.
+    {% endif %}
+
+    {% if item.value.with_hsts|default(true)|bool %}
+    # Enable HSTS (HTTP Strict Transport Security)
+    # https://developer.mozilla.org/en-US/docs/Security/HTTP_Strict_Transport_Security
+    # to avoid ssl stripping https://en.wikipedia.org/wiki/SSL_stripping#SSL_stripping
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubdomains;"
+    {% endif %}
