@@ -16,16 +16,10 @@
 - include: pagespeed.yml
   when: apache_pagespeed_module_enabled|bool
 
+- include: get-version.yml
+  tags: [apache, always]
+
 - block:
-    - name: Detect Apache version
-      shell: apache2 -v | egrep -o 'Apache/[0-9]\.[0-9]\.[0-9]' | cut -d'/' -f2
-      changed_when: no
-      check_mode: no
-      register: _apache_version
-
-    - set_fact:
-        apache_version: '{{ _apache_version.stdout }}'
-
     - name: Create Apache directories
       file: >
         name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
