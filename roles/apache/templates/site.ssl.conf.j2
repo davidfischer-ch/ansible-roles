@@ -1,7 +1,9 @@
     SSLEngine on
     SSLCertificateFile      sites-ssl/{{ item.value.name }}.crt
     SSLCertificateKeyFile   sites-ssl/{{ item.value.name }}.key
-    SSLCertificateChainFile sites-ssl/{{ item.value.name }}.chain
+    {% if apache_version|version_compare('2.4.8', '<') %}
+    SSLCertificateChainFile sites-ssl/{{ item.value.name }}.crt
+    {% endif %}
 
     # Disable SSLv3 since it's less secure than TLS
     # http://en.wikipedia.org/wiki/Secure_Sockets_Layer#SSL_3.0
