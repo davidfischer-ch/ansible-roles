@@ -84,7 +84,7 @@
       when: item.0.ssl_files_prefix is defined and item.0.ssl_files_prefix
       with_nested:
         - '{{ apache_sites.values() }}'
-        - [crt, key]
+        - [chain, crt, key]
 
     - name: Setup the Apache sites Diffie-Hellman parameters
       command: >

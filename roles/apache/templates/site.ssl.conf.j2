@@ -1,6 +1,7 @@
     SSLEngine on
-    SSLCertificateFile    sites-ssl/{{ item.value.name }}.crt
-    SSLCertificateKeyFile sites-ssl/{{ item.value.name }}.key
+    SSLCertificateFile      sites-ssl/{{ item.value.name }}.crt
+    SSLCertificateKeyFile   sites-ssl/{{ item.value.name }}.key
+    SSLCertificateChainFile sites-ssl/{{ item.value.name }}.chain
 
     # Disable SSLv3 since it's less secure than TLS
     # http://en.wikipedia.org/wiki/Secure_Sockets_Layer#SSL_3.0
