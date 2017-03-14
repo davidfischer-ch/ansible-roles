@@ -7,7 +7,7 @@ from ansible.module_utils.basic import AnsibleModule
 
 DOCUMENTATION = r"""
 ---
-module: drupal_var_replace
+module: drupal_vars_replace
 author: "David Fischer (@davidfischer-ch)"
 short_description: Update Drupal variables replacing a pattern by a value. Recurse into (dict, list) data structures.
 options:
@@ -22,7 +22,7 @@ options:
 """
 
 EXAMPLES = r"""
-- drupal_var_replace: path=/var/www/my-site pattern=my-old-domain.com value=my-new-domain.com
+- drupal_vars_replace: path=/var/www/my-site pattern=my-old-domain.com value=my-new-domain.com
 """
 
 
