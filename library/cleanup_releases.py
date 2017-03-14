@@ -82,13 +82,11 @@ def main():
     if keep is not None:
         remove_releases.update(sorted(releases, reverse=True)[keep:])
     remove_releases = sorted(remove_releases, reverse=True)  # For cosmetic reasons
-    before = [{'path': r, 'state': get_state(r)} for r in remove_releases]
+    diff = [{'after': 'absent', 'after_header': r, 'before': get_state(r), 'before_header': r} for r in remove_releases]
     if not module.check_mode:
         for release in remove_releases:
             shutil.rmtree(release)
-    module.exit_json(changed=bool(remove_releases), diff={
-        'after': [{'path': r, 'state': 'absent'} for r in remove_releases], 'before': before
-    })
+    module.exit_json(changed=bool(remove_releases), diff=diff)
 
 if __name__ == '__main__':
     main()
