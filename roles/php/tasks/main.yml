@@ -23,19 +23,30 @@
           - '/etc/php/{{ php_version }}'
         patterns: php.ini
         recurse: yes
-      register: _php_find
+      register: _php_config_files
+
+    - name: Find PHP extra configuration directories
+      find:
+        file_type: directory
+        paths:
+          - '/etc/php{{ php_version }}'
+          - '/etc/php/{{ php_version }}'
+        patterns: conf.d
+        recurse: yes
+      register: _php_extra_config_directories
 
     - set_fact:
-        php_config_files: "{{ _php_find.files|map(attribute='path')|list }}"
+        php_config_files: "{{ _php_config_files.files|map(attribute='path')|list }}"
+        php_extra_config_directories: "{{ _php_extra_config_directories.files|map(attribute='path')|list }}"
 
     - assert:
         that:
-          php_config_files|length > 0
+          - php_config_files|length > 0
+          - php_extra_config_directories|length > 0
 
     - name: Enable PHP modules
       script: >
         scripts/php_enable_module {{ php_version }} {{ item }}
-      become: yes
       changed_when: _php_enable_module.stdout|default('')|length > 0
       notify: php_config_changed
       register: _php_enable_module
@@ -44,9 +55,15 @@
     - name: Configure PHP
       lineinfile: >
         dest={{ item.0 }} regexp='^;?{{ item.1 }} =' line='{{ item.1 }} = {{ item.2 }}' state=present
-      become: yes
       notify: php_config_changed
       with_nested:
         - '{{ php_config_files|default([]) }}'
         - '{{ php_options.items()|default([])|list }}'
+
+    - name: Configure suhosin to whitelist phar
+      copy: >
+        content='suhosin.executor.include.whitelist = phar' dest={{ item }}/suhosin.ini
+      notify: php_config_changed
+      with_items: '{{ php_extra_config_directories }}'
+  become: yes
   tags: [php, config]
