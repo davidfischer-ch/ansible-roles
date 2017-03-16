@@ -30,9 +30,8 @@ EXAMPLES = r"""
 
 
 def get_drupal_variables(drush, directory):
-    return json.loads(subprocess.check_output(
-        [drush, '-r', directory, 'vget', '--format=json'], env=get_drush_environment()
-    ).decode('utf-8'))
+    return json.loads(subprocess.check_output([drush, 'vget', '--format=json'], cwd=directory,
+                      env=get_drush_environment()).decode('utf-8'))
 
 
 def get_drush_environment():
@@ -66,9 +65,8 @@ def replace_drupal_variables(drush, directory, pattern, string, simulate=False):
 
 
 def set_drupal_variable(drush, directory, name, value):
-    process = subprocess.Popen([drush, '-r', directory, 'vset', '--format=json', name, json.dumps(value)],
-                               cwd=directory, env=get_drush_environment(),
-                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen([drush, 'vset', '--format=json', name, json.dumps(value)], cwd=directory,
+                               env=get_drush_environment(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (stdout, stderr), returncode = process.communicate(), process.poll()
     if returncode:
         raise ValueError(name, value, stdout, stderr)
@@ -77,7 +75,7 @@ def set_drupal_variable(drush, directory, name, value):
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            drush=dict(required=False, type='path'),
+            drush=dict(required=False, type='path', default='vendor/bin/drush'),
             path=dict(required=True, type='path'),
             pattern=dict(required=True),
             value=dict(required=True)
