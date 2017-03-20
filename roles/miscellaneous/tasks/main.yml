@@ -18,6 +18,12 @@
         name={{ item }} state=present
       with_items: '{{ debian_tools }}'
 
+    - name: Install Debian SNI tools for Python<2.7.9
+      apt: >
+        name={{ item }} state=present
+      when: ansible_python_version|version_compare('2.7.9', '<')
+      with_items: '{{ debian_sni_tools }}'
+
     - block:
         - name: Upgrade the Debian packages
           apt: >
