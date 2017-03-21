@@ -1,0 +1,28 @@
+jenkins_apt_key_url: https://pkg.jenkins.io/debian/jenkins-ci.org.key
+jenkins_apt_repository: "deb http://pkg.jenkins.io/debian{{ '-stable' if jenkins_from_lts|bool else '' }} binary/"
+jenkins_force_updates: no  # Set to yes to force downloading plug-ins data
+jenkins_updates_url: https://updates.jenkins-ci.org
+jenkins_from_lts: yes
+jenkins_packages:
+  - jenkins
+# service
+jenkins_daemon_group: '{{ jenkins_daemon_user }}'
+jenkins_daemon_user: jenkins
+jenkins_java_options: ''
+jenkins_start_delay: 2
+jenkins_start_timeout: 2
+jenkins_start_retries: 60
+jenkins_cli_delay: 2
+jenkins_cli_retries: 6
+# miscellaneous
+jenkins_cli_path: /opt/jenkins-cli.jar
+# networking
+jenkins_bind_address: 127.0.0.1
+jenkins_interface: null
+jenkins_port: 8080
+jenkins_ufw_rules:
+  - direction: in
+    interface: '{{ jenkins_interface or omit }}'
+    port: '{{ jenkins_port }}'
+    proto: tcp
+    rule: allow

@@ -1,0 +1,110 @@
+# https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
+---
+
+- assert:
+    that:
+      - jenkins_plugins is defined
+      - jenkins_daemon_user == 'jenkins' and jenkins_daemon_group == 'jenkins'  # Limitation of current implementation
+  tags: [jenkins, always]
+
+- block:
+    - block:
+        - name: Register Jenkins apt key
+          apt_key: >
+            url={{ jenkins_apt_key_url }} state=present
+
+        - name: Register Jenkins apt repository
+          apt_repository: >
+            repo={{ jenkins_apt_repository }} filename=ansible_roles_jenkins update_cache=yes state=present
+      when: "ansible_pkg_mgr == 'apt'"
+
+    - name: Install Jenkins packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ jenkins_packages }}'
+  become: yes
+  tags: [jenkins, packages]
+
+- block:
+    - name: Create Jenkins directories
+      file: >
+        name={{ jenkins_directory }}/{{ item }} state=directory
+        owner={{ jenkins_daemon_user }} group={{ jenkins_daemon_group }} mode=755
+      with_items:
+        - updates
+
+    - name: Configure Jenkins
+      lineinfile: >
+        dest=/etc/default/jenkins regexp='{{ item.name }}\s*=' line='{{ item.name }}={{ item.value }}'
+      notify: restart jenkins
+      with_items:
+        - { name: HTTP_HOST, value: '{{ jenkins_bind_address }}'                                        }
+        - { name: HTTP_PORT, value: '{{ jenkins_port|int }}'                                            }
+        - { name: JAVA_ARGS, value: '{{ jenkins_java_options }}' }  # -Djenkins.install.runSetupWizard=false
+
+    # Multiple options:
+    # 1. Generate users/<name>/user.xml
+    # 2. Use Groovy script
+    - name: FIXME Configure Jenkins users
+      pause: seconds=1
+
+  become: yes
+  tags: [jenkins, config]
+
+- block:
+    - meta: flush_handlers
+
+    - name: Start Jenkins service
+      service: >
+        name=jenkins state=started enabled=yes
+
+    - include: get-initial-admin-password.yml
+
+    - name: Wait for Jenkins to start up
+      uri: >
+        url=http://localhost:{{ jenkins_port|int }} timeout={{ jenkins_start_timeout|int }}
+        force_basic_auth=yes user=admin password={{ jenkins_initial_admin_password }}
+      delay: '{{ jenkins_start_delay|int }}'
+      register: _jenkins_service_status
+      retries: '{{ jenkins_start_retries|int }}'
+      until: _jenkins_service_status.status|default(0) == 200
+  become: yes
+  tags: [jenkins, services]
+
+- name: Retrieve Jenkins CLI
+  get_url: >
+    url=http://localhost:{{ jenkins_port|int }}/jnlpJars/jenkins-cli.jar dest={{ jenkins_cli_path }}
+    url_username=admin url_password={{ jenkins_initial_admin_password }}
+  become: yes
+  tags: [jenkins, packages]
+
+- block:
+    # See https://gist.github.com/rowan-m/1026918
+
+    - name: Download Jenkins plugins data
+      get_url: >
+        url={{ jenkins_updates_url }}/update-center.json dest={{ jenkins_directory }}/updates/default.js
+        force={{ jenkins_force_updates|bool }} validate_certs={{ ansible_python_version|version_compare('2.7.9', '>=') }}
+
+    - name: Remove first and last JS line wrappers
+      shell: >
+        sed '1d;$d' default.js > default.json
+      args:
+        chdir: '{{ jenkins_directory }}/updates'
+
+    - name: Install Jenkins plugins
+      command: >
+        java -jar {{ jenkins_cli_path }} -s http://localhost:{{ jenkins_port|int }}
+          install-plugin --username admin --password-file {{ jenkins_directory }}/secrets/initialAdminPassword {{ item.name }}
+      args:
+        creates: '{{ jenkins_directory }}/plugins/{{ item.name }}.jpi'
+      delay: '{{ jenkins_cli_delay|int }}'
+      loop_control:
+        label: '{{ item.name }}'
+      notify: restart jenkins
+      register: _jenkins_install_plugin
+      retries: '{{ jenkins_cli_retries|int }}'
+      until: _jenkins_install_plugin|success
+      with_items: '{{ jenkins_plugins }}'
+  become: yes
+  tags: [jenkins, plugins]

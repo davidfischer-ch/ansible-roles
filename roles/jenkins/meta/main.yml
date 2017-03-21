@@ -1,0 +1,10 @@
+---
+
+dependencies:
+  - role: java
+    tags: [jenkins, dependencies]
+
+  - role: ufw
+    ufw_rules: '{{ jenkins_ufw_rules }}'
+    tags: [jenkins, dependencies]
+    when: jenkins_ufw_rules
