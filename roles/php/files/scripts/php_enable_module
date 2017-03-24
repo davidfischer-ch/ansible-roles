@@ -7,23 +7,63 @@ Enable a PHP module
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import itertools, os, subprocess, sys
+import argparse, itertools, os, subprocess, sys
 
-from pytoolbox import argparse
-from pytoolbox.filesystem import find_recursive
+string_type = basestring if sys.version_info[0] == 2 else str
+
+
+def find_recursive(directory, patterns, unix_wildcards=True, **kwargs):
+    """
+    Copied from https://github.com/davidfischer-ch/pytoolbox/blob/master/pytoolbox/filesystem.py#L34
+
+    Yield filenames matching any of the patterns. Patterns will be compiled to regular expressions, if necessary.
+    If `unix_wildcards` is set to True, then any string pattern will be converted from the unix-style wildcard to the
+    regular expression equivalent using :func:`fnatmch.translate`.
+    **Example usage**
+    >>> print(next(find_recursive('/etc', 'interfaces')))
+    /etc/network/interfaces
+    >>> filenames = list(find_recursive('/etc/network', ['interfaces', 'inter*aces', '*.jpg']))
+    >>> filenames.count('/etc/network/interfaces')
+    1
+    >>> a = set(find_recursive('/etc/network', re.compile('inter?aces')))
+    >>> b = set(find_recursive('/etc/network', ['inter?aces'], unix_wildcards=False))
+    >>> a == b
+    True
+    """
+    import fnmatch, re
+    if isinstance(patterns, string_type) or hasattr(patterns, 'match'):
+        patterns = [patterns]
+    patterns = [
+        p if hasattr(p, 'match') else re.compile(fnmatch.translate(p) if unix_wildcards else p) for p in patterns
+    ]
+    for dirpath, dirnames, filenames in os.walk(directory, **kwargs):
+        for filename in filenames:
+            if any(p.match(filename) for p in patterns):
+                yield os.path.join(dirpath, filename)
 
 
 def main():
     if os.getuid() != 0:
         raise NotImplementedError('You must run this script as root!')
 
-    parser = argparse.HelpArgumentParser(epilog=__doc__)
+    parser = argparse.ArgumentParser()
     parser.add_argument('php_version')
     parser.add_argument('module')
     args = parser.parse_args()
 
     files_before = set(get_php_configuration_files(args.php_version))
-    subprocess.check_call(['php{0.php_version}enmod'.format(args), args.module])
+    binary_names = ['php{0.php_version}enmod'.format(args), 'phpenmod']
+    binary_name = None
+    for name in binary_names:
+        try:
+            subprocess.check_output(['which', name])
+            binary_name = name
+            break
+        except subprocess.CalledProcessError:
+            pass
+    if not binary_name:
+        raise IOError('Unable to find required PHP utility, tried {0}.'.format(binary_names))
+    subprocess.check_call([binary_name, args.module])
     files_after = set(get_php_configuration_files(args.php_version))
     sys.stdout.write('' if files_after == files_before else 'changed')
 
