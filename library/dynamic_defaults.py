@@ -3,7 +3,13 @@
 
 import re
 
-from ansible.module_utils.basic import AnsibleModule, get_platform, get_distribution, get_distribution_version
+from ansible.module_utils.basic import AnsibleModule
+
+LOOKUP_KEYS = [
+    '{ansible_distribution}-{ansible_distribution_version}',
+    '{ansible_distribution}',
+    '{ansible_system}'
+]
 
 DOCUMENTATION = r"""
 ---
@@ -11,7 +17,7 @@ module: dynamic_defaults
 author: "David Fischer (@davidfischer-ch)"
 short_description: Set variables based on operating system.
 description:
-  - Set variables to defaults using the lookup keys in lower-case: {platform}, {distribution}, {distribution}-{version}.
+  - Set variables to defaults using the lookup keys in lower-case and with / replaced by -.
 options:
   hostvars:
     required: true
@@ -22,12 +28,17 @@ options:
     required: true
     description:
       - A dictionary with defaults values.
+  lookup_keys:
+    required: false
+    default: %s
+    description:
+      - Keys used to retrieve defaults, order matters.
   must_match:
     required: false
     default: false
     description:
       - Force that at least of the lookup keys is matched.
-"""
+""" % (LOOKUP_KEYS, )
 
 EXAMPLES = r"""
 - dynamic_defaults:
@@ -52,15 +63,15 @@ def main():
     module = AnsibleModule(argument_spec=dict(
             hostvars=dict(required=True, type='dict'),
             defaults=dict(required=True, type='dict'),
+            lookup_keys=dict(required=False, default=LOOKUP_KEYS, type='list'),
             must_match=dict(required=False, default=False, type='bool')
         ),
         supports_check_mode=True
     )
-    hostvars, defaults, must_match = (module.params[k] for k in ('hostvars', 'defaults', 'must_match'))
-    distribution = get_distribution()
-    lookup_keys = tuple(k.replace('/', '-').lower() for k in (
-        '-'.join([distribution, get_distribution_version()]), distribution, get_platform()
-    ))
+    hostvars, defaults, lookup_keys, must_match = (
+        module.params[k] for k in ('hostvars', 'defaults', 'lookup_keys', 'must_match')
+    )
+    lookup_keys = tuple(k.format(**hostvars).replace('/', '-').lower() for k in lookup_keys)
     facts, match = {}, False
     for lookup_key in lookup_keys:
         for key, variables in defaults.items():
