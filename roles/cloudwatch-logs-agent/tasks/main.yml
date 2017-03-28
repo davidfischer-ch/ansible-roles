@@ -1,0 +1,35 @@
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html
+---
+
+- block:
+    - name: Download CloudWatch logs agent setup script
+      get_url: >
+        url=https://s3.amazonaws.com/aws-cloudwatch/downloads/{{ cloudwatch_logs_agent_version }}/awslogs-agent-setup.py force=no
+        dest={{ local_source_directory }}/awslogs-agent-setup-{{ cloudwatch_logs_agent_version }}.py mode=775
+      tags: packages
+
+    - block:
+        - name: Create CloudWatch logs agent directories
+          file: >
+            name={{ item }} mode=755 state=directory
+          with_items:
+            - /etc/awslogs
+
+        - name: Configure CloudWatch logs agent
+          template: >
+            src={{ cloudwatch_logs_agent_config_file }} dest=/etc/awslogs/awslogs.conf mode=644
+          notify: restart cloudwatch logs agent
+
+        - name: Execute CloudWatch logs agent setup script
+          command: >
+            {{ local_source_directory }}/awslogs-agent-setup-{{ cloudwatch_logs_agent_version }}.py
+            --non-interactive --region={{ ec2_region }} --configfile=/etc/awslogs/awslogs.conf
+      tags: config
+
+    - name: Start CloudWatch logs agent service
+      service: >
+        name=awslogs state=started enabled=yes
+      tags: services
+  become: yes
+  tags: cloudwatch-logs-agent
+  when: ec2_dns_name is defined or ansible_ec2_hostname is defined or not cloudwatch_logs_agent_only_on_ec2|bool

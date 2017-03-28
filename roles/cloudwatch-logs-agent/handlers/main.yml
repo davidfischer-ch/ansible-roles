@@ -1,0 +1,6 @@
+---
+
+- name: restart cloudwatch logs agent
+  service: >
+    name=awslogs state=restarted
+  become: yes
