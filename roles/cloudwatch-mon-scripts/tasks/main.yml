@@ -2,37 +2,36 @@
 ---
 
 - block:
-    - name: Install CloudWatch monitoring scripts packages
-      package: >
-        name={{ item }} state=present
+    - block:
+        - name: Install CloudWatch monitoring scripts packages
+          package: >
+            name={{ item }} state=present
+          with_items: '{{ cloudwatch_mon_scripts_packages }}'
+
+        - name: Download CloudWatch monitoring scripts package
+          get_url: >
+            url=http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip force=no
+            dest={{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
+
+        - name: Extract CloudWatch monitoring scripts package
+          unarchive: >
+            src={{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
+            dest={{ local_source_directory }} copy=no
       tags: packages
-      with_items: '{{ cloudwatch_mon_scripts_packages }}'
 
-    - name: Download CloudWatch monitoring scripts package
-      get_url: >
-        url=http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip force=no
-        dest={{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
-      tags: packages
+    - block:
+        - name: Check periodic memory metrics report
+          command: >
+            {{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --verify {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}
+          changed_when: no
+          failed_when: _cloudwatch_mon_scripts_check|failed or 'successfully' not in _cloudwatch_mon_scripts_check.stdout
+          register: _cloudwatch_mon_scripts_check
 
-    - name: Extract CloudWatch monitoring scripts package
-      unarchive: >
-        src={{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
-        dest={{ local_source_directory }} copy=no
-      tags: packages
-
-    - name: Check periodic memory metrics report
-      command: >
-        {{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --verify {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}
-      changed_when: no
-      failed_when: _cloudwatch_mon_scripts_check|failed or 'successfully' not in _cloudwatch_mon_scripts_check.stdout
-      register: _cloudwatch_mon_scripts_check
-      tags: config
-
-    - name: Setup periodic memory metrics report
-      cron: >
-        name='Report memory metrics to CloudWatch' minute=*/5
-        state="{{ cloudwatch_mon_scripts_report_enabled|bool|ternary('present', 'absent') }}"
-        job='{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}'
+        - name: Setup periodic memory metrics report
+          cron: >
+            name='Report memory metrics to CloudWatch' minute=*/5
+            state="{{ cloudwatch_mon_scripts_report_enabled|bool|ternary('present', 'absent') }}"
+            job='{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}'
       tags: config
   become: yes
   tags: cloudwatch-mon-scripts
