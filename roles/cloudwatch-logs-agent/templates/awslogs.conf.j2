@@ -126,6 +126,6 @@ datetime_format = {{ log.datetime_format }}
 {% endif %}
 encoding = {{ log.encoding|default(cloudwatch_logs_agent_default_encoding) }}
 initial_position = {{ log.initial_position|default(cloudwatch_logs_agent_default_initial_position) }}_of_file
-log_group_name = {{ log.group_name }}
+log_group_name = {{ log.group_name|default(cloudwatch_logs_agent_default_group_name) }}
 log_stream_name = {{ log.stream_name|default(cloudwatch_logs_agent_default_stream_name) }}
 {% endfor %}

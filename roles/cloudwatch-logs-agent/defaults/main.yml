@@ -1,6 +1,7 @@
 cloudwatch_logs_agent_config_file: awslogs.conf.j2
 cloudwatch_logs_agent_default_buffer_duration: 5000
 cloudwatch_logs_agent_default_encoding: utf-8
+cloudwatch_logs_agent_default_group_name: undefined
 cloudwatch_logs_agent_default_initial_position: start
 cloudwatch_logs_agent_default_stream_name: '{instance_id}'
 cloudwatch_logs_agent_only_on_ec2: yes
