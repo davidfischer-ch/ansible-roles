@@ -199,4 +199,52 @@ Variables::
         options: _netdev,allow_other,noatime,endpoint=eu-west-1,iam_role=auto,max_stat_cache_size=60000,storage_class=standard_ia,use_sse
         source: mybucketname:/some/path
 
+Installing AWS utilities
+========================
+
+PlayBook::
+
+    - hosts:
+        - all:!localhost
+      roles:
+        - cloudwatch-logs-agent
+        - cloudwatch-mon-scripts
+
+Variables::
+
+    cloudwatch_logs_agent_default_buffer_duration: 10000
+    cloudwatch_logs_agent_default_group_name: production
+    cloudwatch_logs_agent_default_initial_position: start
+    cloudwatch_logs_agent_logs:
+
+      fail2ban:
+        name: fail2ban
+        file: /var/log/fail2ban.log
+        datetime_format: '%Y-%m-%d %H:%M:%S,%f'  # e.g. 2017-03-28 07:50:45
+        stream_name: 'fail2ban - {instance_id}'
+
+      nginx-default-access:
+        name: nginx-default-access
+        file: /var/log/nginx/access.log
+        datetime_format: '%d/%b/%Y:%H:%M:%S %z'  # e.g. 27/Mar/2017:15:26:29 +0000
+        stream_name: 'nginx default access {instance_id}'
+
+      nginx-default-error:
+        name: nginx-default-error
+        file: /var/log/nginx/error.log
+        datetime_format: '%Y/%m/%d %H:%M:%S'  # e.g. 2017/03/28 07:50:45
+        stream_name: 'nginx default error {instance_id}'
+
+      nginx-application-access:
+        name: nginx-application-access
+        file: /var/log/nginx/application/access.log
+        datetime_format: '%d/%b/%Y:%H:%M:%S %z'  # e.g. 27/Mar/2017:15:26:29 +0000
+        stream_name: 'nginx application access {instance_id}'
+
+      nginx-application-error:
+        name: nginx-application-error
+        file: /var/log/nginx/application/error.log
+        datetime_format: '%Y/%m/%d %H:%M:%S'  # e.g. 2017/03/28 07:50:45
+        stream_name: 'nginx application error {instance_id}'
+
 2014-2017 - David Fischer
