@@ -170,6 +170,7 @@ Variables::
         config_file: app.xml.j2
         path: '{{ production_symlink }}'
         project: <my-django-project-name-here>
+        python_version: python34
         chmod_socket: 666  # Fix access to socket by www-data
         user: '{{ user }}'
         group: '{{ group }}'
