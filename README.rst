@@ -222,7 +222,7 @@ Variables::
         name: fail2ban
         file: /var/log/fail2ban.log
         datetime_format: '%Y-%m-%d %H:%M:%S,%f'  # e.g. 2017-03-28 07:50:45
-        stream_name: 'fail2ban - {instance_id}'
+        stream_name: 'fail2ban {instance_id}'
 
       nginx-default-access:
         name: nginx-default-access
