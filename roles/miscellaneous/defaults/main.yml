@@ -1,3 +1,23 @@
+apt_distribution_repositories:
+  - [core, main]
+  - [core, restricted]
+  - [core, universe]
+  - [core, multiverse]
+  - [core, partner]
+  - [updates, main]
+  - [updates, restricted]
+  - [updates, universe]
+  - [updates, multiverse]
+  - [backports, main]
+  - [backports, restricted]
+  - [backports, universe]
+  - [backports, multiverse]
+  - [security, main]
+  - [security, restricted]
+  - [security, universe]
+  - [security, multiverse]
+apt_sources_files:
+  - sources.{{ ansible_distribution|lower }}.list.j2
 development_tools:
   - build-essential
   - checkinstall
