@@ -8,6 +8,6 @@
 {% else %}
 {% set url='archive.ubuntu.com/ubuntu' %}
 {% endif %}
-deb     http://{{ url }} {{ ansible_distribution_release }}{{ apt_distribution_categories_suffix[category] }} {{ type }}
+deb http://{{ url }} {{ ansible_distribution_release }}{{ apt_distribution_categories_suffix[category] }} {{ type }}
 deb-src http://{{ url }} {{ ansible_distribution_release }}{{ apt_distribution_categories_suffix[category] }} {{ type }}
 {% endfor %}
