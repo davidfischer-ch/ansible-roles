@@ -1,3 +1,58 @@
+miscellaneous_dynamic_defaults:
+  centos:
+    development_tools:
+      # cleaned group Development Tools
+      - autoconf
+      - automake
+      - binutils
+      - bison
+      - flex
+      - gcc
+      - gcc-c++
+      - gettext
+      - libtool
+      - make
+      - patch
+      - pkgconfig
+      # other packages
+      - git
+      - mercurial
+      - subversion
+    ntp_service: ntpd
+    system_tools:
+      - htop
+      - iftop
+      - iotop
+      - ncdu
+      - openssh-server # to mark it as installed manually
+      - rsync
+      - screen
+      - sshfs
+      - tree
+      - unzip
+      - tar
+  linux:
+    development_tools:
+      - build-essential
+      - checkinstall
+      - git
+      - mercurial
+      - subversion
+    ntp_service: ntp
+    system_tools:
+      - htop
+      - iftop
+      - iotop
+      - ncdu
+      - openssh-server # to mark it as installed manually
+      - p7zip-full
+      - preload
+      - rsync
+      - screen
+      - sshfs
+      - tree
+      - unzip
+      - tar
 apt_distribution_repositories:
   - [core, main]
   - [core, restricted]
@@ -18,11 +73,6 @@ apt_distribution_repositories:
   - [security, multiverse]
 apt_sources_files:
   - sources.{{ ansible_distribution|lower }}.list.j2
-development_tools:
-  - build-essential
-  - checkinstall
-  - git
-  - mercurial
 extra_apt_repositories: []
 extra_packages: []
 locale: ''
@@ -34,20 +84,6 @@ debian_sni_tools:
 debian_tools:
   - aptitude
   - apt-transport-https
-system_tools:
-  - htop
-  - iftop
-  - iotop
-  - ncdu
-  - openssh-server # to update it
-  - p7zip-full
-  - preload
-  - rsync
-  - screen
-  - sshfs
-  - tree
-  - unzip
-  - tar
 timezone: ''
 upgrade_packages: yes
 upgrade_packages_cache_valid_time: 3600

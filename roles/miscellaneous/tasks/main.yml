@@ -1,57 +1,13 @@
 # Upgrade system packages, configure locales & NTP, install misc. packages
 ---
 
-- block:
-    - name: Configure Debian sources
-      template: >
-        src={{ item }} dest=/etc/apt/sources.list mode=664
-      register: _apt_sources
-      with_first_found: '{{ apt_sources_files }}'
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ miscellaneous_dynamic_defaults }}'
+    must_match: yes
+  tags: [miscellaneous, always]
 
-    - name: Install extra apt repositories
-      apt_repository: >
-        repo={{ item }} update_cache=yes state=present
-      register: _apt_extra_repositories
-      with_items: '{{ extra_apt_repositories }}'
-
-    - name: Refresh Debian cache
-      apt: >
-        update_cache=yes
-      when: _apt_sources|changed and not _apt_extra_repositories|changed
-
-    - name: Fix any previously running Debian packages upgrade
-      command: >
-        dpkg --configure -a
-      changed_when: _upgrade_fix.stdout|default('')|length > 0
-      register: _upgrade_fix
-
-    - name: Install Debian tools
-      apt: >
-        name={{ item }} state=present
-      with_items: '{{ debian_tools }}'
-
-    - name: Install Debian SNI tools for Python<2.7.9
-      apt: >
-        name={{ item }} state=present
-      when: ansible_python_version|version_compare('2.7.9', '<')
-      with_items: '{{ debian_sni_tools }}'
-
-    - block:
-        - name: Upgrade the Debian packages
-          apt: >
-            upgrade=full update_cache=yes cache_valid_time={{ upgrade_packages_cache_valid_time }}
-          async: '{{ upgrade_packages_async }}'
-          poll: '{{ upgrade_packages_poll }}'
-
-        - name: Cleanup the Debian packages
-          shell: >
-            apt-get -y autoremove && apt-get -y autoclean
-          changed_when: _upgrade_cleanup.stdout_lines|length > 7
-          register: _upgrade_cleanup
-      when: upgrade_packages|bool
-  become: yes
-  tags: [miscellaneous, packages, upgrade]
-  when: "ansible_pkg_mgr == 'apt'"
+- include: setup-upgrade-{{ ansible_pkg_mgr }}.yml
 
 - name: Install extra packages
   package: >
@@ -71,45 +27,26 @@
   become: yes
   tags: [miscellaneous, config]
 
-- block:
-    - name: Set the default locale
-      debconf: >
-        name=locales question=locales/{{ item.name }} value='{{ item.value }}' vtype={{ item.type }}
-      with_items:
-        - { name: 'default_environment_locale', value: '{{ locale }}', type: 'select' }
-        #- { name: 'locales_to_be_generated',    value: "{{ locale }} {{ locale|split('.')[1] }}", type: 'multiselect' }
-
-    # FIXME https://github.com/ansible/ansible-modules-extras/issues/425
-    - name: Generate our locale
-      locale_gen: >
-        name={{ locale }} state=present
-      ignore_errors: yes
-
-    - name: Reconfigure the locales and enable our locale
-      shell: >
-        dpkg-reconfigure locales -f noninteractive &&
-        update-locale LANG={{ locale }} LC_ALL={{ locale }}
-  become: yes
-  tags: [miscellaneous, config]
-  when: locale|length > 0
+- include: setup-locale-{{ ansible_pkg_mgr }}.yml
 
 - block:
     - name: Set local time zone
       copy: >
         content='{{ timezone }}\n' dest=/etc/timezone
       notify: update tzdata
-      tags: [miscellaneous, config]
+      tags: config
 
     - name: Install NTP
       package: >
         name=ntp state=present
-      tags: [miscellaneous, packages]
+      tags: packages
 
     - name: Start NTP service
       service: >
-        name=ntp state=started enabled=yes
-      tags: [miscellaneous, services]
+        name={{ ntp_service }} state=started enabled=yes
+      tags: services
   become: yes
+  tags: miscellaneous
   when: timezone|length > 0
 
 - block:
