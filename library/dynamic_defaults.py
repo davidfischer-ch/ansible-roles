@@ -18,6 +18,7 @@ author: "David Fischer (@davidfischer-ch)"
 short_description: Set variables based on operating system.
 description:
   - Set variables to defaults using the lookup keys in lower-case and with / replaced by -.
+  - Set a variable dynamic_defaults_outputs to a list of (keys, resulting facts).
 options:
   hostvars:
     required: true
@@ -82,9 +83,10 @@ def main():
                         facts.setdefault(name, value)
     if must_match and not match:
         module.fail_json(msg='No match found, lookup keys %s.' % (lookup_keys, ))
-    module.exit_json(ansible_facts=facts, changed=True, diff={
-        'before': {}, 'after': {'facts': facts, 'lookup_keys': lookup_keys}
-    })
+    outputs = facts.get('dynamic_defaults_outputs', [])
+    outputs.append([lookup_keys, facts.copy()])
+    facts['dynamic_defaults_outputs'] = outputs
+    module.exit_json(ansible_facts=facts, changed=False)
 
 if __name__ == '__main__':
     main()
