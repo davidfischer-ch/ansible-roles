@@ -32,5 +32,14 @@
       authorized_key: >
         user={{ user }} key="{{ lookup('file', item) }}"
       with_items: '{{ ssh_authorized_keys }}'
+
+    - name: Configure sudoers PATH variable
+      lineinfile:
+        dest: /etc/sudoers
+        regexp: Defaults\s+secure_path\s*=.*
+        line: Defaults secure_path = "{{ sudoers_secure_paths|join(':') }}"
+        validate: 'visudo -cf %s'
+      become: yes
+      tags: sudo
   tags: [bootstrap, config]
   when: bootstrap_enabled|bool

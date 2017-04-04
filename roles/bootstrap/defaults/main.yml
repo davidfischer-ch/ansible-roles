@@ -1,3 +1,10 @@
 bootstrap_enabled: yes
 ssh_authorized_keys:
   - ~/.ssh/id_rsa.pub
+sudoers_secure_paths:
+  - /usr/local/sbin
+  - /usr/local/bin
+  - /sbin
+  - /bin
+  - /usr/sbin
+  - /usr/bin
