@@ -1,5 +1,8 @@
 ---
 
 dependencies:
+  - role: build
+    tags: [rsync, dependencies]
+
   - role: local-source
     tags: [rsync, dependencies]

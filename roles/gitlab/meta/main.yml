@@ -1,6 +1,9 @@
 ---
 
 dependencies:
+  - role: build
+    tags: [gitlab, dependencies]
+
   - role: ufw
     ufw_rules: '{{ gitlab_ufw_rules }}'
     tags: [gitlab, dependencies]

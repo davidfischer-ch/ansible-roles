@@ -1,0 +1,15 @@
+# Upgrade system packages, configure locales & NTP, install misc. packages
+---
+
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ build_dynamic_defaults }}'
+    must_match: yes
+  tags: [build, always]
+
+- name: Install building and development tools
+  package: >
+    name={{ item }} state=present
+  with_items: '{{ build_packages }}'
+  become: yes
+  tags: [build, packages]

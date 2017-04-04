@@ -1,11 +1,8 @@
 gitlab_data_directory: /var/opt/gitlab/git-data
 gitlab_manual_depend_packages:
   # Needed to compile Ruby and native extensions to Ruby gems
-  - build-essential
-  - checkinstall
   - cmake
   - curl
-  - git-core
   - libcurl4-openssl-dev
   - libffi-dev
   - libgdbm-dev
@@ -19,7 +16,6 @@ gitlab_manual_depend_packages:
   - logrotate
   - nodejs
   - openssh-server
-  - pkg-config
   - python-docutils
   - zlib1g-dev
 gitlab_omnibus_depend_packages:

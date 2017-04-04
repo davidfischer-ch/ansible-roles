@@ -1,0 +1,11 @@
+---
+
+- name: Install Python build dependencies
+  command: >
+    yum-builddep --assume{{ 'no' if ansible_check_mode else 'yes' }} python
+  become: yes
+  changed_when: "'No uninstalled build requires' not in _python_build_dep.stdout|default('')"
+  check_mode: no
+  failed_when: _python_build_dep|failed and 'Exiting on user command' not in _python_build_dep.stdout
+  register: _python_build_dep
+

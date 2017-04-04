@@ -1,11 +1,14 @@
 # Install and configure Redis
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ redis_dynamic_defaults }}'
+    must_match: yes
+  tags: [redis, always]
+
 - block:
-    - name: Install Redis apt repository
-      apt_repository: >
-        repo={{ redis_apt_repository }} filename=ansible_roles_redis update_cache=yes state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - include: setup-repository-{{ ansible_pkg_mgr }}.yml
 
     - name: Install Redis packages
       package: >
@@ -14,13 +17,20 @@
   become: yes
   tags: [redis, packages]
 
-- block:
-    - name: Setup Redis
-      template: >
-        src=redis.conf.j2 dest=/etc/redis/redis.conf mode=644
-      notify: restart redis-server
-      become: yes
+- name: Setup Redis
+  template: >
+    src=redis.conf.j2 dest={{ redis_config_path }} mode=644
+  notify: restart redis
+  become: yes
+  tags: [redis, config]
 
+- name: Start Redis service
+  service: >
+    name={{ redis_service }} state=started enabled=yes
+  become: yes
+  tags: [redis, services]
+
+- block:
     - meta: flush_handlers
 
     - name: Benchmark Redis

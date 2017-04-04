@@ -1,0 +1,10 @@
+---
+
+- name: Install rsync build dependencies
+  command: >
+    yum-builddep --assume{{ 'no' if ansible_check_mode else 'yes' }} rsync
+  become: yes
+  changed_when: "'No uninstalled build requires' not in _rsync_build_dep.stdout|default('')"
+  check_mode: no
+  failed_when: _rsync_build_dep|failed and 'Exiting on user command' not in _rsync_build_dep.stdout
+  register: _rsync_build_dep

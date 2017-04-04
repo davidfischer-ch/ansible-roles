@@ -49,15 +49,9 @@
   tags: miscellaneous
   when: timezone|length > 0
 
-- block:
-    - name: Install usefull system tools
-      package: >
-        name={{ item }} state=present
-      with_items: '{{ system_tools }}'
-
-    - name: Install building and development tools
-      package: >
-        name={{ item }} state=present
-      with_items: '{{ development_tools }}'
+- name: Install usefull system tools
+  package: >
+    name={{ item }} state=present
+  with_items: '{{ system_tools }}'
   become: yes
   tags: [miscellaneous, packages]

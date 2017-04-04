@@ -16,7 +16,6 @@ nginx_build_flags:
   - '--with-http_auth_request_module'
 nginx_build_packages:
   # https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
-  - build-essential
   - libpcre3
   - libpcre3-dev
   - unzip
