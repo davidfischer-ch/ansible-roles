@@ -1,0 +1,29 @@
+---
+
+- assert:
+    that:
+      - vagrant_power_mode in vagrant_power_modes
+
+- include: configure.yml
+
+- name: Get machines power mode
+  command: >
+    vagrant status {{ item.key }}
+  args:
+    chdir: /tmp
+  changed_when: no
+  check_mode: no
+  loop_control:
+    label: '{{ item.key }}'
+  register: _vagrant_machines_status
+  with_dict: '{{ vagrant_machines }}'
+
+- name: Set machines power mode
+  command: >
+    vagrant {{ 'resume' if vagrant_power_mode == 'running' else 'suspend' }} {{ item.item.key }}
+  args:
+    chdir: /tmp
+  loop_control:
+    label: '{{ item.item.key }}'
+  when: "{{ ('The VM is running' in item.stdout)|bool != (vagrant_power_mode == 'running')|bool }}"
+  with_items: '{{ _vagrant_machines_status.results }}'

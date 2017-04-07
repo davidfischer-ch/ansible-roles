@@ -1,0 +1,6 @@
+vagrant_power_modes:
+  - running
+  - stopped
+vagrant_role_actions:
+  - setup
+  - power-control
