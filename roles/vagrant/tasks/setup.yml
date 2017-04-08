@@ -61,6 +61,14 @@
       with_items: '{{ _vagrant_up.results|default([]) }}'
   tags: provision
 
+- name: Wait for machines to be started
+  local_action: >
+    wait_for host={{ item.value.host_public }} port=22 state=started
+  loop_control:
+    label: '{{ item.key }}'
+  tags: provision
+  with_dict: '{{ vagrant_machines }}'
+
 # FIXME convert snapshot to an action
 - block:
     - name: Get VMs snapshot list
