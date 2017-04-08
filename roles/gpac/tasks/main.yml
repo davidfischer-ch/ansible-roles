@@ -28,7 +28,7 @@
     - block:
         - name: Configure GPAC build process
           command: >
-            {{ local_source_directory }}/gpac/configure
+            ./configure
           args:
             chdir: '{{ local_source_directory }}/gpac'
 
