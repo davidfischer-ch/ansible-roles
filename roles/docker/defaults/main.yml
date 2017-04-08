@@ -18,7 +18,7 @@ docker_images:
   - hello-world
 docker_install_compose: yes
 docker_install_engine: yes
-docker_install_machine: yes
+docker_install_machine: no
 docker_install_registry: no
 docker_interface: null
 docker_machine_checksum: 909cae9be74b39cc529fc015aa7c015e1d8f96322d7d92a64004957054965a81
