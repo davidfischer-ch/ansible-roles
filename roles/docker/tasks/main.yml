@@ -133,28 +133,16 @@
 
 - block:
     - name: Get images from Docker Hub
-      command: >
-        docker pull {{ item }}
-      changed_when: "'up to date' not in _docker_pull.stdout"
-      register: _docker_pull
+      docker_image: >
+        name={{ item }}
       with_items: '{{ docker_images }}'
 
-    - name: Tag images to point to our registry
-      command: >
-        docker tag {{ item }} localhost:5000/{{ item }}
-      # changed_when: "'already set' not in _docker_tag.stderr"
-      # failed_when: _docker_tag|failed and 'already set' not in _docker_tag.stderr
-      # register: _docker_tag
-      with_items: '{{ docker_images }}'
-
-    - name: Push images into our registry
-      command: >
-        docker push localhost:5000/{{ item }}
-      changed_when: "'successfully pushed' in _docker_push.stdout"
-      register: _docker_push
+    - name: Tag and push to local registry
+      docker_image: >
+         name={{ item }} push=yes repository=localhost:5000/{{ item }} tag=latest
+      when: docker_install_registry|bool
       with_items: '{{ docker_images }}'
   tags: [docker, images]
-  when: docker_install_registry|bool
 
 # To stop your registry, you would:
 # docker stop registry && docker rm -v registry
