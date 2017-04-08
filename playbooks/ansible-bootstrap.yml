@@ -13,7 +13,7 @@
 
     - name: Install Python
       raw: >
-         which python && echo 'NOT_CHANGED' || apt-get -y install python
+         which python && echo 'NOT_CHANGED' || { apt-get update && apt-get -y install python; }
       become: yes
       changed_when: "'NOT_CHANGED' not in _python_install.stdout"
       register: _python_install
