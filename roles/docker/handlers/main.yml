@@ -1,10 +1,10 @@
 ---
 
 - name: restart
-  command: >
-    shutdown -r now 'Triggered by Ansible'
+  shell: >
+    sleep 2 && shutdown -r now 'Triggered by Ansible'
   ignore_errors: yes
-  async: 1
+  async: 10
   poll: 0
   become: yes
 
