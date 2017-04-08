@@ -3,7 +3,6 @@
 - name: restart
   shell: >
     sleep 2 && shutdown -r now 'Triggered by Ansible'
-  ignore_errors: yes
   async: 10
   poll: 0
   become: yes
