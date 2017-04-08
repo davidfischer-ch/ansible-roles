@@ -17,4 +17,3 @@ dependencies:
     ufw_rules: '{{ docker_registry_ufw_rules }}'
     tags: [docker, dependencies]
     when: docker_install_registry|bool and docker_registry_ufw_rules
-
