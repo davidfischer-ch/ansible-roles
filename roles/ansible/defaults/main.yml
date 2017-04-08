@@ -12,5 +12,5 @@ the_ansible_packages:
   - openssl
   - libffi-dev
   - libssl-dev
-the_ansible_version: devel-fix
-the_ansible_from_source: yes
+the_ansible_version: latest
+the_ansible_from_source: no
