@@ -1,6 +1,12 @@
 # Install file-systems packages & configure mount points
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ mount_dynamic_defaults }}'
+    must_match: yes
+  tags: [mounts, always]
+
 - name: Install file-system packages
   package: >
     name={{ item }} state=present

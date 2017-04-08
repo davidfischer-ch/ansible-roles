@@ -1,0 +1,30 @@
+
+- block:
+    - name: Set the default locale
+      debconf: >
+        name=locales question=locales/{{ item.name }} value='{{ item.value }}' vtype={{ item.type }}
+      tags: config
+      with_items:
+        - { name: 'default_environment_locale', value: '{{ locale }}', type: 'select' }
+        #- { name: 'locales_to_be_generated',    value: "{{ locale }} {{ locale|split('.')[1] }}", type: 'multiselect' }
+
+    - name: Install locales package
+      package: >
+        name=locales state=present
+      tags: packages
+
+    # FIXME https://github.com/ansible/ansible-modules-extras/issues/425
+    - name: Generate our locale
+      locale_gen: >
+        name={{ locale }} state=present
+      ignore_errors: yes
+      tags: config
+
+    - name: Reconfigure the locales and enable our locale
+      shell: >
+        dpkg-reconfigure locales -f noninteractive &&
+        update-locale LANG={{ locale }} LC_ALL={{ locale }}
+      tags: config
+  become: yes
+  tags: miscellaneous
+  when: locale|length > 0

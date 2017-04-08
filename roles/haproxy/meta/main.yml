@@ -1,6 +1,9 @@
 ---
 
 dependencies:
+  - role: build
+    tags: [haproxy, dependencies]
+
   - role: github
     tags: [haproxy, dependencies]
     when: "'github' in haproxy_repository_url"

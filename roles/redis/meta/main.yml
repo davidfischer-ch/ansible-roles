@@ -1,9 +1,6 @@
 ---
 
 dependencies:
-  - role: github
-    tags: [redis, dependencies]
-
   - role: ufw
     ufw_rules: '{{ redis_ufw_rules }}'
     tags: [redis, dependencies]

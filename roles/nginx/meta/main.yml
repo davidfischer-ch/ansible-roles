@@ -1,6 +1,9 @@
 ---
 
 dependencies:
+  - role: build
+    tags: [nginx, dependencies]
+
   - role: github
     tags: [nginx, dependencies]
 

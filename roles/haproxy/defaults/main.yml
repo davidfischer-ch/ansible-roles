@@ -2,7 +2,6 @@ haproxy_backends: []
 haproxy_balance: roundrobin
 haproxy_build_flags: CPU=native USE_LIBCRYPT=1 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1
 haproxy_build_packages:
-  - build-essential
   - libpcre3
   - libpcre3-dev
   - libssl1.0.0

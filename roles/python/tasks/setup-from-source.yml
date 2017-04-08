@@ -1,0 +1,31 @@
+---
+
+- block:
+    - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
+
+    - name: Download Python {{ python_latest_versions[item|string] }} source package
+      get_url: >
+        url=https://www.python.org/ftp/python/{{ python_latest_versions[item|string] }}/Python-{{ python_latest_versions[item|string] }}.tgz force=no
+        dest={{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}.tgz
+
+    - name: Extract Python {{ python_latest_versions[item|string] }} source code
+      unarchive: >
+        src={{ local_source_directory }}/Python-{{ python_latest_versions[item] }}.tgz dest={{ local_source_directory }} copy=no
+
+    - name: Bootstrap Python {{ python_latest_versions[item|string] }} build process
+      command: >
+        ./configure {{ python_build_flags|join(' ') }}
+      args:
+        chdir: '{{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}'
+
+    - name: Build Python {{ python_latest_versions[item|string] }} from source
+      make:
+        chdir: '{{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}'
+        params:
+          NUM_THREADS: '{{ ansible_processor_cores }}'
+
+    - name: Install Python {{ python_latest_versions[item|string] }} from source
+      make:
+        chdir: '{{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}'
+        target: install
+  become: yes

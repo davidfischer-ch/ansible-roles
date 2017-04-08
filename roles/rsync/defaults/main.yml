@@ -1,4 +1,2 @@
 rsync_build_cfg: ''
-rsync_build_packages:
-  - build-essential
 rsync_version: 3.1.2

@@ -1,0 +1,12 @@
+---
+
+# FIXME TODO upgrade
+# FIXME interesting link http://ask.xmodulo.com/install-python3-centos.html
+
+- name: Install RedHat tools
+  yum: >
+    name={{ item }} state=present
+  become: yes
+  tags: [miscellaneous, packages, upgrade]
+  with_items: '{{ redhat_tools }}'
+

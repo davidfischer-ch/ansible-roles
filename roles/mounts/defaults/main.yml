@@ -1,4 +1,9 @@
-filesystem_packages:
-  - cifs-utils
-  - nfs-common
-  - ntfs-3g
+mount_dynamic_defaults:
+  centos:
+    filesystem_packages:
+      - nfs-utils
+  linux:
+    filesystem_packages:
+      - cifs-utils
+      - nfs-common
+      - ntfs-3g

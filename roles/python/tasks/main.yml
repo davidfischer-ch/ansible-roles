@@ -1,20 +1,41 @@
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ python_dynamic_defaults }}'
+    must_match: yes
+  tags: [python, always]
+
 - block:
     - name: Install Python packages
       package: >
         name={{ item }} state=present
       with_items: '{{ python_packages }}'
 
+    - name: Detect missing Python versions
+      command: >
+        python{{ item }}
+      changed_when: _python_command|failed
+      check_mode: no
+      failed_when: no
+      register: _python_command
+      with_items: '{{ python_versions }}'
+
+    - set_fact:
+        python_missing_versions: "{{ _python_command.results|selectattr('changed')|map(attribute='item')|list }}"
+
+    - include: setup-from-source.yml
+      with_items: '{{ python_missing_versions }}'
+
     - name: Download pip bootstrap script
       get_url: >
         url=https://bootstrap.pypa.io{{ (item|string == '3.2')|ternary('/3.2', '') }}/get-pip.py
-        dest=/tmp/get-pip-{{ item }}.py
+        dest={{ local_source_directory }}/get-pip-{{ item }}.py
       with_items: '{{ python_versions }}'
 
     - name: Install pip
       command: >
-        python{{ item }} /tmp/get-pip-{{ item }}.py {{ python_get_pip_options }} pip{{ python_pip_version }}
+        python{{ item }} {{ local_source_directory }}/get-pip-{{ item }}.py {{ python_get_pip_options }} pip{{ python_pip_version }}
       changed_when: "'already up-to-date' not in _get_pip.stdout|default('') and 'are using pip' not in _get_pip.stderr|default('')"
       failed_when: "_get_pip|failed and 'are using pip' not in _get_pip.stderr|default('')"
       register: _get_pip

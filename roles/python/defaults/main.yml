@@ -1,16 +1,64 @@
+python_dynamic_defaults:
+
+  centos:
+    python_packages:
+      - python-devel
+    python_versions:
+      - '2.7'
+      - '3.6'
+
+  debian-lenny-sid:
+    python_packages:
+      - python-dev
+    python_versions:
+      - '2.5'
+
+  debian-8.*:
+    python_versions:
+      - '2.7'
+      - '3.4'
+
+  linux:
+    python_packages:
+      - bpython
+      - bpython3
+      - python-dev
+      - python3-dev
+    python_versions:
+      - '2.7'
+      - '3.5'
+
+  macosx:
+    python_versions:
+      - '2.7'
+
+  ubuntu-12.*:
+    python_versions:
+      - '2.7'
+      # - '3.2' pip do not support it anymore
+
+  ubuntu-14.*:
+    python_versions:
+      - '2.7'
+      - '3.4'
+
+  ubuntu-15.*:
+    python_versions:
+      - '2.7'
+      - '3.4'
+
+  ubuntu-16.*:
+    python_versions:
+      - '2.7'
+      - '3.5'
+
+python_build_flags: []
+  # - '--enable-optimizations'
 python_default_version: '{{ python_versions|first }}'
 python_pip_path: /usr/local/bin/pip
 python_get_pip_options: ''
-python_packages:
-  - bpython
-  - bpython3
-  - build-essential
-  - checkinstall
-  - python-dev
-  - python3-dev
+python_latest_versions:  # map version X.Y -> latest version X.Y.Z
+  '3.6': '3.6.1'
 python_pip_version: ''
 python_setuptools_version: latest
-python_versions:
-  - 2.7
-  - 3.5
 python_virtualenv_version: latest

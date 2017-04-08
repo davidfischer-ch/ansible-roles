@@ -1,6 +1,4 @@
 veracrypt_build_packages:
-  - build-essential
-  - pkg-config
   - makeself
   - nasm
   - libfuse2

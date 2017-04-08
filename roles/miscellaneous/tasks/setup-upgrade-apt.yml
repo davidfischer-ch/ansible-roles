@@ -1,0 +1,54 @@
+---
+
+- block:
+    - name: Configure Debian sources
+      template: >
+        src={{ item }} dest=/etc/apt/sources.list mode=664
+      register: _apt_sources
+      with_first_found:
+        - files: '{{ apt_sources_files }}'
+          skip: "{{ ansible_pkg_mgr != 'apt' }}"
+
+    - name: Install extra apt repositories
+      apt_repository: >
+        repo={{ item }} update_cache=yes state=present
+      register: _apt_extra_repositories
+      with_items: '{{ extra_apt_repositories }}'
+
+    - name: Refresh Debian cache
+      apt: >
+        update_cache=yes
+      when: _apt_sources|changed and not _apt_extra_repositories|changed
+
+    - name: Fix any previously running Debian packages upgrade
+      command: >
+        dpkg --configure -a
+      changed_when: _upgrade_fix.stdout|default('')|length > 0
+      register: _upgrade_fix
+
+    - name: Install Debian tools
+      apt: >
+        name={{ item }} state=present
+      with_items: '{{ debian_tools }}'
+
+    - name: Install Debian SNI tools for Python<2.7.9
+      apt: >
+        name={{ item }} state=present
+      when: ansible_python_version|version_compare('2.7.9', '<')
+      with_items: '{{ debian_sni_tools }}'
+
+    - block:
+        - name: Upgrade the Debian packages
+          apt: >
+            upgrade=full update_cache=yes cache_valid_time={{ upgrade_packages_cache_valid_time }}
+          async: '{{ upgrade_packages_async }}'
+          poll: '{{ upgrade_packages_poll }}'
+
+        - name: Cleanup the Debian packages
+          shell: >
+            apt-get -y autoremove && apt-get -y autoclean
+          changed_when: _upgrade_cleanup.stdout_lines|length > 7
+          register: _upgrade_cleanup
+      when: upgrade_packages|bool
+  become: yes
+  tags: [miscellaneous, packages, upgrade]

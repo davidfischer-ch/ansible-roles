@@ -1,0 +1,6 @@
+---
+
+- name: Install Redis yum repository
+  yum_repository: >
+    name=epel description=EPEL baseurl=https://download.fedoraproject.org/pub/epel/$releasever/$basearch/ state=present
+  become: yes

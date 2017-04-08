@@ -1,3 +1,8 @@
-kernel_packages:
-  - linux-generic
-  - linux-signed-generic
+kernel_dynamic_defaults:
+  centos:
+    kernel_packages:
+      - kernel-devel
+  linux:
+    kernel_packages:
+      - linux-generic
+      - linux-signed-generic
