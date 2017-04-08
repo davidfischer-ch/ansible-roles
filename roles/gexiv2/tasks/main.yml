@@ -29,15 +29,14 @@
         chdir: '{{ local_source_directory }}/gexiv2'
 
     - name: Build GExiv2 from source
-      command: >
-        make -j{{ ansible_processor_cores }}
-      args:
+      make:
         chdir: '{{ local_source_directory }}/gexiv2'
+        params:
+          NUM_THREADS: '{{ ansible_processor_cores }}'
 
     - name: Install GExiv2 from source
-      command: >
-        make install
-      args:
+      make:
         chdir: '{{ local_source_directory }}/gexiv2'
+        target: install
   become: yes
   tags: [gexiv2, packages]

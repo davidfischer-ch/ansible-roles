@@ -27,10 +27,9 @@
         chdir: '{{ local_source_directory }}/haproxy'
 
     - name: Install HAProxy from source
-      command: >
-        make install-{{ item }}
-      args:
+      command:
         chdir: '{{ local_source_directory }}/haproxy'
+        target: 'install-{{ item }}'
       with_items:
         - bin
         - man

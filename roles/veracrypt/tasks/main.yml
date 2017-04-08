@@ -13,12 +13,10 @@
         version={{ veracrypt_version }}
 
     - name: Build VeraCrypt from source
-      command: >
-        make -j{{ ansible_processor_cores }}
-      args:
+      make:
         chdir: '{{ local_source_directory }}/veracrypt/src'
-      changed_when: _veracrypt_make.stdout_lines|length > 0
-      register: _veracrypt_make
+        params:
+          NUM_THREADS: '{{ ansible_processor_cores }}'
 
     - name: Create VeraCrypt symlink
       file: >

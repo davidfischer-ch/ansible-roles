@@ -33,16 +33,15 @@
             chdir: '{{ local_source_directory }}/gpac'
 
         - name: Build GPAC from source
-          command: >
-            make -j{{ ansible_processor_cores }}
-          args:
+          make:
             chdir: '{{ local_source_directory }}/gpac'
+            params:
+              NUM_THREADS: '{{ ansible_processor_cores }}'
 
         - name: Install GPAC from source
-          command: >
-            make install
-          args:
+          make:
             chdir: '{{ local_source_directory }}/gpac'
+            target: install
 
         - name: Save build environment
           copy: >

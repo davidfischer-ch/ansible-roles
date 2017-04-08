@@ -45,16 +45,15 @@
             chdir: '{{ local_source_directory }}/rsync-{{ rsync_version }}'
 
         - name: Build rsync from source
-          command: >
-            make -j{{ ansible_processor_cores }}
-          args:
+          make:
             chdir: '{{ local_source_directory }}/rsync-{{ rsync_version }}'
+            params:
+              NUM_THREADS: '{{ ansible_processor_cores }}'
 
         - name: Install rsync from source
-          command: >
-            make install
-          args:
+          make:
             chdir: '{{ local_source_directory }}/rsync-{{ rsync_version }}'
+            target: install
 
         - name: Save build environment
           copy: >

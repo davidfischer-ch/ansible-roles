@@ -114,16 +114,15 @@
             chdir: '{{ local_source_directory }}/nginx'
 
         - name: Build Nginx from source
-          command: >
-            make -j{{ ansible_processor_cores }}
-          args:
+          make:
             chdir: '{{ local_source_directory }}/nginx'
+            params:
+              NUM_THREADS: '{{ ansible_processor_cores }}'
 
         - name: Install Nginx from source
-          command: >
-            make install
-          args:
+          make:
             chdir: '{{ local_source_directory }}/nginx'
+            target: install
 
         - name: Make Nginx binary executable
           file: >
