@@ -4,7 +4,7 @@
 - block:
     - name: Install Docker Machine
       get_url: >
-        url=https://github.com/docker/machine/releases/download/v{{ docker_machine_version }}/docker-machine_linux-amd64
+        url=https://github.com/docker/machine/releases/download/v{{ docker_machine_version }}/docker-machine-{{ ansible_system }}-{{ ansible_architecture }}
         dest='{{ docker_machine_path }}' mode=755 sha256sum={{ docker_machine_checksum }}
       become: yes
 
