@@ -1,12 +1,15 @@
 # Install and configure UFW
 ---
 
-- name: Install UFW packages
-  package: >
-    name={{ item }} state=present
+- block:
+    - include: setup-repository-{{ ansible_pkg_mgr }}.yml
+
+    - name: Install UFW packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ ufw_packages }}'
   become: yes
   tags: [ufw, packages]
-  with_items: '{{ ufw_packages }}'
 
 - block:
     - name: Allow ssh
