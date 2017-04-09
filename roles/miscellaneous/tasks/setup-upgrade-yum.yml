@@ -1,12 +1,25 @@
+# FIXME Tnteresting link http://ask.xmodulo.com/install-python3-centos.html
 ---
 
-# FIXME TODO upgrade
-# FIXME interesting link http://ask.xmodulo.com/install-python3-centos.html
+- block:
+    - name: Toggle EPEL repository
+      yum_repository: >
+        name=epel description=EPEL baseurl=https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+        state=present
+      when: yum_epel_repository|bool
 
-- name: Install RedHat tools
-  yum: >
-    name={{ item }} state=present
+    - name: Install package manager tools
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ package_manager_tools }}'
+
+    - name: Upgrade the packages
+      yum: >
+        name=* update_cache=yes state=latest
+      async: '{{ upgrade_packages_async }}'
+      poll: '{{ upgrade_packages_poll }}'
+      when: upgrade_packages|bool
   become: yes
   tags: [miscellaneous, packages, upgrade]
-  with_items: '{{ redhat_tools }}'
+
 

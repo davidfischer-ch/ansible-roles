@@ -1,32 +1,38 @@
 miscellaneous_dynamic_defaults:
+  apt:
+    package_manager_tools:
+      - aptitude
+      - apt-transport-https
+  yum:
+    package_manager_tools:
+      - yum-utils
+
   centos:
     ntp_service: ntpd
-    system_tools:
+    system_administration_tools:
       - htop
       - iftop
       - iotop
       - ncdu
-      - openssh-server # to mark it as installed manually
-      - rsync
       - screen
-      - sshfs
       - tree
+    system_tools:
+      - rsync
       - unzip
       - tar
   linux:
     ntp_service: ntp
-    system_tools:
+    system_administration_tools:
       - htop
       - iftop
       - iotop
       - ncdu
-      - openssh-server # to mark it as installed manually
+      - screen
+      - tree
+    system_tools:
       - p7zip-full
       - preload
       - rsync
-      - screen
-      - sshfs
-      - tree
       - unzip
       - tar
 apt_distribution_repositories:
@@ -47,24 +53,20 @@ apt_distribution_repositories:
   - [security, restricted]
   - [security, universe]
   - [security, multiverse]
+apt_sni_tools:
+  - python-openssl
+  - python-pyasn1
+  - python-urllib3
 apt_sources_files:
   - sources.{{ ansible_distribution|lower }}.list.j2
 extra_apt_repositories: []
 extra_packages: []
 locale: ''
 net_tcp_sack: no  # for security reasons (http://serverfault.com/questions/10955/when-to-turn-tcp-sack-off)
-debian_sni_tools:
-  - python-openssl
-  - python-pyasn1
-  - python-urllib3
-debian_tools:
-  - aptitude
-  - apt-transport-https
-redhat_tools:
-  - yum-utils
 timezone: ''
 upgrade_packages: yes
 upgrade_packages_cache_valid_time: 3600
 upgrade_packages_async: "{{ (ansible_connection == 'local')|ternary(omit, 600) }}"
 upgrade_packages_poll: "{{ (ansible_connection == 'local')|ternary(omit, 5) }}"
 vm_swappiness: 1
+yum_epel_repository: yes  # Do nothing in distribution such as Ubuntu, "no" do not disable it.
