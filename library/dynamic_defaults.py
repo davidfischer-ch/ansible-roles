@@ -8,14 +8,15 @@ from ansible.module_utils.basic import AnsibleModule
 LOOKUP_KEYS = [
     '{ansible_distribution}-{ansible_distribution_version}',
     '{ansible_distribution}',
-    '{ansible_system}'
+    '{ansible_system}',
+    '{ansible_pkg_mgr}'
 ]
 
 DOCUMENTATION = r"""
 ---
 module: dynamic_defaults
 author: "David Fischer (@davidfischer-ch)"
-short_description: Set variables based on operating system.
+short_description: Set variables based on operating system and package manager.
 description:
   - Set variables to defaults using the lookup keys in lower-case and with / replaced by -.
   - Set a variable dynamic_defaults_outputs to a list of (keys, resulting facts).
