@@ -28,17 +28,17 @@
       failed_when: _tcp_sack|failed and 'No such file' not in _tcp_sack.msg
       register: _tcp_sack
   become: yes
-  tags: [miscellaneous, config]
+  tags: [miscellaneous, sysctl, config]
 
 - include: setup-locale-{{ ansible_pkg_mgr }}.yml
 
-- block:
-    - name: Set local time zone
-      copy: >
-        content='{{ timezone }}\n' dest=/etc/timezone
-      notify: update tzdata
-      tags: config
+- name: Configure timezone
+  timezone: >
+    name={{ timezone }}
+  tags: [miscellaneous, timezone, config]
+  when: timezone|length > 0
 
+- block:
     - name: Install NTP
       package: >
         name=ntp state=present
@@ -49,8 +49,7 @@
         name={{ ntp_service }} state=started enabled=yes
       tags: services
   become: yes
-  tags: miscellaneous
-  when: timezone|length > 0
+  tags: [miscellaneous, ntp]
 
 - block:
     - name: Install usefull system tools
