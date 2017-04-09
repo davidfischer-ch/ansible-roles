@@ -2,10 +2,9 @@
 ---
 
 - block:
-    - name: Toggle EPEL repository
-      yum_repository: >
-        name=epel description=EPEL baseurl=https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
-        state=present
+    - name: Install EPEL repository
+      package:
+        name=epel-release state=present
       when: yum_epel_repository|bool
 
     - name: Install package manager tools
