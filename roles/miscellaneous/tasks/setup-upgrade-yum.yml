@@ -21,5 +21,3 @@
       when: upgrade_packages|bool
   become: yes
   tags: [miscellaneous, packages, upgrade]
-
-
