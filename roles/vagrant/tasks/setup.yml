@@ -32,12 +32,14 @@
       changed_when: "vagrant_update_boxes|bool and 'to update' in _vagrant_outdated.stdout"
       check_mode: no
       register: _vagrant_outdated
+      tags: upgrade
 
     - name: Update boxes
       command: >
         vagrant box update
       args:
         chdir: /tmp
+      tags: upgrade
       when: _vagrant_outdated|changed
 
     - name: Provision machines
