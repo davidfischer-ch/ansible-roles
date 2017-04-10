@@ -51,4 +51,3 @@
           register: _upgrade_cleanup
       when: upgrade_packages|bool
   become: yes
-  tags: [miscellaneous, packages, upgrade]

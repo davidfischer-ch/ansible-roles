@@ -11,20 +11,15 @@
     - name: Install locales package
       package: >
         name=locales state=present
-      tags: packages
 
     # FIXME https://github.com/ansible/ansible-modules-extras/issues/425
     - name: Generate our locale
       locale_gen: >
         name={{ locale }} state=present
       ignore_errors: yes
-      tags: config
 
     - name: Reconfigure the locales and enable our locale
       shell: >
         dpkg-reconfigure locales -f noninteractive &&
         update-locale LANG={{ locale }} LC_ALL={{ locale }}
-      tags: config
   become: yes
-  tags: miscellaneous
-  when: locale|length > 0

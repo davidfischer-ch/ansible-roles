@@ -5,5 +5,4 @@
     localedef --force --inputfile {{ locale.split('.')[0] }} --charmap {{ locale.split('.')[1] }} {{ locale }}
   become: yes
   # changed_when:  FIXME to implement
-  tags: [miscellaneous, config]
   when: locale|length > 0

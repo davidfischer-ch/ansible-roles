@@ -15,4 +15,3 @@
       apt: >
         deb={{ local_source_directory }}/{{ apache_pagespeed_module_url|basename }} state=present
   become: yes
-  tags: [apache, packages]
