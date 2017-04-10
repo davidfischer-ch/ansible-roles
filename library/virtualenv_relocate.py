@@ -40,34 +40,6 @@ EXAMPLES = r"""
 """
 
 
-def find_recursive(directory, patterns):
-    """Simplified version of https://github.com/davidfischer-ch/pytoolbox/blob/master/pytoolbox/filesystem.py#L34."""
-    patterns = [re.compile(fnmatch.translate(p)) for p in patterns]
-    for dirpath, dirnames, filenames in os.walk(directory):
-        for filename in filenames:
-            if any(p.match(filename) for p in patterns):
-                yield os.path.join(dirpath, filename)
-
-
-def relocate(source_directory, destination_directory, encoding='utf-8'):
-    """Modified version of https://github.com/davidfischer-ch/pytoolbox/blob/master/pytoolbox/virtualenv.py."""
-    b_source_directory = source_directory.encode(encoding)
-    b_destination_directory = destination_directory.encode(encoding)
-
-    for path in itertools.chain.from_iterable([
-        find_recursive(destination_directory, ['*.egg-link', '*.pth', '*.pyc', 'RECORD']),
-        find_recursive(os.path.join(destination_directory, 'bin'), ['*']),
-        find_recursive(os.path.join(destination_directory, 'src'), ['*.so'])
-    ]):
-        with open(path, 'r+b') as f:
-            content = f.read()
-            updated_content = content.replace(b_source_directory, b_destination_directory)
-            if updated_content != content:
-                f.seek(0)
-                f.write(updated_content)
-                f.truncate()
-
-
 def main():
     module = AnsibleModule(
         argument_spec=dict(
@@ -96,6 +68,34 @@ def main():
             shutil.move(source, destination)
         relocate(source, destination, encoding)
     module.exit_json(changed=True)
+
+
+def find_recursive(directory, patterns):
+    """Simplified version of https://github.com/davidfischer-ch/pytoolbox/blob/master/pytoolbox/filesystem.py#L34."""
+    patterns = [re.compile(fnmatch.translate(p)) for p in patterns]
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for filename in filenames:
+            if any(p.match(filename) for p in patterns):
+                yield os.path.join(dirpath, filename)
+
+
+def relocate(source_directory, destination_directory, encoding='utf-8'):
+    """Modified version of https://github.com/davidfischer-ch/pytoolbox/blob/master/pytoolbox/virtualenv.py."""
+    b_source_directory = source_directory.encode(encoding)
+    b_destination_directory = destination_directory.encode(encoding)
+
+    for path in itertools.chain.from_iterable([
+        find_recursive(destination_directory, ['*.egg-link', '*.pth', '*.pyc', 'RECORD']),
+        find_recursive(os.path.join(destination_directory, 'bin'), ['*']),
+        find_recursive(os.path.join(destination_directory, 'src'), ['*.so'])
+    ]):
+        with open(path, 'r+b') as f:
+            content = f.read()
+            updated_content = content.replace(b_source_directory, b_destination_directory)
+            if updated_content != content:
+                f.seek(0)
+                f.write(updated_content)
+                f.truncate()
 
 if __name__ == '__main__':
     main()

@@ -29,6 +29,21 @@ EXAMPLES = r"""
 """
 
 
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            drush=dict(required=False, type='path', default='vendor/bin/drush'),
+            path=dict(required=True, type='path'),
+            pattern=dict(required=True),
+            value=dict(required=True)
+        ),
+        supports_check_mode=True
+    )
+    drush, path, pattern, value = (module.params[k] for k in ('drush', 'path', 'pattern', 'value'))
+    updated_variables = replace_drupal_variables(drush, path, pattern, value, simulate=module.check_mode)
+    module.exit_json(changed=bool(updated_variables), diff=updated_variables)
+
+
 def get_drupal_variables(drush, directory):
     return json.loads(subprocess.check_output([drush, 'vget', '--format=json'], cwd=directory,
                       env=get_drush_environment()).decode('utf-8'))
@@ -70,21 +85,6 @@ def set_drupal_variable(drush, directory, name, value):
     (stdout, stderr), returncode = process.communicate(), process.poll()
     if returncode:
         raise ValueError(name, value, stdout, stderr)
-
-
-def main():
-    module = AnsibleModule(
-        argument_spec=dict(
-            drush=dict(required=False, type='path', default='vendor/bin/drush'),
-            path=dict(required=True, type='path'),
-            pattern=dict(required=True),
-            value=dict(required=True)
-        ),
-        supports_check_mode=True
-    )
-    drush, path, pattern, value = (module.params[k] for k in ('drush', 'path', 'pattern', 'value'))
-    updated_variables = replace_drupal_variables(drush, path, pattern, value, simulate=module.check_mode)
-    module.exit_json(changed=bool(updated_variables), diff=updated_variables)
 
 if __name__ == '__main__':
     main()

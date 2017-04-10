@@ -45,20 +45,6 @@ EXAMPLES = r"""
 """
 
 
-def get_state(b_path):
-    # https://github.com/ansible/ansible-modules-core/blob/bf5b3de83eae72e0602ce2418a1a547c023ed3fe/files/file.py
-    if os.path.lexists(b_path):
-        if os.path.islink(b_path):
-            return 'link'
-        if os.path.isdir(b_path):
-            return 'directory'
-        if os.stat(b_path).st_nlink > 1:
-            return 'hard'
-        # could be many other things, but defaulting to file
-        return 'file'
-    return 'absent'
-
-
 def main():
     module = AnsibleModule(
         argument_spec=dict(
@@ -87,6 +73,20 @@ def main():
         for release in remove_releases:
             shutil.rmtree(release)
     module.exit_json(changed=bool(remove_releases), diff=diff)
+
+
+def get_state(b_path):
+    # https://github.com/ansible/ansible-modules-core/blob/bf5b3de83eae72e0602ce2418a1a547c023ed3fe/files/file.py
+    if os.path.lexists(b_path):
+        if os.path.islink(b_path):
+            return 'link'
+        if os.path.isdir(b_path):
+            return 'directory'
+        if os.stat(b_path).st_nlink > 1:
+            return 'hard'
+        # could be many other things, but defaulting to file
+        return 'file'
+    return 'absent'
 
 if __name__ == '__main__':
     main()
