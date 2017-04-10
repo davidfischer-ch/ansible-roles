@@ -1,6 +1,7 @@
 vagrant_power_modes:
+  - poweroff
   - running
-  - stopped
+  - saved
 vagrant_role_actions:
   - setup
   - power-control

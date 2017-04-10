@@ -41,14 +41,12 @@
       when: _vagrant_outdated|changed
 
     - name: Provision machines
-      command: >
-        vagrant up --provider {{ item.value.provider }} {{ item.key }}
-      args:
-        chdir: /tmp
-      changed_when: "'already running' not in _vagrant_up.stdout"
+      vagrant_machine: >
+        chdir=/tmp name={{ item.key }} provider={{ item.value.provider }} state=running
+        timeout={{ item.value.timeout|int if item.value.timeout is defined else omit }}
       loop_control:
         label: '{{ item.key }}'
-      register: _vagrant_up
+      register: _vagrant_provision
       with_dict: '{{ vagrant_machines }}'
   always:
     # FIXME less verbose output https://github.com/ansible/ansible/issues/5564
@@ -58,7 +56,7 @@
       loop_control:
         label: '{{ item.item.key }}'
       when: item|changed
-      with_items: '{{ _vagrant_up.results|default([]) }}'
+      with_items: '{{ _vagrant_provision.results|default([]) }}'
   tags: provision
 
 - name: Wait for machines to be started
