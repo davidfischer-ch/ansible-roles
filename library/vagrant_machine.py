@@ -46,6 +46,7 @@ EXAMPLES = r"""
 
 ACTION_FOR_TRANSITION = {
     'absent': {'running': ['up', '--provider']},
+    'aborted': {'absent': ['destroy', '--force'], 'running': ['up', '--no-provision']},
     'poweroff': {'absent': ['destroy', '--force'], 'running': ['up', '--no-provision']},
     'running': {'absent': ['destroy', '--force'], 'poweroff': ['halt'], 'saved': ['suspend']},
     'saved': {'absent': ['destroy', '--force'], 'running': ['resume']}
