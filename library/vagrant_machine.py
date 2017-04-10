@@ -91,7 +91,7 @@ def set_state(directory, name, state, provider=None, timeout=120):
             raise NotImplementedError('Unable to find a suitable action for the transition from %s to %s.' % (
                 current_state, state)
             )
-        if action[0] == 'up':
+        if action[-1] == '--provider':
             action.append(provider)
         process = subprocess.Popen(
             itertools.chain(['vagrant'], action, [name]), cwd=directory, stdout=subprocess.PIPE, stderr=subprocess.PIPE
