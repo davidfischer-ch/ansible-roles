@@ -51,6 +51,7 @@ ACTION_FOR_TRANSITION = {
     'running': {'absent': ['destroy', '--force'], 'poweroff': ['halt'], 'saved': ['suspend']},
     'saved': {'absent': ['destroy', '--force'], 'running': ['resume']}
 }
+STOP_TO_START_STATES = {'aborted', 'poweroff', 'saved'}
 VBOX_LIST_REGEX = re.compile(r'^(?P<name>[^\s]+)\s+(?P<status>[a-z\s]+)\s+\(', re.MULTILINE)
 
 
@@ -96,7 +97,7 @@ def set_state(directory, name, state, provider=None, timeout=120):
         process = subprocess.Popen(
             itertools.chain(['vagrant'], action, [name]), cwd=directory, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        if current_state in ('poweroff', 'saved'):
+        if current_state in STOP_TO_START_STATES:
             start_time = time.time()
             while True:
                 time.sleep(1)
