@@ -38,7 +38,10 @@ options:
 """
 
 EXAMPLES = r"""
-- virtualenv_relocate: source=/var/app/my-app/test destination=/var/app/releases/alpha
+- vagrant_machine: chdir=/some/path name=my-vm provider=virtualbox state=running
+- vagrant_machine: chdir=/some/path name=my-vm provider=virtualbox state=saved
+- vagrant_machine: chdir=/some/path name=my-vm state=running timeout=60
+- vagrant_machine: chdir=/some/path name=my-vm state=absent
 """
 
 ACTION_FOR_TRANSITION = {
