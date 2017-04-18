@@ -170,7 +170,7 @@
       when: djsite_bower_enabled|bool
 
     - block:
-        - name: Ccompile the assets (SASS/SCSS)
+        - name: Compile the assets (SASS/SCSS)
           django_manage: >
             command=compilescss
             app_path={{ djsite_app_directory }}/test/server
