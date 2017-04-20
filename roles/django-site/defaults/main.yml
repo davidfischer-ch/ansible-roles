@@ -16,6 +16,7 @@ djsite_log_directory: '/var/log/{{ djsite_instance_name }}'
 # cache, database, storage and web server
 
 djsite_redirect_ssl: no
+djsite_max_body_size: 100k
 djsite_ssl_enabled: no
 
 # miscellaneous settings

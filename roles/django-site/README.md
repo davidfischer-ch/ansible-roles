@@ -127,6 +127,7 @@ source_path: src/myproject
         config_file: '{{ roles_directory }}/django-site/templates/example.nginx.config.conf.j2'
         debug: '{{ djsite_debug_enabled|bool }}'
         domain: '{{ djsite_domain }}'
+        max_body_size: '{{ djsite_max_body_size }}'
         redirect_ssl: '{{ djsite_redirect_ssl|bool }}'
         with_dhparam: '{{ djsite_ssl_enabled|bool }}'
         with_ssl: '{{ djsite_ssl_enabled|bool }}'

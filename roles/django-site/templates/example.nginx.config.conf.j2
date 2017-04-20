@@ -68,13 +68,13 @@ server {
     }
 
     location / {
-        client_max_body_size 100k;
+        client_max_body_size {{ item.value.max_body_size }};
         include uwsgi_params;
         uwsgi_pass uwsgi;
     }
 
     location @uwsgi {
-        client_max_body_size 100k;
+        client_max_body_size {{ item.value.max_body_size }};
         include uwsgi_params;
         uwsgi_pass uwsgi;
     }
