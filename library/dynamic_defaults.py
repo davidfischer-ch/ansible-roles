@@ -9,7 +9,8 @@ LOOKUP_KEYS = [
     '{ansible_distribution}-{ansible_distribution_version}',
     '{ansible_distribution}',
     '{ansible_system}',
-    '{ansible_pkg_mgr}'
+    '{ansible_pkg_mgr}',
+    'default'
 ]
 
 DOCUMENTATION = r"""
