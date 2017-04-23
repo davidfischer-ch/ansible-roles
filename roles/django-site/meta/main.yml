@@ -5,6 +5,10 @@ dependencies:
     is_master_variable: djsite_is_master
     tags: [django-site, always]
 
+  - role: timestamp
+    timestamp_variable: djsite_release_timestamp
+    tags: [django-site, always]
+
   - role: daemon
     daemon_user: '{{ djsite_daemon_user }}'
     daemon_group: '{{ djsite_daemon_group }}'
