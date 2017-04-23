@@ -238,7 +238,7 @@
           when: djsite_repository_is_local|bool
 
         - name: Retrieve unit-tests coverage
-          command: >
+          shell: >
             {{ djsite_app_directory }}/test/venv/bin/coverage report | tail -n 1 | sed -r 's:.*\s+([0-9]+)%:\1:'
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
