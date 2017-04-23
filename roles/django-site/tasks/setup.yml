@@ -26,21 +26,22 @@
       file: >
         src={{ djsite_data_directory }}/media dest={{ djsite_app_directory }}/test/server/media force=yes state=link
 
-    - name: Install Application repository SSH key pair
-      copy: >
-        src={{ item.path }} dest={{ djsite_app_directory }}/.ssh/{{ item.name }}
-        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=0600
-      loop_control:
-        label: '{{ item.name }}'
-      when: "'://' in djsite_repository_url"
-      with_items:
-        - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa'     }
-        - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub' }
+    - block:
+        - name: Install Application repository SSH key pair
+          copy: >
+            src={{ item.path }} dest={{ djsite_app_directory }}/.ssh/{{ item.name }}
+            owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=0600
+          loop_control:
+            label: '{{ item.name }}'
+          with_items:
+            - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa'     }
+            - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub' }
 
-    - name: Register Application repository RSA key
-      known_hosts: >
-        name={{ djsite_repository_host }} key='{{ djsite_repository_key }}' state=present
-      become_user: '{{ djsite_daemon_user }}'
+        - name: Register Application repository RSA key
+          known_hosts: >
+            name={{ djsite_repository_host }} key='{{ djsite_repository_key }}' state=present
+          become_user: '{{ djsite_daemon_user }}'
+      when: not djsite_repository_is_local|bool
   become: yes
   tags: config
 
@@ -58,10 +59,10 @@
     - name: Copy Application source code
       synchronize: >
         src={{ djsite_repository_url }}/ dest={{ djsite_app_directory }}/source/
-        checksum=yes delete=yes links=yes recursive=yes times=yes
+        checksum=yes copy_links=yes delete=yes group=yes links=yes owner=yes recursive=yes times=yes
       args:
-        rsync_opts:
-          - '--chown {{ djsite_daemon_user }}:{{ djsite_daemon_group }} -og'
+        rsync_opts: ['--chown', '{{ djsite_daemon_user }}:{{ djsite_daemon_group }}']
+      become_user: root
       when: djsite_repository_is_local|bool
 
     - name: Set Application source code ownership
