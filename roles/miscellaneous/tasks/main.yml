@@ -38,6 +38,7 @@
 - name: Configure timezone
   timezone: >
     name={{ timezone }}
+  become: yes
   tags: [miscellaneous, timezone, config]
   when: timezone|length > 0
 
