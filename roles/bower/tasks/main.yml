@@ -1,0 +1,7 @@
+---
+
+- name: Install Bower package
+  npm: >
+    name=bower global=yes production=yes state=present
+  become: yes
+  tags: [bower, packages]
