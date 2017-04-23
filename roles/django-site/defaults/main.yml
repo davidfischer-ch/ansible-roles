@@ -21,6 +21,7 @@ djsite_ssl_enabled: no
 
 # miscellaneous settings
 djsite_bower_enabled: no
+djsite_celery_workers: {}
 djsite_compress_enabled: no
 djsite_compress_offline: no
 djsite_coverage_minimum: 64

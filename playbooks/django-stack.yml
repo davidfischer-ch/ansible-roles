@@ -45,12 +45,7 @@
   max_fail_percentage: 0
 
 - hosts:
-    - web
+    - worker
   roles:
     - nginx
     - uwsgi
-
-- hosts:
-    - worker
-  roles:
-    - celery

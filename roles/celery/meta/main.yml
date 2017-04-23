@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: python
-    tags: [celery, dependencies]
-
-  - role: supervisor
-    tags: [celery, dependencies]

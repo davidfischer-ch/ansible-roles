@@ -18,5 +18,5 @@ dependencies:
   - role: github
     tags: [django-site, dependencies]
 
-  - role: python
+  - role: supervisor
     tags: [django-site, dependencies]
