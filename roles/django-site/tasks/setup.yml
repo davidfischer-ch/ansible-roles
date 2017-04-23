@@ -159,16 +159,16 @@
     - block:
         - name: Configure bower in non-interactive mode
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py bower_install --traceback -- --config.interactive=false
+            {{ djsite_app_directory }}/test/venv/bin/python manage.py bower_install --traceback -- --config.interactive=false
           args:
-            chdir: '{{ djsite_app_directory }}/test/server/{{ djsite_application }}'
+            chdir: '{{ djsite_app_directory }}/test/server'
           tags: config
 
         - name: Download web (js) packages with bower
           command: >
             {{ djsite_app_directory }}/test/venv/bin/python ../manage.py bower_install --traceback -F
           args:
-            chdir: '{{ djsite_app_directory }}/test/server/{{ djsite_application }}'
+            chdir: '{{ djsite_app_directory }}/test/server'
           failed_when: "'error' in _djsite_install.stderr"
           register: _djsite_install
           tags: packages
@@ -196,10 +196,11 @@
           when: djsite_compress_enabled|bool and djsite_compress_offline|bool
 
         - name: Compile translations
-          django_manage: >
-            command=compilemessages
-            app_path={{ djsite_app_directory }}/test/server
-            virtualenv={{ djsite_app_directory }}/test/venv
+          command: >
+            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py compilemessages
+          args:
+            chdir: '{{ djsite_app_directory }}/test/server/{{ item }}'
+          with_items: '{{ djsite_config.custom_applications }}'
       tags: [unit-test-extra, update]
 
     - name: Check the applications for common errors
