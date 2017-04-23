@@ -119,6 +119,10 @@
             label: '{{ item.path }}'
           when: "item.path.split('.')[-1] == 'pip' + djsite_config.python_version[0]"
           with_items: '{{ _djsite_requirements.files }}'
+
+        - name: Trigger virtualenv hook
+          include: '{{ djsite_virtualenv_tasks_file }}'
+          when: djsite_virtualenv_tasks_file|length > 0
       tags: virtualenv
 
     - include: configure.yml

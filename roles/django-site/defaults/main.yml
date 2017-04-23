@@ -34,4 +34,6 @@ djsite_sass_enabled: no
 djsite_release_mode: normal
 
 # Hooks
+djsite_configure_tasks_file: ''
 djsite_update_tasks_file: ''
+djsite_virtualenv_tasks_file: ''
