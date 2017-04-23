@@ -31,8 +31,8 @@ djsite_coverage_options:
   - --omit=*/migrations/*,*/tests/*
 djsite_graph_models_enabled: no
 djsite_sass_enabled: no
-
 djsite_release_mode: normal
+djsite_test_options: --failfast --no-input
 
 # Hooks
 djsite_configure_tasks_file: ''

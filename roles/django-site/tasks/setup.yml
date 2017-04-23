@@ -220,7 +220,7 @@
         - name: Unit-test the application
           command: >
             {{ djsite_app_directory }}/test/venv/bin/coverage run {{ djsite_coverage_options|join(' ') }}
-            manage.py test {{ djsite_config.custom_applications|join(' ') }} --failfast --no-input
+            manage.py test {{ djsite_config.custom_applications|join(' ') }} {{ djsite_test_options }}
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
 
