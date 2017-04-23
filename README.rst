@@ -130,6 +130,17 @@ Variables::
     nginx_zip_module_version: 01ce916943337b32d72cf0ab87f218caa8c598ab  # 17/10/2015
     nginx_version: release-1.9.4                                        # 17/10/2015
 
+    nginx_sites:
+      site:
+        name: '{{ djsite_instance_name }}'
+        config_file: '{{ roles_directory }}/django-site/templates/example.nginx.config.conf.j2'
+        debug: '{{ djsite_debug_enabled|bool }}'
+        domain: '{{ djsite_domain }}'
+        max_body_size: '{{ djsite_max_body_size }}'
+        redirect_ssl: '{{ djsite_redirect_ssl|bool }}'
+        with_dhparam: '{{ djsite_ssl_enabled|bool }}'
+        with_ssl: '{{ djsite_ssl_enabled|bool }}'
+
     postgresql_databases:
       template1:
         name: template1
@@ -166,14 +177,13 @@ Variables::
 
     uwsgi_apps:
       application:
-        name: <my-django-application-name-here>
-        config_file: app.xml.j2
-        path: '{{ production_symlink }}'
-        project: <my-django-project-name-here>
+        name: '{{ djsite_instance_name }}'
+        config_file: '{{ roles_directory }}/django-site/templates/example.uwsgi.app.xml.j2'
+        user: '{{ djsite_daemon_user }}'
+        group: '{{ djsite_daemon_group }}'
+        path: '{{ djsite_app_directory }}/production'
+        project: '{{ djsite_project }}'
         python_version: python34
-        chmod_socket: 666  # Fix access to socket by www-data
-        user: '{{ user }}'
-        group: '{{ group }}'
         limit_as: 2048
 
 Mounting a S3 bucket with s3fs
