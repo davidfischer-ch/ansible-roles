@@ -286,35 +286,7 @@
         --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-sync
       when: not djsite_is_master|bool and not djsite_standalone|bool
 
-    - block:
-        - name: Create release directory
-          file: >
-            name={{ djsite_release_directory }} owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
-            mode=755 state=directory
-          become_user: root
-
-        - name: Deploy the application in release directory
-          command: >
-            rsync {{ djsite_app_directory }}/test/{{ item }}/ {{ djsite_release_directory }}/{{ item }}/
-            --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-release
-          with_items:
-            - server
-            - venv
-
-        - name: Relocate the virtualenv
-          virtualenv_relocate: >
-            source={{ djsite_app_directory }}/test/venv destination={{ djsite_release_directory }}/venv operation=none
-      rescue:
-        - name: Remove broken release directory
-          file: >
-            name={{ djsite_release_directory }} state=absent
-          become_user: root
-
-        - fail: >
-            msg='Release process failed!'
-      become: yes
-      become_user: '{{ djsite_daemon_user }}'
-      when: djsite_release_mode == 'normal'
+    - include: 'release-{{ djsite_release_mode }}.yml'
 
     - name: Switch production symlink
       file: >
