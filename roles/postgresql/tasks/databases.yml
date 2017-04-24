@@ -7,7 +7,7 @@
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush
-      when: item.flush|default(false)|bool and not 'template' in item.value.name
+      when: item.value.flush|default(false)|bool and not 'template' in item.value.name
       with_dict: '{{ postgresql_databases }}'
 
     - name: Setup PostgreSQL users
