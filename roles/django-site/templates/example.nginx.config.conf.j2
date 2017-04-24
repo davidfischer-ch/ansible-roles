@@ -25,12 +25,14 @@ server {
 {% endif %}
 
 server {
-    listen {{ item.value.with_ssl|bool|ternary(nginx_port_ssl, nginx_port)|int }} {{ item.value.with_http2|default(false)|bool|ternary('http2', '') }};
-    server_name {{ item.value.domain }} 127.0.0.1;
-
     {% if item.value.with_ssl|bool %}
+    listen {{ nginx_port_ssl|int }} {{ item.value.with_http2|bool|ternary('ssl http2', '') }};
     {% include 'templates/site.ssl.conf.j2' %}
+    {% else %}
+    listen {{ nginx_port|int }};
     {% endif %}
+
+    server_name {{ item.value.domain }} 127.0.0.1;
 
     gzip off;  # Security - http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf
     gzip_proxied any;

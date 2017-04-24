@@ -21,6 +21,7 @@ djsite_ssl_enabled: no
 
 # miscellaneous settings
 djsite_bower_enabled: no
+djsite_celery_workers: {}
 djsite_compress_enabled: no
 djsite_compress_offline: no
 djsite_coverage_minimum: 64
@@ -30,8 +31,10 @@ djsite_coverage_options:
   - --omit=*/migrations/*,*/tests/*
 djsite_graph_models_enabled: no
 djsite_sass_enabled: no
-
 djsite_release_mode: normal
+djsite_test_options: --failfast --no-input
 
 # Hooks
+djsite_configure_tasks_file: ''
 djsite_update_tasks_file: ''
+djsite_virtualenv_tasks_file: ''

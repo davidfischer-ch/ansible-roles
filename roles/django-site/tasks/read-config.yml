@@ -15,6 +15,7 @@
         chdir: '{{ djsite_app_directory }}/source'
       changed_when: no
       check_mode: no
+      failed_when: _djsite_git_log|failed and 'Not a git' not in _djsite_git_log.stderr
       register: _djsite_git_log
 
     - name: Set application variables

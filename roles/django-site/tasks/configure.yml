@@ -14,5 +14,9 @@
       loop_control:
         label: '{{ item.item }}'
       with_items: '{{ _djsite_config_templates.results }}'
+
+    - name: Trigger configure hook
+      include: '{{ djsite_configure_tasks_file }}'
+      when: djsite_configure_tasks_file|length > 0
   become: yes
   tags: [unit-test-extra, update]

@@ -1,7 +1,0 @@
----
-
-- name: restart celery
-  supervisorctl: >
-    name={{ item.value.name }} state=restarted
-  become: yes
-  with_dict: '{{ celery_services }}'

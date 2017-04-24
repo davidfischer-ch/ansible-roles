@@ -12,42 +12,31 @@
           - djsite_is_master is defined
           - djsite_max_releases|int > 0
           - djsite_release_mode in djsite_release_modes
-          - djsite_repository_host is defined
-          - djsite_repository_key is defined
-          - djsite_repository_url is defined
+          - djsite_release_timestamp is defined
           - djsite_role_action in djsite_role_actions
           - djsite_secret_key|length > 30
           - djsite_settings_module is defined
-          - djsite_ssh_key_private is defined
-          - djsite_ssh_key_public is defined
           - djsite_standalone is defined
           - djsite_superuser.email is defined
           - djsite_superuser.name is defined
           - djsite_superuser.password is defined
-          - djsite_version is defined
 
-    - debug: var=djsite_is_master
-
-    - name: Define release timestamp (1/2)
-      command:
-        date +%Y%m%d%H%M%S
-      changed_when: no
-      check_mode: no
-      register: _djsite_release_timestamp
-      run_once: yes
-
-    - name: Define release timestamp (2/2)
-      set_fact:
-        djsite_release_timestamp: '{{ _djsite_release_timestamp.stdout }}'
+    - set_fact:
+        djsite_release_directory: "{{ djsite_app_directory }}/{{ (djsite_release_mode == 'direct')|ternary('test', 'releases/'+djsite_release_timestamp) }}"
         djsite_repository_is_local: "{{ '://' not in djsite_repository_url }}"
 
-    - name: Define release directory
-      set_fact:
-        djsite_release_directory: "{{ djsite_app_directory }}/{{ (djsite_release_mode == 'direct')|ternary('test', 'releases/'+djsite_release_timestamp) }}"
+    - assert:
+        that:
+          - djsite_repository_host is defined
+          - djsite_repository_key is defined
+          - djsite_repository_url is defined
+          - djsite_ssh_key_private is defined
+          - djsite_ssh_key_public is defined
+          - djsite_version is defined
+      when: not djsite_repository_is_local|bool
 
     - debug: var={{ item }}
       with_items:
-        - djsite_release_timestamp
         - djsite_release_directory
         - djsite_repository_is_local
   tags: always
