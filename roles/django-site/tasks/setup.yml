@@ -154,7 +154,7 @@
             archive=yes checksum=yes delete=yes mode=pull
           with_items: '{{ djsite_config.custom_applications }}'
       tags: database
-      when: djsite_repository_is_local|bool
+      when: djsite_repository_is_local|bool and djsite_update_database_migrations|bool
 
     - block:
         - name: Configure bower in non-interactive mode
