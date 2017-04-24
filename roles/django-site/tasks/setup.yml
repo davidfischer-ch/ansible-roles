@@ -295,7 +295,7 @@
 
     - name: Remove oldest releases directories
       cleanup_releases: >
-        directory={{ djsite_app_directory }}/releases keep={{ djsite_max_releases|int + 1 }} regexp=[0-9]{14}
+        directory={{ djsite_app_directory }}/releases keep={{ djsite_max_releases|int + 1 }} regexp=[0-9]{8}T[0-9]{6}
       become: yes
       when: djsite_release_mode == 'normal'
   tags: update
