@@ -3,17 +3,17 @@
 
 - dynamic_defaults:
     hostvars: '{{ hostvars[inventory_hostname] }}'
-    defaults: '{{ mount_dynamic_defaults }}'
+    defaults: '{{ mounts_dynamic_defaults }}'
     must_match: yes
   tags: [mounts, always]
 
 - name: Install file-system packages
   package: >
-    name={{ mount_packages_by_fstype[item] }} state=present
+    name={{ mounts_packages_by_fstype[item] }} state=present
   loop_control:
-    label: "{{ item }} -> {{ mount_packages_by_fstype[item]|default('missing') }}"
-  when: item in mount_packages_by_fstype or not mount_packages_by_fstype_skip_missing|bool
-  with_items: "{{ mount_filesystem_types|union(mounts.values()|map(attribute='fstype')|list)|unique|sort }}"
+    label: "{{ item }} -> {{ mounts_packages_by_fstype[item]|default('missing') }}"
+  when: item in mounts_packages_by_fstype or not mounts_packages_by_fstype_skip_missing|bool
+  with_items: "{{ mounts_filesystem_types|union(mounts.values()|map(attribute='fstype')|list)|unique|sort }}"
   become: yes
   tags: [mounts, packages]
 

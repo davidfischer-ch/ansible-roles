@@ -1,15 +1,15 @@
-mount_dynamic_defaults:
+mounts_dynamic_defaults:
   centos:
-    mount_packages_by_fstype:
+    mounts_packages_by_fstype:
       nfs: [nfs-utils]
       none: []  # Bind mount
       s3fs-fuse: []  # Use s3fs role instead
   linux:
-    mount_filesystem_types:
+    mounts_filesystem_types:
       - nfs
-    mount_packages_by_fstype:
+    mounts_packages_by_fstype:
       cifs: [cifs-utils, ntfs-3g]
       nfs: [nfs-common]
       none: []  # Bind mount
       s3fs-fuse: []  # Use s3fs role instead
-mount_packages_by_fstype_skip_missing: no
+mounts_packages_by_fstype_skip_missing: no
