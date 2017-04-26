@@ -59,7 +59,7 @@
     - name: Copy Application source code
       synchronize: >
         src={{ djsite_repository_url }}/ dest={{ djsite_app_directory }}/source/
-        checksum=yes copy_links=yes delete=yes group=yes links=yes owner=yes recursive=yes times=yes
+        archive=yes checksum=yes delete=yes
       args:
         rsync_opts: ['--chown', '{{ djsite_daemon_user }}:{{ djsite_daemon_group }}']
       become_user: root
