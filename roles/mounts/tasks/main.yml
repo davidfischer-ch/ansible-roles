@@ -7,7 +7,7 @@
     must_match: yes
   tags: [mounts, always]
 
-- name: Install file-system packages
+- name: Install file systems packages
   package: >
     name={{ mounts_packages_by_fstype[item] }} state=present
   loop_control:
@@ -18,7 +18,7 @@
   tags: [mounts, packages]
 
 - block:
-    - name: Create file system
+    - name: Create file systems
       filesystem: >
         dev={{ item.value.source }}
         fstype={{ item.value.fstype }}
