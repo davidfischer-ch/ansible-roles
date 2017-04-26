@@ -12,14 +12,14 @@ server {
 server {
     listen {{ item.value.with_ssl|bool|ternary(nginx_port_ssl, nginx_port)|int }};
     server_name {{ item.value.domain_old }};
-    rewrite ^ $scheme://{{ item.value.domain }}$request_uri permanent;
+    rewrite ^ $scheme://{{ item.value.domains|first }}$request_uri permanent;
 }
 {% endif %}
 
 {% if item.value.with_ssl|bool and item.value.redirect_ssl|bool %}
 server {
     listen {{ nginx_port|int }};
-    server_name {{ item.value.domain }} 127.0.0.1;
+    server_name {{ item.value.domains|join(' ') }} 127.0.0.1;
     rewrite ^ https://$http_host$request_uri? permanent;
 }
 {% endif %}
@@ -32,7 +32,7 @@ server {
     listen {{ nginx_port|int }};
     {% endif %}
 
-    server_name {{ item.value.domain }} 127.0.0.1;
+    server_name {{ item.value.domains|join(' ') }};
 
     gzip off;  # Security - http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf
     gzip_proxied any;

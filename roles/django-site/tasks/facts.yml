@@ -7,7 +7,7 @@
           - djsite_database_name is defined
           - djsite_database_password is defined
           - djsite_database_user is defined
-          - djsite_domain is defined
+          - djsite_domains is defined
           - djsite_instance_name is defined
           - djsite_is_master is defined
           - djsite_max_releases|int > 0
