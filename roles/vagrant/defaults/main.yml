@@ -2,7 +2,6 @@ vagrant_machines: {}
 vagrant_packages:
   - vagrant
   - vagrant-lxc
-vagrant_plugins:
-  - vbox-snapshot
+vagrant_plugins: []  # e.g. vbox-snapshot
 vagrant_snapshots: {}
 vagrant_update_boxes: yes
