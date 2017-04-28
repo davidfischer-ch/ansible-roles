@@ -7,7 +7,7 @@
 
     - name: Create daemon user
       user: >
-        name={{ daemon_user }} group={{ daemon_group }} comment='{{ daemon_comment }}'
+        name={{ daemon_user }} group={{ daemon_group }} password={{ daemon_password }} comment='{{ daemon_comment }}'
         home={{ daemon_directory }} createhome=no shell=/bin/bash system=yes state=present
   become: yes
   tags: daemon

@@ -1,2 +1,3 @@
 daemon_comment: 'One more daemon'
 daemon_group: '{{ daemon_user }}'
+daemon_password: '{{ omit }}'
