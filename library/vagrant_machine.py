@@ -62,7 +62,7 @@ def main():
             name=dict(required=True),
             provider=dict(required=False),
             state=dict(required=True, choice=['absent', 'poweroff', 'running', 'saved']),
-            timeout=dict(required=False, type='int', default=10)
+            timeout=dict(required=False, type='int', default=120)
         ),
         supports_check_mode=True
     )
