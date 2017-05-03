@@ -1,0 +1,7 @@
+---
+
+- name: Gather information about current release directory
+  stat: >
+    path={{ djsite_app_directory }}/production
+  become: yes
+  register: djsite_production_link

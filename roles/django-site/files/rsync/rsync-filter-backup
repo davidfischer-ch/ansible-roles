@@ -1,0 +1,17 @@
+# rsync from production to a backup
+
+# Generated
+- *.log
+- *.pyc
+- *.socket
+- *.sqlite3
+- __pycache__
+
+# Version control
+- .git
+- .hg
+- .svn
+
+# Symbolic link
+
+/server/media/

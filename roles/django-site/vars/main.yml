@@ -1,5 +1,8 @@
+djsite_media_file_mode: ugo=rwX  # FIXME maybe disallow writing to others on some sub-directories, ?
 djsite_release_modes:
   - direct
   - normal
 djsite_role_actions:
   - setup
+  - local-backup
+  - local-restore
