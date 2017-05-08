@@ -19,7 +19,7 @@ server {
 {% if item.value.with_ssl|bool and item.value.redirect_ssl|bool %}
 server {
     listen {{ nginx_port|int }};
-    server_name {{ item.value.domains|join(' ') }} 127.0.0.1;
+    server_name {{ item.value.domains|join(' ') }};
     rewrite ^ https://$http_host$request_uri? permanent;
 }
 {% endif %}
