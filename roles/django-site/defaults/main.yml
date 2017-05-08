@@ -32,6 +32,7 @@ djsite_coverage_options:
 djsite_graph_models_enabled: no
 djsite_sass_enabled: no
 djsite_release_mode: normal
+djsite_release_ok_flag: ok.flag
 djsite_test_options: --failfast --no-input
 djsite_update_database_migrations: yes
 

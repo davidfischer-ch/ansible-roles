@@ -18,6 +18,10 @@
     - name: Relocate the virtualenv
       virtualenv_relocate: >
         source={{ djsite_app_directory }}/test/venv destination={{ djsite_release_directory }}/venv operation=none
+
+    - name: Create release OK flag
+      file: >
+        path={{ djsite_release_directory }}/{{ djsite_release_ok_flag }} state=touch
   rescue:
     - name: Remove broken release directory
       file: >
