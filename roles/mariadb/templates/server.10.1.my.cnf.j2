@@ -111,6 +111,8 @@ log_slow_verbosity  = query_plan
 #auto_increment_offset  = 1
 log_bin         = /var/log/mysql/mariadb-bin
 log_bin_index       = /var/log/mysql/mariadb-bin.index
+log_bin_trust_function_creators = {{ mariadb_bin_log_trust_function_creators|bool|ternary(1, 0) }}
+
 # not fab for performance, but safer
 #sync_binlog        = 1
 expire_logs_days    = 10

@@ -1,5 +1,6 @@
 mariadb_bind_address: 127.0.0.1
 mariadb_interface: null
+mariadb_bin_log_trust_function_creators: no
 mariadb_packages:
   - 'mariadb-server-{{ mariadb_version }}'
 mariadb_port: 3306

@@ -98,6 +98,7 @@ server-id         = {{ mysql_server_id|int }}
 {% if mysql_bin_log_enabled|bool %}
 log_bin           = {{ mysql_bin_log_file }}
 {% endif %}
+log_bin_trust_function_creators = {{ mysql_bin_log_trust_function_creators|bool|ternary(1, 0) }}
 expire_logs_days  = {{ mysql_logs_retention_days|int }}
 max_binlog_size   = {{ mysql_bin_log_max_size }}
 #binlog_do_db     = include_database_name
