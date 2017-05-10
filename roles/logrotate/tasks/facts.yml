@@ -1,0 +1,7 @@
+# Install and configure logrotate
+---
+
+- assert:
+    that:
+      - logrotate_role_action in logrotate_role_actions
+  tags: always

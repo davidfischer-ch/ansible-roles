@@ -1,0 +1,19 @@
+---
+
+- block:
+    - name: Install Logrotate packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ logrotate_packages }}'
+  become: yes
+  tags: packages
+
+- name: Setup the log rotations
+  template: >
+    src={{ item.config_file }} dest=/etc/logrotate.d/{{ item.name }} mode=644
+    validate='logrotate --debug %s'
+  loop_control:
+    label: '{{ item.name }}'
+  with_items: '{{ logrotate_log_rotations }}'
+  become: yes
+  tags: logs

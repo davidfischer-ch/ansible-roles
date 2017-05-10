@@ -1,0 +1,7 @@
+# Install and configure logrotate
+---
+
+- block:
+    - include: facts.yml
+    - include: '{{ logrotate_role_action }}.yml'
+  tags: logrotate

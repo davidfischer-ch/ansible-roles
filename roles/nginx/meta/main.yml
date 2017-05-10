@@ -10,6 +10,12 @@ dependencies:
   - role: local-source
     tags: [nginx, dependencies]
 
+  - role: logrotate
+    logrotate_log_rotations: '{{ nginx_log_rotations }}'
+    logrotate_role_action: setup
+    tags: [nginx, dependencies]
+    when: nginx_log_rotations
+
   - role: supervisor
     tags: [nginx, dependencies]
     when: nginx_daemon_mode == 'supervisor'

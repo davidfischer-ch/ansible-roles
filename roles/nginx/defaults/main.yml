@@ -33,6 +33,12 @@ nginx_pagespeed_module_configure: ''
 nginx_pagespeed_module_enabled: no
 nginx_upload_module_enabled: no
 nginx_zip_module_enabled: no
+# logging
+nginx_log_compress_delay: 49
+nginx_log_rotations_config_file: logrotate.j2
+nginx_log_rotations:
+  - name: nginx
+    config_file: '{{ nginx_log_rotations_config_file }}'
 # networking
 nginx_interface: null
 nginx_port: 80

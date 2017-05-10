@@ -1,0 +1,3 @@
+logrotate_packages:
+  - logrotate
+logrotate_log_rotations: []

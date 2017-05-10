@@ -1,0 +1,3 @@
+logrotate_role_actions:
+  - setup
+  - simulate
