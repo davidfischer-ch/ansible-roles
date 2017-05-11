@@ -1,0 +1,22 @@
+/var/log/apache2/*.log /var/log/apache2/*/*.log {
+       daily
+       dateext
+       missingok
+       rotate {{ apache_log_compress_delay|int }}
+       compress
+       delaycompress
+       nomail
+       notifempty
+       create 644 root root
+       sharedscripts
+       postrotate
+              if /etc/init.d/apache2 status > /dev/null ; then \
+                     /etc/init.d/apache2 reload > /dev/null; \
+              fi;
+       endscript
+       prerotate
+              if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+                     run-parts /etc/logrotate.d/httpd-prerotate; \
+              fi; \
+       endscript
+}
