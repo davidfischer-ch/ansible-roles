@@ -2,7 +2,7 @@
        daily
        dateext
        missingok
-       rotate {{ apache_log_compress_delay|int }}
+       rotate {{ apache_log_rotations_max_count|int }}
        compress
        delaycompress
        nomail

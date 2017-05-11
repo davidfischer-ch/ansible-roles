@@ -2,7 +2,7 @@
        daily
        dateext
        missingok
-       rotate {{ nginx_log_compress_delay|int }}
+       rotate {{ nginx_log_rotations_max_count|int }}
        compress
        delaycompress
        nomail
