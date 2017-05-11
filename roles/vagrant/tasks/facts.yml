@@ -1,6 +1,12 @@
 ---
 
-- assert:
-    that:
-      - vagrant_role_action in vagrant_role_actions
+- block:
+    - dynamic_defaults:
+        hostvars: '{{ hostvars[inventory_hostname] }}'
+        defaults: '{{ vagrant_dynamic_defaults }}'
+        must_match: yes
+
+    - assert:
+        that:
+          - vagrant_role_action in vagrant_role_actions
   tags: always

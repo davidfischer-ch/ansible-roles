@@ -1,7 +1,12 @@
+vagrant_dynamic_defaults:
+  macosx:
+    vagrant_packages:
+      - vagrant
+  linux:
+    vagrant_packages:
+      - vagrant
+      - vagrant-lxc
 vagrant_machines: {}
-vagrant_packages:
-  - vagrant
-  - vagrant-lxc
 vagrant_plugins: []  # e.g. vbox-snapshot
 vagrant_snapshots: {}
 vagrant_update_boxes: yes
