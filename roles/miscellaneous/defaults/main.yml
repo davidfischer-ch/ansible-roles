@@ -20,6 +20,10 @@ miscellaneous_dynamic_defaults:
       - rsync
       - unzip
       - tar
+  ubuntu-12.04:
+    apt_sni_tools:
+      - python-openssl
+      - python-pyasn1
   linux:
     ntp_service: ntp
     system_administration_tools:
@@ -35,6 +39,11 @@ miscellaneous_dynamic_defaults:
       - rsync
       - unzip
       - tar
+  default:
+    apt_sni_tools:
+      - python-openssl
+      - python-pyasn1
+      - python-urllib3
 apt_distribution_repositories:
   - [core, main]
   - [core, restricted]
@@ -53,10 +62,6 @@ apt_distribution_repositories:
   - [security, restricted]
   - [security, universe]
   - [security, multiverse]
-apt_sni_tools:
-  - python-openssl
-  - python-pyasn1
-  - python-urllib3
 apt_sources_files:
   - sources.{{ ansible_distribution|lower }}.list.j2
 extra_apt_repositories: []
