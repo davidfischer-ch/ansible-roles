@@ -3,15 +3,12 @@
 local postgres postgres trust
 
 {{ postgresql_authentication_rules|join('\n') }}
-
-{% for database in postgresql_databases.itervalues() %}
+{% for database in postgresql_databases.itervalues()|sort %}
 
 local {{ database.name }} postgres trust
-
 {% if database.with_test|default(false)|bool %}
 local test_{{ database.name }} postgres trust
 {% endif %}
-
 {% if database.clients is defined %}
 {% for client in database.clients %}
 {% if database.user is defined %}
@@ -23,5 +20,4 @@ host test_{{ database.name }} {{ database.user }} {{ client }} md5
 {% endif %}
 {% endfor %}
 {% endif %}
-
 {% endfor %}
