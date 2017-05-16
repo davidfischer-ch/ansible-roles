@@ -29,6 +29,7 @@ djsite_coverage_options:
   - --branch
   - --include=*/*
   - --omit=*/migrations/*,*/tests/*
+djsite_disallow_robots: no
 djsite_graph_models_enabled: no
 djsite_sass_enabled: no
 djsite_release_mode: normal

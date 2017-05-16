@@ -94,6 +94,13 @@
         {% for t in djsite_config.configuration_templates %} --exclude {{ t }}{% endfor %}
       tags: [update, unit-test-extra]
 
+    - name: Disallow robots
+      template: >
+        src=disallow.robots.txt.j2 dest={{ djsite_app_directory }}/test/server/robots.txt
+        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=644
+      tags: [update, unit-test-extra]
+      when: djsite_disallow_robots|bool
+
     - block:
         - name: Create virtualenv
           command: >
