@@ -1,4 +1,4 @@
-upstream uwsgi {
+upstream uwsgi-{{ item.value.name }} {
     server unix:///run/uwsgi/app/{{ item.value.name }}/socket;
 }
 
@@ -72,12 +72,12 @@ server {
     location / {
         client_max_body_size {{ item.value.max_body_size }};
         include uwsgi_params;
-        uwsgi_pass uwsgi;
+        uwsgi_pass uwsgi-{{ djsite_instance_name }};
     }
 
     location @uwsgi {
         client_max_body_size {{ item.value.max_body_size }};
         include uwsgi_params;
-        uwsgi_pass uwsgi;
+        uwsgi_pass uwsgi-{{ djsite_instance_name }};
     }
 }
