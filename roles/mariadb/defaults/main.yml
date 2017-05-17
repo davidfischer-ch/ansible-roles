@@ -1,10 +1,60 @@
-mariadb_bind_address: 127.0.0.1
-mariadb_interface: null
-mariadb_bin_log_trust_function_creators: no
+# packages
 mariadb_packages:
   - 'mariadb-server-{{ mariadb_version }}'
-mariadb_port: 3306
 mariadb_version: 10.1
+# miscellaneous configuration
+mariadb_auto_rehash: yes
+mariadb_base_directory: /usr
+mariadb_bin_log_enabled: no
+mariadb_bin_log_file: /var/log/mysql/mariadb-bin
+mariadb_bin_log_index_file: /var/log/mysql/mariadb-bin.index
+mariadb_bin_log_max_size: 100M
+mariadb_bin_log_trust_function_creators: no
+mariadb_bulk_insert_buffer_size: 16M
+mariadb_concurrent_insert: 2
+mariadb_connect_timeout: 5
+mariadb_data_directory: /var/lib/mysql
+mariadb_dump_packet_max_size: 16M
+mariadb_dump_quick: yes
+mariadb_dump_quote_names: yes
+mariadb_general_log_enabled: no
+mariadb_general_log_file: /var/log/mysql/mysql.log
+mariadb_innodb_buffer_pool_size: 256M
+mariadb_innodb_file_per_table: 1
+mariadb_innodb_io_capacity: 400
+mariadb_innodb_lock_wait_timeout: 50
+mariadb_innodb_log_buffer_size: 8M
+mariadb_innodb_open_files: 400
+mariadb_isamchk_key_buffer_size: 16M
+mariadb_key_buffer_size: 128M
+mariadb_logs_retention_days: 10
+mariadb_max_connections: 100
+mariadb_max_heap_table_size: 32M
+mariadb_messages_directory: /usr/share/mysql
+mariadb_myisam_sort_buffer_size: 512M
+mariadb_packet_max_size: 16M
+mariadb_pid_file: /var/run/mysqld/mysqld.pid
+mariadb_query_cache_limit: 1M
+mariadb_query_cache_size: 16M
+mariadb_query_cache_type: demand
+mariadb_query_log_use_indexes: yes
+mariadb_read_buffer_size: 2M
+mariadb_read_rnd_buffer_size: 1M
+mariadb_server_id: 1
+mariadb_slow_query_log_enabled: no
+mariadb_slow_query_log_file: /var/log/mysql/mariadb-slow.log
+mariadb_slow_query_time: 10
+mariadb_socket_file: /var/run/mysqld/mysqld.sock
+mariadb_sort_buffer_size: 4M
+mariadb_table_open_cache: 400
+mariadb_temp_directory: /tmp
+mariadb_temp_table_size: 32M
+mariadb_thread_cache_size: 128
+mariadb_wait_timeout: 600
+# networking
+mariadb_bind_address: 127.0.0.1
+mariadb_interface: null
+mariadb_port: 3306
 mariadb_ufw_rules:
   - direction: in
     interface: '{{ mariadb_interface or omit }}'

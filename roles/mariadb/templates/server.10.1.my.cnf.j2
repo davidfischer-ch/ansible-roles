@@ -16,117 +16,119 @@
 # escpecially if they contain "#" chars...
 # Remember to edit /etc/mysql/debian.cnf when changing the socket location.
 [client]
-port        = {{ mariadb_port|int }}
-socket      = /var/run/mysqld/mysqld.sock
+port   = {{ mariadb_port|int }}
+socket = {{ mariadb_socket_file }}
 
 # Here is entries for some specific programs
 # The following values assume you have at least 32M ram
 
 # This was formally known as [safe_mysqld]. Both versions are currently parsed.
 [mysqld_safe]
-socket      = /var/run/mysqld/mysqld.sock
-nice        = 0
+nice   = 0
+socket = {{ mariadb_socket_file }}
 
 [mysqld]
 #
 # * Basic Settings
 #
-user        = mysql
-pid-file    = /var/run/mysqld/mysqld.pid
-socket      = /var/run/mysqld/mysqld.sock
-port        = {{ mariadb_port|int }}
-basedir     = /usr
-datadir     = /var/lib/mysql
-tmpdir      = /tmp
-lc_messages_dir = /usr/share/mysql
-lc_messages = en_US
+user            = mysql
+pid-file        = {{ mariadb_pid_file }}
+socket          = {{ mariadb_socket_file }}
+port            = {{ mariadb_port|int }}
+basedir         = {{ mariadb_base_directory }}
+datadir         = {{ mariadb_data_directory }}
+tmpdir          = {{ mariadb_temp_directory }}
+lc_messages_dir = {{ mariadb_messages_directory }}
+lc_messages     = en_US
 skip-external-locking
 #
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
-bind-address        = {{ mariadb_bind_address }}
+bind-address = {{ mariadb_bind_address }}
 #
 # * Fine Tuning
 #
-max_connections     = 100
-connect_timeout     = 5
-wait_timeout        = 600
-max_allowed_packet  = 16M
-thread_cache_size       = 128
-sort_buffer_size    = 4M
-bulk_insert_buffer_size = 16M
-tmp_table_size      = 32M
-max_heap_table_size = 32M
+bulk_insert_buffer_size = {{ mariadb_bulk_insert_buffer_size }}
+connect_timeout         = {{ mariadb_connect_timeout|int }}
+max_allowed_packet      = {{ mariadb_packet_max_size }}
+max_connections         = {{ mariadb_max_connections|int }}
+max_heap_table_size     = {{ mariadb_max_heap_table_size }}
+sort_buffer_size        = {{ mariadb_sort_buffer_size }}
+thread_cache_size       = {{ mariadb_thread_cache_size|int }}
+tmp_table_size          = {{ mariadb_temp_table_size }}
+wait_timeout            = {{ mariadb_wait_timeout|int }}
 #
 # * MyISAM
 #
 # This replaces the startup script and checks MyISAM tables if needed
 # the first time they are touched. On error, make copy and try a repair.
-myisam_recover_options = BACKUP
-key_buffer_size     = 128M
-#open-files-limit   = 2000
-table_open_cache    = 400
-myisam_sort_buffer_size = 512M
-concurrent_insert   = 2
-read_buffer_size    = 2M
-read_rnd_buffer_size    = 1M
+concurrent_insert       = {{ mariadb_concurrent_insert|int }}
+key_buffer_size         = {{ mariadb_key_buffer_size }}
+myisam_recover_options  = BACKUP
+myisam_sort_buffer_size = {{ mariadb_myisam_sort_buffer_size }}
+#open-files-limit       = 2000
+read_buffer_size        = {{ mariadb_read_buffer_size }}
+read_rnd_buffer_size    = {{ mariadb_read_rnd_buffer_size }}
+table_open_cache        = {{ mariadb_table_open_cache|int }}
 #
 # * Query Cache Configuration
 #
 # Cache only tiny result sets, so we can fit more in the query cache.
-query_cache_limit       = 128K
-query_cache_size        = 64M
-# for more write intensive setups, set to DEMAND or OFF
-#query_cache_type       = DEMAND
+query_cache_limit = {{ mariadb_query_cache_limit }}
+query_cache_size  = {{ mariadb_query_cache_size }}
+query_cache_type  = {{ mariadb_query_cache_types[mariadb_query_cache_type] }}
 #
 # * Logging and Replication
 #
 # Both location gets rotated by the cronjob.
 # Be aware that this log type is a performance killer.
 # As of 5.1 you can enable the log at runtime!
-#general_log_file        = /var/log/mysql/mysql.log
-#general_log             = 1
+general_log      = {{ mariadb_general_log_enabled|bool|ternary(1, 0) }}
+general_log_file = {{ mariadb_general_log_file }}
 #
 # Error logging goes to syslog due to /etc/mysql/conf.d/mysqld_safe_syslog.cnf.
 #
 # we do want to know about network errors and such
-log_warnings        = 2
+log_warnings = 2
 #
 # Enable the slow query log to see queries with especially long duration
-#slow_query_log[={0|1}]
-slow_query_log_file = /var/log/mysql/mariadb-slow.log
-long_query_time = 10
-#log_slow_rate_limit    = 1000
-log_slow_verbosity  = query_plan
-
-#log-queries-not-using-indexes
+slow_query_log      = {{ mariadb_slow_query_log_enabled|bool|ternary(1, 0) }}
+slow_query_log_file = {{ mariadb_slow_query_log_file }}
+long_query_time     = {{ mariadb_slow_query_time|int }}
+{{ mariadb_query_log_use_indexes|bool|ternary('', 'log-queries-not-using-indexes') }}
+#log_slow_rate_limit = 1000
+log_slow_verbosity = query_plan
 #log_slow_admin_statements
 #
 # The following can be used as easy to replay backup logs or for replication.
 # note: if you are setting up a replication slave, see README.Debian about
 #       other settings you may need to change.
-#server-id      = 1
-#report_host        = master1
-#auto_increment_increment = 2
-#auto_increment_offset  = 1
-log_bin         = /var/log/mysql/mariadb-bin
-log_bin_index       = /var/log/mysql/mariadb-bin.index
+server-id         = {{ mariadb_server_id|int }}
+{% if mariadb_bin_log_enabled|bool %}
+log_bin           = {{ mariadb_bin_log_file }}
+log_bin_index     = {{ mariadb_bin_log_index_file }}
+{% endif %}
 log_bin_trust_function_creators = {{ mariadb_bin_log_trust_function_creators|bool|ternary(1, 0) }}
+expire_logs_days  = {{ mariadb_logs_retention_days|int }}
+max_binlog_size   = {{ mariadb_bin_log_max_size }}
+
+#report_host              = master1
+#auto_increment_increment = 2
+#auto_increment_offset    = 1
 
 # not fab for performance, but safer
-#sync_binlog        = 1
-expire_logs_days    = 10
-max_binlog_size         = 100M
+#sync_binlog = 1
+
 # slaves
-#relay_log      = /var/log/mysql/relay-bin
-#relay_log_index    = /var/log/mysql/relay-bin.index
-#relay_log_info_file    = /var/log/mysql/relay-bin.info
+#relay_log           = /var/log/mysql/relay-bin
+#relay_log_index     = /var/log/mysql/relay-bin.index
+#relay_log_info_file = /var/log/mysql/relay-bin.info
 #log_slave_updates
 #read_only
 #
 # If applications support it, this stricter sql_mode prevents some
 # mistakes like inserting invalid dates etc.
-#sql_mode       = NO_ENGINE_SUBSTITUTION,TRADITIONAL
+#sql_mode = NO_ENGINE_SUBSTITUTION,TRADITIONAL
 #
 # * InnoDB
 #
@@ -135,12 +137,13 @@ max_binlog_size         = 100M
 default_storage_engine  = InnoDB
 # you can't just change log file size, requires special procedure
 #innodb_log_file_size   = 50M
-innodb_buffer_pool_size = 256M
-innodb_log_buffer_size  = 8M
-innodb_file_per_table   = 1
-innodb_open_files   = 400
-innodb_io_capacity  = 400
-innodb_flush_method = O_DIRECT
+innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
+innodb_log_buffer_size  = {{ mariadb_innodb_log_buffer_size }}
+innodb_file_per_table   = {{ mariadb_innodb_file_per_table|int }}
+innodb_open_files       = {{ mariadb_innodb_open_files|int }}
+innodb_io_capacity      = {{ mariadb_innodb_io_capacity|int }}
+innodb_flush_method     = O_DIRECT
+innodb_lock_wait_timeout = {{ mariadb_innodb_lock_wait_timeout|int }}
 #
 # * Security Features
 #
@@ -152,7 +155,6 @@ innodb_flush_method = O_DIRECT
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
 # ssl-key=/etc/mysql/server-key.pem
-
 #
 # * Galera-related settings
 #
@@ -174,15 +176,15 @@ innodb_flush_method = O_DIRECT
 #innodb_flush_log_at_trx_commit=0
 
 [mysqldump]
-quick
-quote-names
-max_allowed_packet  = 16M
+{{ mariadb_dump_quick|bool|ternary('quick', '') }}
+{{ mariadb_dump_quote_names|bool|ternary('quote-names', '') }}
+max_allowed_packet = {{ mariadb_dump_packet_max_size }}
 
 [mysql]
-#no-auto-rehash # faster start of mysql but no tab completion
+{{ mariadb_auto_rehash|bool|ternary('', 'no-auto-rehash') }}
 
 [isamchk]
-key_buffer      = 16M
+key_buffer = {{ mariadb_isamchk_key_buffer_size }}
 
 #
 # * IMPORTANT: Additional settings that can override those from this file!
