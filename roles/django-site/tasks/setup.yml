@@ -134,7 +134,7 @@
       tags: virtualenv
 
     - include: configure.yml
-      tags: [unit-test-extra, update]
+      tags: [config, unit-test-extra, update]
 
     - name: Trigger update hook
       include: '{{ djsite_update_tasks_file }}'
