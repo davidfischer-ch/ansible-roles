@@ -216,7 +216,7 @@
         {{ djsite_app_directory }}/test/venv/bin/python manage.py check {{ djsite_config.custom_applications|join(' ')}}
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
-      tags: unit-test-extra
+      tags: unit-test
 
     - block:
         - name: Reset the unit-tests coverage report
