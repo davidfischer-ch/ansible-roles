@@ -116,8 +116,8 @@ state_file = /var/awslogs/state/agent-state
 # ----------------------------------------------------------------------------------------------------------------------
 #  %c           Locale's appropriate date and time representation.                                      Tue Aug 16 21:30:00 1988 (en_US)
 # ----------------------------------------------------------------------------------------------------------------------
-
 {% for key, log in cloudwatch_logs_agent_logs.items()|sort %}
+
 [{{ log.name }}]
 file = {{ log.file }}
 buffer_duration = {{ log.buffer_duration|default(cloudwatch_logs_agent_default_buffer_duration)|int }}
