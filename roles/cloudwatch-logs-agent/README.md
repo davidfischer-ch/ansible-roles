@@ -36,6 +36,30 @@ cloudwatch_logs_agent_logs:
     datetime_format: '%Y-%m-%d %H:%M:%S,%f'  # e.g. 2017-03-28 07:50:45
     stream_name: 'fail2ban {instance_id}'
 
+  apache-default-access:
+    name: apache-default-access
+    file: /var/log/apache2/access.log
+    datetime_format: '%d/%b/%Y:%H:%M:%S %z'  # e.g. 27/Mar/2017:15:26:29 +0000
+    stream_name: 'apache default access {instance_id}'
+
+  apache-default-error:
+    name: apache-default-error
+    file: /var/log/apache2/error.log
+    datetime_format: '%b %d %H:%M:%S.%f %Y'  # e.g. May 19 06:25:01.551855 2017
+    stream_name: 'apache default error {instance_id}'
+
+  apache-other-vhosts-access:
+    name: apache-other-vhosts-access
+    file: /var/log/apache2/other_vhosts_access.log
+    datetime_format: '%d/%b/%Y:%H:%M:%S %z'  # e.g. 27/Mar/2017:15:26:29 +0000
+    stream_name: 'apache other vhosts access {instance_id}'
+
+  apache-other-vhosts-error:
+    name: apache-other-vhosts-error
+    file: /var/log/apache2/other_vhosts_error.log
+    datetime_format: '%b %d %H:%M:%S.%f %Y'  # e.g. May 19 06:25:01.551855 2017
+    stream_name: 'apache other vhosts error {instance_id}'
+
   nginx-default-access:
     name: nginx-default-access
     file: /var/log/nginx/access.log
