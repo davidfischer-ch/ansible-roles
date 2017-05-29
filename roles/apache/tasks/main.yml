@@ -45,11 +45,13 @@
       template: >
         src={{ apache_ports_file }} dest=/etc/apache2/ports.conf mode=600
       notify: restart apache
+      when: apache_ports_file|length > 0
 
     - name: Configure Apache macros
       template: >
         src={{ apache_macros_file }} dest=/etc/apache2/mods-available/macro.conf mode=644
       notify: reload apache
+      when: apache_macros_file|length > 0
 
     - name: Enable Apache modules
       apache2_module: >
