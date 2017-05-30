@@ -39,9 +39,8 @@ options:
 """
 
 EXAMPLES = r"""
-- cleanup_releases: directory=/var/app/releases keep=3
-- cleanup_releases: directory=/var/app/releases keep=3 ok_flag=ok.flag
-- cleanup_releases: directory=/var/app/releases keep=3 regexp='release-[0-9]{3}'
+- cleanup_releases: directory=/var/app/releases keep=3 regexp=release-[0-9]{3}
+- cleanup_releases: directory=/var/app/releases keep=3 ok_flag=ok.flag regexp=[0-9]{8}T[0-9]{6}
 """
 
 
@@ -60,7 +59,6 @@ def main():
     if keep is not None and keep < 1:
         module.fail_json(msg="'keep' should be a positive number")
 
-    # FIXME first should be removed releases that don't have the "complete" flag
     releases, remove_releases = set(os.path.join(directory, r) for r in os.listdir(directory) if regexp.match(r)), set()
     if ok_flag is not None:
         remove_releases = set(r for r in releases if not os.path.exists(os.path.join(r, ok_flag)))
