@@ -42,8 +42,9 @@
 
     - name: Restore Website database
       shell: >
-        PGPASSWORD={{ djsite_database_password }} psql {{ djsite_database_name }} --username {{ djsite_database_user }} \
-          --host {{ djsite_database_host }} --port {{ djsite_database_port }} < {{ _tmp_directory }}/db.sql
+        PGPASSWORD={{ djsite_database_password }} pg_restore --clean -d {{ djsite_database_name }} --no-acl --no-owner \
+          --host {{ djsite_database_host }} --port {{ djsite_database_port }} --username {{ djsite_database_user }} \
+          {{ _tmp_directory }}/db.sql
       tags: database
       when: djsite_is_master|bool
 
