@@ -11,6 +11,13 @@
       package: >
         name={{ item }} state=present
       with_items: '{{ php_packages }}'
+
+    - name: Install PHP mbstring package if available
+      package: >
+        name={{ php_mbstring_package }} state=present
+      failed_when: _php_mbstring|failed and 'available' not in _php_mbstring.msg
+      register: _php_mbstring
+      when: php_mbstring_package|length > 0
   become: yes
   tags: [php, packages]
 
