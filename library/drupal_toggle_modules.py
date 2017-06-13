@@ -80,7 +80,7 @@ def toggle_drupal_modules(drush, directory, enable=None, disable=None, simulate=
             })
     if not simulate:
         for state, action in ('disabled', 'dis'), ('enabled', 'en'):
-            subprocess.check_call([drush, action] + toggle_modules[state], cwd=directory)
+            subprocess.check_call([drush, action, '-y'] + toggle_modules[state], cwd=directory)
     return updated_modules
 
 if __name__ == '__main__':
