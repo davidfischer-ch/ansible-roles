@@ -1,15 +1,9 @@
 # Install and configure Apache 2
 ---
 
-- block:
-    - dynamic_defaults:
-        hostvars: '{{ hostvars[inventory_hostname] }}'
-        defaults: '{{ apache_dynamic_defaults }}'
-        must_match: yes
-
-    - assert:
-        that:
-          apache_log_level in apache_log_levels
+- assert:
+    that:
+      apache_log_level in apache_log_levels
   tags: [apache, always]
 
 - name: Install Apache packages
