@@ -1,6 +1,7 @@
 # packages
 apache_packages:
   - apache2
+apache_macro_package: libapache2-mod-macro
 # miscellaneous configuration
 apache_config_file: 'apache{{ apache_version[:3] }}.conf.j2'
 apache_extra_config_files: {}

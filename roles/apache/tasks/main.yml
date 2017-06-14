@@ -6,12 +6,20 @@
       apache_log_level in apache_log_levels
   tags: [apache, always]
 
-- name: Install Apache packages
-  package: >
-    name={{ item }} state=present
+- block:
+    - name: Install Apache packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ apache_packages }}'
+
+    - name: Install Apache macro package if available
+      package: >
+        name={{ apache_macro_package }} state=present
+      failed_when: _apache_macro|failed and 'available' not in _apache_macro.msg
+      register: _apache_macro
+      when: apache_macro_package|length > 0
   become: yes
   tags: [apache, packages]
-  with_items: '{{ apache_packages }}'
 
 - include: pagespeed.yml
   tags: [apache, packages]
