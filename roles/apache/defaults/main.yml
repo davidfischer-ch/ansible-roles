@@ -1,6 +1,14 @@
-# packages
-apache_packages:
-  - apache2
+apache_dynamic_defaults:
+
+  ubuntu-12.*:
+    apache_packages:
+      - apache2
+      - libapache2-mod-macro
+
+  linux:
+    apache_packages:
+      - apache2
+
 # miscellaneous configuration
 apache_config_file: 'apache{{ apache_version[:3] }}.conf.j2'
 apache_extra_config_files: {}
