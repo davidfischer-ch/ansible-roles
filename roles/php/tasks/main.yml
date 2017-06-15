@@ -51,13 +51,21 @@
           - php_config_files|length > 0
           - php_extra_config_directories|length > 0
 
+    - include: get-version.yml
+
     - name: Enable PHP modules
       script: >
         scripts/php_enable_module {{ php_version }} {{ item }}
       changed_when: "'changed' in _php_enable_module.stdout|default('')"
       notify: php_config_changed
       register: _php_enable_module
+      when: php_detected_version|version_compare('5.4', '>=')
       with_items: '{{ php_modules }}'
+
+    - name: WARNING Enable PHP modules is not implemented with PHP < 5.4
+      pause: >
+        seconds=5
+      when: php_detected_version|version_compare('5.4', '<')
 
     - name: Configure PHP
       lineinfile: >

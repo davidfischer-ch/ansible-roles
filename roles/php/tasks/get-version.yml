@@ -1,0 +1,14 @@
+---
+
+- block:
+    - name: Detect PHP version
+      shell: php{{ php_version }} --version | egrep -o 'PHP [0-9]+\.[0-9]+\.[0-9]+' | cut -d' ' -f2
+      changed_when: no
+      check_mode: no
+      register: _php_detected_version
+
+    - set_fact:
+        php_detected_version: '{{ _php_detected_version.stdout }}'
+
+    - debug: var=php_detected_version
+  become: yes
