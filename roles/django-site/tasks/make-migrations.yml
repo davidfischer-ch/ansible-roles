@@ -1,0 +1,29 @@
+---
+
+- block:
+    - fail:
+        msg: 'Deploy code from a local directory to receive the generated migration files'
+      when: not djsite_repository_is_local|bool
+
+    - name: Make database migrations
+      command: >
+        {{ djsite_app_directory }}/test/venv/bin/python manage.py makemigrations {{ djsite_config.custom_applications|join(' ') }}
+      args:
+        chdir: '{{ djsite_app_directory }}/test/server'
+
+    - name: Generate graphs of the models
+      shell: >
+        {{ djsite_app_directory }}/test/venv/bin/python ../manage.py graph_models | dot -Tpng -omigrations/models.png
+      args:
+        chdir: '{{ djsite_app_directory }}/test/server/{{ item }}'
+      when: djsite_graph_models_enabled|bool
+      with_items: '{{ djsite_config.custom_applications }}'
+
+    - name: Copy the database migrations in the local machine
+      synchronize: >
+        src={{ djsite_app_directory }}/test/server/{{ item }}/migrations/
+        dest={{ djsite_repository_url }}/{{ djsite_config.source_path }}/{{ item }}/migrations/
+        archive=yes checksum=yes delete=yes mode=pull
+      with_items: '{{ djsite_config.custom_applications }}'
+  become: yes
+  become_user: '{{ djsite_daemon_user }}'

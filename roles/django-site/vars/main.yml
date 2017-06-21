@@ -7,3 +7,4 @@ djsite_role_actions:
   - setup
   - local-backup
   - local-restore
+  - update-migrations
