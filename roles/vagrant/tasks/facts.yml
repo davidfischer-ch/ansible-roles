@@ -9,4 +9,8 @@
     - assert:
         that:
           - vagrant_role_action in vagrant_role_actions
+
+    - name: Make machines directory variable constant
+      set_fact:
+        vagrant_machines_directory: '{{ vagrant_machines_directory }}'
   tags: always

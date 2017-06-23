@@ -1,17 +1,21 @@
 ---
 
+- name: Create machines configuration directory
+  file: >
+    name={{ vagrant_machines_directory }} state=directory
+
 - name: Generate Vagrant file
   template: >
-    src=Vagrantfile.j2 dest=/tmp/Vagrantfile mode=644
+    src=Vagrantfile.j2 dest={{ vagrant_machines_directory }}/Vagrantfile mode=644
 
 - name: Save machines specifications into a file
   copy: >
-    dest=/tmp/vagrant_machines.yml content='{{ vagrant_machines|to_yaml }}'
+    dest={{ vagrant_machines_directory }}/vagrant_machines.yml content='{{ vagrant_machines|to_yaml }}'
 
 # FIXME convert to a module?
 - name: Detect machines IDs
   script: >
-    set-machines-ids /tmp/vagrant_machines.yml
+    set-machines-ids {{ vagrant_machines_directory }}/vagrant_machines.yml
   changed_when: no
   check_mode: no
   register: _vagrant_ids
@@ -22,14 +26,14 @@
 
 - name: Create machines metadata directories
   file: >
-    name=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }} state=directory
+    name={{ vagrant_machines_directory }}/.vagrant/machines/{{ item.key }}/{{ item.value.provider }} state=directory
   loop_control:
     label: '{{ item.key }}'
   with_dict: '{{ vagrant_machines }}'
 
 - name: Update machines IDs file
   copy: >
-    dest=/tmp/.vagrant/machines/{{ item.key }}/{{ item.value.provider }}/id
+    dest={{ vagrant_machines_directory }}/.vagrant/machines/{{ item.key }}/{{ item.value.provider }}/id
     content={{ item.value.uuid }} force=yes
   loop_control:
     label: '{{ item.key }}'

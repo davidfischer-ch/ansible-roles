@@ -7,6 +7,7 @@ vagrant_dynamic_defaults:
       - vagrant
       - vagrant-lxc
 vagrant_machines: {}
+vagrant_machines_directory: "/tmp/vagrant-{{ vagrant_machines|to_yaml|hash('md5') }}"
 vagrant_plugins: []  # e.g. vbox-snapshot
 vagrant_snapshots: {}
 vagrant_update_boxes: yes

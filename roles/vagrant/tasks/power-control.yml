@@ -8,8 +8,8 @@
 
 - name: Set machines power mode
   vagrant_machine: >
-    chdir=/tmp name={{ item.key }} provider={{ item.value.provider }} state={{ vagrant_power_mode }}
-    timeout={{ item.value.timeout|int if item.value.timeout is defined else omit }}
+    chdir={{ vagrant_machines_directory }} name={{ item.key }} provider={{ item.value.provider }}
+    timeout={{ item.value.timeout|int if item.value.timeout is defined else omit }} state={{ vagrant_power_mode }}
   loop_control:
     label: '{{ item.key }}'
   with_dict: '{{ vagrant_machines }}'

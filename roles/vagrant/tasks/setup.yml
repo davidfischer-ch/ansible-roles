@@ -28,7 +28,7 @@
       command: >
         vagrant box outdated
       args:
-        chdir: /tmp
+        chdir: '{{ vagrant_machines_directory }}'
       changed_when: "vagrant_update_boxes|bool and 'to update' in _vagrant_outdated.stdout"
       check_mode: no
       register: _vagrant_outdated
@@ -38,13 +38,13 @@
       command: >
         vagrant box update
       args:
-        chdir: /tmp
+        chdir: '{{ vagrant_machines_directory }}'
       tags: upgrade
       when: _vagrant_outdated|changed
 
     - name: Provision machines
       vagrant_machine: >
-        chdir=/tmp name={{ item.key }} provider={{ item.value.provider }} state=running
+        chdir={{ vagrant_machines_directory }} name={{ item.key }} provider={{ item.value.provider }} state=running
         timeout={{ item.value.timeout|int if item.value.timeout is defined else omit }}
       loop_control:
         label: '{{ item.key }}'
@@ -75,7 +75,7 @@
       command: >
         vagrant snapshot list {{ item.key }}
       args:
-        chdir: /tmp
+        chdir: '{{ vagrant_machines_directory }}'
       changed_when: no
       check_mode: no
       loop_control:
@@ -87,7 +87,7 @@
       command: >
         vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
       args:
-        chdir: /tmp
+        chdir: '{{ vagrant_machines_directory }}'
       loop_control:
         label: '{{ item.item.key }} snapshot {{ item.item.value }}'
       when: "' {{ item.item.value }} ' not in item.stdout"
