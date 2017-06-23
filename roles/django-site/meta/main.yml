@@ -18,5 +18,11 @@ dependencies:
   - role: github
     tags: [django-site, dependencies]
 
+  - role: logrotate
+    logrotate_log_rotations: '{{ djsite_log_rotations }}'
+    logrotate_role_action: setup
+    tags: [django-site, dependencies]
+    when: djsite_role_action == 'setup' and djsite_log_rotations
+
   - role: supervisor
     tags: [django-site, dependencies]

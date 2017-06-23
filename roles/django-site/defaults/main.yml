@@ -14,11 +14,17 @@ djsite_data_directory: '/data/{{ djsite_instance_name }}'
 djsite_log_directory: '/var/log/{{ djsite_instance_name }}'
 
 # cache, database, storage and web server
-
 djsite_domain_old: ''
 djsite_redirect_ssl: no
 djsite_max_body_size: 100k
 djsite_ssl_enabled: no
+
+# logging
+djsite_log_rotations_max_count: 49
+djsite_log_rotations_config_file: logrotate.j2
+djsite_log_rotations:
+  - name: '{{ djsite_instance_name }}'
+    config_file: '{{ djsite_log_rotations_config_file }}'
 
 # miscellaneous settings
 djsite_bower_enabled: no

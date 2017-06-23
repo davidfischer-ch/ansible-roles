@@ -1,0 +1,12 @@
+/var/log/{{ djsite_instance_name }}/*.log {
+       daily
+       dateext
+       missingok
+       rotate {{ djsite_log_rotations_max_count|int }}
+       compress
+       delaycompress
+       nomail
+       notifempty
+       create 644 root root
+       sharedscripts
+}
