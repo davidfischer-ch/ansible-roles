@@ -19,3 +19,4 @@
       include: '{{ djsite_configure_tasks_file }}'
       when: djsite_configure_tasks_file|length > 0
   become: yes
+  become_user: root

@@ -4,4 +4,5 @@
   stat: >
     path={{ djsite_app_directory }}/production
   become: yes
+  become_user: root
   register: djsite_production_link
