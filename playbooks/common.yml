@@ -9,6 +9,7 @@
     - all:!localhost
   roles:
     - bootstrap
+    - bash
     - fail2ban
     - ufw
     - miscellaneous
