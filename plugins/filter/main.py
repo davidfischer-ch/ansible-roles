@@ -24,7 +24,7 @@ def chunk(objects, length, of_type=list):
 
 
 def enumerate_(objects, *args, **kwargs):
-    return ({'index': i, 'items': o} for i, o in enumerate(objects, *args, **kwargs))
+    return ({'index': i, 'objects': o} for i, o in enumerate(objects, *args, **kwargs))
 
 
 def format_items(items, pattern):
