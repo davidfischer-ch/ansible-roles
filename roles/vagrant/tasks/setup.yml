@@ -30,25 +30,24 @@
       register: _vagrant_outdated
       tags: upgrade
 
-    - name: Update boxes
-      command: >
-        vagrant box update
-      args:
-        chdir: '{{ vagrant_machines_directory }}'
-      tags: upgrade
-      when: _vagrant_outdated|changed
+    - block:
+        - name: Update boxes
+          command: >
+            vagrant box update
+          args:
+            chdir: '{{ vagrant_machines_directory }}'
 
-    - name: Cleanup boxes
-      command: >
-        vagrant box prune --force {{ ansible_check_mode|ternary('--dry-run', '') }}
-      changed_when: >
-        _vagrant_prune|success and (
-          'Usage' not in _vagrant_prune.stdout and
-          'no installed' not in _vagrant_prune.stdout and
-          'No old versions' not in _vagrant_prune.stdout
-        )
-      check_mode: no
-      register: _vagrant_prune
+        - name: Cleanup boxes
+          command: >
+            vagrant box prune --force {{ ansible_check_mode|ternary('--dry-run', '') }}
+          changed_when: >
+            _vagrant_prune|success and (
+              'Usage' not in _vagrant_prune.stdout and
+              'no installed' not in _vagrant_prune.stdout and
+              'No old versions' not in _vagrant_prune.stdout
+            )
+          check_mode: no
+          register: _vagrant_prune
       tags: upgrade
       when: _vagrant_outdated|changed
 
