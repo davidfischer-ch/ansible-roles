@@ -1,0 +1,6 @@
+---
+
+- name: Install Vagrant release {{ vagrant_version }}
+  apt: >
+    deb={{ vagrant_release_url }} state=present
+  become: yes

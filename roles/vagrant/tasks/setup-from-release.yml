@@ -1,0 +1,3 @@
+---
+
+- include: setup-from-release-{{ ansible_pkg_mgr }}.yml

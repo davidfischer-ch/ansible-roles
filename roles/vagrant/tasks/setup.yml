@@ -1,11 +1,7 @@
 ---
 
 - block:
-    - name: Install Vagrant packages
-      package: >
-        name={{ item }} state=present
-      become: yes
-      with_items: '{{ vagrant_packages }}'
+    - include: setup-from-{{ 'release' if vagrant_from_release|bool else 'repository' }}.yml
 
     - name: Get installed Vagrant plugins
       command: >

@@ -1,13 +1,20 @@
 vagrant_dynamic_defaults:
+  apt:
+    vagrant_release_url: 'https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.deb'
+  yum:
+    vagrant_release_url: 'https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.rpm'
   macosx:
+    vagrant_from_release: no
+    vagrant_release_url: 'https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.dmg'
     vagrant_packages:
       - vagrant
   linux:
+    vagrant_from_release: yes
     vagrant_packages:
       - vagrant
-      - vagrant-lxc
 vagrant_machines: {}
 vagrant_machines_directory: "/tmp/vagrant-{{ vagrant_machines|to_yaml|hash('md5') }}"
 vagrant_plugins: []  # e.g. vbox-snapshot
 vagrant_snapshots: {}
 vagrant_update_boxes: yes
+vagrant_version: 1.9.5
