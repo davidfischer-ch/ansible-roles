@@ -7,7 +7,7 @@
        delaycompress
        nomail
        notifempty
-       create 644 root root
+       create 644 {{ nginx_daemon_user }} {{ nginx_daemon_group }}
        sharedscripts
        postrotate
               [ -f /run/nginx.pid ] && kill -USR1 `cat /run/nginx.pid`

@@ -7,6 +7,6 @@
        delaycompress
        nomail
        notifempty
-       create 644 root root
+       create 644 {{ djsite_daemon_user }} {{ djsite_daemon_group }}
        sharedscripts
 }

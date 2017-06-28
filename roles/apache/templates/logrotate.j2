@@ -7,7 +7,7 @@
        delaycompress
        nomail
        notifempty
-       create 644 root root
+       create 644 {{ apache_daemon_user }} {{ apache_daemon_group }}
        sharedscripts
        postrotate
               if /etc/init.d/apache2 status > /dev/null ; then \
