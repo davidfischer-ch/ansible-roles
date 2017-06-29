@@ -31,6 +31,13 @@ def format_items(items, pattern):
     return [pattern.format(i) for i in items]
 
 
+def ec2_group_rules(cidr_ips, **kwargs):
+    for cidr_ip in cidr_ips:
+        rules = {'cidr_ip': cidr_ip}
+        rules.update(kwargs)
+        yield rules
+
+
 def oldest_ec2_snapshots(snapshots, keep):
     return sorted(snapshots, key=lambda s: s['start_time'])[keep:]
 
@@ -43,6 +50,7 @@ class FilterModule(object):
             'chunk': chunk,
             'enumerate': enumerate_,
             'format_items': format_items,
+            'ec2_group_rules': ec2_group_rules,
             'oldest_ec2_snapshots': oldest_ec2_snapshots
         }
 
