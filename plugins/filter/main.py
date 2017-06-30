@@ -38,6 +38,13 @@ def ec2_group_rules(cidr_ips, **kwargs):
         yield rules
 
 
+def ec2_vpc_routes(dests, **kwargs):
+    for dest in dests:
+        route = {'dest': dest}
+        route.update(**kwargs)
+        yield route
+
+
 def oldest_ec2_snapshots(snapshots, keep):
     return sorted(snapshots, key=lambda s: s['start_time'])[keep:]
 
@@ -51,6 +58,7 @@ class FilterModule(object):
             'enumerate': enumerate_,
             'format_items': format_items,
             'ec2_group_rules': ec2_group_rules,
+            'ec2_vpc_routes': ec2_vpc_routes,
             'oldest_ec2_snapshots': oldest_ec2_snapshots
         }
 
