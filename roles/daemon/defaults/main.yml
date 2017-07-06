@@ -3,4 +3,4 @@ daemon_group: '{{ daemon_user }}'
 daemon_groups: '{{ omit }}'
 daemon_password: ''
 daemon_password_hash_algorithm: 'sha512'
-daemon_password_hash_salt: null
+daemon_password_hash_salt: null  # Set it to some value to get relevant "changed" status on "user" task
