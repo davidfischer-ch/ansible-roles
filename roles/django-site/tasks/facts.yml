@@ -13,6 +13,7 @@
           - djsite_max_releases|int > 0
           - djsite_release_mode in djsite_release_modes
           - djsite_release_timestamp is defined
+          - djsite_repository_url is defined
           - djsite_role_action in djsite_role_actions
           - djsite_secret_key|length > 30
           - djsite_settings_module is defined
@@ -27,13 +28,16 @@
 
     - assert:
         that:
-          - djsite_repository_host is defined
-          - djsite_repository_key is defined
-          - djsite_repository_url is defined
-          - djsite_ssh_key_private is defined
-          - djsite_ssh_key_public is defined
           - djsite_version is defined
       when: not djsite_repository_is_local|bool
+
+    - assert:
+        that:
+          - djsite_repository_host is defined
+          - djsite_repository_key is defined
+          - djsite_ssh_key_private is defined
+          - djsite_ssh_key_public is defined
+      when: not djsite_repository_is_local|bool or djsite_has_private_requirements|bool
 
     - debug: var={{ item }}
       with_items:

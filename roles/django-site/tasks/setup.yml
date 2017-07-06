@@ -41,7 +41,7 @@
           known_hosts: >
             name={{ djsite_repository_host }} key='{{ djsite_repository_key }}' state=present
           become_user: '{{ djsite_daemon_user }}'
-      when: not djsite_repository_is_local|bool
+      when: not djsite_repository_is_local|bool or djsite_has_private_requirements|bool
   become: yes
   tags: config
 

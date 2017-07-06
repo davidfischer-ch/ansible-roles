@@ -38,6 +38,7 @@ djsite_coverage_options:
   - --omit=*/migrations/*,*/tests/*
 djsite_disallow_robots: no
 djsite_graph_models_enabled: no
+djsite_has_private_requirements: no  # Set it to yes if you have requirements
 djsite_sass_enabled: no
 djsite_release_mode: normal
 djsite_release_ok_flag: ok.flag
