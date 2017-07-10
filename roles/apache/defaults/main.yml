@@ -59,7 +59,8 @@ apache_ssl_cipher_suite:
   - AES128-SHA256
   - AES256-SHA
   - AES128-SHA
-  - DES-CBC3-SHA:HIGH
+  - DES-CBC3-SHA
+  - HIGH
   - '!aNULL'
   - '!eNULL'
   - '!EXPORT'
