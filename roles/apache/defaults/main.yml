@@ -14,6 +14,29 @@ apache_macros: {}
 apache_macros_file: macro.conf.j2
 apache_ports_file: ports.conf.j2
 apache_request_timeout: 300
+# multi-processing configuration
+apache_mpm_event_max_clients: 150
+apache_mpm_event_max_requests_per_child: 0
+apache_mpm_event_max_spare_servers: 75
+apache_mpm_event_min_spare_servers: 25
+apache_mpm_event_server_limit: 16
+apache_mpm_event_start_servers: 2
+apache_mpm_event_thread_limit: 64
+apache_mpm_event_threads_per_child: 25
+apache_mpm_prefork_max_clients: 150
+apache_mpm_prefork_max_requests_per_child: 0
+apache_mpm_prefork_max_spare_servers: 10
+apache_mpm_prefork_min_spare_servers: 5
+apache_mpm_prefork_server_limit: 256
+apache_mpm_prefork_start_servers: 5
+apache_mpm_worker_max_clients: 150
+apache_mpm_worker_max_requests_per_child: 0
+apache_mpm_worker_max_spare_servers: 75
+apache_mpm_worker_min_spare_servers: 25
+apache_mpm_worker_server_limit: 16
+apache_mpm_worker_start_servers: 2
+apache_mpm_worker_thread_limit: 64
+apache_mpm_worker_threads_per_child: 25
 # modules
 apache_modules:
   - headers
