@@ -49,15 +49,6 @@
       notify: reload apache
       with_dict: '{{ apache_extra_config_files }}'
 
-    - name: Configure Apache multi-processing modules
-      template: >
-        src=mpm_{{ item }}.conf.j2 dest=/etc/apache2/mods-available/mpm_{{ item }}.conf mode=644
-      notify: restart apache
-      with_items:
-        - event
-        - prefork
-        - worker
-
     - name: Configure Apache ports
       template: >
         src={{ apache_ports_file }} dest=/etc/apache2/ports.conf mode=600
@@ -70,12 +61,21 @@
       notify: reload apache
       when: apache_macros_file|length > 0
 
+    - name: Configure Apache base modules
+      template: >
+        src=modules/{{ item }}.conf.j2 dest=/etc/apache2/mods-available/{{ item }}.conf mode=644
+      notify: restart apache
+      with_items:
+        - mpm_event
+        - mpm_prefork
+        - mpm_worker
+        - ssl
+
     - name: Enable Apache modules
       apache2_module: >
         name={{ item }} state=present
       notify: restart apache
       with_items: '{{ apache_modules }}'
-
   become: yes
   tags: [apache, config]
 
