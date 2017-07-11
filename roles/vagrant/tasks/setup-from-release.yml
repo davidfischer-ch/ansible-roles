@@ -1,3 +1,8 @@
 ---
 
+- name: Download Vagrant release {{ vagrant_version }}
+  get_url: >
+    url={{ vagrant_release_url }} dest={{ local_source_directory }}/{{ vagrant_release_url|basename }} force=no
+  become: yes
+
 - include: setup-from-release-{{ ansible_pkg_mgr }}.yml

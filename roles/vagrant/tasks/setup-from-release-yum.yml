@@ -2,5 +2,5 @@
 
 - name: Install Vagrant release {{ vagrant_version }}
   yum: >
-    name={{ vagrant_release_url }} state=present
+    name={{ local_source_directory }}/{{ vagrant_release_url|basename }} state=present
   become: yes

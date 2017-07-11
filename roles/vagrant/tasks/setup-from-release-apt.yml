@@ -2,5 +2,5 @@
 
 - name: Install Vagrant release {{ vagrant_version }}
   apt: >
-    deb={{ vagrant_release_url }} state=present
+    deb={{ local_source_directory }}/{{ vagrant_release_url|basename }} state=present
   become: yes
