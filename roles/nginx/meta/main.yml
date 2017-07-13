@@ -14,7 +14,7 @@ dependencies:
     logrotate_log_rotations: '{{ nginx_log_rotations }}'
     logrotate_role_action: setup
     tags: [nginx, dependencies]
-    when: nginx_log_rotations
+    when: nginx_log_rotations|length > 0
 
   - role: supervisor
     tags: [nginx, dependencies]
@@ -23,4 +23,4 @@ dependencies:
   - role: ufw
     ufw_rules: '{{ nginx_ufw_rules }}'
     tags: [nginx, dependencies]
-    when: nginx_ufw_rules
+    when: nginx_ufw_rules|length > 0

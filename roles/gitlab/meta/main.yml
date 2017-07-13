@@ -7,4 +7,4 @@ dependencies:
   - role: ufw
     ufw_rules: '{{ gitlab_ufw_rules }}'
     tags: [gitlab, dependencies]
-    when: gitlab_ufw_rules
+    when: gitlab_ufw_rules|length > 0

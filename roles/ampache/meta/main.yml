@@ -25,4 +25,4 @@ dependencies:
   - role: ufw
     ufw_rules: '{{ ampache_ufw_rules }}'
     tags: [ampache, dependencies]
-    when: ampache_ufw_rules
+    when: ampache_ufw_rules|length > 0

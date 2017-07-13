@@ -14,4 +14,4 @@ dependencies:
   - role: ufw
     ufw_rules: '{{ haproxy_ufw_rules }}'
     tags: [haproxy, dependencies]
-    when: haproxy_ufw_rules
+    when: haproxy_ufw_rules|length > 0

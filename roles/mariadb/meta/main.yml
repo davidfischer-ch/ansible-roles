@@ -7,4 +7,4 @@ dependencies:
   - role: ufw
     ufw_rules: '{{ mariadb_ufw_rules }}'
     tags: [mariadb, dependencies]
-    when: mariadb_ufw_rules
+    when: mariadb_ufw_rules|length > 0

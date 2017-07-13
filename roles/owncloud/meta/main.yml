@@ -15,4 +15,4 @@ dependencies:
   - role: ufw
     ufw_rules: '{{ owncloud_ufw_rules }}'
     tags: [owncloud, dependencies]
-    when: owncloud_ufw_rules
+    when: owncloud_ufw_rules|length > 0
