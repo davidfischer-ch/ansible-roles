@@ -30,6 +30,14 @@
         src={{ varnish_config_file }} dest=/etc/default/varnish mode=0644
       notify: restart varnish
 
+    - name: Configure Varnish service on SystemD
+      template: >
+        src={{ varnish_service_file }} dest=/etc/systemd/system/varnish.service mode=0644
+      notify:
+        - reload systemd
+        - restart varnish
+      when: ansible_service_mgr == 'systemd'
+
     - name: Configure Varnish default VCL
       template: >
         src={{ varnish_default_vcl_config_file }} dest=/etc/varnish/default.vcl mode=644

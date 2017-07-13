@@ -1,5 +1,10 @@
 ---
 
+- name: reload systemd
+  command: >
+    systemctl daemon-reload
+  become: yes
+
 - name: restart varnish
   service: >
     name=varnish state=restarted

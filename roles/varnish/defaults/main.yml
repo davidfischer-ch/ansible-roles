@@ -6,6 +6,7 @@ varnish_default_vcl_host: 127.0.0.1
 varnish_default_vcl_port: 8080
 varnish_packages:
   - varnish
+varnish_service_file: varnish.service.j2
 varnish_storage: malloc,256m
 varnish_version: 4.1
 # networking
