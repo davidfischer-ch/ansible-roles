@@ -1,0 +1,10 @@
+---
+
+- name: Configure Nginx service
+  template: >
+    src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
+  notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
+
+- name: Install Nginx service
+  supervisorctl: >
+    name=nginx state=present

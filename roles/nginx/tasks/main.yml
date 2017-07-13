@@ -165,30 +165,7 @@
         path=/etc/nginx/sites-enabled/default state=absent
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
 
-    - block:
-        - name: Configure Nginx service
-          template: >
-            src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/nginx.conf mode=644
-          notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
-
-        - name: Install Nginx service
-          supervisorctl: >
-            name=nginx state=present
-      when: "nginx_daemon_mode == 'supervisor'"
-
-    - name: Configure Nginx service
-      template: >
-        src=nginx.service.j2 dest=/etc/systemd/system/nginx.service mode=755
-      notify:
-        - reload systemd
-        - '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
-      when: "nginx_daemon_mode == 'systemd'"
-
-    - name: Configure Nginx service
-      template: >
-        src=init.d.j2 dest=/etc/init.d/nginx mode=755
-      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
-      when: "nginx_daemon_mode == 'systemv'"
+    - include: setup-service-{{ nginx_daemon_mode }}.yml
   become: yes
   tags: [nginx, config]
 

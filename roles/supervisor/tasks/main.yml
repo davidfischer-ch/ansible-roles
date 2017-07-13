@@ -36,19 +36,7 @@
       file: >
         src=/etc/supervisor/supervisord.conf dest=/etc/supervisord.conf state=link
 
-    - name: Configure Supervisor service
-      template: >
-        src=supervisor.service.j2 dest=/etc/systemd/system/supervisor.service mode=755
-      notify:
-        - reload systemd
-        - restart supervisor
-      when: "supervisor_daemon_mode == 'systemd'"
-
-    - name: Install Supervisor service
-      template: >
-        src=supervisor dest=/etc/init.d/supervisor mode=755
-      notify: restart supervisor
-      when: "supervisor_daemon_mode == 'systemv'"
+    - include: setup-service-{{ supervisor_daemon_mode }}.yml
 
     - meta: flush_handlers
   become: yes

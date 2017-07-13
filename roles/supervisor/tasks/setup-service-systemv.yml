@@ -1,0 +1,6 @@
+---
+
+- name: Install Supervisor service
+  template: >
+    src=supervisor dest=/etc/init.d/supervisor mode=755
+  notify: restart supervisor
