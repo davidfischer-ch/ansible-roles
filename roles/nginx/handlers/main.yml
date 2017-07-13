@@ -17,10 +17,10 @@
 
 - name: system restart nginx
   service: >
-    name=nginx state=restarted
+    name=nginx use={{ nginx_daemon_mode }} state=restarted
   become: yes
 
 - name: system reload nginx
   service: >
-    name=nginx state=reloaded
+    name=nginx use={{ nginx_daemon_mode }} state=reloaded
   become: yes

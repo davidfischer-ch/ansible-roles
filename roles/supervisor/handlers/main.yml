@@ -7,5 +7,5 @@
 
 - name: restart supervisor
   service: >
-    name=supervisor state=restarted
+    name=supervisor use={{ supervisor_daemon_mode }} state=restarted
   become: yes
