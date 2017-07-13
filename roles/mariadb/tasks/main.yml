@@ -18,6 +18,24 @@
       notify: restart mariadb
       tags: config
 
+    - name: Configure socket for Debian
+      replace: >
+        dest=/etc/mysql/debian.cnf owner=root group=root mode=600
+        regexp='^socket\s+=\s+\S+' replace='socket = {{ mariadb_socket_file }}'
+      tags: config
+      when: ansible_os_family == 'Debian'
+
+    - name: Remove default MySQL configuration
+      file: >
+        path=/etc/mysql/{{ item }} state=absent
+      notify: restart mariadb
+      tags: config
+      with_items:
+        - conf.d/mariadb.cnf
+        - conf.d/mysql.cnf
+        - conf.d/mysqld_safe_syslog.cnf
+        - conf.d/mysqldump.cnf
+
     - name: Start MariaDB service
       service: >
         name=mysql state=started enabled=yes

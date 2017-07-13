@@ -1,19 +1,17 @@
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ mariadb_dynamic_defaults }}'
+    must_match: yes
+  tags: [mariadb-client, always]
+
 - block:
     - name: Install MySQL python packages
       package: >
         name=python-mysqldb state=present
 
-    - block:
-        - name: Register MariaDB apt key
-          apt_key: >
-            keyserver=hkp://keyserver.ubuntu.com:80 id={{ mariadb_apt_key }} state=present
-
-        - name: Register MariaDB apt repository
-          apt_repository: >
-            repo={{ mariadb_apt_repository }} filename=ansible_roles_mariadb_client update_cache=yes state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - include: setup-{{ ansible_pkg_mgr }}.yml
 
     - name: Install MariaDB client packages
       package: >
