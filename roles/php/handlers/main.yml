@@ -3,4 +3,5 @@
 - name: dummy handler
   command: >
     ls
+  changed_when: no
   listen: php_config_changed
