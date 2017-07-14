@@ -3,5 +3,7 @@ vagrant_power_modes:
   - running
   - saved
 vagrant_role_actions:
-  - setup
+  - destroy
   - power-control
+  - setup
+  - snapshot

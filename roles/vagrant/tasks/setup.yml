@@ -77,28 +77,3 @@
     label: '{{ item.key }}'
   tags: provision
   with_dict: '{{ vagrant_machines }}'
-
-# FIXME convert snapshot to an action
-- block:
-    - name: Get VMs snapshot list
-      command: >
-        vagrant snapshot list {{ item.key }}
-      args:
-        chdir: '{{ vagrant_machines_directory }}'
-      changed_when: no
-      check_mode: no
-      loop_control:
-        label: '{{ item.key }}'
-      register: vagrant_snapshot_list
-      with_dict: '{{ vagrant_snapshots }}'
-
-    - name: Take base VMs snapshot
-      command: >
-        vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
-      args:
-        chdir: '{{ vagrant_machines_directory }}'
-      loop_control:
-        label: '{{ item.item.key }} snapshot {{ item.item.value }}'
-      when: "' {{ item.item.value }} ' not in item.stdout"
-      with_items: '{{ vagrant_snapshot_list.results|default([]) }}'
-  tags: snapshots

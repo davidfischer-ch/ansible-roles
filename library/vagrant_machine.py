@@ -72,7 +72,7 @@ def main():
     if timeout < 1:
         module.fail_json(msg='Timeout must be greater than 0.')
     current_state = get_state(chdir, name)
-    if current_state == 'absent' and not provider:
+    if current_state == 'absent' and state != 'absent' and not provider:
         module.fail_json(msg='A provider is required because machine "%s" is absent.' % name)
     if not module.check_mode:
         if current_state != state:
