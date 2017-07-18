@@ -770,12 +770,15 @@ class Ec2Inventory(object):
             error = "ElasticSearch query to AWS failed (unexpected format)."
             self.fail_with_error(error, 'getting ElasticSearch domain')
 
-        inventory_hostname = domain['DomainName']
-        self.push(self.inventory, 'elasticsearch_domains', inventory_hostname)
-        if inventory_hostname in self.inventory['_meta']['hostvars']:
-            self.inventory['_meta']['hostvars'][inventory_hostname].update(domain)
-        else:
-            self.inventory['_meta']['hostvars'][inventory_hostname] = domain
+        endpoint = domain.get('Endpoint')
+        if endpoint:
+            domain_name = domain['DomainName']
+            for group in 'elasticsearch_domains', self.to_safe('elasticsearch_domain_' + domain_name):
+                self.push(self.inventory, group, endpoint)
+            if endpoint in self.inventory['_meta']['hostvars']:
+                self.inventory['_meta']['hostvars'][endpoint].update(domain)
+            else:
+                self.inventory['_meta']['hostvars'][endpoint] = domain
 
     def get_auth_error_message(self):
         ''' create an informative error message if there is an issue authenticating'''
