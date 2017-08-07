@@ -8,7 +8,7 @@ dependencies:
     logrotate_log_rotations: '{{ apache_log_rotations }}'
     logrotate_role_action: setup
     tags: [apache, dependencies]
-    when: apache_log_rotations
+    when: apache_log_rotations|length > 0
 
   - role: ufw
     ufw_rules: '{{ apache_ufw_rules }}'
