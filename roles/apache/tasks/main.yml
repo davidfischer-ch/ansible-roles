@@ -46,6 +46,8 @@
     - name: Setup Apache extra configuration
       template: >
         src={{ item.value.config_file }} dest=/etc/apache2/conf.d/{{ item.value.name }}.conf mode=644
+      loop_control:
+        label: '{{ item.key }}'
       notify: reload apache
       with_dict: '{{ apache_extra_config_files }}'
 
