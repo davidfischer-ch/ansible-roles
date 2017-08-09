@@ -12,6 +12,11 @@
         name={{ item }} state=present
       with_items: '{{ php_packages }}'
 
+    - name: Install Apache PHP module
+      package: >
+        name={{ php_apache_package }} state=present
+      when: php_apache_package|length > 0
+
     - name: Install PHP mbstring package if available
       package: >
         name={{ php_mbstring_package }} state=present
