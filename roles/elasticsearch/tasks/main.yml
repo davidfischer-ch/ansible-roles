@@ -24,6 +24,13 @@
         name={{ item }} state=present
       with_items: '{{ elasticsearch_packages }}'
 
+    # FIXME Useless when https://github.com/ansible/ansible/issues/18889 is fixed
+    - name: Toggle ElastiSearch packages version hold marker
+      command:
+        apt-mark {{ ('=' in item)|ternary('hold', 'unhold') }} {{ item.split('=')[0] }}
+      when: ansible_pkg_mgr == 'apt'
+      with_items: '{{ elasticsearch_packages }}'
+
     - name: Create ElasticSearch directories
       file: >
         name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=755
