@@ -12,4 +12,4 @@
     timeout={{ item.timeout|int if item.timeout is defined else omit }} state={{ vagrant_power_mode }}
   loop_control:
     label: '{{ item.name }}'
-  with_items: '{{ vagrant_machines }}'
+  with_items: "{{ vagrant_machines[::1 if vagrant_power_mode == 'running' else -1] }}"
