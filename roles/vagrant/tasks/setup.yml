@@ -53,27 +53,27 @@
 
     - name: Provision machines
       vagrant_machine: >
-        chdir={{ vagrant_machines_directory }} name={{ item.key }} provider={{ item.value.provider }} state=running
-        timeout={{ item.value.timeout|int if item.value.timeout is defined else omit }}
+        chdir={{ vagrant_machines_directory }} name={{ item.name }} provider={{ item.provider }} state=running
+        timeout={{ item.timeout|int if item.timeout is defined else omit }}
       loop_control:
-        label: '{{ item.key }}'
+        label: '{{ item.name }}'
       register: _vagrant_provision
-      with_dict: '{{ vagrant_machines }}'
+      with_items: '{{ vagrant_machines }}'
   always:
     # FIXME less verbose output https://github.com/ansible/ansible/issues/5564
     - name: Cleanup machines SSH authentication footprints
       known_hosts: >
-        name={{ item.item.value.host_public }} state=absent
+        name={{ item.item.host_public }} state=absent
       loop_control:
-        label: '{{ item.item.key }}'
+        label: '{{ item.item.name }}'
       when: item|changed
       with_items: '{{ _vagrant_provision.results|default([]) }}'
   tags: provision
 
 - name: Wait for machines to be started
   local_action: >
-    wait_for host={{ item.value.host_public }} port=22 state=started
+    wait_for host={{ item.host_public }} port=22 state=started
   loop_control:
-    label: '{{ item.key }}'
+    label: '{{ item.name }}'
   tags: provision
-  with_dict: '{{ vagrant_machines }}'
+  with_items: '{{ vagrant_machines }}'

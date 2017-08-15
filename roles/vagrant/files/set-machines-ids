@@ -19,8 +19,8 @@ def main():
     with open(args.machines_file, 'r', encoding='utf-8') as f:
         machines = yaml.load(f.read())
 
-    for name, machine in machines.items():
-        machines[name]['uuid'] = get_vagrant_machine_id(name, machine['provider'])
+    for index, machine in enumerate(machines):
+        machines[index]['uuid'] = get_vagrant_machine_id(machine['name'], machine['provider'])
     sys.stdout.write(json.dumps(machines))
 
 
