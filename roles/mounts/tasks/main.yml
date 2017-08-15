@@ -87,7 +87,10 @@
         rpcinfo -u {{ item.value.source|regex_replace(':[^:]+$', '') }} status
       changed_when: no
       check_mode: no
-      failed_when: "'ready and waiting' not in _mounts_rpcinfo.stdout"
+      # FIXME Understand issue "not registered"
+      failed_when: >
+        'Program not registered' not in _mounts_rpcinfo.stderr|default('') and
+        'ready and waiting' not in _mounts_rpcinfo.stdout
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       register: _mounts_rpcinfo
