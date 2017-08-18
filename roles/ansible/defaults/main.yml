@@ -4,13 +4,16 @@ the_ansible_modules_packages:
   amazon: []
 the_ansible_modules_python_packages:
   amazon:
+    - awscli
     - boto
     - boto3
 the_ansible_packages:
   - keychain
-  - libffi6
-  - openssl
   - libffi-dev
+  - libffi6
+  - liblzma-dev
   - libssl-dev
+  - openssl
+  - sshpass
 the_ansible_version: latest
 the_ansible_from_source: no
