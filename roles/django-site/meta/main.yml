@@ -14,15 +14,18 @@ dependencies:
     daemon_group: '{{ djsite_daemon_group }}'
     daemon_directory: '{{ djsite_app_directory }}'
     tags: [django-site, dependencies]
+    when: djsite_role_action == 'setup'
 
   - role: github
     tags: [django-site, dependencies]
+    when: djsite_role_action == 'setup'
 
   - role: logrotate
     logrotate_log_rotations: '{{ djsite_log_rotations }}'
     logrotate_role_action: setup
     tags: [django-site, dependencies]
-    when: djsite_role_action == 'setup' and djsite_log_rotations
+    when: djsite_role_action == 'setup' and djsite_log_rotations|length > 0
 
   - role: supervisor
     tags: [django-site, dependencies]
+    when: djsite_role_action == 'setup'
