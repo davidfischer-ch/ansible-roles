@@ -14,8 +14,8 @@
         - name: Save timestamp
           set_fact:
             '{{ timestamp_variable }}': "{{ _timestamp.stdout }}"
-          delegate_to: localhost
           delegate_facts: yes
+          delegate_to: localhost
       when: hostvars['localhost'][timestamp_variable] is undefined
 
     - name: Define timestamp
