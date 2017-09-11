@@ -217,7 +217,7 @@
         label: '{{ item.value.name }}'
       with_dict: '{{ djsite_celery_workers }}'
   become: yes
-  tags: [django-site, workers, config]
+  tags: [workers, config]
 
 - block:
     - name: Start Celery workers
@@ -238,4 +238,4 @@
       tags: update
       when: _djsite_celery_start is undefined or _djsite_celery_start|failed
   become: yes
-  tags: [django-site, workers, services]
+  tags: [workers, services]
