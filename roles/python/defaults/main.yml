@@ -58,7 +58,7 @@ python_default_version: '{{ python_versions|first }}'
 python_pip_path: /usr/local/bin/pip
 python_get_pip_options: ''
 python_latest_versions:  # map version X.Y -> latest version X.Y.Z
-  '3.6': '3.6.1'
+  '3.6': '3.6.2'
 python_pip_version: ''
 python_setuptools_version: latest
 python_virtualenv_version: latest
