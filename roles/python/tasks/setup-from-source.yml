@@ -10,7 +10,7 @@
 
     - name: Extract Python {{ python_latest_versions[item|string] }} source code
       unarchive: >
-        src={{ local_source_directory }}/Python-{{ python_latest_versions[item] }}.tgz dest={{ local_source_directory }} copy=no
+        src={{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}.tgz dest={{ local_source_directory }} copy=no
 
     - name: Bootstrap Python {{ python_latest_versions[item|string] }} build process
       command: >
