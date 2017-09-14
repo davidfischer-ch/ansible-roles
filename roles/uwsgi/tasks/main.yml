@@ -8,14 +8,6 @@
       when: uwsgi_system_install|bool
       with_items: '{{ uwsgi_packages }}'
 
-    - name: Install uWSGI packages inside the virtualenv
-      command: >
-        {{ item.value.venv_path }}/bin/pip install {{ uwsgi_venv_packages|join(' ') }}
-      loop_control:
-        label: '{{ item.value.name }}'
-      when: item.value.venv_path is defined
-      with_dict: '{{ uwsgi_apps }}'
-
     # FIXME disable because it breaks running Python 2 applications
     # - name: Upgrade uWSGI
     #   pip: >
@@ -31,6 +23,16 @@
   tags: [uwsgi, packages]
 
 - block:
+    - name: Check uWSGI is available inside the virtualenvs
+      stat: >
+        path={{ item.value.venv_path }}/bin/uwsgi
+      loop_control:
+        label: '{{ item.value.name }}'
+      failed_when: not _uwsgi_bin.stat.exists
+      register: _uwsgi_bin
+      when: item.value.venv_path is defined
+      with_dict: '{{ uwsgi_apps }}'
+
     - name: Configure uWSGI service
       template: >
         src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/uwsgi-{{ item.value.name }}.conf mode=644
