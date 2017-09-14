@@ -5,7 +5,16 @@
     - name: Install uWSGI packages
       package: >
         name={{ item }} state=present
+      when: uwsgi_system_install|bool
       with_items: '{{ uwsgi_packages }}'
+
+    - name: Install uWSGI packages inside the virtualenv
+      command: >
+        {{ item.value.venv_path }}/bin/pip install {{ uwsgi_venv_packages|join(' ') }}
+      loop_control:
+        label: '{{ item.value.name }}'
+      when: item.value.venv_path is defined
+      with_dict: '{{ uwsgi_apps }}'
 
     # FIXME disable because it breaks running Python 2 applications
     # - name: Upgrade uWSGI
@@ -22,6 +31,37 @@
   tags: [uwsgi, packages]
 
 - block:
+    - name: Configure uWSGI service
+      template: >
+        src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/uwsgi-{{ item.value.name }}.conf mode=644
+      loop_control:
+        label: '{{ item.value.name }}'
+      # notify: restart uwsgi apps
+      when: item.value.venv_path is defined
+      with_dict: '{{ uwsgi_apps }}'
+
+    - name: Configure the uWSGI applications
+      template: >
+        src={{ item.value.config_file }}
+        dest=/etc/supervisor/conf.d/uwsgi-{{ item.value.name }}.{{ item.value.config_file.split('.')[-2] }}
+        mode=644
+      loop_control:
+        label: '{{ item.value.name }}'
+      # notify: reload uwsgi apps
+      when: item.value.venv_path is defined
+      with_dict: '{{ uwsgi_apps }}'
+
+    - name: Install the uWSGI applications
+      supervisorctl: >
+        name=uwsgi-{{ item.value.name }} state=present
+      loop_control:
+        label: '{{ item.value.name }}'
+      when: item.value.venv_path is defined
+      with_dict: '{{ uwsgi_apps }}'
+  become: yes
+  tags: [uwsgi, applications]
+
+- block:
     - name: Start uWSGI service
       service: >
         name=uwsgi state=started enabled=yes
@@ -33,6 +73,7 @@
       when: _uwsgi_start|failed
   become: yes
   tags: [uwsgi, services]
+  when: uwsgi_system_install|bool
 
 - name: Trigger uWSGI restart
   command: >
@@ -41,23 +82,30 @@
   check_mode: no
   notify: restart uwsgi
   tags: [uwsgi, update]
+  when: uwsgi_system_install|bool
 
 - block:
     - name: Setup the uWSGI applications
       template: >
-        src={{ item.value.config_file }} dest=/etc/uwsgi/apps-available/{{ item.value.name }}.xml mode=644
+        src={{ item.value.config_file }}
+        dest=/etc/uwsgi/apps-available/{{ item.value.name }}.{{ item.value.config_file.split('.')[-2] }}
+        mode=644
       loop_control:
         label: '{{ item.value.name }}'
       notify: reload uwsgi
+      when: item.value.venv_path is undefined
       with_dict: '{{ uwsgi_apps }}'
 
     - name: Enable the uWSGI applications
       file: >
-        src=/etc/uwsgi/apps-available/{{ item.value.name }}.xml dest=/etc/uwsgi/apps-enabled/{{ item.value.name }}.xml
+        src=/etc/uwsgi/apps-available/{{ item.value.name }}.{{ item.value.config_file.split('.')[-2] }}
+        dest=/etc/uwsgi/apps-enabled/{{ item.value.name }}.{{ item.value.config_file.split('.')[-2] }}
         state=link
       loop_control:
         label: '{{ item.value.name }}'
       notify: reload uwsgi
+      when: item.value.venv_path is undefined
       with_dict: '{{ uwsgi_apps }}'
   become: yes
   tags: [uwsgi, applications]
+  when: uwsgi_system_install|bool

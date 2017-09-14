@@ -1,0 +1,11 @@
+[program:uwsgi-{{ item.value.name }}]
+command={{ item.value.venv_path }}/bin/uwsgi --{{ item.value.config_file.split('.')[-2] }} /etc/supervisor/conf.d/uwsgi-{{ item.value.name }}.{{ item.value.config_file.split('.')[-2] }}
+directory={{ item.value.path }}
+stopsignal=QUIT
+stdout_logfile=/var/log/supervisor/uwsgi-{{ item.value.name }}-stdout.log
+stderr_logfile=/var/log/supervisor/uwsgi-{{ item.value.name }}-stderr.log
+user=root
+numprocs=1
+autostart=true
+autorestart=true
+startsecs=10

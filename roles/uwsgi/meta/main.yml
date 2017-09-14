@@ -1,5 +1,5 @@
 ---
 
 dependencies:
-  - role: python
+  - role: supervisor
     tags: [uwsgi, dependencies]

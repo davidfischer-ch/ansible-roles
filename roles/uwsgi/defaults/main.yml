@@ -2,3 +2,6 @@ uwsgi_packages:
   - uwsgi
   - uwsgi-plugin-python
   - uwsgi-plugin-python3
+uwsgi_system_install: yes
+uwsgi_venv_packages:
+  - uwsgi
