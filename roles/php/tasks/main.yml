@@ -47,9 +47,20 @@
         recurse: yes
       register: _php_extra_config_directories
 
+    - name: Find PHP modules configuration directories
+      find:
+        file_type: directory
+        paths:
+          - '/etc/php{{ php_version }}'
+          - '/etc/php/{{ php_version }}'
+        patterns: mods-available
+        recurse: yes
+      register: _php_modules_config_directories
+
     - set_fact:
         php_config_files: "{{ _php_config_files.files|map(attribute='path')|list }}"
         php_extra_config_directories: "{{ _php_extra_config_directories.files|map(attribute='path')|list }}"
+        php_modules_config_directories: "{{ _php_modules_config_directories.files|map(attribute='path')|list }}"
 
     - assert:
         that:
@@ -74,11 +85,20 @@
 
     - name: Configure PHP
       lineinfile: >
-        dest={{ item.0 }} regexp='^;?{{ item.1 }} =' line='{{ item.1 }} = {{ item.2 }}' state=present
+        dest={{ item.0 }} regexp='^(;\s*)?{{ item.1 }}\s*=' line='{{ item.1 }} = {{ item.2 }}' state=present
       notify: php_config_changed
       with_nested:
         - '{{ php_config_files|default([]) }}'
         - '{{ php_options.items()|default([])|list }}'
+
+    - name: Configure PHP modules
+      lineinfile: >
+        dest={{ item.0 }}/{{ item.1 }}.ini state=present
+        regexp='^(;\s*)?{{ item.2 }}\s*=' line='{{ item.2 }} = {{ item.3 }}'
+      notify: php_config_changed
+      with_nested:
+        - '{{ php_modules_config_directories }}'
+        - '{{ php_modules_options }}'
 
     - name: Configure suhosin to whitelist phar
       copy: >
