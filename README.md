@@ -76,6 +76,10 @@ See django-site role's [README](roles/django-site/README.md).
 
 See s3fs role's [README](roles/s3fs/README.md).
 
+### Setup a PostgreSQL server with an application DB
+
+See postgresql role's [README](roles/postgresql/README.md).
+
 ### Installing AWS utilities
 
 See cloudwatch-logs-agent role's [README](roles/cloudwatch-logs-agent/README.md).
