@@ -38,7 +38,8 @@
         src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/uwsgi-{{ item.value.name }}.conf mode=644
       loop_control:
         label: '{{ item.value.name }}'
-      # notify: restart uwsgi apps
+      # FIXME do not reload all apps
+      notify: reload uwsgi apps
       when: item.value.venv_path is defined
       with_dict: '{{ uwsgi_apps }}'
 
@@ -49,7 +50,8 @@
         mode=644
       loop_control:
         label: '{{ item.value.name }}'
-      # notify: reload uwsgi apps
+      # FIXME do not restart all apps
+      notify: restart uwsgi apps
       when: item.value.venv_path is defined
       with_dict: '{{ uwsgi_apps }}'
 
