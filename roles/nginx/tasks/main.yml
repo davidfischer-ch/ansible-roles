@@ -198,6 +198,7 @@
   check_mode: no
   notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
   tags: [nginx, update]
+  when: nginx_reload_on_update|bool
 
 - block:
     - name: Setup the Nginx sites

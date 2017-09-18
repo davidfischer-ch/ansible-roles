@@ -2,4 +2,5 @@ uwsgi_packages:
   - uwsgi
   - uwsgi-plugin-python
   - uwsgi-plugin-python3
+uwsgi_reload_on_update: no
 uwsgi_system_install: yes

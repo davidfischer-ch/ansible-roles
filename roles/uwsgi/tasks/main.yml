@@ -86,7 +86,7 @@
   check_mode: no
   notify: restart uwsgi
   tags: [uwsgi, update]
-  when: uwsgi_system_install|bool
+  when: uwsgi_system_install|bool and uwsgi_reload_on_update|bool
 
 - block:
     - name: Setup the uWSGI applications
