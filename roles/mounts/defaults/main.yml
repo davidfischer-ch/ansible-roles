@@ -3,7 +3,7 @@ mounts_dynamic_defaults:
     mounts_packages_by_fstype:
       nfs: [nfs-utils]
       none: []  # Bind mount
-      s3fs-fuse: []  # Use s3fs role instead
+      fuse.s3fs: []  # Use s3fs role instead
   linux:
     mounts_filesystem_types:
       - nfs
@@ -11,5 +11,5 @@ mounts_dynamic_defaults:
       cifs: [cifs-utils, ntfs-3g]
       nfs: [nfs-common]
       none: []  # Bind mount
-      s3fs-fuse: []  # Use s3fs role instead
+      fuse.s3fs: []  # Use s3fs role instead
 mounts_packages_by_fstype_skip_missing: no
