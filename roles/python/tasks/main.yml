@@ -25,6 +25,8 @@
         python_missing_versions: "{{ _python_command.results|selectattr('changed')|map(attribute='item')|list }}"
 
     - include: setup-from-source.yml
+      loop_control:
+        loop_var: _python_version
       with_items: '{{ python_missing_versions|default([]) }}'
 
     - name: Download pip bootstrap script

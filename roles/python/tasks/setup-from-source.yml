@@ -1,31 +1,39 @@
 ---
 
 - block:
+    - name: Install Python build packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ python_build_packages }}'
+
     - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
 
-    - name: Download Python {{ python_latest_versions[item|string] }} source package
+    - set_fact:
+        _python_latest_version: '{{ python_latest_versions[_python_version|string] }}'
+
+    - name: Download Python {{ _python_latest_version }} source package
       get_url: >
-        url=https://www.python.org/ftp/python/{{ python_latest_versions[item|string] }}/Python-{{ python_latest_versions[item|string] }}.tgz force=no
-        dest={{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}.tgz
+        url=https://www.python.org/ftp/python/{{ _python_latest_version }}/Python-{{ _python_latest_version }}.tgz force=no
+        dest={{ local_source_directory }}/Python-{{ _python_latest_version }}.tgz
 
-    - name: Extract Python {{ python_latest_versions[item|string] }} source code
+    - name: Extract Python {{ _python_latest_version }} source code
       unarchive: >
-        src={{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}.tgz dest={{ local_source_directory }} copy=no
+        src={{ local_source_directory }}/Python-{{ _python_latest_version }}.tgz dest={{ local_source_directory }} copy=no
 
-    - name: Bootstrap Python {{ python_latest_versions[item|string] }} build process
+    - name: Bootstrap Python {{ _python_latest_version }} build process
       command: >
         ./configure {{ python_build_flags|join(' ') }}
       args:
-        chdir: '{{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}'
+        chdir: '{{ local_source_directory }}/Python-{{ _python_latest_version }}'
 
-    - name: Build Python {{ python_latest_versions[item|string] }} from source
+    - name: Build Python {{ _python_latest_version }} from source
       make:
-        chdir: '{{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}'
+        chdir: '{{ local_source_directory }}/Python-{{ _python_latest_version }}'
         params:
           NUM_THREADS: '{{ ansible_processor_cores }}'
 
-    - name: Install Python {{ python_latest_versions[item|string] }} from source
+    - name: Install Python {{ _python_latest_version }} from source
       make:
-        chdir: '{{ local_source_directory }}/Python-{{ python_latest_versions[item|string] }}'
+        chdir: '{{ local_source_directory }}/Python-{{ _python_latest_version }}'
         target: install
   become: yes

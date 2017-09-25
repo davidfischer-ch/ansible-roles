@@ -19,6 +19,11 @@ python_dynamic_defaults:
       - '3.4'
 
   linux:
+    python_build_packages:
+      - dpkg-dev
+      - libssl-dev
+      - zlib1g
+      - zlib1g-dev
     python_packages:
       - bpython
       - bpython3
