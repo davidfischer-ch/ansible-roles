@@ -4,10 +4,6 @@
 
 Stable
 
-Not (yet) implemented:
-
-* Role actions such as flush, ...
-
 ## Example
 
 ### PlayBook
