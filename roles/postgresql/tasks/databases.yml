@@ -31,6 +31,7 @@
       with_dict: '{{ postgresql_databases }}'
   become: yes
   become_user: postgres
+  when: postgresql_is_master|bool
 
 - block:
     - name: Install PostGIS packages
@@ -105,3 +106,4 @@
       with_dict: '{{ postgresql_databases }}'
   become: yes
   become_user: postgres
+  when: postgresql_is_master|bool

@@ -35,4 +35,3 @@
 
 - include: databases.yml
   tags: [postgresql, databases]
-  when: postgresql_is_master|bool
