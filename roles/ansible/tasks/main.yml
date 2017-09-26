@@ -1,5 +1,13 @@
 ---
 
+
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ the_ansible_dynamic_defaults }}'
+    must_match: yes
+  tags: [ansible, always]
+
+
 - block:
     - name: Install Ansible packages
       package: >
