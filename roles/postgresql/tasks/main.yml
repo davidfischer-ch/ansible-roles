@@ -33,5 +33,50 @@
   become: yes
   tags: [postgresql, services]
 
-- include: databases.yml
+- block:
+    - name: Install PostGIS packages
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - postgis
+        - 'postgresql-{{ postgresql_version }}-postgis-2.1'
+        - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
+
+    - name: Install geolocation prerequisites required for all back-ends
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - binutils
+        - libgeos-3.4.2
+        - libgeos-c1
+        - libgeos-dev
+
+    - name: Install geolocation prerequisites required for PostgreSQL and SQLite
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - libproj-dev
+        - proj-bin
+        - proj-data
+
+    - name: Install geolocation prerequisites optional but required for SQLite
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - gdal-bin
+        - libgdal1-dev
+        - python3-gdal
+
+    - name: install optional IP-based geolocation library
+      package: >
+        name={{ item }} state=present
+      with_items:
+        - libgeoip1
+  become: yes
+  tags: [postgresql, packages]
+  when: "'postgis' in postgresql_extensions"
+
+- include_role:
+    name: postgresql-databases
   tags: [postgresql, databases]
+  when: postgresql_is_master|bool

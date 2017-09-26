@@ -1,9 +1,12 @@
+# Setup PostgreSQL databases
 ---
 
 - block:
     - name: Flush PostgreSQL databases
       postgresql_db: >
         name={{ item.value.name }} state=absent
+        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
+        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush
@@ -14,6 +17,8 @@
       postgresql_user: >
         name={{ item.value.user }} password={{ item.value.password }} state=present
         role_attr_flags={{ item.value.role_flags|default(['SUPERUSER', 'CREATEDB'])|join(',') }}
+        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
+        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush-extra
@@ -24,62 +29,19 @@
       postgresql_db: >
         name={{ item.value.name }} encoding={{ item.value.encoding|default('unicode') }} owner={{ item.value.user }}
         template={{ item.value.template|default('template1') }} state=present
+        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
+        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush-extra
       when: not 'template' in item.value.name
       with_dict: '{{ postgresql_databases }}'
-  become: yes
-  become_user: postgres
-  when: postgresql_is_master|bool
 
-- block:
-    - name: Install PostGIS packages
-      package: >
-        name={{ item }} state=present
-      with_items:
-        - postgis
-        - 'postgresql-{{ postgresql_version }}-postgis-2.1'
-        - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
-
-    - name: Install geolocation prerequisites required for all back-ends
-      package: >
-        name={{ item }} state=present
-      with_items:
-        - binutils
-        - libgeos-3.4.2
-        - libgeos-c1
-        - libgeos-dev
-
-    - name: Install geolocation prerequisites required for PostgreSQL and SQLite
-      package: >
-        name={{ item }} state=present
-      with_items:
-        - libproj-dev
-        - proj-bin
-        - proj-data
-
-    - name: Install geolocation prerequisites optional but required for SQLite
-      package: >
-        name={{ item }} state=present
-      with_items:
-        - gdal-bin
-        - libgdal1-dev
-        - python3-gdal
-
-    - name: install optional IP-based geolocation library
-      package: >
-        name={{ item }} state=present
-      with_items:
-        - libgeoip1
-  become: yes
-  tags: packages
-  when: "'postgis' in postgresql_databases.values()|selectattr('extensions', 'defined')|map(attribute='extensions')|join()"
-
-- block:
     - name: Enable extensions to the PostgreSQL databases
       postgresql_ext: >
         db={{ item.0.name }} name={{ item.1 }} state=present
+        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
+        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
         label: '{{ item.0.name }}'
       tags: flush-extra
@@ -90,6 +52,8 @@
     - name: Remove PostgreSQL unit-test databases
       postgresql_db: >
         name=test_{{ item.value.name }} state=absent
+        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
+        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
         label: '{{ item.value.name }}'
       tags: unit_test
@@ -99,11 +63,12 @@
     - name: Allow PostgreSQL users to access PostgreSQL databases
       postgresql_privs: >
         db={{ item.value.name }} type=database priv=ALL role={{ item.value.user }} state=present
+        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
+        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush-extra
       when: not 'template' in item.value.name
       with_dict: '{{ postgresql_databases }}'
-  become: yes
-  become_user: postgres
-  when: postgresql_is_master|bool
+  run_once: yes
+  tags: [postgresql-databases, databases]

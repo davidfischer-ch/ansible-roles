@@ -2,6 +2,7 @@ postgresql_allocated_ram: 2048  # In megabytes
 postgresql_authentication_rules: []
 postgresql_config_file: 'postgresql.{{ postgresql_version }}.conf.j2'
 postgresql_effective_cache_size: '{{ postgresql_allocated_ram // 2 }}MB'
+postgresql_extensions: []
 postgresql_interface: null
 postgresql_listen_addresses:
   - '*'
