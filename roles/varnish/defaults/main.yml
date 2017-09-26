@@ -1,5 +1,5 @@
-varnish_apt_key: http://repo.varnish-cache.org/debian/GPG-key.txt
-varnish_apt_repository: 'deb http://repo.varnish-cache.org/ubuntu {{ ansible_distribution_release }} varnish-{{ varnish_version }}'
+varnish_apt_key: "https://packagecloud.io/varnishcache/varnish{{ (varnish_version|string).replace('.', '') }}/gpgkey"
+varnish_apt_repository: "deb https://packagecloud.io/varnishcache/varnish{{ (varnish_version|string).replace('.', '') }}/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} main"
 varnish_config_file: varnish.conf.j2
 varnish_default_vcl_config_file: default.vcl.j2
 varnish_default_vcl_host: 127.0.0.1
@@ -8,7 +8,7 @@ varnish_packages:
   - varnish
 varnish_service_file: varnish.service.j2
 varnish_storage: malloc,256m
-varnish_version: 4.1
+varnish_version: 5
 # networking
 varnish_admin_bind_address: 127.0.0.1
 varnish_admin_interface: null
