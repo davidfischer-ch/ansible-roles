@@ -13,11 +13,10 @@
       when: item.value.flush|default(false)|bool and not 'template' in item.value.name
       with_dict: '{{ postgresql_databases }}'
 
-    - name: Setup PostgreSQL users
-      postgresql_user: >
-        name={{ item.value.user }} password={{ item.value.password }} state=present
-        no_password_changes={{ not item.value.password_update|default(true) }}
-        role_attr_flags={{ item.value.role_flags|default(['SUPERUSER', 'CREATEDB'])|join(',') }}
+    - name: Setup PostgreSQL databases
+      postgresql_db: >
+        name={{ item.value.name }} encoding={{ item.value.encoding|default('unicode') }}
+        template={{ item.value.template|default('template1') }} state=present
         login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
         login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
@@ -26,10 +25,11 @@
       when: not 'template' in item.value.name
       with_dict: '{{ postgresql_databases }}'
 
-    - name: Setup PostgreSQL databases
-      postgresql_db: >
-        name={{ item.value.name }} encoding={{ item.value.encoding|default('unicode') }} owner={{ item.value.user }}
-        template={{ item.value.template|default('template1') }} state=present
+    - name: Setup PostgreSQL users
+      postgresql_user: >
+        name={{ item.value.user }} db={{ item.value.name }} password={{ item.value.password }} state=present
+        no_password_changes={{ not item.value.password_update|default(true) }}
+        role_attr_flags={{ item.value.role_flags|default(['SUPERUSER', 'CREATEDB'])|join(',') }}
         login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
         login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
       loop_control:
