@@ -16,6 +16,7 @@
     - name: Setup PostgreSQL users
       postgresql_user: >
         name={{ item.value.user }} password={{ item.value.password }} state=present
+        no_password_changes={{ not item.value.password_update|default(true) }}
         role_attr_flags={{ item.value.role_flags|default(['SUPERUSER', 'CREATEDB'])|join(',') }}
         login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
         login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
