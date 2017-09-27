@@ -45,17 +45,17 @@
 
     - name: Set pip default version
       file: >
-        src={{ python_pip_path }}{{ (python_default_version|string)[0] }} dest={{ python_pip_path }} force=yes state=link
+        src={{ python_pip_path }}{{ python_default_version }} dest={{ python_pip_path }} force=yes state=link
 
     - name: Install setuptools
       pip: >
-        name=setuptools executable=pip{{ (item|string)[0] }} state={{ (python_setuptools_version == 'latest')|ternary('latest', omit) }}
+        name=setuptools executable=pip{{ item }} state={{ (python_setuptools_version == 'latest')|ternary('latest', omit) }}
         version={{ (python_setuptools_version == 'latest')|ternary(omit, python_setuptools_version) }}
       with_items: '{{ python_versions }}'
 
     - name: Install virtualenv
       pip: >
-        name=virtualenv executable=pip{{ (item|string)[0] }} state={{ (python_virtualenv_version == 'latest')|ternary('latest', omit) }}
+        name=virtualenv executable=pip{{ item }} state={{ (python_virtualenv_version == 'latest')|ternary('latest', omit) }}
         version={{ (python_virtualenv_version == 'latest')|ternary(omit, python_virtualenv_version) }}
       with_items: '{{ python_versions }}'
   become: yes
