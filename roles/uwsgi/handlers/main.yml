@@ -6,8 +6,8 @@
   become: yes
 
 - name: reload uwsgi apps
-  supervisorctl: >
-    name=uwsgi-{{ item.value.name }} state=reloaded
+  command: >
+    supervisorctl uwsgi-{{ item.value.name }} reload
   become: yes
   loop_control:
     label: '{{ item.value.name }}'
