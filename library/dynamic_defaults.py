@@ -74,7 +74,13 @@ def main():
     hostvars, defaults, lookup_keys, must_match = (
         module.params[k] for k in ('hostvars', 'defaults', 'lookup_keys', 'must_match')
     )
-    lookup_keys = tuple(k.format(**hostvars).replace('/', '-').lower() for k in lookup_keys)
+    try:
+        lookup_keys = tuple(k.format(**hostvars).replace('/', '-').lower() for k in lookup_keys)
+    except AttributeError:
+        # Python 2.5 - 'str' object has no attribute 'format'
+        lookup_keys = tuple(
+            (k.replace('{', '%(').replace('}', ')s') % hostvars).replace('/', '-').lower() for k in lookup_keys
+        )
     facts, match = {}, False
     for lookup_key in lookup_keys:
         for key, variables in defaults.items():
