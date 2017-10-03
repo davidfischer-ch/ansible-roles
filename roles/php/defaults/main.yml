@@ -6,4 +6,5 @@ php_modules_options: []
 php_options: {}
 php_packages:
   - 'php{{ php_version }}-cli'
+php_fpm_reload_on_update: yes
 php_version: 5

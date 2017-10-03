@@ -5,3 +5,8 @@
     ls
   changed_when: no
   listen: php_config_changed
+
+- name: reload php-fpm
+  service: >
+    name=php{{ php_version }}-fpm state=reloaded
+  become: yes

@@ -107,3 +107,15 @@
       with_items: '{{ php_extra_config_directories }}'
   become: yes
   tags: [php, config]
+
+- name: Trigger PHP FPM reload
+  service: >
+    name=php{{ php_version }}-fpm state=started
+  become: yes
+  check_mode: yes
+  changed_when: _php_fpm.msg is undefined
+  failed_when: no
+  notify: reload php-fpm
+  register: _php_fpm
+  tags: [php, update]
+  when: php_fpm_reload_on_update|bool
