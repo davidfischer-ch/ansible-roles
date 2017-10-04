@@ -10,10 +10,10 @@
   roles:
     - bootstrap
     - bash
-    - fail2ban
-    - ufw
     - miscellaneous
     - kernel
     - python
     - mounts
     - rsync
+    - ufw
+    - fail2ban
