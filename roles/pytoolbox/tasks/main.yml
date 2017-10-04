@@ -1,5 +1,11 @@
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ pytooblox_dynamic_defaults }}'
+    must_match: yes
+  tags: [pytoolbox, always]
+
 - block:
     - name: Install pytoolbox packages
       package: >
