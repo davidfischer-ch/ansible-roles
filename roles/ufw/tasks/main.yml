@@ -11,6 +11,12 @@
   become: yes
   tags: [ufw, packages]
 
+- name: Start UFW service
+  service: >
+    name=ufw state=started enabled=yes
+  become: yes
+  tags: [ufw, services]
+
 - block:
     - name: Allow ssh
       ufw: >
