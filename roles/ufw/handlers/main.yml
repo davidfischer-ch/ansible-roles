@@ -4,3 +4,4 @@
   ufw: >
     state=reloaded
   become: yes
+  changed_when: yes
