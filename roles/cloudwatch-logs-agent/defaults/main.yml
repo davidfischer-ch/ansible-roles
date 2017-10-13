@@ -7,4 +7,5 @@ cloudwatch_logs_agent_default_multi_line_start_pattern: '^[^\s]'
 cloudwatch_logs_agent_default_stream_name: '{instance_id}'
 cloudwatch_logs_agent_only_on_ec2: yes
 cloudwatch_logs_agent_logs: {}
+cloudwatch_logs_agent_python: /usr/bin/python
 cloudwatch_logs_agent_version: latest  # can be 1.3.9

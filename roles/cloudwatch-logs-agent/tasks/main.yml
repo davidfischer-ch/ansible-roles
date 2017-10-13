@@ -22,8 +22,10 @@
 
         - name: Execute CloudWatch logs agent setup script
           command: >
+            {{ cloudwatch_logs_agent_python }}
             {{ local_source_directory }}/awslogs-agent-setup-{{ cloudwatch_logs_agent_version }}.py
             --non-interactive --region={{ ec2_region }} --configfile=/etc/awslogs/awslogs.conf
+            --python={{ cloudwatch_logs_agent_python }}
       tags: config
 
     - name: Start CloudWatch logs agent service
