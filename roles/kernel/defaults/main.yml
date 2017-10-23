@@ -6,3 +6,4 @@ kernel_dynamic_defaults:
     kernel_packages:
       - linux-generic
       - linux-signed-generic
+kernel_get_config: yes

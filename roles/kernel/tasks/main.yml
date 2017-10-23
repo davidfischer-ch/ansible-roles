@@ -13,10 +13,12 @@
       changed_when: no
       check_mode: no
       register: _kernel_config
+      when: kernel_get_config|bool
 
     - set_fact:
         # [-1] is an hack to filter the boring 'bash: warning: setlocale: ...
         kernel_config: '{{ _kernel_config.stdout_lines[-1]|default({}) }}'
+      when: kernel_get_config|bool
   tags: [kernel, always]
 
 - name: Install GNU/Linux kernel packages
