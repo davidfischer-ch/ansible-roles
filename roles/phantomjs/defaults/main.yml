@@ -1,0 +1,4 @@
+phantomjs_package_name: 'phantomjs-{{ phantomjs_version }}-linux-x86_64'
+phantomjs_package_url: 'https://bitbucket.org/ariya/phantomjs/downloads/{{ phantomjs_package_name }}.tar.bz2'
+phantomjs_path: /usr/local/bin/phantomjs
+phantomjs_version: 2.1.1
