@@ -32,6 +32,12 @@ server {
     listen {{ nginx_port|int }};
     {% endif %}
 
+    {% if not item.value.with_ssl|bool and item.value.redirect_ssl|bool %}
+    if ($http_x_forwarded_proto != 'https') {
+        rewrite ^ https://$host$request_uri? permanent;
+    }
+    {% endif %}
+
     server_name {{ item.value.domains|join(' ') }};
 
     gzip off;  # Security - http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf
