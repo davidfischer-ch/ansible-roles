@@ -37,7 +37,7 @@
         node --version
       changed_when: no
       check_mode: no
-      failed_when: _node_version|failed or _node_version.stdout[1:node_version|length+1] != node_version
+      failed_when: _node_version|failed or _node_version.stdout[1:node_version|string|length+1] != node_version|string
       register: _node_version
   become: yes
   tags: [node, packages]
