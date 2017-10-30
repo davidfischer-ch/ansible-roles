@@ -11,6 +11,7 @@
     - bootstrap
     - bash
     - miscellaneous
+    - openssl
     - kernel
     - python
     - mounts
