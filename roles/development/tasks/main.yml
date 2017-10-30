@@ -3,11 +3,6 @@
 # FIXME install package control, gitgutter ... configure ...
 
 - block:
-    - name: Install ScudCloud apt repository
-      apt_repository: >
-        repo=ppa:rael-gc/scudcloud state=present update_cache=yes
-      when: ansible_pkg_mgr == 'apt' and 'scudcloud' in devops_packages
-
     - name: Install DevOps packages
       package: >
         name={{ item }} state=present
