@@ -1,0 +1,8 @@
+---
+
+- name: Install OpenSSL build dependencies
+  apt: >
+    name=openssl state=build-dep
+  become: yes
+  changed_when: _openssl_build_dep.stdout_lines|length > 4
+  register: _openssl_build_dep

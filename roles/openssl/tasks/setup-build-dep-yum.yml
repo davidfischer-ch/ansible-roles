@@ -1,0 +1,10 @@
+---
+
+- name: Install OpenSSL build dependencies
+  command: >
+    yum-builddep --assume{{ 'no' if ansible_check_mode else 'yes' }} openssl
+  become: yes
+  changed_when: "'No uninstalled build requires' not in _openssl_build_dep.stdout|default('')"
+  check_mode: no
+  failed_when: _openssl_build_dep|failed and 'Exiting on user command' not in _openssl_build_dep.stdout
+  register: _openssl_build_dep

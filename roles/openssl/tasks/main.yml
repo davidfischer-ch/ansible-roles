@@ -10,6 +10,68 @@
   with_items: '{{ openssl_packages }}'
 
 - block:
+    - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
+
+    - name: Set OpenSSL build environment
+      set_fact:
+        openssl_build_env: >
+          {{ openssl_build_cfg }}
+          {{ openssl_checksum }}
+          {{ openssl_version }}
+
+    - name: Detect if OpenSSL must be reinstalled
+      command: >
+        cat '{{ local_source_directory }}/openssl.build.cfg'
+      changed_when: >
+        openssl_build_env|trim != openssl_build.stdout|default('')|trim
+      check_mode: no
+      failed_when: no
+      register: openssl_build
+
+    - block:
+        - name: Download OpenSSL source code
+          get_url: >
+            url=https://github.com/openssl/openssl/archive/{{ openssl_source_package }} force=no
+            dest={{ local_source_directory }}/{{ openssl_source_package }} sha256sum={{ openssl_checksum }}
+
+        - name: Extract OpenSSL source code
+          unarchive: >
+            src={{ local_source_directory }}/{{ openssl_source_package }} dest={{ local_source_directory }} copy=no
+
+        - name: Configure OpenSSL build process
+          command: >
+            ./config {{ openssl_build_cfg }}
+          args:
+            chdir: '{{ local_source_directory }}/{{ openssl_source_directoy }}'
+
+        - name: Build OpenSSL from source
+          make:
+            chdir: '{{ local_source_directory }}/{{ openssl_source_directoy }}'
+            params:
+              NUM_THREADS: '{{ ansible_processor_cores }}'
+
+        - name: Install OpenSSL from source
+          make:
+            chdir: '{{ local_source_directory }}/{{ openssl_source_directoy }}'
+            target: install
+
+        - name: Save build environment
+          copy: >
+            content={{ openssl_build_env }} dest={{ local_source_directory }}/openssl.build.cfg
+      when: openssl_build|changed
+
+    - name: Check OpenSSL version
+      command: >
+        openssl version
+      changed_when: no
+      check_mode: no
+      failed_when: openssl_version not in _openssl_version.stdout
+      register: _openssl_version
+  become: yes
+  tags: [openssl, packages]
+  when: openssl_from_source|bool
+
+- block:
     - name: Create self-signed SSL certificate directory
       file: >
         name={{ item|dirname }} state=directory
