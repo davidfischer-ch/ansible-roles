@@ -88,4 +88,4 @@
         creates: '{{ ssl_cert_crt_filename }}'
   become: yes
   tags: [openssl, config]
-  when: ssl_cert_key_filename is defined and ssl_cert_key_filename
+  when: ssl_cert_key_filename|default('')|length > 0

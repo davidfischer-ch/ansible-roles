@@ -94,7 +94,7 @@
       loop_control:
         label: '{{ item.value.name }}'
       notify: reload apache
-      when: item.value.auth_file is defined and item.value.auth_file
+      when: item.value.auth_file|default('')|length > 0
       with_dict: '{{ apache_sites }}'
 
     - name: Setup the Apache sites certificates
@@ -104,7 +104,7 @@
       loop_control:
         label: '{{ item.0.name }} {{ item.1 }}'
       notify: reload apache
-      when: item.0.ssl_files_prefix is defined and item.0.ssl_files_prefix
+      when: item.0.ssl_files_prefix|default('')|length > 0
       with_nested:
         - '{{ apache_sites.values() }}'
         - [crt, key]
