@@ -3,6 +3,7 @@ python_dynamic_defaults:
   centos:
     python_build_packages:
       - openssl-devel
+      - sqlite-devel
       - zlib-devel
     python_packages:
       - python-devel
@@ -24,6 +25,7 @@ python_dynamic_defaults:
   linux:
     python_build_packages:
       - dpkg-dev
+      - libsqlite3-dev
       - libssl-dev
       - zlib1g
       - zlib1g-dev
