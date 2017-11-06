@@ -3,7 +3,7 @@
 - block:
     - name: Copy application configuration templates locally
       fetch: >
-        src={{ djsite_app_directory }}/test/server/{{ djsite_project }}/{{ item }}.j2 dest=/tmp/
+        src={{ djsite_app_directory }}/test/server/{{ djsite_project }}/{{ item }}.j2 dest=/tmp/ fail_on_missing=yes
       register: _djsite_config_templates
       with_items: '{{ djsite_config.configuration_templates }}'
 
