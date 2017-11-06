@@ -7,12 +7,15 @@
       - fail2ban_dns_mode in fail2ban_dns_modes
   tags: [fail2ban, always]
 
-- name: Install fail2ban packages
-  package: >
-    name={{ item }} state=present
+- block:
+    - include: setup-repository-{{ ansible_pkg_mgr }}.yml
+
+    - name: Install fail2ban packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ fail2ban_packages }}'
   become: yes
   tags: [fail2ban, packages]
-  with_items: '{{ fail2ban_packages }}'
 
 - block:
     - name: Detect fail2ban version
