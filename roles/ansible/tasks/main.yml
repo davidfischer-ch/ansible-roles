@@ -26,6 +26,11 @@
         version={{ (the_ansible_version == 'latest')|ternary(omit, the_ansible_version) }}
       when: not the_ansible_from_source|bool
 
+    - name: Install Ansible Python packages
+      pip: >
+        name={{ item }} executable=pip2 state=present
+      with_items: '{{ the_ansible_python_packages }}'
+
     # FIXME may iterate over the_ansible_modules and use map('extract', ...)
 
     - name: Install Ansible modules packages
