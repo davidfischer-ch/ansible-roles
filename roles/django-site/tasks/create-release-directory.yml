@@ -1,0 +1,8 @@
+---
+
+- name: Create release directory
+  file: >
+    name={{ djsite_release_directory }} owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
+    mode=755 state=directory
+  become: yes
+  become_user: root
