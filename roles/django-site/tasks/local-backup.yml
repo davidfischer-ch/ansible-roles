@@ -47,17 +47,12 @@
           local_action: >
             copy content={{ djsite_production_link.stat.lnk_source }} dest={{ djsite_local_backup_directory }}/venv.path
 
-        - name: Copy rsync exclusion rules
-          local_action:
-            copy src=rsync/rsync-filter-backup dest=/tmp/djsite-{{ djsite_instance_name }}-rsync-filter-backup
-          become: yes
-
         - name: Backup Website web directory locally
           synchronize: >
             src={{ djsite_app_directory }}/production/ dest={{ djsite_local_backup_directory }}/web/
             archive=yes checksum=yes delete=yes links=yes mode=pull
           args:
-            rsync_opts: '--exclude-from=/tmp/djsite-{{ djsite_instance_name }}-rsync-filter-backup'
+            rsync_opts: "{{ djsite_rsync_backup_excludes|format_items('--exclude={0}')|join(' ') }}"
       tags: code
   become: yes
   when: djsite_is_master|bool

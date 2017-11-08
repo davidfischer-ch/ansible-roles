@@ -10,7 +10,8 @@
     - name: Deploy the application in release directory
       command: >
         rsync {{ djsite_app_directory }}/test/{{ item }}/ {{ djsite_release_directory }}/{{ item }}/
-        --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-release
+        {{ djsite_rsync_release_excludes|format_items('--exclude={0}')|join(' ') }}
+        --archive --delete --hard-links --links
       with_items:
         - server
         - venv
