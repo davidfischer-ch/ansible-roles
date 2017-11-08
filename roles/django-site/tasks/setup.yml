@@ -45,6 +45,8 @@
   become: yes
   tags: config
 
+# Release
+
 - block:
     - include: deploy-release.yml
     - include: make-migrations.yml

@@ -1,3 +1,5 @@
+---
+
 - block:
     - name: Clone Application source code
       git: >
