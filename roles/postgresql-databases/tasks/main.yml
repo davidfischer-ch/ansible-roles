@@ -41,10 +41,10 @@
     - name: Enable extensions to the PostgreSQL databases
       postgresql_ext: >
         db={{ item.0.name }} name={{ item.1 }} state=present
-        login_host={{ item.value.host|default(omit) }} port={{ item.value.port|default(omit) }}
-        login_user={{ item.value.login_user|default(omit) }} login_password={{ item.value.login_password|default(omit) }}
+        login_host={{ item.0.host|default(omit) }} port={{ item.0.port|default(omit) }}
+        login_user={{ item.0.login_user|default(omit) }} login_password={{ item.0.login_password|default(omit) }}
       loop_control:
-        label: '{{ item.0.name }}'
+        label: '{{ item.0.name }} extension {{ item.1 }}'
       tags: flush-extra
       with_subelements:
         - "{{ postgresql_databases.values()|selectattr('extensions', 'defined')|list }}"
