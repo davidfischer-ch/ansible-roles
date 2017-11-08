@@ -6,9 +6,9 @@
 
 environment=LANG={{ locale }},LC_ALL={{ locale }},LC_LANG={{ locale }}
 {% if item.value.type == 'beat' %}
-command = {{ djsite_app_directory }}/production/venv/bin/python manage.py celery beat --loglevel=INFO --schedule {{ djsite_app_directory }}/data/celery-beat.db
+command = {{ djsite_app_directory }}/production/venv/bin/celery beat --app {{ djsite_project }} --loglevel INFO --schedule {{ djsite_app_directory }}/data/celery-beat.db
 {% else %}
-command = {{ djsite_app_directory }}/production/venv/bin/python manage.py celery worker -Q {{ item.value.queues|join(',') }} --loglevel=INFO -n={{ item.value.name }}.{{ ansible_fqdn }}.{{ djsite_instance_name }} --statedb={{ djsite_app_directory }}/data/celery-{{ item.value.name }}.db
+command = {{ djsite_app_directory }}/production/venv/bin/celery worker --app {{ djsite_project }} -Q {{ item.value.queues|join(',') }} --loglevel=INFO -n={{ item.value.name }}.{{ ansible_fqdn }}.{{ djsite_instance_name }} --statedb={{ djsite_app_directory }}/data/celery-{{ item.value.name }}.db
 {% endif %}
 
 directory      = {{ djsite_app_directory }}/production/server/

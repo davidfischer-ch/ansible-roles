@@ -226,6 +226,16 @@
       loop_control:
         label: '{{ item.value.name }}'
       with_dict: '{{ djsite_celery_workers }}'
+
+    - name: Setup periodic copy of Celery beat DB to shared storage
+      cron: >
+        name='Copy {{ djsite_instance_name }}-celery-{{ item.value.name }} database to shared storage'
+        job='cp {{ djsite_app_directory }}/data/celery-beat.db.* {{ djsite_data_directory }}/'
+        minute=*/5 user={{ djsite_daemon_user }} state=present
+      loop_control:
+        label: '{{ item.value.name }}'
+      when: item.value.type == 'beat'
+      with_dict: '{{ djsite_celery_workers }}'
   become: yes
   tags: [workers, config]
 
