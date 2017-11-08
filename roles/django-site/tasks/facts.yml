@@ -24,7 +24,7 @@
 
     - set_fact:
         djsite_release_directory: "{{ djsite_app_directory }}/{{ (djsite_release_mode == 'direct')|ternary('test', 'releases/'+djsite_release_timestamp) }}"
-        djsite_repository_is_local: "{{ '://' not in djsite_repository_url }}"
+        djsite_repository_is_local: "{{ ':' not in djsite_repository_url }}"
 
     - assert:
         that:

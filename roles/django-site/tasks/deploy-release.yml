@@ -30,6 +30,8 @@
       command: >
         find {{ djsite_app_directory }}/test/server/ -depth \( -type d -name '__pycache__' -o -type f -name '*.pyc' \)
         -exec rm -rf {} \;
+      failed_when: _djsite_cleanup|failed and 'No such file or directory' not in _djsite_cleanup.stderr
+      register: _djsite_cleanup
       tags: [update, unit-test-extra]
 
     - name: Deploy the Application in the unit-test area
