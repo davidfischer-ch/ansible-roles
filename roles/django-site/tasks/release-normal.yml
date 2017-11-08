@@ -17,8 +17,8 @@
         source={{ djsite_app_directory }}/test/venv destination={{ djsite_release_directory }}/venv operation=none
 
     - name: Create release OK flag
-      file: >
-        path={{ djsite_release_directory }}/{{ djsite_release_ok_flag }} state=touch
+      copy: >
+        content='This release is awesome!' dest={{ djsite_release_directory }}/{{ djsite_release_ok_flag }}
   rescue:
     - name: Remove broken release directory
       file: >
@@ -29,3 +29,4 @@
         msg='Release process failed!'
   become: yes
   become_user: '{{ djsite_daemon_user }}'
+  when: djsite_is_master|bool

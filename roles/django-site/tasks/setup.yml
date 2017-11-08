@@ -20,6 +20,7 @@
         - { name: '{{ djsite_app_directory }}/releases',                           mode: 755 }
         - { name: '{{ djsite_app_directory }}/test/server/bower/bower_components', mode: 755 }
         - { name: '{{ djsite_data_directory }}/media',                             mode: 755 }
+        - { name: '{{ djsite_data_directory }}/releases',                          mode: 755 }
         - { name: '{{ djsite_log_directory }}',                                    mode: 750 }
 
     - name: Create link to Application media directory
@@ -171,32 +172,39 @@
 # Release
 
 - block:
-    - name: Deploy test directory to shared test directory
-      command: >
-        rsync {{ djsite_app_directory }}/test/ {{ djsite_data_directory }}/test/
-        --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-sync
-      when: djsite_is_master|bool and not djsite_standalone|bool
-
-    - name: Deploy test directory from shared test directory
-      command: >
-        rsync {{ djsite_data_directory }}/test/ {{ djsite_app_directory }}/test/
-        --archive --delete --hard-links --links --exclude-from {{ djsite_data_directory }}/rsync/rsync-filter-sync
-      when: not djsite_is_master|bool and not djsite_standalone|bool
-
     - include: 'release-{{ djsite_release_mode }}.yml'
 
-    - name: Switch production symlink
-      file: >
-        src={{ djsite_release_directory }} dest={{ djsite_app_directory }}/production state=link
-      become: yes
+    - block:
+        - name: Archive Website directory into shared storage
+          archive: >
+            path={{ djsite_release_directory }}/
+            dest={{ djsite_data_directory }}/releases/{{ djsite_release_timestamp }}.tar.gz
+          when: djsite_is_master|bool
 
-    - name: Remove oldest releases directories
-      cleanup_releases: >
-        directory={{ djsite_app_directory }}/releases keep={{ djsite_max_releases|int }}
-        ok_flag={{ djsite_release_ok_flag }} regexp=[0-9T]{8}T[0-9]{6}
-      become: yes
-      tags: cleanup
-      when: djsite_release_mode == 'normal'
+        - include: create-release-directory.yml
+          when: not djsite_is_master|bool
+
+        - name: Extract Website directory from shared storage
+          unarchive:
+            src={{ djsite_data_directory }}/releases/{{ djsite_release_timestamp }}.tar.gz
+            dest={{ djsite_release_directory }}/ remote_src=yes
+          when: not djsite_is_master|bool
+      tags: sync
+      when: not djsite_standalone|bool
+
+    - block:
+        - name: Switch production symlink
+          file: >
+            src={{ djsite_release_directory }} dest={{ djsite_app_directory }}/production state=link
+
+        - name: Remove oldest releases directories
+          cleanup_releases: >
+            directory={{ djsite_app_directory }}/releases keep={{ djsite_max_releases|int }}
+            ok_flag={{ djsite_release_ok_flag }} regexp=[0-9T]{8}T[0-9]{6}
+          tags: cleanup
+          when: djsite_release_mode == 'normal'
+      tags: activate
+  become: yes
   tags: update
 
 # Celery Workers
