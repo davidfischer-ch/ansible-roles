@@ -62,6 +62,11 @@ python_dynamic_defaults:
       - '2.7'
       - '3.5'
 
+  ubuntu-17.*:
+    python_versions:
+      - '2.7'
+      - '3.6'
+
 python_build_flags: []
   # - '--enable-optimizations'
 python_default_version: '{{ python_versions|first }}'
