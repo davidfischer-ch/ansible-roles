@@ -1,5 +1,4 @@
 # https://www.sslshopper.com/article-how-to-create-and-install-an-apache-self-signed-certificate.html
-# # https://software.opensuse.org/download/package?project=isv:ownCloud:desktop&package=owncloud-client
 ---
 
 - name: Install OpenSSL packages
