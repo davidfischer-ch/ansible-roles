@@ -69,7 +69,10 @@ def main():
     diff = [{'after': 'absent', 'after_header': r, 'before': get_state(r), 'before_header': r} for r in remove_releases]
     if not module.check_mode:
         for release in remove_releases:
-            shutil.rmtree(release)
+            if os.path.isdir(release):
+                shutil.rmtree(release)
+            else:
+                os.remove(release)
     module.exit_json(changed=bool(remove_releases), diff=diff)
 
 
