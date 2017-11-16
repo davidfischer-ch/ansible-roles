@@ -24,7 +24,7 @@
         dest={{ lookup('env', 'HOME') }}/.ssh/config marker='# {mark} ANSIBLE MANAGED BLOCK {{ item }}'
       args:
         block: >
-          Host {{ item }}
+          Host {{ hostvars[item].register_ssh_name_prefix|default('') }}{{ item }}
               HostName {{ hostvars[item].ansible_host }}
               Port {{ hostvars[item].ansible_port|default(22) }}
               User {{ hostvars[item].ansible_user }}
