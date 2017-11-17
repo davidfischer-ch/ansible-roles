@@ -25,12 +25,18 @@
         ./configure {{ python_build_flags|join(' ') }}
       args:
         chdir: '{{ local_source_directory }}/Python-{{ _python_latest_version }}'
+      register: _python_configure
+
+    - debug: var=_python_configure.stdout_lines verbosity=3
 
     - name: Build Python {{ _python_latest_version }} from source
       make:
         chdir: '{{ local_source_directory }}/Python-{{ _python_latest_version }}'
         params:
           NUM_THREADS: '{{ ansible_processor_cores }}'
+      register: _python_build
+
+    - debug: var=_python_build verbosity=3
 
     - name: Install Python {{ _python_latest_version }} from source
       make:
