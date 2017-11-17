@@ -25,8 +25,14 @@ python_dynamic_defaults:
   linux:
     python_build_packages:
       - dpkg-dev
+      - libbz2-dev
+      - libc6-dev
+      - libgdbm-dev
+      - liblzma-dev
+      - libncurses5-dev
       - libsqlite3-dev
       - libssl-dev
+      - sqlite3
       - zlib1g
       - zlib1g-dev
     python_packages:
