@@ -1,10 +1,13 @@
 kernel_dynamic_defaults:
-  ubuntu17.*:
-    kernel_packages:
-      - linux-headers-lowlatency
   centos:
     kernel_packages:
       - kernel-devel
+  debian-8.9:
+    kernel_packages:
+      - linux-base
+  ubuntu17.*:
+    kernel_packages:
+      - linux-headers-lowlatency
   linux:
     kernel_packages:
       - linux-generic
