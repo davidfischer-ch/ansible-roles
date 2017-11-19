@@ -27,7 +27,7 @@ nginx_daemon_group: www-data
 nginx_daemon_path: /usr/share/nginx/sbin/nginx
 nginx_daemon_user: www-data
 nginx_reload_on_update: no
-nginx_worker_processes: 4
+nginx_worker_processes: '{{ ansible_processor_count }}'
 # modules
 nginx_pagespeed_module_cache_directory: /var/cache/nginx_pagespeed
 nginx_pagespeed_module_configure: ''
