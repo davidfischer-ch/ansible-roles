@@ -32,9 +32,9 @@
     - name: Create mount directories
       file: >
         name={{ item.value.directory }}
-        owner={{ item.value.user|default(user) }}
-        group={{ item.value.group|default(group) }}
-        mode={{ item.value.mode|default(755) }}
+        owner={{ item.value.user|default(omit) }}
+        group={{ item.value.group|default(omit) }}
+        mode={{ item.value.mode|default(omit) }}
         state=directory
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
@@ -67,16 +67,11 @@
 
     - name: Check root can write and chown
       file: >
-        name={{ item.value.directory }}/{{ inventory_hostname }} owner={{ user }} group={{ group }} mode=755 state=directory
-      loop_control:
-        label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
-      when: item.value.check|bool and item.value.fstype != 'swap'
-      with_dict: '{{ mounts }}'
-
-    - name: Check user can write
-      file: >
-        name={{ item.value.directory }}/{{ inventory_hostname }}/{{ user }} state=directory
-      become: no
+        name={{ item.value.directory }}/{{ inventory_hostname }}
+        owner={{ item.value.user|default(omit) }}
+        group={{ item.value.group|default(omit) }}
+        mode={{ item.value.mode|default(omit) }}
+        state=directory
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.check|bool and item.value.fstype != 'swap'
