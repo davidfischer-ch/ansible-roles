@@ -431,9 +431,17 @@ class Ec2Inventory(object):
         self.all_elasticache_nodes = config.getboolean('ec2', 'all_elasticache_nodes')
 
         try:
+            self.elasticache_cluster_id = config.get('ec2', 'elasticache_cluster_id')
+        except:
+            self.elasticache_cluster_id = None
+        try:
             self.elasticsearch_domain_id = config.get('ec2', 'elasticsearch_domain_id')
         except:
             self.elasticsearch_domain_id = None
+        try:
+            self.rds_subnet_group = config.get('ec2', 'rds_subnet_group')
+        except:
+            self.rds_subnet_group = None
 
         # boto configuration profile (prefer CLI argument then environment variables then config file)
         self.boto_profile = self.args.boto_profile or \
@@ -694,6 +702,9 @@ class Ec2Inventory(object):
                     instances = conn.get_all_dbinstances(marker=marker)
                     marker = instances.marker
                     for index, instance in enumerate(instances):
+                        if self.rds_subnet_group and instance.subnet_group.name != self.rds_subnet_group:
+                            continue
+
                         # Add tags to instances.
                         instance.arn = db_instances['DBInstances'][index]['DBInstanceArn']
                         tags = client.list_tags_for_resource(ResourceName=instance.arn)['TagList']
@@ -792,7 +803,7 @@ class Ec2Inventory(object):
             if conn:
                 # show_cache_node_info = True
                 # because we also want nodes' information
-                response = conn.describe_cache_clusters(None, None, None, True)
+                response = conn.describe_cache_clusters(self.elasticache_cluster_id, None, None, True)
 
         except boto.exception.BotoServerError as e:
             error = e.reason
