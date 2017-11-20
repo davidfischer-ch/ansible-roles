@@ -1,4 +1,7 @@
+# See https://downloads.mariadb.org/mariadb/repositories/
 mariadb_dynamic_defaults:
+  debian-8.9:
+    mariadb_apt_key: '0xcbcb082a1bb943db'
   ubuntu-(12|14).*:
     mariadb_apt_key: '0xcbcb082a1bb943db'
   ubuntu-(16|17).*:
