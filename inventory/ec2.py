@@ -193,6 +193,7 @@ DEFAULTS = {
     'cache_path': '~/.ansible/tmp',
     'destination_variable': 'public_dns_name',
     'elasticache': 'True',
+    'elasticsearch': 'True',
     'eucalyptus': 'False',
     'eucalyptus_host': None,
     'expand_csv_tags': 'False',
@@ -389,6 +390,9 @@ class Ec2Inventory(object):
         # Include ElastiCache instances?
         self.elasticache_enabled = config.getboolean('ec2', 'elasticache')
 
+        # Include ElasticSearch domains?
+        self.elasticsearch_enabled = config.getboolean('ec2', 'elasticsearch')
+
         # Return all EC2 instances?
         self.all_instances = config.getboolean('ec2', 'all_instances')
 
@@ -425,6 +429,11 @@ class Ec2Inventory(object):
 
         # Return all ElastiCache nodes? (if ElastiCache is enabled)
         self.all_elasticache_nodes = config.getboolean('ec2', 'all_elasticache_nodes')
+
+        try:
+            self.elasticsearch_domain_id = config.get('ec2', 'elasticsearch_domain_id')
+        except:
+            self.elasticsearch_domain_id = None
 
         # boto configuration profile (prefer CLI argument then environment variables then config file)
         self.boto_profile = self.args.boto_profile or \
@@ -543,6 +552,8 @@ class Ec2Inventory(object):
             if self.elasticache_enabled:
                 self.get_elasticache_clusters_by_region(region)
                 self.get_elasticache_replication_groups_by_region(region)
+            if self.elasticsearch_enabled:
+                self.get_elasticsearch_domains_by_region(region, self.elasticsearch_domain_id)
             if self.include_rds_clusters:
                 self.include_rds_clusters_by_region(region)
 
@@ -842,6 +853,44 @@ class Ec2Inventory(object):
 
         for replication_group in replication_groups:
             self.add_elasticache_replication_group(replication_group, region)
+
+    def get_elasticsearch_domains_by_region(self, region, domain_id=None):
+        """Makes an AWS API call to ElasticSearch domain in a particular region."""
+        if not HAS_BOTO3:
+            self.fail_with_error(
+                "Working with ElasticSearch domain requires boto3 - please install boto3 and try again",
+                "getting ElasticSearch domain"
+            )
+        try:
+            client = ec2_utils.boto3_inventory_conn('client', 'es', region, **self.credentials)
+            response = client.describe_elasticsearch_domain(DomainName=domain_id)
+        except Exception as e:
+            if 'ResourceNotFound' in str(e):
+                return
+            if 'AuthFailure' in str(e):
+                error = self.get_auth_error_message()
+            if 'Forbidden' not in str(e):
+                error = "Looks like AWS ElasticSearch is down:\n%s" % e.message
+            self.fail_with_error(error, 'getting ElasticSearch domain')
+        try:
+            domain = response['DomainStatus']
+        except KeyError as e:
+            error = "ElasticSearch query to AWS failed (unexpected format)."
+            self.fail_with_error(error, 'getting ElasticSearch domain')
+
+        # Get VPC endpoint or try to get public endpoint
+        if 'Endpoints' in domain:
+            endpoint = domain['Endpoints']['vpc']
+        else:
+            endpoint = domain.get('Endpoint')
+        if endpoint:
+            domain_name = domain['DomainName']
+            for group in 'elasticsearch_domains', self.to_safe('elasticsearch_domain_' + domain_name):
+                self.push(self.inventory, group, endpoint)
+            if endpoint in self.inventory['_meta']['hostvars']:
+                self.inventory['_meta']['hostvars'][endpoint].update(domain)
+            else:
+                self.inventory['_meta']['hostvars'][endpoint] = domain
 
     def get_auth_error_message(self):
         ''' create an informative error message if there is an issue authenticating'''
