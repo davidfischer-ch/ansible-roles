@@ -1,7 +1,7 @@
 # packages
 mariadb_packages:
   - 'mariadb-server-{{ mariadb_version }}'
-mariadb_version: 10.1
+mariadb_version: 10.2
 # miscellaneous configuration
 mariadb_auto_rehash: yes
 mariadb_base_directory: /usr
