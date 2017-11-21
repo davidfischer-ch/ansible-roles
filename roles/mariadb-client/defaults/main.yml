@@ -6,7 +6,7 @@ mariadb_dynamic_defaults:
     mariadb_apt_key: '0xcbcb082a1bb943db'
   ubuntu-(16|17).*:
     mariadb_apt_key: '0xF1656F24C74CD1D8'
-mariadb_apt_repository: 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/{{ mariadb_version }}/ubuntu {{ ansible_distribution_release }} main'
+mariadb_apt_repository: 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/{{ mariadb_version }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'
 mariadb_client_packages:
   - 'mariadb-client-{{ mariadb_version }}'
 mariadb_version: 10.2  # 13/07/2017
