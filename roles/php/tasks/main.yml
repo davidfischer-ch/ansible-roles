@@ -17,6 +17,11 @@
         name={{ php_apache_package }} state=present
       when: php_apache_package|length > 0
 
+    - name: Install PHP FPM module
+      package: >
+        name={{ php_fpm_package }} state=present
+      when: php_fpm_package|length > 0
+
     - name: Install PHP mbstring package if available
       package: >
         name={{ php_mbstring_package }} state=present
