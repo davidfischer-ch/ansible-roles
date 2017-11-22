@@ -7,7 +7,6 @@
       register: _apt_sources
       with_first_found:
         - files: '{{ apt_sources_files }}'
-          skip: "{{ ansible_pkg_mgr != 'apt' }}"
 
     - name: Install extra repositories
       apt_repository: >
