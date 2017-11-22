@@ -1,0 +1,28 @@
+---
+
+dependencies:
+  - role: daemon
+    daemon_user: '{{ seafile_daemon_user }}'
+    daemon_group: '{{ seafile_daemon_group }}'
+    daemon_directory: '{{ seafile_app_directory }}'
+    tags: [seafile, dependencies]
+
+  - role: local-source
+    tags: [seafile, dependencies]
+
+  - role: java
+    tags: [seafile, dependencies]
+
+  - role: postfix
+    tags: [seafile, dependencies]
+
+  - role: python
+    tags: [seafile, dependencies]
+
+  - role: mariadb-client
+    tags: [seafile, dependencies]
+
+  - role: ufw
+    ufw_rules: '{{ seafile_ufw_rules }}'
+    tags: [seafile, dependencies]
+    when: seafile_ufw_rules|length > 0

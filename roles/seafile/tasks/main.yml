@@ -1,0 +1,146 @@
+# This roles has some steps that should be made more generic to handle multi-tier deployment
+---
+
+- assert:
+    that:
+      - seafile_admin_email is defined
+      - seafile_admin_password is defined
+      - seafile_database_password is defined
+      - seafile_instance_name is defined
+      - seafile_version is defined
+  tags: [seafile, always]
+
+- block:
+    - name: Install Seafile packages
+      package: >
+        name={{ item }} state=present
+      with_items: '{{ seafile_packages }}'
+
+    - name: Install Seafile Python packages
+      pip: >
+        name={{ item }} executable=pip2 state=present
+      with_items: '{{ seafile_python_packages }}'
+
+    - name: Download Seafile distribution package
+      get_url: >
+        url={{ seafile_package_url }} dest={{ local_source_directory }}/{{ seafile_package_url|basename }} force=no
+
+    - name: Extract Seafile distribution package
+      unarchive: >
+        src={{ local_source_directory }}/{{ seafile_package_url|basename }} dest={{ local_source_directory }} copy=no
+  become: yes
+  tags: [seafile, packages]
+
+- name: Create Application directories
+  file: >
+    name={{ item }} recurse=no state=directory
+    owner={{ seafile_daemon_user }} group={{ seafile_daemon_group }} mode=755
+  with_items:
+    - '{{ seafile_app_directory }}'
+    - '{{ seafile_log_directory }}'
+  become: yes
+  tags: [seafile, config]
+
+# FIXME multi-tier architecture
+- name: Setup Application database user
+  mysql_user: >
+    name={{ seafile_database_user }} host=127.0.0.1 password={{ seafile_database_password }}
+    priv={{ seafile_database_name_prefix }}-{{ item }}.*:ALL append_privs=yes state=present
+  become: yes
+  tags: [seafile, database]
+  with_items:
+    - ccnet
+    - seafile
+    - seahub
+
+- block:
+    - name: Update Application
+      command: >
+        rsync {{ local_source_directory }}/seafile-pro-server-{{ seafile_version }}/
+              {{ seafile_app_directory }}/seafile-server/
+          --chown {{ seafile_daemon_user }}:{{ seafile_daemon_group }} -og
+          --archive --checksum --delete
+
+    - name: Prevent useless DNS lookup
+      replace: >
+        name={{ seafile_app_directory }}/seafile-server/setup-seafile-mysql.py
+        regexp='socket.gethostbyname\(socket.gethostname\(\)\)' replace='args.server_ip'
+
+    # https://manual.seafile.com/deploy/using_mysql.html
+    - name: Execute setup script
+      command: >
+        python ./setup-seafile-mysql.py auto
+        --server-name {{ seafile_instance_name }}
+        --server-ip {{ domain }}
+        --fileserver-port {{ seafile_file_port|int }}
+        --seafile-dir {{ seafile_data_directory }}
+        --use-existing-db 0
+        --mysql-host localhost
+        --mysql-port {{ mariadb_port|default(mysql_port)|int }}
+        --mysql-user {{ seafile_database_user }}
+        --mysql-user-passwd {{ seafile_database_password }}
+        --mysql-root-passwd {{ mariadb_root_password|default(mysql_root_password) }}
+        --ccnet-db {{ seafile_database_name_prefix }}-ccnet
+        --seafile-db {{ seafile_database_name_prefix }}-seafile
+        --seahub-db {{ seafile_database_name_prefix }}-seahub
+      args:
+        chdir: '{{ seafile_app_directory }}/seafile-server'
+        creates: '{{ seafile_data_directory }}'
+      environment:
+        PYTHON: python
+      register: _seafile_setup
+
+    - name: Set administrator credentials
+      replace: >
+        name={{ seafile_app_directory }}/seafile-server/check_init_admin.py
+        regexp='= ask_admin_{{ item.key }}\(\)' replace='= "{{ item.value }}"'
+      no_log: yes
+      with_dict:
+        email: '{{ seafile_admin_email }}'
+        password: '{{ seafile_admin_password }}'
+
+    - block:
+        - name: Start Application services
+          command: >
+            ./{{ item }}.sh start
+          args:
+            chdir: '{{ seafile_app_directory }}/seafile-server'
+          changed_when: _seafile_start|success and 'already running' not in _seafile_start.stdout
+          failed_when: _seafile_start|failed and 'already running' not in _seafile_start.stdout
+          register: _seafile_start
+          with_items:
+            - seafile
+            - seahub
+
+        - name: Wait few seconds for the initial auto-configration
+          pause: >
+            seconds=5
+
+        - name: Stop Application services
+          command: >
+            ./{{ item }}.sh stop
+          args:
+            chdir: '{{ seafile_app_directory }}/seafile-server'
+          changed_when: _seafile_stop|success and 'not running' not in _seafile_stop.stdout
+          failed_when: _seafile_stop|failed and 'not running' not in _seafile_stop.stdout
+          register: _seafile_stop
+          with_items:
+            - seafile
+            - seahub
+      when: _seafile_setup|changed
+  become: yes
+  tags: [seafile, update]
+
+- name: Start Application services
+  command: >
+    ./{{ item }}
+  args:
+    chdir: '{{ seafile_app_directory }}/seafile-server'
+  become: yes
+  changed_when: _seafile_start|success and 'already running' not in _seafile_start.stdout
+  failed_when: _seafile_start|failed and 'already running' not in _seafile_start.stdout
+  register: _seafile_start
+  tags: [seafile, services]
+  with_items:
+    - 'seafile.sh start'
+    - 'seahub.sh start-fastcgi {{ seafile_hub_port|int }}'
