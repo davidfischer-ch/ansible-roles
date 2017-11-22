@@ -76,6 +76,11 @@ See django-site role's [README](roles/django-site/README.md).
 
 See s3fs role's [README](roles/s3fs/README.md).
 
+### Seafile Professional Server
+
+See seafile role's [README](roles/seafile/README.md).
+
+
 ### Setup a PostgreSQL server with an application DB
 
 See postgresql role's [README](roles/postgresql/README.md).
