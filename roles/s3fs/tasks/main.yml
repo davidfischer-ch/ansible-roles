@@ -44,7 +44,7 @@
           make:
             chdir: '{{ local_source_directory }}/s3fs'
             params:
-              NUM_THREADS: '{{ ansible_processor_cores }}'
+              '--jobs': '{{ ansible_processor_cores }}'
 
         - name: Install s3fs from source
           make:

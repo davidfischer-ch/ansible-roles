@@ -117,7 +117,7 @@
           make:
             chdir: '{{ local_source_directory }}/nginx'
             params:
-              NUM_THREADS: '{{ ansible_processor_cores }}'
+              '--jobs': '{{ ansible_processor_cores }}'
 
         - name: Install Nginx from source
           make:
