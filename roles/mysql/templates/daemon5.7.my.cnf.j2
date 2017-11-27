@@ -47,6 +47,9 @@ bind-address = {{ mysql_bind_address }}
 #
 innodb_buffer_pool_size        = {{ mysql_innodb_buffer_pool_size }}
 innodb_flush_log_at_trx_commit = {{ mysql_innodb_flush_log_at_trx_commit|int }}
+{% if mysql_innodb_log_file_size %}
+innodb_log_file_size           = {{ mysql_innodb_log_file_size }}
+{% endif %}
 join_buffer_size               = {{ mysql_join_buffer_size }}
 key_buffer_size                = {{ mysql_key_buffer_size }}
 max_allowed_packet             = {{ mysql_packet_max_size }}
