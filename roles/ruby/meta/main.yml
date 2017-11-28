@@ -1,0 +1,8 @@
+---
+
+dependencies:
+  - role: build
+    tags: [ruby, dependencies]
+
+  - role: local-source
+    tags: [ruby, dependencies]
