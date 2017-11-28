@@ -2,9 +2,9 @@
 
 dependencies:
   - role: build
-    tags: [rsync, dependencies]
+    tags: [openssl, dependencies]
     when: openssl_from_source|bool
 
   - role: local-source
-    tags: [rsync, dependencies]
+    tags: [openssl, dependencies]
     when: openssl_from_source|bool
