@@ -3,3 +3,10 @@
 dependencies:
   - role: build
     tags: [development, dependencies]
+
+  - role: ansible
+    tags: [development, dependencies]
+
+  - role: vagrant
+    vagrant_role_action: setup
+    tags: [development, dependencies]

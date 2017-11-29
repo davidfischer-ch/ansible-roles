@@ -1,8 +1,6 @@
 devops_packages:
-  - ansible
-  - juju-local
+  - juju
   - libzmq5
-  - vagrant
 programming_packages:
   - bzr
   - gedit-developer-plugins
