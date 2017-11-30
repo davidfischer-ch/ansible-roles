@@ -1,0 +1,6 @@
+CACHES = {
+    'default': {
+        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:{{ memcache_port|int }}'
+    }
+}

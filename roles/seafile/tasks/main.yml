@@ -90,6 +90,13 @@
         PYTHON: python
       register: _seafile_setup
 
+    - name: Connect Seafile to MemCache
+      blockinfile: >
+        path={{ seafile_app_directory }}/conf/seahub_settings.py
+        insertafter=EOF marker='# {mark} Connect Seafile to MemCache'
+        content="{{ lookup('template', 'seahub_settings.cache.py.j2') }}"
+      # notify: restart seafile
+
     - name: Set administrator credentials
       replace: >
         name={{ seafile_app_directory }}/seafile-server/check_init_admin.py

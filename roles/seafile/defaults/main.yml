@@ -1,4 +1,5 @@
 seafile_packages:
+  - libmemcached-dev
   - libreoffice
   - libreoffice-script-provider-python
   - poppler-utils  # for full text search of PDF files
@@ -16,7 +17,9 @@ seafile_packages:
 seafile_package_url: 'https://download.seafile.com/d/6e5297246c/files/?dl=1&p=/pro/seafile-pro-server_{{ seafile_version }}_x86-64_Ubuntu.tar.gz'
 seafile_python_packages:
   - boto
+  - django-pylibmc
   - Pillow
+  - pylibmc
   - requests
   - urllib3
 
