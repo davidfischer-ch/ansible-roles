@@ -1,0 +1,26 @@
+---
+
+- name: reload systemd
+  command: >
+    systemctl daemon-reload
+  become: yes
+
+- name: system restart seafile
+  service: >
+    name=seafile use={{ seafile_daemon_mode }} state=restarted
+  become: yes
+
+- name: system restart seahub
+  service: >
+    name=seahub use={{ seafile_daemon_mode }} state=restarted
+  become: yes
+
+- name: system reload seafile
+  service: >
+    name=seafile use={{ seafile_daemon_mode }} state=reloaded
+  become: yes
+
+- name: system reload seahub
+  service: >
+    name=seahub use={{ seafile_daemon_mode }} state=reloaded
+  become: yes

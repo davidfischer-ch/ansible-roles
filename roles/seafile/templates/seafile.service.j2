@@ -1,0 +1,15 @@
+[Unit]
+Description=Seafile
+After=network.target mysql.service
+
+[Service]
+WorkingDirectory={{ seafile_app_directory }}/seafile-server-latest
+ExecStart={{ seafile_app_directory }}/seafile-server-latest/seafile.sh start
+ExecStop={{ seafile_app_directory }}/seafile-server-latest/seafile.sh stop
+User={{ seafile_daemon_user }}
+Group={{ seafile_daemon_group }}
+RemainAfterExit=yes
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

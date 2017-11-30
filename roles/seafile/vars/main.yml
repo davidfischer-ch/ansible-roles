@@ -1,0 +1,2 @@
+seafile_daemon_modes:
+  systemd: system

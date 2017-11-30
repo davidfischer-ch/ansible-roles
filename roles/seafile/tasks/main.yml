@@ -5,6 +5,7 @@
     that:
       - seafile_admin_email is defined
       - seafile_admin_password is defined
+      - seafile_daemon_mode in seafile_daemon_modes
       - seafile_database_password is defined
       - seafile_instance_name is defined
       - seafile_version is defined
@@ -86,6 +87,7 @@
       args:
         chdir: '{{ seafile_app_directory }}/seafile-server'
         creates: '{{ seafile_data_directory }}'
+      become: '{{ seafile_daemon_user }}'
       environment:
         PYTHON: python
       register: _seafile_setup
@@ -95,7 +97,7 @@
         path={{ seafile_app_directory }}/conf/seahub_settings.py
         insertafter=EOF marker='# {mark} Connect Seafile to MemCache'
         content="{{ lookup('template', 'seahub_settings.cache.py.j2') }}"
-      # notify: restart seafile
+      notify: '{{ seafile_daemon_modes[seafile_daemon_mode] }} restart seahub'
 
     - name: Set administrator credentials
       replace: >
@@ -106,48 +108,40 @@
         email: '{{ seafile_admin_email }}'
         password: '{{ seafile_admin_password }}'
 
+    - include: setup-service-{{ seafile_daemon_mode }}.yml
+
     - block:
-        - name: Start Application services
-          command: >
-            ./{{ item }}.sh start
-          args:
-            chdir: '{{ seafile_app_directory }}/seafile-server'
-          changed_when: _seafile_start|success and 'already running' not in _seafile_start.stdout
-          failed_when: _seafile_start|failed and 'already running' not in _seafile_start.stdout
-          register: _seafile_start
+        - name: Start Seafile services
+          service: >
+            name={{ item }} state=started enabled=yes
           with_items:
             - seafile
             - seahub
 
-        - name: Wait few seconds for the initial auto-configration
+        - name: Wait few seconds for the initial auto-configuration
           pause: >
-            seconds=5
+            seconds=10
 
-        - name: Stop Application services
+        - name: Trigger Seafile restart
           command: >
-            ./{{ item }}.sh stop
-          args:
-            chdir: '{{ seafile_app_directory }}/seafile-server'
-          changed_when: _seafile_stop|success and 'not running' not in _seafile_stop.stdout
-          failed_when: _seafile_stop|failed and 'not running' not in _seafile_stop.stdout
-          register: _seafile_stop
+            ls /dev/null
+          changed_when: yes
+          check_mode: no
+          notify: '{{ seafile_daemon_modes[seafile_daemon_mode] }} restart {{ item }}'
           with_items:
             - seafile
             - seahub
+
+        - meta: flush_handlers
       when: _seafile_setup|changed
   become: yes
   tags: [seafile, update]
 
-- name: Start Application services
-  command: >
-    ./{{ item }}
-  args:
-    chdir: '{{ seafile_app_directory }}/seafile-server'
+- name: Start Seafile services
+  service: >
+    name={{ item }} state=started enabled=yes
   become: yes
-  changed_when: _seafile_start|success and 'already running' not in _seafile_start.stdout
-  failed_when: _seafile_start|failed and 'already running' not in _seafile_start.stdout
-  register: _seafile_start
-  tags: [seafile, services]
   with_items:
-    - 'seafile.sh start'
-    - 'seahub.sh start-fastcgi {{ seafile_hub_port|int }}'
+    - seafile
+    - seahub
+  tags: [seafile, services]
