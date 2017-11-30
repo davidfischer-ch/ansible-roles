@@ -40,7 +40,7 @@ seafile_log_rotations:
   - name: seafile
     config_file: '{{ seafile_log_rotations_config_file }}'
 # networking
-seafile_interface: null
+seafile_interface: lo
 seafile_file_port: 8082
 seafile_hub_port: 8000
 seafile_ufw_rules:
