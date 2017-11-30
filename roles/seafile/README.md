@@ -2,11 +2,10 @@
 
 ## Status
 
-Alpha
+Beta
 
 Not (yet) implemented:
 
-* Supervisor configuration to start Seafile services
 * Handling of multi-tier architecture (database external host, ...)
 
 * Role actions such as configure, ...
@@ -20,8 +19,11 @@ Not (yet) implemented:
 java_apt_repository: ''
 java_version: 8
 
+mariadb_interface: lo
 mariadb_root_password: cFazXrbhJyfpu5B7
 mariadb_version: 10.2
+
+memcache_interface: lo
 
 nginx_zip_module_enabled: no
 nginx_version: release-1.13.6  # 19/11/2017
@@ -64,9 +66,10 @@ supervisor_password: h3mQ2FbrGUzNE85m
 
 seafile_admin_email: admin@seafile.example
 seafile_admin_password: xTv6w7f5r2KaTKJS
+seafile_daemon_mode: systemd
 seafile_database_password: K89YeTgZmqRFYJGC
 seafile_instance_name: seafile
-# seafile_interface: lo
+seafile_interface: lo
 seafile_version: 6.1.9
 ```
 
