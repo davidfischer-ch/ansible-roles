@@ -3,11 +3,12 @@
        daily
        dateext
        missingok
-       rotate {{ nginx_log_rotations_max_count|int }}
+       rotate {{ seafile_log_rotations_max_count|int }}
        compress
        delaycompress
        nomail
        notifempty
+       create 644 {{ seafile_daemon_user }} {{ seafile_daemon_group }}
        sharedscripts
        postrotate
               [ ! -f {{ seafile_app_directory }}/pids/ccnet.pid ] || kill -USR1 `cat {{ seafile_app_directory }}/pids/ccnet.pid`
@@ -19,11 +20,12 @@
        daily
        dateext
        missingok
-       rotate {{ nginx_log_rotations_max_count|int }}
+       rotate {{ seafile_log_rotations_max_count|int }}
        compress
        delaycompress
        nomail
        notifempty
+       create 644 {{ seafile_daemon_user }} {{ seafile_daemon_group }}
        sharedscripts
 }
 
@@ -32,11 +34,12 @@
        daily
        dateext
        missingok
-       rotate {{ nginx_log_rotations_max_count|int }}
+       rotate {{ seafile_log_rotations_max_count|int }}
        compress
        delaycompress
        nomail
        notifempty
+       create 644 {{ seafile_daemon_user }} {{ seafile_daemon_group }}
        sharedscripts
        postrotate
               [ ! -f {{ seafile_app_directory }}/pids/seaf-server.pid ] || kill -USR1 `cat {{ seafile_app_directory }}/pids/seaf-server.pid`
