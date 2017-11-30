@@ -1,3 +1,4 @@
+# dependencies
 seafile_packages:
   - libmemcached-dev
   - libreoffice
@@ -22,14 +23,14 @@ seafile_python_packages:
   - pylibmc
   - requests
   - urllib3
-
+# directories
 seafile_app_directory: '/var/app/{{ seafile_instance_name }}'
 seafile_data_directory: '{{ seafile_app_directory }}/seafile-data'
 seafile_log_directory: '/var/log/{{ seafile_instance_name }}'
-
+# daemon
 seafile_daemon_group: '{{ seafile_daemon_user }}'
 seafile_daemon_user: '{{ seafile_instance_name }}'
-
+# database
 seafile_database_name_prefix: '{{ seafile_instance_name }}'
 seafile_database_user: '{{ seafile_instance_name }}'
 # logging
