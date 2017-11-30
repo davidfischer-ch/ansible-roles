@@ -1,0 +1,44 @@
+{{ seafile_app_directory }}/logs/ccnet.log
+{
+       daily
+       dateext
+       missingok
+       rotate {{ nginx_log_rotations_max_count|int }}
+       compress
+       delaycompress
+       nomail
+       notifempty
+       sharedscripts
+       postrotate
+              [ ! -f {{ seafile_app_directory }}/pids/ccnet.pid ] || kill -USR1 `cat {{ seafile_app_directory }}/pids/ccnet.pid`
+       endscript
+}
+
+{{ seafile_app_directory }}/logs/controller.log {{ seafile_app_directory }}/logs/index.log {{ seafile_app_directory }}/logs/seahub*.log
+{
+       daily
+       dateext
+       missingok
+       rotate {{ nginx_log_rotations_max_count|int }}
+       compress
+       delaycompress
+       nomail
+       notifempty
+       sharedscripts
+}
+
+{{ seafile_app_directory }}/logs/seafile.log
+{
+       daily
+       dateext
+       missingok
+       rotate {{ nginx_log_rotations_max_count|int }}
+       compress
+       delaycompress
+       nomail
+       notifempty
+       sharedscripts
+       postrotate
+              [ ! -f {{ seafile_app_directory }}/pids/seaf-server.pid ] || kill -USR1 `cat {{ seafile_app_directory }}/pids/seaf-server.pid`
+       endscript
+}

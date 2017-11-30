@@ -32,7 +32,12 @@ seafile_daemon_user: '{{ seafile_instance_name }}'
 
 seafile_database_name_prefix: '{{ seafile_instance_name }}'
 seafile_database_user: '{{ seafile_instance_name }}'
-
+# logging
+seafile_log_rotations_max_count: 49
+seafile_log_rotations_config_file: logrotate.j2
+seafile_log_rotations:
+  - name: seafile
+    config_file: '{{ seafile_log_rotations_config_file }}'
 # networking
 seafile_interface: null
 seafile_file_port: 8082
