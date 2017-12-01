@@ -2,8 +2,17 @@ python_dynamic_defaults:
 
   centos:
     python_build_packages:
+      - bzip2-devel
+      - db4-devel
+      - expat-devel
+      - gdbm-devel
+      - libpcap-devel
+      - ncurses-devel
       - openssl-devel
+      - readline-devel
       - sqlite-devel
+      - tk-devel
+      - xz-devel
       - zlib-devel
     python_packages:
       - python-devel
@@ -27,13 +36,16 @@ python_dynamic_defaults:
       - dpkg-dev
       - libbz2-dev
       - libc6-dev
+      - libdb-dev
+      - libexpat1-dev
       - libgdbm-dev
       - liblzma-dev
       - libncurses5-dev
+      - libpcap-dev
+      - libreadline-dev
       - libsqlite3-dev
       - libssl-dev
-      - sqlite3
-      - zlib1g
+      - tk-dev
       - zlib1g-dev
     python_packages:
       - bpython
