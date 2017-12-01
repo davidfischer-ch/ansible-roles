@@ -1,0 +1,23 @@
+---
+
+- block:
+    - name: Archive Website directory into shared storage
+      archive: >
+        path={{ djsite_release_directory }}/
+        dest={{ djsite_data_directory }}/releases/{{ djsite_release_timestamp }}.tar.gz
+      when: djsite_is_master|bool
+
+    - name: Create release directory
+      file: >
+        name={{ djsite_release_directory }} state=directory
+        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=755
+      when: not djsite_is_master|bool
+
+    - name: Extract Website directory from shared storage
+      unarchive:
+        src={{ djsite_data_directory }}/releases/{{ djsite_release_timestamp }}.tar.gz
+        dest={{ djsite_release_directory }}/ remote_src=yes
+      when: not djsite_is_master|bool
+  become: yes
+  become_user: root
+  when: not djsite_standalone|bool

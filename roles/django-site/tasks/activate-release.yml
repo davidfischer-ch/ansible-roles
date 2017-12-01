@@ -1,0 +1,7 @@
+---
+
+- name: Switch production symlink
+  file: >
+    src={{ djsite_release_directory }} dest={{ djsite_app_directory }}/production state=link
+  become: yes
+  become_user: root

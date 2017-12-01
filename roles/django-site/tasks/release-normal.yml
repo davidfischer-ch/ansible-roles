@@ -1,7 +1,10 @@
 ---
 
 - block:
-    - include: create-release-directory.yml
+    - name: Create release directory
+      file: >
+        name={{ djsite_release_directory }} state=directory
+        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=755
 
     - name: Deploy the application in release directory
       command: >
