@@ -1,12 +1,18 @@
 # https://gorails.com/setup/ubuntu/17.10
 ---
 
-- name: Install Ruby packages
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ ruby_dynamic_defaults }}'
+    must_match: yes
+  tags: [ruby, always]
+
+- name: Install Ruby build packages
   package: >
     name={{ item }} state=present
   become: yes
   tags: [ruby, packages]
-  with_items: '{{ ruby_packages }}'
+  with_items: '{{ ruby_build_packages }}'
 
 - block:
     - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
