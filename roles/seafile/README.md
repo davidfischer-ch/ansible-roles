@@ -48,6 +48,7 @@ nginx_sites:
   seafile:
     name: '{{ seafile_instance_name }}'
     config_file: '{{ playbook_dir }}/../roles/seafile/templates/example.nginx.site.conf.j2'
+    domains: '{{ seafile_domains }}'
     with_dhparam: yes
 
 postfix_hostname: '{{ ansible_hostname }}'
@@ -68,6 +69,9 @@ seafile_admin_email: admin@seafile.example
 seafile_admin_password: xTv6w7f5r2KaTKJS
 seafile_daemon_mode: systemd
 seafile_database_password: K89YeTgZmqRFYJGC
+seafile_domains:
+  - '{{ ansible_host }}'
+  - 127.0.0.1
 seafile_instance_name: seafile
 seafile_interface: lo
 seafile_version: 6.1.9

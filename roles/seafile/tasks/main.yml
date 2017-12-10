@@ -7,6 +7,7 @@
       - seafile_admin_password is defined
       - seafile_daemon_mode in seafile_daemon_modes
       - seafile_database_password is defined
+      - seafile_domains|length > 0
       - seafile_instance_name is defined
       - seafile_version is defined
   tags: [seafile, always]
@@ -72,7 +73,7 @@
       command: >
         python ./setup-seafile-mysql.py auto
         --server-name {{ seafile_instance_name }}
-        --server-ip {{ domain }}
+        --server-ip {{ seafile_domains|first }}
         --fileserver-port {{ seafile_file_port|int }}
         --seafile-dir {{ seafile_data_directory }}
         --use-existing-db 0

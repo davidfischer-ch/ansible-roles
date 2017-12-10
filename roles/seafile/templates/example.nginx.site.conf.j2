@@ -1,12 +1,12 @@
 server {
     listen {{ nginx_port|int }};
-    server_name {{ domain }} 127.0.0.1;
+    server_name {{ item.value.domains|join(' ') }};
     rewrite ^ https://$http_host$request_uri? permanent;
 }
 
 server {
     listen {{ nginx_port_ssl|int }};
-    server_name {{ domain }} 127.0.0.1;
+    server_name {{ item.value.domains|join(' ') }};
     proxy_set_header X-Forwarded-For $remote_addr;
 
     {% include 'templates/site.ssl.conf.j2' %}
