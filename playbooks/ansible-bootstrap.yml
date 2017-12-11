@@ -3,6 +3,7 @@
 - hosts:
     - ansible-bootstrap
   gather_facts: no
+  tags: ansible-bootstrap
   tasks:
     - name: Generate locale
       raw: >
