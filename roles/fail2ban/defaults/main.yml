@@ -11,4 +11,4 @@ fail2ban_find_time: 3600
 fail2ban_ignore_ips:
   - 127.0.0.1/8
 fail2ban_log_encoding: auto
-fail2ban_max_retries: 3
+fail2ban_max_retries: 10
