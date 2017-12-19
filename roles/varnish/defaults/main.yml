@@ -11,7 +11,7 @@ varnish_storage: malloc,256m
 varnish_version: 5
 # networking
 varnish_admin_bind_address: 127.0.0.1
-varnish_admin_interface: null
+varnish_admin_interface: lo
 varnish_admin_port: 6082
 varnish_interface: null
 varnish_port: 80
