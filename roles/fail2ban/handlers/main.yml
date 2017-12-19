@@ -1,0 +1,7 @@
+---
+
+- name: reload fail2ban
+  service: >
+    name=fail2ban state=restarted
+  become: yes
+  when: fail2ban_enabled|bool
