@@ -1,6 +1,9 @@
 ---
 
 dependencies:
+  - role: build
+    tags: [s3fs, dependencies]
+
   - role: github
     tags: [s3fs, dependencies]
     when: "'github' in s3fs_repository_url"
