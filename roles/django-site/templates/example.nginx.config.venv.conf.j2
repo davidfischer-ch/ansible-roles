@@ -1,0 +1,94 @@
+upstream uwsgi-{{ item.value.name }} {
+    server unix://{{ djsite_app_directory }}/run/uwsgi.socket;
+}
+
+server {
+    # Security - http://nginx.org/en/docs/http/request_processing.html
+    listen {{ nginx_port|int }};
+    return 444;
+}
+
+{% if item.value.domain_old|length > 0 %}
+server {
+    listen {{ item.value.with_ssl|bool|ternary(nginx_port_ssl, nginx_port)|int }};
+    server_name {{ item.value.domain_old }};
+    rewrite ^ $scheme://{{ item.value.domains|first }}$request_uri permanent;
+}
+{% endif %}
+
+{% if item.value.with_ssl|bool and item.value.redirect_ssl|bool %}
+server {
+    listen {{ nginx_port|int }};
+    server_name {{ item.value.domains|join(' ') }};
+    rewrite ^ https://$http_host$request_uri? permanent;
+}
+{% endif %}
+
+server {
+    {% if item.value.with_ssl|bool %}
+    listen {{ nginx_port_ssl|int }} {{ item.value.with_http2|bool|ternary('ssl http2', '') }};
+    {% include 'templates/site.ssl.conf.j2' %}
+    {% else %}
+    listen {{ nginx_port|int }};
+    {% endif %}
+
+    {% if not item.value.with_ssl|bool and item.value.redirect_ssl|bool %}
+    if ($http_x_forwarded_proto != 'https') {
+        rewrite ^ https://$host$request_uri? permanent;
+    }
+    {% endif %}
+
+    server_name {{ item.value.domains|join(' ') }};
+
+    {% if item.value.real_ip_from|default('')|length > 0 %}
+    real_ip_header   X-Forwarded-For;
+    set_real_ip_from {{ item.value.real_ip_from }};
+    {% endif %}
+
+    gzip off;  # Security - http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf
+    gzip_proxied any;
+    gzip_types application/javascript application/json text/css text/javascript text/xml;
+
+    client_max_body_size 0;
+    access_log /var/log/nginx/{{ item.value.name }}/access.log;
+    error_log /var/log/nginx/{{ item.value.name }}/error.log warn;
+
+    location /robots.txt {
+        alias {{ djsite_app_directory }}/production/server/robots.txt;
+    }
+
+    location /favicon/ {
+        alias {{ djsite_app_directory }}/production/server/favicons/;
+    }
+
+    location /static/ {
+        access_log  off;
+        autoindex   on;
+        {% if not item.value.debug|bool %}
+        expires     max;
+        {% endif %}
+        gzip        on;
+        sendfile    off;  # Avoid Nginx serving outdated static files
+        alias {{ djsite_app_directory }}/production/server/static/;
+    }
+
+    location /media/ {
+        access_log  off;
+        autoindex   on;
+        gzip        on;
+        sendfile    off;  # Avoid Nginx serving outdated static files
+        alias {{ djsite_app_directory }}/production/server/media/;
+    }
+
+    location / {
+        client_max_body_size {{ item.value.max_body_size }};
+        include uwsgi_params;
+        uwsgi_pass uwsgi-{{ djsite_instance_name }};
+    }
+
+    location @uwsgi {
+        client_max_body_size {{ item.value.max_body_size }};
+        include uwsgi_params;
+        uwsgi_pass uwsgi-{{ djsite_instance_name }};
+    }
+}
