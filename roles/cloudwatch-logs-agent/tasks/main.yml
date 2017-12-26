@@ -28,10 +28,12 @@
             --python={{ cloudwatch_logs_agent_python }}
       tags: config
 
-    - name: Start CloudWatch logs agent service
+    - name: Toggle CloudWatch logs agent service
       service: >
-        name=awslogs state=started enabled=yes
+        name=awslogs state={{ item }} enabled={{ item == 'started' }}
       tags: services
+      with_items:
+        - "{{ (cloudwatch_logs_agent_logs|length > 0)|ternary('started', 'stopped') }}"
   become: yes
   tags: cloudwatch-logs-agent
   when: ec2_dns_name is defined or ansible_ec2_hostname is defined or not cloudwatch_logs_agent_only_on_ec2|bool
