@@ -27,7 +27,6 @@ nginx_daemon_group: www-data
 nginx_daemon_path: /usr/share/nginx/sbin/nginx
 nginx_daemon_user: www-data
 nginx_reload_on_update: no
-nginx_worker_processes: '{{ ansible_processor_count }}'
 # modules
 nginx_pagespeed_module_cache_directory: /var/cache/nginx_pagespeed
 nginx_pagespeed_module_configure: ''
@@ -40,6 +39,11 @@ nginx_log_rotations_config_file: logrotate.j2
 nginx_log_rotations:
   - name: nginx
     config_file: '{{ nginx_log_rotations_config_file }}'
+# miscellaneous
+nginx_keepalive_timeout: 65
+nginx_types_hash_max_size: 2048
+nginx_worker_connections: 768
+nginx_worker_processes: '{{ ansible_processor_count }}'
 # networking
 nginx_interface: null
 nginx_port: 80

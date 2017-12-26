@@ -5,7 +5,7 @@ worker_processes {{ nginx_worker_processes|int }};
 pid /run/nginx.pid;
 
 events {
-    worker_connections 768;
+    worker_connections {{ nginx_worker_connections|int }};
     # multi_accept on;
 }
 
@@ -18,8 +18,8 @@ http {
     sendfile on;
     tcp_nopush on;
     tcp_nodelay on;
-    keepalive_timeout 65;
-    types_hash_max_size 2048;
+    keepalive_timeout {{ nginx_keepalive_timeout|int }};
+    types_hash_max_size {{ nginx_types_hash_max_size|int }};
     server_tokens off;  # do not return Nginx version
 
     # server_names_hash_bucket_size 64;
