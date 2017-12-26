@@ -11,13 +11,18 @@ chdir = {{ item.value.path }}/server
 chmod-socket = {{ item.value.chmod_socket|default(666) }}
 socket = {{ item.value.path|dirname }}/run/uwsgi.socket
 stats = {{ item.value.path|dirname }}/run/uwsgi.stats
+memory-report = true
+
 touch-reload = {{ item.value.path|dirname }}/run/uwsgi.reload
+
 pythonpath = {{ item.value.path }}/server
 virtualenv = {{ item.value.path }}/venv
 wsgi-file = {{ item.value.project }}/wsgi.py
+
 master = true
 enable-threads = true
 single-interpreter = true
+
 buffer-size = {{ item.value.buffer_size|default(65535)|int }}
 processes = {{ item.value.processes|default(10)|int }}
 harakiri = {{ item.value.harakiri|default(3600)|int }}
@@ -28,6 +33,7 @@ limit-as = {{ item.value.limit_as|default(512)|int }}
 listen = {{ item.value.listen|default(100)|int }}
 reload-on-as = {{ item.value.reload_on_as|default(256)|int }}
 reload-on-rss = {{ item.value.reload_on_rss|default(192)|int }}
+
 post-buffering = true
 no-orphans = true
 vacuum = true
