@@ -65,11 +65,14 @@
 
         - name: Download web (js) packages with bower
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py bower_install --traceback -F
+            {{ djsite_app_directory }}/test/venv/bin/python manage.py bower_install --traceback -F
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
-          failed_when: "'error' in _djsite_install.stderr"
-          register: _djsite_install
+          failed_when: "'error' in _djsite_bower_install.stderr"
+          register: _djsite_bower_install
+          tags: packages
+
+        - debug: var=_djsite_bower_install.stdout_lines
           tags: packages
       when: djsite_bower_enabled|bool
 
