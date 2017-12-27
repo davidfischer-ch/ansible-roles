@@ -41,8 +41,16 @@
 - block:
     - name: Clone Nginx source code
       git: >
-        repo=https://github.com/nginx/nginx.git dest={{ local_source_directory }}/nginx force=yes
+        repo=https://github.com/nginx/nginx.git
+        dest={{ local_source_directory }}/nginx force=yes
         version={{ nginx_version }}
+
+    - name: Clone Length Hiding Filter module source code
+      git: >
+        repo=https://github.com/nulab/nginx-length-hiding-filter-module.git
+        dest={{ local_source_directory }}/nginx-length-hiding-filter-module force=yes
+        version={{ nginx_length_hiding_filter_module_version }}
+      when: nginx_length_hiding_filter_module_enabled|bool
 
     - block:
         - name: Clone Upload module source code
@@ -60,7 +68,8 @@
 
     - name: Clone Zip module source code
       git: >
-        repo=https://github.com/evanmiller/mod_zip.git dest={{ local_source_directory }}/nginx-zip-module force=yes
+        repo=https://github.com/evanmiller/mod_zip.git
+        dest={{ local_source_directory }}/nginx-zip-module force=yes
         version={{ nginx_zip_module_version }}
       when: nginx_zip_module_enabled|bool
 
@@ -79,6 +88,9 @@
           --http-scgi-temp-path=/var/lib/nginx/scgi
           --http-uwsgi-temp-path=/var/lib/nginx/uwsgi
           {{ nginx_build_flags|join(' ') }}
+          {% if nginx_length_hiding_filter_module_enabled %}
+          --add-module={{ local_source_directory }}/nginx-length-hiding-filter-module
+          {% endif %}
           {% if nginx_upload_module_enabled %}
           --add-module={{ local_source_directory }}/nginx-upload-module
           --add-module={{ local_source_directory }}/nginx-upload-progress-module
@@ -93,6 +105,7 @@
         nginx_build_env: >
           {{ nginx_build_cfg }}
           {{ nginx_version }}
+          {{ nginx_length_hiding_filter_module_version|default('') }}
           {{ nginx_upload_module_version|default('') }}
           {{ nginx_upload_progress_module_version|default('') }}
           {{ nginx_zip_module_version|default('') }}
