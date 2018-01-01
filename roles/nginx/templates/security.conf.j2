@@ -1,0 +1,4 @@
+## Block spammers and other unwanted visitors  ##
+{% for ip in nginx_ips_blacklist %}
+deny {{ ip }};
+{% endfor %}

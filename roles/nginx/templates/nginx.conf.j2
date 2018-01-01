@@ -1,4 +1,3 @@
-
 daemon {{ (nginx_daemon_mode == 'supervisor')|ternary('off', 'on') }};
 user {{ nginx_daemon_user }} {{ nginx_daemon_group }};
 worker_processes {{ nginx_worker_processes|int }};

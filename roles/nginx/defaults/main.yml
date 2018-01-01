@@ -27,6 +27,7 @@ nginx_daemon_group: www-data
 nginx_daemon_path: /usr/share/nginx/sbin/nginx
 nginx_daemon_user: www-data
 nginx_reload_on_update: no
+nginx_security_config_file: security.conf.j2
 # modules
 nginx_length_hiding_filter_module_enabled: no
 nginx_pagespeed_module_cache_directory: /var/cache/nginx_pagespeed
@@ -60,5 +61,7 @@ nginx_ufw_rules:
     port: '{{ nginx_port_ssl }}'
     proto: tcp
     rule: allow
+# security
+nginx_ips_blacklist: []
 # private
 _nginx_start: {}

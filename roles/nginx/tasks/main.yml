@@ -156,22 +156,26 @@
   tags: [nginx, packages]
 
 - block:
-    - name: Configure Nginx
-      template: >
-        src={{ nginx_config_file }} dest=/etc/nginx/nginx.conf mode=644
-      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
-
     - name: Create Nginx directories
       file: >
         name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
         state=directory
       with_items:
-        - { name: '/etc/nginx/sites-auth/'    }
-        - { name: '/etc/nginx/sites-dhparam/' }
-        - { name: '/etc/nginx/sites-enabled/' }
-        - { name: '/etc/nginx/sites-ssl/'     }
-        - { name: '/var/lib/nginx/'           }
-        - { name: '/var/log/nginx/', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
+        - { name: '/etc/nginx/conf.d'        }
+        - { name: '/etc/nginx/sites-auth'    }
+        - { name: '/etc/nginx/sites-dhparam' }
+        - { name: '/etc/nginx/sites-enabled' }
+        - { name: '/etc/nginx/sites-ssl'     }
+        - { name: '/var/lib/nginx'           }
+        - { name: '/var/log/nginx', owner: '{{ nginx_daemon_user }}', group: '{{ nginx_daemon_group }}' }
+
+    - name: Configure Nginx
+      template: >
+        src={{ item.src }} dest=/etc/nginx/{{ item.dest }} mode=644
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
+      with_items:
+        - { src: '{{ nginx_config_file }}',          dest: 'nginx.conf'           }
+        - { src: '{{ nginx_security_config_file }}', dest: 'conf.d/security.conf' }
 
     - name: Remove default site
       file: >
