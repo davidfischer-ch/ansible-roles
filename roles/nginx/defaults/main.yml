@@ -21,6 +21,10 @@ nginx_build_packages:
   - unzip
   - zlib1g
   - zlib1g-dev
+nginx_extra_packages:
+  # For GeoIP blocking feature
+  - geoip-database
+  - libgeoip1
 # daemon
 nginx_config_file: nginx.conf.j2
 nginx_daemon_group: www-data
@@ -62,6 +66,10 @@ nginx_ufw_rules:
     proto: tcp
     rule: allow
 # security
+nginx_geoip_blocking_enabled: no
+nginx_geoip_blocking_default: allow
+nginx_geoip_countries_blacklist: []
+nginx_geoip_countries_whitelist: []
 nginx_ips_blacklist: []
 # private
 _nginx_start: {}
