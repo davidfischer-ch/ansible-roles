@@ -3,7 +3,7 @@ apache_packages:
   - apache2
 apache_macro_package: libapache2-mod-macro
 # miscellaneous configuration
-apache_config_file: 'apache{{ apache_version[:3] }}.conf.j2'
+apache_config_file: 'apache{{ apache_version[:3] }}.{{ ansible_distribution|lower }}.conf.j2'
 apache_extra_config_files: {}
 apache_hostname_lookup_enabled: no
 apache_keep_alive_enabled: yes
