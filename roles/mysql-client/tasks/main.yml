@@ -1,5 +1,11 @@
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ mysql_client_dynamic_defaults }}'
+    must_match: yes
+  tags: [mysql-client, always]
+
 - block:
     - name: Install MySQL python packages
       package: >

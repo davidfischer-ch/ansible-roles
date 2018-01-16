@@ -1,5 +1,16 @@
 pytooblox_dynamic_defaults:
 
+  debian-7.*:
+    pytoolbox_packages:
+      # - gir1.2-gexiv2-0.10
+      - libexiv2-dev
+      - liblzma-dev
+      - libxml2-dev
+      - libxslt-dev
+      - libyaml-dev
+      - libz-dev
+      - python-gi
+
   centos:
     pytoolbox_packages:
       # - gir1.2-gexiv2-0.10
