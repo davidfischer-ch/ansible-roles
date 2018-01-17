@@ -1,4 +1,5 @@
 php_apache_package: 'libapache2-mod-php{{ php_version }}'
+php_apt_key: ''
 php_apt_repository: ''  # ppa:ondrej/php For PHP 7
 php_fpm_package: 'php{{ php_version }}-fpm'
 php_mbstring_package: 'php{{ php_version }}-mbstring'
