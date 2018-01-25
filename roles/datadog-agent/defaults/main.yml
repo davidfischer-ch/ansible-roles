@@ -5,4 +5,6 @@ datadog_agent_check_timings: no
 datadog_agent_default_integration_http_timeout: 9
 datadog_agent_exclude_process_args: no
 datadog_agent_forwarder_timeout: 20
+datadog_agent_hostname: '{{ inventory_hostname }}'
+datadog_agent_process_agent_enabled: no
 datadog_agent_tags: []

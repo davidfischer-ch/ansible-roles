@@ -23,7 +23,7 @@ dd_url: https://app.datadoghq.com
 api_key: {{ datadog_agent_api_key }}
 
 # Force the hostname to whatever you want. (default: auto-detected)
-# hostname: mymachine.mydomain
+hostname: {{ datadog_agent_hostname }}
 
 # Set the host's tags (optional)
 {% if datadog_agent_tags|length > 0 %}
@@ -100,6 +100,8 @@ exclude_process_args: {{ datadog_agent_exclude_process_args|bool|ternary('yes', 
 
 # histogram_aggregates: max, median, avg, count
 # histogram_percentiles: 0.95
+
+process_agent_enabled: {{ datadog_agent_process_agent_enabled|bool|ternary('true', 'false') }}
 
 # ========================================================================== #
 # Service Discovery                                                          #
