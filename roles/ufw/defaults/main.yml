@@ -1,4 +1,5 @@
 ufw_enabled: yes
+ufw_ipv6_enabled: yes
 ufw_logging: 'off'
 ufw_packages:
   - ufw
