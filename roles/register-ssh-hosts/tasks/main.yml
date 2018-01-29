@@ -30,6 +30,7 @@
               User {{ hostvars[item].ansible_user }}
               IdentityFile {{ hostvars[item].ansible_ssh_private_key_file }}
               IdentitiesOnly yes
+              {{ hostvars[item].register_ssh_extra_opts|default('') }}
       when: >
         hostvars[item].register_ssh_host|default(False)|bool and
         hostvars[item].ansible_host is defined and
