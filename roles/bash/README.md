@@ -31,6 +31,6 @@ bash_aliases:
 
 bash_extra_user_configuration: |
   # Yeah, still using my old-school project :)
-  export LU_PATH='{{ ansible_user_dir }}/david-develop/logicielsUbuntu'
-  . '{{ ansible_user_dir }}/david-develop/logicielsUbuntu/logicielsUbuntuExports'
+  export LU_PATH='{{ ansible_user_dir }}/develop/logicielsUbuntu'
+  . '{{ ansible_user_dir }}/develop/logicielsUbuntu/logicielsUbuntuExports'
 ```
