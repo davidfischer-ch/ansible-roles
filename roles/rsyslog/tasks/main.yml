@@ -1,0 +1,24 @@
+---
+
+- name: Install rsyslog packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [rsyslog, packages]
+  with_items: '{{ rsyslog_packages }}'
+
+- block:
+    - name: Create logs directory
+      file: >
+        name=/var/log follow=yes owner=root group=syslog mode=775 state=directory
+
+    - name: Configure standard log files
+      lineinfile: >
+        dest={{ rsyslog_default_config_file }} regexp=^#?{{ item.expr }} line='{{ item.name }} {{ item.file }}'
+      loop_control:
+        label: '{{ item.name }}'
+      notify: reload rsyslog
+      with_items:
+        - { expr: cron\.\*, name: cron.*, file: '{{ rsyslog_cron_log }}' }
+  become: yes
+  tags: [rsyslog, config]
