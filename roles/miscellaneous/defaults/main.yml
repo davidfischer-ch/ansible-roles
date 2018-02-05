@@ -24,6 +24,15 @@ miscellaneous_dynamic_defaults:
     apt_sni_tools:
       - python-openssl
       - python-pyasn1
+  ubuntu-17.10:
+    system_administration_tools:
+      - htop
+      - iftop
+      - iotop
+      - ncdu
+      - net-tools
+      - screen
+      - tree
   linux:
     ntp_service: ntp
     system_administration_tools:
