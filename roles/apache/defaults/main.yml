@@ -96,7 +96,7 @@ apache_port_ssl: 443
 apache_ports:
   - '{{ apache_port }}'
   - '{{ apache_port_ssl }}'
-apache_ufw_rules: "{{ apache_ports|map_items('port', direction='in', interface=apache_interface or omit, proto='tcp', rule='allow') }}"
+apache_ufw_rules: "{{ apache_ports|map_items('port', direction='in', interface=apache_interface or omit, proto='tcp', rule='allow')|list }}"
 # sites
 apache_sites: {}
 apache_disabled_sites:

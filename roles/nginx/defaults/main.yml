@@ -57,7 +57,7 @@ nginx_port_ssl: 443
 nginx_ports:
   - '{{ nginx_port }}'
   - '{{ nginx_port_ssl }}'
-nginx_ufw_rules: "{{ nginx_ports|map_items('port', direction='in', interface=nginx_interface or omit, proto='tcp', rule='allow') }}"
+nginx_ufw_rules: "{{ nginx_ports|map_items('port', direction='in', interface=nginx_interface or omit, proto='tcp', rule='allow')|list }}"
 # security
 nginx_geoip_blocking_enabled: no
 nginx_geoip_blocking_default: allow
