@@ -31,17 +31,24 @@ def format_items(items, pattern):
     return [pattern.format(i) for i in items]
 
 
-def ec2_group_rules(cidr_ips, **kwargs):
+def map_items(items, key, **defaults):
+    for item in items:
+        item_dict = defaults.copy()
+        item_dict[key] = item
+        yield item_dict
+
+
+def ec2_group_rules(cidr_ips, **defaults):
     for cidr_ip in cidr_ips:
-        rules = {'cidr_ip': cidr_ip}
-        rules.update(kwargs)
-        yield rules
+        rule = defaults.copy()
+        rule['cidr_ip'] = cidr_ip
+        yield rule
 
 
-def ec2_vpc_routes(dests, **kwargs):
+def ec2_vpc_routes(dests, **defaults):
     for dest in dests:
-        route = {'dest': dest}
-        route.update(**kwargs)
+        route = defaults.copy()
+        route['dest'] = dest
         yield route
 
 
@@ -57,6 +64,7 @@ class FilterModule(object):
             'chunk': chunk,
             'enumerate': enumerate_,
             'format_items': format_items,
+            'map_items': map_items,
             'ec2_group_rules': ec2_group_rules,
             'ec2_vpc_routes': ec2_vpc_routes,
             'oldest_ec2_snapshots': oldest_ec2_snapshots
