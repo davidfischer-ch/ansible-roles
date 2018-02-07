@@ -54,17 +54,10 @@ nginx_worker_processes: '{{ ansible_processor_count }}'
 nginx_interface: null
 nginx_port: 80
 nginx_port_ssl: 443
-nginx_ufw_rules:
-  - direction: in
-    interface: '{{ nginx_interface or omit }}'
-    port: '{{ nginx_port }}'
-    proto: tcp
-    rule: allow
-  - direction: in
-    interface: '{{ nginx_interface or omit }}'
-    port: '{{ nginx_port_ssl }}'
-    proto: tcp
-    rule: allow
+nginx_ports:
+  - '{{ nginx_port }}'
+  - '{{ nginx_port_ssl }}'
+nginx_ufw_rules: "{{ nginx_ports|map_items('port', direction='in', interface=nginx_interface or omit, proto='tcp', rule='allow') }}"
 # security
 nginx_geoip_blocking_enabled: no
 nginx_geoip_blocking_default: allow

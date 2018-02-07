@@ -93,17 +93,10 @@ apache_log_rotations:
 apache_interface: null
 apache_port: 80
 apache_port_ssl: 443
-apache_ufw_rules:
-  - direction: in
-    interface: '{{ apache_interface or omit }}'
-    port: '{{ apache_port }}'
-    proto: tcp
-    rule: allow
-  - direction: in
-    interface: '{{ apache_interface or omit }}'
-    port: '{{ apache_port_ssl }}'
-    proto: tcp
-    rule: allow
+apache_ports:
+  - '{{ apache_port }}'
+  - '{{ apache_port_ssl }}'
+apache_ufw_rules: "{{ apache_ports|map_items('port', direction='in', interface=apache_interface or omit, proto='tcp', rule='allow') }}"
 # sites
 apache_sites: {}
 apache_disabled_sites:
