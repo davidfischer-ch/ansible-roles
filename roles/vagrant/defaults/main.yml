@@ -16,4 +16,4 @@ vagrant_machines: {}
 vagrant_machines_directory: "/tmp/vagrant-{{ vagrant_machines|to_yaml|hash('md5') }}"
 vagrant_plugins: []  # e.g. vbox-snapshot
 vagrant_update_boxes: yes
-vagrant_version: 1.9.5
+vagrant_version: 2.0.2
