@@ -1,7 +1,9 @@
 datadog_agent_apt_repository: 'deb https://apt.datadoghq.com/ stable main'
+datadog_agent_groups: []
 datadog_agent_packages:
   - datadog-agent
 datadog_agent_check_timings: no
+datadog_agent_checks: {}
 datadog_agent_default_integration_http_timeout: 9
 datadog_agent_exclude_process_args: no
 datadog_agent_forwarder_timeout: 20
