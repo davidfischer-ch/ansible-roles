@@ -2,9 +2,12 @@
 
 [unix_http_server]
 file = /var/run/supervisor.sock  ; (the path to the socket file)
-chmod = 0700                     ; sockef file mode (default 0700)
+chmod = 0770                     ; sockef file mode (default 0700)
+chown = root:{{ supervisor_socket_group }}
+{% if supervisor_credentials_enabled|bool %}
 username = "{{ supervisor_username }}"
 password = "{{ supervisor_password }}"
+{% endif %}
 
 [supervisord]
 logfile = /var/log/supervisor/supervisord.log  ; (main log file;default $CWD/supervisord.log)
@@ -19,8 +22,10 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [supervisorctl]
 serverurl = unix:///var/run/supervisor.sock  ; use a unix:// URL  for a unix socket
+{% if supervisor_credentials_enabled|bool %}
 username = "{{ supervisor_username }}"
 password = "{{ supervisor_password }}"
+{% endif %}
 
 ; The [include] section can just contain the "files" setting. This setting can list multiple files (separated by
 ; whitespace or newlines). It can also contain wildcards. The filenames are interpreted as relative to this file.
