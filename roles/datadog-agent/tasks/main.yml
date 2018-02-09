@@ -36,7 +36,7 @@
 
     - name: Configure Datadog agent checks
       copy: >
-        content='{{ item.value|to_yaml }}' dest=/etc/dd-agent/conf.d/{{ item.key }}.yaml mode=644
+        content={{ item.value|to_yaml }} dest=/etc/dd-agent/conf.d/{{ item.key }}.yaml mode=644
       loop_control:
         label: '{{ item.key }}'
       notify: reload datadog-agent
