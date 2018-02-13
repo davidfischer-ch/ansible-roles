@@ -10,11 +10,12 @@
     - name: Clone GPAC source code
       git: >
         repo={{ gpac_repository_url }} dest={{ local_source_directory }}/gpac force=yes version={{ gpac_version }}
+      register: _gpac_git
 
     - name: Set GPAC build environment
       set_fact:
         gpac_build_env: >
-          {{ gpac_version }}
+          {{ _gpac_git.after }}
 
     - name: Detect if GPAC must be reinstalled
       command: >

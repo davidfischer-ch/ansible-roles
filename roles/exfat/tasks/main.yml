@@ -11,12 +11,13 @@
       git: >
         repo=https://github.com/relan/exfat.git dest={{ local_source_directory }}/exfat force=yes
         version={{ exfat_version }}
+      register: _exfat_git
 
     - name: Set exFAT build environment
       set_fact:
         exfat_build_env: >
           {{ exfat_build_cfg }}
-          {{ exfat_version }}
+          {{ _exfat_git.after }}
 
     - name: Detect if exFAT must be reinstalled
       command: >

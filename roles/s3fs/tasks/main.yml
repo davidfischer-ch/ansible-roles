@@ -11,12 +11,13 @@
       git: >
         repo={{ s3fs_repository_url }} dest={{ local_source_directory }}/s3fs force=yes
         version={{ s3fs_version }}
+      register: _s3fs_git
 
     - name: Set s3fs build environment
       set_fact:
         s3fs_build_env: >
           {{ s3fs_build_cfg }}
-          {{ s3fs_version }}
+          {{ _s3fs_git.after }}
 
     - name: Detect if s3fs must be reinstalled
       command: >

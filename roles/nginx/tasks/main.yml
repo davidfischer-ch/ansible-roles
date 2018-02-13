@@ -49,12 +49,14 @@
         repo=https://github.com/nginx/nginx.git
         dest={{ local_source_directory }}/nginx force=yes
         version={{ nginx_version }}
+      register: _nginx_git
 
     - name: Clone Length Hiding Filter module source code
       git: >
         repo=https://github.com/nulab/nginx-length-hiding-filter-module.git
         dest={{ local_source_directory }}/nginx-length-hiding-filter-module force=yes
         version={{ nginx_length_hiding_filter_module_version }}
+      register: _nginx_length_hiding_filter_module_git
       when: nginx_length_hiding_filter_module_enabled|bool
 
     - block:
@@ -63,12 +65,14 @@
             repo=https://github.com/vkholodkov/nginx-upload-module.git
             dest={{ local_source_directory }}/nginx-upload-module force=yes
             version={{ nginx_upload_module_version }}
+          register: _nginx_upload_module_git
 
         - name: Clone Upload Progress module source code
           git: >
             repo=https://github.com/masterzen/nginx-upload-progress-module.git
             dest={{ local_source_directory }}/nginx-upload-progress-module force=yes
             version={{ nginx_upload_progress_module_version }}
+          register: _nginx_upload_progress_module_git
       when: nginx_upload_module_enabled|bool
 
     - name: Clone Zip module source code
@@ -76,6 +80,7 @@
         repo=https://github.com/evanmiller/mod_zip.git
         dest={{ local_source_directory }}/nginx-zip-module force=yes
         version={{ nginx_zip_module_version }}
+      register: _nginx_zip_module_git
       when: nginx_zip_module_enabled|bool
 
     - name: Set Nginx build configuration
@@ -109,11 +114,11 @@
       set_fact:
         nginx_build_env: >
           {{ nginx_build_cfg }}
-          {{ nginx_version }}
-          {{ nginx_length_hiding_filter_module_version|default('') }}
-          {{ nginx_upload_module_version|default('') }}
-          {{ nginx_upload_progress_module_version|default('') }}
-          {{ nginx_zip_module_version|default('') }}
+          {{ _nginx_git.after }}
+          {{ _nginx_length_hiding_filter_module_git.after|default('') }}
+          {{ _nginx_upload_module_git.after|default('') }}
+          {{ _nginx_upload_progress_module_git.after|default('') }}
+          {{ _nginx_zip_module_git.after|default('') }}
 
     - name: Detect if Nginx must be reinstalled
       command: >
