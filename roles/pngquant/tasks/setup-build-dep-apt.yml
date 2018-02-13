@@ -1,0 +1,8 @@
+---
+
+- name: Install pngquant build dependencies
+  apt: >
+    name=pngquant state=build-dep
+  become: yes
+  changed_when: _pngquant_build_dep.stdout_lines|length > 4
+  register: _pngquant_build_dep

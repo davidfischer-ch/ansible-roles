@@ -1,0 +1,51 @@
+---
+
+- block:
+    - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
+
+    - name: Clone pngquant source code
+      git: >
+        repo=https://github.com/kornelski/pngquant.git
+        dest={{ local_source_directory }}/pngquant force=yes
+        version={{ pngquant_version }}
+      register: _pngquant_git
+
+    - name: Set pngquant build environment
+      set_fact:
+        pngquant_build_env: >
+          {{ pngquant_build_cfg }}
+          {{ _pngquant_git.after }}
+
+    - name: Detect if pngquant must be reinstalled
+      command: >
+        cat '{{ local_source_directory }}/pngquant.build.cfg'
+      changed_when: >
+        pngquant_build_env|trim != pngquant_build.stdout|default('')|trim
+      check_mode: no
+      failed_when: no
+      register: pngquant_build
+
+    - block:
+        - name: Configure pngquant build process
+          command: >
+            ./configure {{ pngquant_build_cfg }}
+          args:
+            chdir: '{{ local_source_directory }}/pngquant'
+
+        - name: Build pngquant from source
+          make:
+            chdir: '{{ local_source_directory }}/pngquant'
+            params:
+              '--jobs': '{{ ansible_processor_cores }}'
+
+        - name: Install pngquant from source
+          make:
+            chdir: '{{ local_source_directory }}/pngquant'
+            target: install
+
+        - name: Save build environment
+          copy: >
+            content={{ pngquant_build_env }} dest={{ local_source_directory }}/pngquant.build.cfg
+      when: pngquant_build|changed
+  become: yes
+  tags: [pngquant, packages]
