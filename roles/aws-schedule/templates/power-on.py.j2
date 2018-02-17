@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+import boto3
+
+
+def lambda_handler(event, context):
+    environment = '{{ aws_schedule_environment }}'
+
+    # VPC
+    ec2 = boto3.client('ec2', region_name='{{ aws_schedule_region }}')
+    vpcs = ec2.describe_vpcs(Filters=[{'Name': 'tag:environment', 'Values': [environment]}])['Vpcs']
+    if not vpcs:
+        print(f'[WARNING] Environment {environment} - VPC not found.')
+        return
+
+    assert len(vpcs) == 1, vpcs
+    vpc_id = vpcs[0]['VpcId']
+
+    # EC2 Instances
+    instances = []
+    data = ec2.describe_instances(Filters=[{'Name': 'vpc-id', 'Values': [vpc_id]}])
+    for reservation in data['Reservations']:
+        instances.extend([
+            i['InstanceId'] for i in reservation['Instances'] if i['State']['Name'] != 'running'
+        ])
+    if instances:
+        ec2.start_instances(InstanceIds=instances)
+        print(f'[INFO] Environment {environment} - Started instances {instances}')

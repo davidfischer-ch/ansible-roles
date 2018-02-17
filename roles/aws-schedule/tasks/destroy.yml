@@ -1,0 +1,32 @@
+---
+
+- name: Remove temporary directory
+  file: >
+    name=/tmp/aws-schedule/{{ aws_schedule_environment }} state=absent
+
+- name: Remove the resources scheduling events
+  cloudwatchevent_rule:
+    name: '{{ aws_schedule_environment }}-{{ item.name }}'
+    state: absent
+  with_items: '{{ aws_schedule_functions }}'
+
+- name: Remove the resources scheduling lambda functions
+  lambda:
+    name: '{{ aws_schedule_environment }}-{{ item.name }}'
+    region: '{{ aws_schedule_region }}'
+    state: absent
+  with_items: '{{ aws_schedule_functions }}'
+
+- name: Remove the resources scheduling policy
+  iam_policy:
+    iam_name: resources-scheduling
+    iam_type: role
+    policy_name: resources-scheduling
+    region: '{{ aws_schedule_region }}'
+    state: absent
+
+- name: Remove the resources scheduling role
+  iam:
+    iam_type: role
+    name: resources-scheduling
+    state: absent

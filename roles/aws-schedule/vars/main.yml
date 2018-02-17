@@ -1,0 +1,3 @@
+aws_schedule_role_actions:
+  - destroy
+  - setup
