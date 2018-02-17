@@ -1,0 +1,40 @@
+---
+
+- name: Remove temporary directory
+  file: >
+    name=/tmp/aws-lambda/{{ aws_lambda_environment }} state=absent
+
+# - name: Remove the events
+#   cloudwatchevent_rule:
+#     name: '{{ aws_lambda_environment }}-{{ item.name }}'
+#     state: absent
+#   with_items: '{{ aws_lambda_functions }}'
+
+- name: Remove the lambda functions
+  lambda:
+    name: '{{ aws_lambda_environment }}-{{ item.name }}'
+    region: '{{ aws_lambda_region }}'
+    state: absent
+  loop_control:
+    label: '{{ aws_lambda_environment }}-{{ item.name }}'
+  with_items: '{{ aws_lambda_functions }}'
+
+- name: Remove the policies
+  iam_policy:
+    iam_name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+    iam_type: role
+    policy_name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+    region: '{{ aws_lambda_region }}'
+    state: absent
+  loop_control:
+    label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+  with_items: '{{ aws_lambda_functions }}'
+
+- name: Remove the roles
+  iam:
+    iam_type: role
+    name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+    state: absent
+  loop_control:
+    label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+  with_items: '{{ aws_lambda_functions }}'

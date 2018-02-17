@@ -1,0 +1,6 @@
+---
+
+- block:
+    - include: facts.yml
+    - include: '{{ aws_lambda_role_action }}.yml'
+  tags: aws-lambda

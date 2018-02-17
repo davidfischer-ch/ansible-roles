@@ -1,0 +1,122 @@
+---
+
+- name: Create the roles
+  iam:
+    iam_type: role
+    name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+    trust_policy:
+      Version: '2012-10-17'
+      Statement:
+      - Action: sts:AssumeRole
+        Effect: Allow
+        Principal:
+          Service: lambda.amazonaws.com
+    state: present
+  loop_control:
+    label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+  with_items: '{{ aws_lambda_functions }}'
+
+- name: Create the policies
+  iam_policy:
+    iam_name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+    iam_type: role
+    policy_name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+    policy_json: "{{ lookup('template', item.directory + '/Policy.json.j2') }}"
+    region: '{{ aws_lambda_region }}'
+    state: present
+  loop_control:
+    label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+  register: _aws_lambda_policies
+  with_items: '{{ aws_lambda_functions }}'
+
+- name: Wait some time for the policies to be available
+  pause: seconds=10
+  when: _aws_lambda_policies|changed
+
+- name: Create temporary directory
+  file: >
+    name=/tmp/aws-lambda/{{ aws_lambda_environment }} state=directory
+
+- block:
+    - name: Synchronize source code
+      synchronize: >
+        src={{ item.directory }}/ dest=/tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}/
+        archive=yes delete=yes links=yes
+      loop_control:
+        label: '{{ item.name }}'
+      with_items: '{{ aws_lambda_functions }}'
+
+    - name: Build lambda functions
+      command: >
+        ./build
+      args:
+        chdir: '/tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}'
+      loop_control:
+        label: '{{ item.name }}'
+      register: _aws_lambda_build
+      with_items: '{{ aws_lambda_functions }}'
+
+    - debug: var=_aws_lambda_build
+
+    - name: Deploy the lambda functions
+      lambda:
+        name: '{{ aws_lambda_environment }}-{{ item.name }}'
+        handler: '{{ item.handler }}'
+        environment_variables: '{{ item.environment|default(omit) }}'
+        memory_size: '{{ item.memory_size|int }}'
+        region: '{{ aws_lambda_region }}'
+        role: 'arn:aws:iam::{{ aws_lambda_account_id }}:role/{{ aws_lambda_environment }}-lambda-{{ item.name }}'
+        runtime: '{{ item.runtime }}'
+        timeout: '{{ item.timeout|int }}'
+        zip_file: /tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}/package.zip
+        state: present
+      loop_control:
+        label: '{{ aws_lambda_environment }}-{{ item.name }}'
+      with_items: '{{ aws_lambda_functions }}'
+
+    - name: Create the S3 events policies
+      lambda_policy:
+        state: "{{ item.1.state|default('present') }}"
+        function_name: '{{ aws_lambda_environment }}-{{ item.0.name }}'
+        statement_id: '{{ aws_lambda_environment }}-{{ item.0.name }}-s3-{{ item.1.name }}'
+        action: "{{ item.1.action|default('lambda:InvokeFunction') }}"
+        principal: s3.amazonaws.com
+        source_arn: 'arn:aws:s3:{{ aws_lambda_region }}:{{ aws_lambda_account_id }}:{{ item.1.name }}'
+        source_account: '{{ aws_lambda_account_id }}'
+      loop_control:
+        label: '{{ aws_lambda_environment }}-{{ item.0.name }}-s3-{{ item.1.name }}'
+      with_subelements:
+        - '{{ aws_lambda_functions }}'
+        - s3_events
+
+    - name: Configure the S3 events
+      s3_event:
+        state: "{{ item.1.state|default('present') }}"
+        bucket: '{{ item.1.name }}'
+        id: '{{ aws_lambda_environment }}-{{ item.0.name }}-s3-{{ item.1.name }}'
+        lambda_function_arn: '{{ aws_lambda_environment }}-{{ item.0.name }}'
+        prefix: '{{ item.1.prefix|default(omit) }}'
+        suffix: '{{ item.1.suffix|default(omit) }}'
+        events: "{{ item.1.events|format_items('s3:{0}') }}"
+      loop_control:
+        label: '{{ aws_lambda_environment }}-{{ item.0.name }}-s3-{{ item.1.name }}'
+      with_subelements:
+        - '{{ aws_lambda_functions }}'
+        - s3_events
+
+    # - name: Configure the resources scheduling events
+    #   cloudwatchevent_rule:
+    #     name: '{{ aws_lambda_environment }}-{{ item.name }}'
+    #     schedule_expression: '{{ item.schedule }}'
+    #     description: '{{ item.name|title }} resources of environment {{ aws_lambda_environment }}'
+    #     targets:
+    #       - id: '{{ aws_lambda_environment }}-{{ item.name }}'
+    #         arn: 'arn:aws:lambda:{{ aws_lambda_region }}:{{ aws_lambda_account_id }}:function:{{ aws_lambda_environment }}-{{ item.name }}'
+    #     state: present
+    #   loop_control:
+    #     label: '{{ item.name }}'
+    #   with_items: '{{ aws_lambda_functions }}'
+  always:
+    - name: Cleanup temporary directory
+      file: >
+        name=/tmp/aws-lambda/{{ aws_lambda_environment }} state=absent

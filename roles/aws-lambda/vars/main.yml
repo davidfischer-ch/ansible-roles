@@ -1,0 +1,3 @@
+aws_lambda_role_actions:
+  - destroy
+  - setup
