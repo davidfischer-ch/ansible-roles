@@ -1,6 +1,12 @@
 # https://github.com/gpac/gpac/blob/master/doc/INSTALL.gcc
 ---
 
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ gpac_dynamic_defaults }}'
+    must_match: yes
+  tags: [gpac, always]
+
 - block:
     - name: Install GPAC build packages
       package: >
