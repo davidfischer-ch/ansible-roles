@@ -1,0 +1,8 @@
+---
+
+- name: Install JuJu packages
+  package: >
+    name={{ item }} state=present
+  become: yes
+  tags: [juju, packages]
+  with_items: '{{ juju_packages }}'

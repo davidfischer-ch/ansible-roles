@@ -2,27 +2,9 @@
 
 # FIXME install package control, gitgutter ... configure ...
 
-- block:
-    - name: Install DevOps packages
-      package: >
-        name={{ item }} state=present
-      with_items: '{{ devops_packages }}'
-
-    - name: Install programming packages
-      package: >
-        name={{ item }} state=present
-      with_items: '{{ programming_packages }}'
-
-    - block:
-        - name: Download Sublime Text 3
-          get_url: >
-            url=https://download.sublimetext.com/sublime-text_build-{{ sublime_text_version }}_amd64.deb
-            dest=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
-          become: no
-
-        - name: Install Sublime Text 3
-          apt: >
-            deb=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
-      when: ansible_pkg_mgr == 'apt' and sublime_text_version > 0
+- name: Install programming packages
+  package: >
+    name={{ item }} state=present
   become: yes
   tags: [development, packages]
+  with_items: '{{ programming_packages }}'

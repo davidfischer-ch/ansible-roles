@@ -1,9 +1,5 @@
-devops_packages:
-  - juju
-  - libzmq5
 programming_packages:
   - bzr
   - gedit-developer-plugins
   - gitg
   - meld
-sublime_text_version: 3143

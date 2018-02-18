@@ -1,0 +1,12 @@
+---
+
+- name: Download Sublime Text 3
+  get_url: >
+    url=https://download.sublimetext.com/sublime-text_build-{{ sublime_text_version }}_amd64.deb
+    dest=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
+  become: no
+
+- name: Install Sublime Text 3
+  apt: >
+    deb=/tmp/sublime-text_build-{{ sublime_text_version }}_amd64.deb
+  become: yes

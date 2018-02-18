@@ -1,0 +1,3 @@
+juju_packages:
+  - juju
+  - libzmq5
