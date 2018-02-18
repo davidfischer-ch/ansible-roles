@@ -63,11 +63,6 @@
         name={{ item }} state=present
       with_items: '{{ file_utility_packages }}'
 
-    - name: Install java packages
-      package: >
-        name={{ item }} state=present
-      with_items: '{{ java_packages }}'
-
     - name: Install miscellaneous packages
       package: >
         name={{ item }} state=present
