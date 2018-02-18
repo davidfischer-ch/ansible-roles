@@ -1,4 +1,11 @@
-java_apt_repository: "{{ java_from_oracle|bool|ternary('ppa:webupd8team/java', 'ppa:openjdk-r/ppa') }}"
+java_dynamic_defaults:
+
+  ubuntu-17.10:
+    java_apt_repository: ''
+
+  default:
+    java_apt_repository: "{{ java_from_oracle|bool|ternary('ppa:webupd8team/java', 'ppa:openjdk-r/ppa') }}"
+
 java_from_oracle: no
 java_open_packages:
   - 'openjdk-{{ java_version }}-jdk'

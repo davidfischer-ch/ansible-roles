@@ -1,18 +1,14 @@
 # Install and configure Java
 ---
 
-- block:
-    - block:
-        - name: Install Java apt repository
-          apt_repository: >
-            repo={{ java_apt_repository }} filename=ansible_roles_java update_cache=yes state=present
-          when: java_apt_repository|length > 0
+- dynamic_defaults:
+    hostvars: '{{ hostvars[inventory_hostname] }}'
+    defaults: '{{ java_dynamic_defaults }}'
+    must_match: yes
+  tags: [java, always]
 
-        - name: Accept Oracle Java License
-          debconf: >
-            name=oracle-java8-installer question=shared/accepted-oracle-license-v1-1 value=true vtype=select
-          when: java_from_oracle|bool
-      when: ansible_pkg_mgr == 'apt'
+- block:
+    - include: 'setup-{{ ansible_pkg_mgr }}.yml'
 
     - name: Install Java packages
       package: >
