@@ -147,8 +147,10 @@
 
     - name: Disable unwanted sites
       file: >
-        name=/etc/apache2/sites-enabled/{{ item }}.conf state=absent
+        name=/etc/apache2/sites-enabled/{{ item.0 }}{{ item.1 }} state=absent
       notify: reload apache
-      with_items: '{{ apache_disabled_sites }}'
+      with_nested:
+        - '{{ apache_disabled_sites }}'
+        - ['', .conf]
   become: yes
   tags: [apache, sites]
