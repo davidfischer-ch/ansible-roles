@@ -30,5 +30,6 @@ virtualization_packages:
   - virtualbox-guest-additions-iso
 web_packages:
   - chromium-browser
+  - chromium-chromedriver
   - filezilla
   - firefox
