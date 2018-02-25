@@ -1,0 +1,49 @@
+{#
+
+You must make sure your nginx host(s) are authorized to access the proxy-ed S3 bucket.
+
+If you do not want to use an unmaintained nginx module for S3, then you can write a policy like:
+{
+    "Version": "2012-10-17",
+    "Id": "AuthorizeNginxProxy",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:Get*",
+            "Resource": "arn:aws:s3:::your-bucket-name/*",
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": [
+                        "your-proxy-elastic-ip/32"
+                    ]
+                }
+            }
+        }
+    ]
+}
+
+Reference: https://stackoverflow.com/questions/11457635/amazon-s3-files-access-policy-based-on-ip-address.
+
+#}
+
+proxy_http_version 1.1;
+
+proxy_intercept_errors on;
+
+proxy_set_header     Connection '';
+proxy_set_header     Authorization '';
+proxy_hide_header    Set-Cookie;
+proxy_ignore_headers Set-Cookie;
+
+proxy_hide_header x-amz-id-2;
+proxy_hide_header x-amz-meta-gid;
+proxy_hide_header x-amz-meta-mode;
+proxy_hide_header x-amz-meta-mtime;
+proxy_hide_header x-amz-meta-uid;
+proxy_hide_header x-amz-request-id;
+proxy_hide_header x-amz-meta-server-side-encryption;
+proxy_hide_header x-amz-server-side-encryption;
+proxy_hide_header x-amz-version-id;
+
+proxy_pass {{ bucket_url }};
