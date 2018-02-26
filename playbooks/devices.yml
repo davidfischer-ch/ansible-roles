@@ -1,6 +1,6 @@
 ---
 
-- include: common.yml
+- import_playbook: common.yml
 
 - hosts:
     - desktop

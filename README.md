@@ -26,7 +26,7 @@ The roles are generic enough to be usable as-is.
 ```
 ---
 
-- include: roles-df/playbooks/devices.yml
+- import_playbook: roles-df/playbooks/devices.yml
 
 - hosts:
     - seafile-client
