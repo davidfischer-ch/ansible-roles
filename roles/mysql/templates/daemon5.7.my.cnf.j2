@@ -60,7 +60,7 @@ open_files_limit               = {{ mysql_open_files_limit|int }}
 table_definition_cache         = {{ mysql_table_definition_cache|int }}
 table_open_cache               = {{ mysql_table_open_cache|int }}
 thread_cache_size              = {{ mysql_thread_cache_size|int }}
-thread_concurrency             = {{ mysql_thread_concurrency|int }}
+# thread_concurrency           = {{ mysql_thread_concurrency|int }}  # This option is invalid
 thread_stack                   = {{ mysql_thread_stack_size }}
 tmp_table_size                 = {{ mysql_temp_table_size }}
 # This replaces the startup script and checks MyISAM tables if needed
