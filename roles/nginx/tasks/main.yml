@@ -115,6 +115,7 @@
         nginx_build_env: >
           {{ nginx_build_cfg }}
           {{ _nginx_git.after }}
+          {{ nginx_server_header_engine }}
           {{ _nginx_length_hiding_filter_module_git.after|default('') }}
           {{ _nginx_upload_module_git.after|default('') }}
           {{ _nginx_upload_progress_module_git.after|default('') }}
@@ -130,6 +131,15 @@
       register: nginx_build
 
     - block:
+        - name: Set Nginx Server header engine
+          lineinfile: >
+            dest={{ local_source_directory }}/nginx/src/http/ngx_http_header_filter_module.c
+            line='static char {{ item }}[] = "Server: {{ nginx_server_header_engine }}" CRLF;'
+            regexp='^static char {{ item }}[^;]+;$'
+          with_items:
+            - ngx_http_server_string
+            - ngx_http_server_full_string
+
         - name: Configure Nginx build process
           command: >
             ./auto/configure {{ nginx_build_cfg }}

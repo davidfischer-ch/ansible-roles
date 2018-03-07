@@ -47,6 +47,7 @@ nginx_log_rotations:
     config_file: '{{ nginx_log_rotations_config_file }}'
 # miscellaneous
 nginx_keepalive_timeout: 65
+nginx_server_header_engine: 'nginx'
 nginx_types_hash_max_size: 2048
 nginx_worker_connections: 768
 nginx_worker_processes: '{{ ansible_processor_count }}'
