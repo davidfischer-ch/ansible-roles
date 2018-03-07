@@ -1,0 +1,13 @@
+    # Stops a browser from trying to MIME-sniff the content type
+    add_header X-Content-Type-Options "{{ item.value.x_content_type_options|default('nosniff') }}" always;
+
+    # XSS Protection
+    add_header X-Frame-Options "{{ item.value.x_frame_options|default('DENY') }}" always;
+    add_header X-Xss-Protection "{{ item.value.x_xss_protection|default('1; mode=block') }}" always;
+
+    # https://scotthelme.co.uk/content-security-policy-an-introduction/
+    {% if item.value.content_security_policy is defined %}
+    add_header Content-Security-Policy "{{ item.value.content_security_policy }}" always;
+    {% else %}
+    # WARNING: Its recommended to define a security policy.
+    {% endif %}
