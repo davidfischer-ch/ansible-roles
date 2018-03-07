@@ -11,3 +11,6 @@
     {% else %}
     # WARNING: Its recommended to define a security policy.
     {% endif %}
+
+    # https://scotthelme.co.uk/a-new-security-header-referrer-policy/
+    add_header Referrer-Policy "{{ item.value.referrer_policy|default('no-referrer-when-downgrade') }}" always;
