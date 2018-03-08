@@ -9,7 +9,7 @@
 - block:
     - name: Register Datadog agent apt key
       apt_key: >
-        keyserver=keyserver.ubuntu.com id=C7A7DA52 state=present
+        keyserver=keyserver.ubuntu.com id=382E94DE state=present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Datadog agent apt repository
