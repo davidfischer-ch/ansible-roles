@@ -132,13 +132,14 @@
 
     - block:
         - name: Set Nginx Server header engine
-          lineinfile: >
+          replace: >
             dest={{ local_source_directory }}/nginx/src/http/ngx_http_header_filter_module.c
-            line='static char {{ item }}[] = "Server: {{ nginx_server_header_engine }}" CRLF;'
-            regexp='^static char {{ item }}[^;]+;$'
+            replace='{{ item }}[] = "Server: {{ nginx_server_header_engine }}" CRLF;'
+            regexp='{{ item }}\[\] = "Server: [^;]+;$'
           with_items:
             - ngx_http_server_string
             - ngx_http_server_full_string
+            - ngx_http_server_build_string
 
         - name: Configure Nginx build process
           command: >
