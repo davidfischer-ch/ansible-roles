@@ -76,8 +76,21 @@
     - name: Enable Apache modules
       apache2_module: >
         name={{ item }} state=present
+      ignore_errors: yes
       notify: restart apache
+      register: _apache_enable_modules
       with_items: '{{ apache_modules }}'
+
+    - name: Enable Apache modules (fallback to a2enmod)
+      command: >
+        a2enmod {{ item.item }}
+      loop_control:
+        label: '{{ item.item }}'
+      changed_when: "'already enabled' not in _apache_enable_modules_fallback.stdout"
+      notify: restart apache
+      register: _apache_enable_modules_fallback
+      when: item|failed
+      with_items: '{{ _apache_enable_modules.results }}'
   become: yes
   tags: [apache, config]
 
