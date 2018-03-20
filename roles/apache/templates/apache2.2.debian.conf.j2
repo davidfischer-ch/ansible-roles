@@ -132,8 +132,8 @@ Group ${APACHE_RUN_GROUP}
 AccessFileName .htaccess
 
 #
-# The following lines prevent .htaccess and .htpasswd files from being 
-# viewed by Web clients. 
+# The following lines prevent .htaccess and .htpasswd files from being
+# viewed by Web clients.
 #
 <Files ~ "^\.ht">
     Order allow,deny
@@ -213,3 +213,6 @@ Include conf.d/
 Include sites-enabled/
 
 {% include apache_pagespeed_module_include_file %}
+
+ServerTokens {{ apache_server_tokens }}
+ServerSignature {{ apache_server_signature }}

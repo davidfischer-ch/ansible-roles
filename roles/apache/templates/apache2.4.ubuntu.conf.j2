@@ -221,3 +221,6 @@ IncludeOptional sites-enabled/*.conf
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 
 {% include apache_pagespeed_module_include_file %}
+
+ServerTokens {{ apache_server_tokens }}
+ServerSignature {{ apache_server_signature }}

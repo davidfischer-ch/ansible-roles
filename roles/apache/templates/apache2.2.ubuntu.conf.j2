@@ -183,3 +183,6 @@ Include conf.d/
 Include sites-enabled/
 
 {% include apache_pagespeed_module_include_file %}
+
+ServerTokens {{ apache_server_tokens }}
+ServerSignature {{ apache_server_signature }}
