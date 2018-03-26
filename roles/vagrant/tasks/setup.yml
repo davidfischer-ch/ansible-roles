@@ -41,7 +41,7 @@
           command: >
             vagrant box prune --force {{ ansible_check_mode|ternary('--dry-run', '') }}
           changed_when: >
-            _vagrant_prune|success and (
+            _vagrant_prune is success and (
               'Usage' not in _vagrant_prune.stdout and
               'no installed' not in _vagrant_prune.stdout and
               'No old versions' not in _vagrant_prune.stdout
@@ -49,7 +49,7 @@
           check_mode: no
           register: _vagrant_prune
       tags: upgrade
-      when: _vagrant_outdated|changed
+      when: _vagrant_outdated is change
 
     - name: Provision machines
       vagrant_machine: >
@@ -66,7 +66,7 @@
         name={{ item.item.host_public }} state=absent
       loop_control:
         label: '{{ item.item.name }}'
-      when: item|changed
+      when: item is change
       with_items: '{{ _vagrant_provision.results|default([]) }}'
   tags: provision
 

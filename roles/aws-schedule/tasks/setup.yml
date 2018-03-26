@@ -25,7 +25,7 @@
 
 - name: Wait some time for the policy to be available
   pause: seconds=10
-  when: _aws_schedule_policy|changed
+  when: _aws_schedule_policy is change
 
 - name: Create temporary directory
   file: >

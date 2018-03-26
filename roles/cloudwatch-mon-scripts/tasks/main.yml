@@ -24,7 +24,7 @@
           command: >
             {{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --verify {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}
           changed_when: no
-          failed_when: _cloudwatch_mon_scripts_check|failed or 'successfully' not in _cloudwatch_mon_scripts_check.stdout
+          failed_when: _cloudwatch_mon_scripts_check is failure or 'successfully' not in _cloudwatch_mon_scripts_check.stdout
           register: _cloudwatch_mon_scripts_check
 
         - name: Setup periodic memory metrics report

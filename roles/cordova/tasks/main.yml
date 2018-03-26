@@ -17,7 +17,7 @@
     - name: Check node command is available
       command: >
         node
-      changed_when: _cordova_node|failed
+      changed_when: _cordova_node is failure
       check_mode: no
       ignore_errors: yes
       register: _cordova_node
@@ -26,7 +26,7 @@
       file: >
         src=/usr/bin/nodejs dest=/usr/bin/node state=link
       become: yes
-      when: _cordova_node|failed
+      when: _cordova_node is failure
 
     - name: Check cordova command is available
       command: >

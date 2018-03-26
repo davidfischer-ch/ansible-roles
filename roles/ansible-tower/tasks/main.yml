@@ -55,7 +55,7 @@
         - name: Save setup environment
           copy: >
             content={{ ansible_tower_setup_env }} dest={{ local_source_directory }}/ansible-tower.build.cfg
-      when: ansible_tower_setup|changed
+      when: ansible_tower_setup is change
   become: yes
   tags: [ansible-tower, packages]
 

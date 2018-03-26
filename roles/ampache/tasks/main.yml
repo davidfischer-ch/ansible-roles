@@ -93,7 +93,7 @@
     - name: Initialize Ampache MySQL database
       shell: >
         mysql -uampache -p{{ ampache_mysql_password }} ampache < {{ ampache_web_directory }}/sql/ampache.sql
-      when: _ampache_database|changed
+      when: _ampache_database is change
 
     # FIXME generate passwords - https://github.com/ampache/ampache/blob/develop/lib/class/user.class.php#L982
     # FIXME create preferences - https://github.com/ampache/ampache/blob/develop/lib/class/user.class.php#L1085
@@ -105,7 +105,7 @@
             {{ item.is_admin|bool|ternary(100, 25)}}
         );"
       changed_when: "'Duplicate' not in _ampache_register.stderr"
-      failed_when: _ampache_register|failed and 'Duplicate' not in _ampache_register.stderr
+      failed_when: _ampache_register is failure and 'Duplicate' not in _ampache_register.stderr
       register: _ampache_register
       with_items: ampache_users
   become: yes

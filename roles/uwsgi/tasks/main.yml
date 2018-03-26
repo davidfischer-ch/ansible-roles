@@ -74,7 +74,7 @@
     - name: Restart uWSGI service
       service: >
         name=uwsgi state=restarted enabled=yes
-      when: _uwsgi_start|failed
+      when: _uwsgi_start is failure
   become: yes
   tags: [uwsgi, services]
   when: uwsgi_system_install|bool

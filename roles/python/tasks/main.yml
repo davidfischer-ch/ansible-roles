@@ -15,7 +15,7 @@
     - name: Detect missing Python versions
       command: >
         python{{ item }}
-      changed_when: _python_command|failed
+      changed_when: _python_command is failure
       check_mode: no
       failed_when: no
       register: _python_command
@@ -39,7 +39,7 @@
       command: >
         python{{ item }} {{ local_source_directory }}/get-pip-{{ item }}.py {{ python_get_pip_options }} pip{{ python_pip_version }}
       changed_when: "'already up-to-date' not in _get_pip.stdout|default('') and 'are using pip' not in _get_pip.stderr|default('')"
-      failed_when: "_get_pip|failed and 'are using pip' not in _get_pip.stderr|default('')"
+      failed_when: "_get_pip is failure and 'are using pip' not in _get_pip.stderr|default('')"
       register: _get_pip
       with_items: '{{ python_versions }}'
 

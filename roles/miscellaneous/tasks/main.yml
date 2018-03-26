@@ -25,8 +25,8 @@
     - name: Toggle TCP Selective Acknowledgment
       sysctl:
         name=net.ipv4.tcp_sack value={{ net_tcp_sack|bool|ternary(1, 0) }} sysctl_set=yes state=present
-      changed_when: _tcp_sack|changed
-      failed_when: _tcp_sack|failed and 'No such file' not in _tcp_sack.msg
+      changed_when: _tcp_sack is change
+      failed_when: _tcp_sack is failure and 'No such file' not in _tcp_sack.msg
       register: _tcp_sack
   become: yes
   tags: [miscellaneous, sysctl, config]

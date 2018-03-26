@@ -31,7 +31,7 @@
 
 - name: Wait some time for the policies to be available
   pause: seconds=10
-  when: _aws_lambda_policies|changed
+  when: _aws_lambda_policies is change
 
 - name: Create temporary directory
   file: >

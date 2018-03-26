@@ -46,6 +46,6 @@
         - name: Save build environment
           copy: >
             content={{ pngquant_build_env }} dest={{ local_source_directory }}/pngquant.build.cfg
-      when: pngquant_build|changed
+      when: pngquant_build is change
   become: yes
   tags: [pngquant, packages]

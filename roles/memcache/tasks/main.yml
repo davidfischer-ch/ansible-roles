@@ -51,7 +51,7 @@
         echo 'stats settings' | nc {{ memcache_bind_addresses|first }} {{ memcache_port }} -w {{ memcache_read_timeout|int }}
       changed_when: no
       check_mode: no
-      failed_when: _memcache_settings|failed or _memcache_settings.stderr|length > 0
+      failed_when: _memcache_settings is failure or _memcache_settings.stderr|length > 0
       register: _memcache_settings
 
     - name: Check memcache settings

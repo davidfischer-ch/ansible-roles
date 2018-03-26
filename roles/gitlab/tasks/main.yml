@@ -26,7 +26,7 @@
       assert:
         that:
           - "gitlab_install_mode in ['manual', 'omnibus']"
-          - git_version.stdout is undefined or git_version.stdout.split(' ')[-1]|version_compare('1.7.10', '>=')
+          - git_version.stdout is undefined or git_version.stdout.split(' ')[-1] is version('1.7.10', '>=')
   tags: [gitlab, always]
 
 - block:
@@ -99,7 +99,7 @@
     - name: Stop GitLab services to free up some memory
       command: >
         gitlab-ctl stop {{ item }}
-      when: _gitlab_url|changed or _gitlab_port|changed or _gitlab_data|changed or _gitlab_setings|changed
+      when: _gitlab_url is change or _gitlab_port is change or _gitlab_data is change or _gitlab_setings is change
       with_items:
         - unicorn
         - sidekiq

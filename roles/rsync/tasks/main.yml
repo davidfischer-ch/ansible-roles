@@ -48,6 +48,6 @@
         - name: Save build environment
           copy: >
             content={{ rsync_build_env }} dest={{ local_source_directory }}/rsync.build.cfg
-      when: rsync_build|changed
+      when: rsync_build is change
   become: yes
   tags: [rsync, packages]

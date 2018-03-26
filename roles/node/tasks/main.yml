@@ -16,13 +16,13 @@
 
     - name: Install node packages
       package: >
-        name={{ item }} state={{ _node_apt_repository|changed|ternary('latest', 'present') }}
+        name={{ item }} state={{ (_node_apt_repository is change)|ternary('latest', 'present') }}
       with_items: '{{ node_packages }}'
 
     - name: Check node command is available
       command: >
         node
-      changed_when: _node_command|failed
+      changed_when: _node_command is failure
       check_mode: no
       ignore_errors: yes
       register: _node_command
@@ -30,14 +30,14 @@
     - name: Add symlink nodejs = node
       file: >
         src=/usr/bin/nodejs dest=/usr/bin/node state=link
-      when: _node_command|failed
+      when: _node_command is failure
 
     - name: Check node version
       command: >
         node --version
       changed_when: no
       check_mode: no
-      failed_when: _node_version|failed or _node_version.stdout[1:node_version|string|length+1] != node_version|string
+      failed_when: _node_version is failure or _node_version.stdout[1:node_version|string|length+1] != node_version|string
       register: _node_version
   become: yes
   tags: [node, packages]

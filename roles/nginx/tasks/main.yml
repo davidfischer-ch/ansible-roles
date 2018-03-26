@@ -172,7 +172,7 @@
           changed_when: yes
           check_mode: no
           notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} restart nginx'
-      when: nginx_build|changed
+      when: nginx_build is change
   become: yes
   tags: [nginx, packages]
 
@@ -217,7 +217,7 @@
     - name: Restart Nginx service
       supervisorctl: >
         name=nginx state=restarted
-      when: _nginx_start|failed
+      when: _nginx_start is failure
   become: yes
   tags: [nginx, services]
   when: "nginx_daemon_mode == 'supervisor'"

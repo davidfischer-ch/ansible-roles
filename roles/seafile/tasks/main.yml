@@ -134,7 +134,7 @@
             - seahub
 
         - meta: flush_handlers
-      when: _seafile_setup|changed
+      when: _seafile_setup is change
   become: yes
   tags: [seafile, update]
 

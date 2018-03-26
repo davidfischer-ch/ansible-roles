@@ -55,6 +55,6 @@
         - name: Save build environment
           copy: >
             content={{ exfat_build_env }} dest={{ local_source_directory }}/exfat.build.cfg
-      when: exfat_build|changed
+      when: exfat_build is change
   become: yes
   tags: [exfat, packages]

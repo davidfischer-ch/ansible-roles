@@ -6,5 +6,5 @@
   become: yes
   changed_when: "'No uninstalled build requires' not in _openssl_build_dep.stdout|default('')"
   check_mode: no
-  failed_when: _openssl_build_dep|failed and 'Exiting on user command' not in _openssl_build_dep.stdout
+  failed_when: _openssl_build_dep is failure and 'Exiting on user command' not in _openssl_build_dep.stdout
   register: _openssl_build_dep

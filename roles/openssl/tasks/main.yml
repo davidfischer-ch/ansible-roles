@@ -57,7 +57,7 @@
         - name: Save build environment
           copy: >
             content={{ openssl_build_env }} dest={{ local_source_directory }}/openssl.build.cfg
-      when: openssl_build|changed
+      when: openssl_build is change
 
     - name: Check OpenSSL version
       command: >

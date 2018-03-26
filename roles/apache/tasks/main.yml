@@ -15,7 +15,7 @@
     - name: Install Apache macro package if available
       package: >
         name={{ apache_macro_package }} state=present
-      failed_when: _apache_macro|failed and 'available' not in _apache_macro.msg
+      failed_when: _apache_macro is failure and 'available' not in _apache_macro.msg
       register: _apache_macro
       when: apache_macro_package|length > 0
   become: yes
@@ -89,7 +89,7 @@
       changed_when: "'already enabled' not in _apache_enable_modules_fallback.stdout"
       notify: restart apache
       register: _apache_enable_modules_fallback
-      when: item|failed
+      when: item is failure
       with_items: '{{ _apache_enable_modules.results }}'
   become: yes
   tags: [apache, config]

@@ -23,7 +23,7 @@
       service: >
         name=postgresql state=restarted enabled=yes
       tags: flush-extra
-      when: _postgresql_config|changed or _postgresql_allow|changed
+      when: _postgresql_config is change or _postgresql_allow is change
   become: yes
   tags: [postgresql, config]
 

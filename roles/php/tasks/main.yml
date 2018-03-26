@@ -30,7 +30,7 @@
     - name: Install PHP mbstring package if available
       package: >
         name={{ php_mbstring_package }} state=present
-      failed_when: _php_mbstring|failed and 'available' not in _php_mbstring.msg
+      failed_when: _php_mbstring is failure and 'available' not in _php_mbstring.msg
       register: _php_mbstring
       when: php_mbstring_package|length > 0
   become: yes
@@ -85,13 +85,13 @@
       changed_when: "'changed' in _php_enable_module.stdout|default('')"
       notify: php_config_changed
       register: _php_enable_module
-      when: php_detected_version|version_compare('5.4', '>=')
+      when: php_detected_version is version('5.4', '>=')
       with_items: '{{ php_modules }}'
 
     - name: WARNING Enable PHP modules is not implemented with PHP < 5.4
       pause: >
         seconds=5
-      when: php_detected_version|version_compare('5.4', '<')
+      when: php_detected_version is version('5.4', '<')
 
     - name: Configure PHP
       lineinfile: >

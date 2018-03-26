@@ -54,7 +54,7 @@
           copy: >
             content={{ gpac_build_env }} dest={{ local_source_directory }}/gpac.build.cfg
 
-      when: gpac_build|changed
+      when: gpac_build is change
   become: yes
   tags: [gpac, packages]
 

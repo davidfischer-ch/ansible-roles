@@ -9,6 +9,6 @@
   service: >
     name=apache2 state=restarted
   become: yes
-  failed_when: _apache_restart|failed and 'not find' not in _apache_restart.msg
+  failed_when: _apache_restart is failure and 'not find' not in _apache_restart.msg
   listen: php_config_changed
   register: _apache_restart

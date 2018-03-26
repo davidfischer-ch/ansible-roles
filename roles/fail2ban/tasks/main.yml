@@ -27,7 +27,7 @@
 
     - set_fact:
         fail2ban_version: '{{ _fail2ban_version.stdout }}'
-        fail2ban_conf_suffix: "{{ _fail2ban_version.stdout|version_compare('0.9', '>=')|ternary('new', 'old') }}"
+        fail2ban_conf_suffix: "{{ (_fail2ban_version.stdout is version('0.9', '>='))|ternary('new', 'old') }}"
 
     - debug: >
         msg='fail2ban version {{ fail2ban_version }}, detected as {{ fail2ban_conf_suffix }}'

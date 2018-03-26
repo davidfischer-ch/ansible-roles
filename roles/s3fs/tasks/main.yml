@@ -55,6 +55,6 @@
         - name: Save build environment
           copy: >
             content={{ s3fs_build_env }} dest={{ local_source_directory }}/s3fs.build.cfg
-      when: s3fs_build|changed
+      when: s3fs_build is change
   become: yes
   tags: [s3fs, packages]

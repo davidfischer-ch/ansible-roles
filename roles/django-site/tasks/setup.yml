@@ -235,6 +235,6 @@
       check_mode: no
       notify: restart celery workers
       tags: update
-      when: _djsite_celery_start is undefined or _djsite_celery_start|failed
+      when: _djsite_celery_start is undefined or _djsite_celery_start is failure
   become: yes
   tags: [workers, services]

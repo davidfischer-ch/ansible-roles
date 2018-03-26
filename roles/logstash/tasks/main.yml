@@ -64,7 +64,7 @@
       delay: '{{ logstash_check_delay|int }}'
       register: _logstash_check
       retries: '{{ logstash_check_retries|int }}'
-      until: _logstash_check|success
+      until: _logstash_check is success
 
     - name: Check Logstash configuration
       assert:

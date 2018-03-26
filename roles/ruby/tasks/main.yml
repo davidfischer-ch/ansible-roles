@@ -63,7 +63,7 @@
         - name: Save build environment
           copy: >
             content={{ ruby_build_env }} dest={{ local_source_directory }}/ruby.build.cfg
-      when: ruby_build|changed
+      when: ruby_build is change
 
     - name: Check Ruby version
       command: >

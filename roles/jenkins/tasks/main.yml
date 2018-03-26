@@ -84,7 +84,7 @@
     - name: Download Jenkins plugins data
       get_url: >
         url={{ jenkins_updates_url }}/update-center.json dest={{ jenkins_directory }}/updates/default.js
-        force={{ jenkins_force_updates|bool }} validate_certs={{ ansible_python_version|version_compare('2.7.9', '>=') }}
+        force={{ jenkins_force_updates|bool }} validate_certs={{ ansible_python_version is version('2.7.9', '>=') }}
 
     - name: Remove first and last JS line wrappers
       shell: >
@@ -104,7 +104,7 @@
       notify: restart jenkins
       register: _jenkins_install_plugin
       retries: '{{ jenkins_cli_retries|int }}'
-      until: _jenkins_install_plugin|success
+      until: _jenkins_install_plugin is success
       with_items: '{{ jenkins_plugins }}'
   become: yes
   tags: [jenkins, plugins]

@@ -1,7 +1,7 @@
     SSLEngine on
     SSLCertificateFile      sites-ssl/{{ item.value.name }}.crt
     SSLCertificateKeyFile   sites-ssl/{{ item.value.name }}.key
-    {% if apache_version|version_compare('2.4.8', '<') %}
+    {% if apache_version is version('2.4.8', '<') %}
     SSLCertificateChainFile sites-ssl/{{ item.value.name }}.crt
     {% endif %}
 
@@ -17,7 +17,7 @@
     # http://blog.ivanristic.com/2013/08/configuring-apache-nginx-and-openssl-for-forward-secrecy.html
     SSLCipherSuite {{ apache_ssl_cipher_suite|join(':') }}
 
-    {% if item.value.with_dhparam|default(true)|bool and apache_version|version_compare('2.4.8', '>=') %}
+    {% if item.value.with_dhparam|default(true)|bool and apache_version is version('2.4.8', '>=') %}
     # Diffie-Hellman parameter for DHE cipher suites, recommended 2048 bits
     SSLOpenSSLConfCmd DHParameters sites-dhparam/{{ item.value.name }}.pem
     {% else %}
