@@ -4,6 +4,6 @@
   supervisorctl: >
     name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=restarted
   become: yes
+  loop: "{{ lookup('dict', djsite_celery_workers) }}"
   loop_control:
     label: '{{ item.value.name }}'
-  with_dict: '{{ djsite_celery_workers }}'

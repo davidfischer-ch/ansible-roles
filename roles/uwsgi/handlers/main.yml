@@ -9,9 +9,9 @@
   command: >
     supervisorctl uwsgi-{{ item.value.name }} reload
   become: yes
+  loop: "{{ lookup('dict', uwsgi_apps) }}"
   loop_control:
     label: '{{ item.value.name }}'
-  with_dict: '{{ uwsgi_apps }}'
 
 - name: restart uwsgi
   service: >
@@ -22,6 +22,6 @@
   supervisorctl: >
     name=uwsgi-{{ item.value.name }} state=restarted
   become: yes
+  loop: "{{ lookup('dict', uwsgi_apps) }}"
   loop_control:
     label: '{{ item.value.name }}'
-  with_dict: '{{ uwsgi_apps }}'

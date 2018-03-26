@@ -11,8 +11,8 @@
     - name: Provision Docker Machines
       command: >
         docker-machine create -d {{ item.value.provider }} {{ item.key }} {{ item.extra|default('') }}
+      loop: "{ lookup('dict', docker_machines) }}"
       tags: provision
-      with_dict: '{{ docker_machines }}'
   tags: [docker, packages]
   when: docker_install_machine|bool
 

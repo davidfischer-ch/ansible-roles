@@ -104,10 +104,10 @@
       replace: >
         name={{ seafile_app_directory }}/seafile-server/check_init_admin.py
         regexp='= ask_admin_{{ item.key }}\(\)' replace='= "{{ item.value }}"'
+      loop:
+        - { key: email,    value: '{{ seafile_admin_email }}'    }
+        - { key: password, value: '{{ seafile_admin_password }}' }
       no_log: yes
-      with_dict:
-        email: '{{ seafile_admin_email }}'
-        password: '{{ seafile_admin_password }}'
 
     - include: setup-service-{{ seafile_daemon_mode }}.yml
 
