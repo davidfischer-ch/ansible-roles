@@ -194,27 +194,27 @@
         src={{ item.value.config_file|default('example.celery.worker.conf.j2') }}
         dest=/etc/supervisor/conf.d/{{ djsite_instance_name }}-celery-{{ item.value.name }}.conf
         mode=644
-      loop: "{{ lookup('dict', djsite_celery_workers) }}"
       loop_control:
         label: '{{ item.value.name }}'
       notify: restart celery workers
+      with_dict: '{{ djsite_celery_workers }}'
 
     - name: Install Celery workers
       supervisorctl: >
         name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=present
-      loop: "{{ lookup('dict', djsite_celery_workers) }}"
       loop_control:
         label: '{{ item.value.name }}'
+      with_dict: '{{ djsite_celery_workers }}'
 
     - name: Setup periodic copy of Celery beat DB to shared storage
       cron: >
         name='Copy {{ djsite_instance_name }}-celery-{{ item.value.name }} database to shared storage'
         job='cp {{ djsite_app_directory }}/data/celery-beat.db.* {{ djsite_data_directory }}/'
         minute=*/5 user={{ djsite_daemon_user }} state=present
-      loop: "{{ lookup('dict', djsite_celery_workers) }}"
       loop_control:
         label: '{{ item.value.name }}'
       when: item.value.type == 'beat'
+      with_dict: '{{ djsite_celery_workers }}'
   become: yes
   tags: [workers, config]
 
@@ -223,10 +223,10 @@
       supervisorctl: >
         name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=started
       ignore_errors: yes
-      loop: "{{ lookup('dict', djsite_celery_workers) }}"
       loop_control:
         label: '{{ item.value.name }}'
       register: _djsite_celery_start
+      with_dict: '{{ djsite_celery_workers }}'
 
     - name: Trigger Celery workers restart
       command: >

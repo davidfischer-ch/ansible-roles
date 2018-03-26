@@ -50,19 +50,19 @@
       file: >
         path={{ item.value.path }} owner={{ item.value.user|default(user) }} group={{ item.value.group|default(group) }}
         mode={{ item.value.mode|default(755) }} state=directory
-      loop: "{{ lookup('dict', nfs_exports) }}"
       loop_control:
         label: '{{ item.value.path }}'
       when: nfs_server_enabled|bool
+      with_dict: '{{ nfs_exports }}'
 
     - name: Setup shared directories
       lineinfile: >
         dest=/etc/exports regexp="ansible-roles-key-{{ item.key }}" state={{ item.value.state|default('present') }}
         line="{{ item.value.path }} {{ item.value.rules|join(' ') }}  # ansible-roles-key-{{ item.key }}"
-      loop: "{{ lookup('dict', nfs_exports) }}"
       loop_control:
         label: '{{ item.value.path }}'
       notify: reload nfs-kernel-server
       when: nfs_server_enabled|bool
+      with_dict: '{{ nfs_exports }}'
   become: yes
   tags: [nfs, shares]

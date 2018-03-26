@@ -11,10 +11,10 @@
     chdir: '{{ vagrant_machines_directory }}'
   changed_when: no
   check_mode: no
-  loop: "{{ lookup('dict', vagrant_snapshots) }}"
   loop_control:
     label: '{{ item.key }}'
   register: vagrant_snapshot_list
+  with_dict: '{{ vagrant_snapshots }}'
 
 - name: Take snapshots
   command: >

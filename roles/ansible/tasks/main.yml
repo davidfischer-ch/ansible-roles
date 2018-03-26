@@ -36,13 +36,13 @@
     - name: Install Ansible modules packages
       package: >
         name="{{ item.value|join(' ') }}" state=present
-      loop: "{{ lookup('dict', the_ansible_modules_packages) }}"
       when: item.key in the_ansible_modules and item.value
+      with_dict: '{{ the_ansible_modules_packages }}'
 
     - name: Install Ansible modules Python package
       pip: >
         name="{{ item.value|join(' ') }}" executable=pip2 state=present
-      loop: "{{ lookup('dict', the_ansible_modules_python_packages) }}"
       when: item.key in the_ansible_modules and item.value
+      with_dict: '{{ the_ansible_modules_python_packages }}'
   become: yes
   tags: [ansible, packages]
