@@ -260,13 +260,11 @@
       copy: >
         src={{ item.0.ssl_files_prefix }}.{{ item.1 }} dest=/etc/nginx/sites-ssl/{{ item.0.name }}.{{ item.1 }}
         owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=444
+      loop: "{{ lookup('nested', nginx_sites.values(), ['crt', 'key']) }}"
       loop_control:
         label: '{{ item.0.name }} {{ item.1 }}'
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
       when: item.0.ssl_files_prefix|default('')|length > 0
-      with_nested:
-        - '{{ nginx_sites.values() }}'
-        - [crt, key]
 
     - name: Setup the Nginx sites Diffie-Hellman parameters
       command: >

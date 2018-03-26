@@ -114,13 +114,11 @@
       copy: >
         src={{ item.0.ssl_files_prefix }}.{{ item.1 }} dest=/etc/apache2/sites-ssl/{{ item.0.name }}.{{ item.1 }}
         owner={{ apache_daemon_user }} group={{ apache_daemon_group }} mode=444
+      loop: "{{ lookup('nested', apache_sites.values(), ['crt', 'key']) }}"
       loop_control:
         label: '{{ item.0.name }} {{ item.1 }}'
       notify: reload apache
       when: item.0.ssl_files_prefix|default('')|length > 0
-      with_nested:
-        - '{{ apache_sites.values() }}'
-        - [crt, key]
 
     - name: Setup the Apache sites Diffie-Hellman parameters
       command: >
@@ -161,9 +159,7 @@
     - name: Disable unwanted sites
       file: >
         name=/etc/apache2/sites-enabled/{{ item.0 }}{{ item.1 }} state=absent
+      loop: "{{ lookup('nested', apache_disabled_sites, ['', '.conf']) }}"
       notify: reload apache
-      with_nested:
-        - '{{ apache_disabled_sites }}'
-        - ['', .conf]
   become: yes
   tags: [apache, sites]

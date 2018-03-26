@@ -96,19 +96,15 @@
     - name: Configure PHP
       lineinfile: >
         dest={{ item.0 }} regexp='^(;\s*)?{{ item.1 }}\s*=' line='{{ item.1 }} = {{ item.2 }}' state=present
+      loop: "{{ lookup('nested', php_config_files|default([]), php_options.items()|default([])|list) }}"
       notify: php_config_changed
-      with_nested:
-        - '{{ php_config_files|default([]) }}'
-        - '{{ php_options.items()|default([])|list }}'
 
     - name: Configure PHP modules
       lineinfile: >
         dest={{ item.0 }}/{{ item.1 }}.ini state=present
         regexp='^(;\s*)?{{ item.2 }}\s*=' line='{{ item.2 }} = {{ item.3 }}'
+      loop: " {{ lookup('nested', php_modules_config_directories, php_modules_options) }}"
       notify: php_config_changed
-      with_nested:
-        - '{{ php_modules_config_directories }}'
-        - '{{ php_modules_options }}'
 
     - name: Configure suhosin to whitelist phar
       copy: >
