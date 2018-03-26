@@ -7,7 +7,7 @@
     - name: Install Ampache packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ ampache_packages }}'
+      loop: '{{ ampache_packages }}'
 
     - name: Clone Ampache source code
       git: >
@@ -35,38 +35,38 @@
     - name: Create Ampache directories
       file: >
         name={{ item }} owner=www-data group=www-data mode=755 recurse=no state=directory
-      when: item|length > 0
-      with_items:
+      loop:
         - '{{ ampache_log_directory }}'
         - '{{ ampache_metadata_directory }}'
         - '{{ ampache_tmp_directory }}'
+      when: item|length > 0
 
     - name: Enable Apache 2 modules
       apache2_module: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - ssl
         - rewrite
 
     - name: Configure Ampache
       template: >
         src={{ item.name }}.j2 dest=/usr/share/ampache/www2/{{ item.path }} owner=root group=root mode=644
-      notify: reload apache
-      with_items:
+      loop:
         - { name: 'ampache.cfg.{{ ampache_config_version|int }}.php', path: 'config/ampache.cfg.php' }
         - { name: 'channel-htaccess', path: 'channel/.htaccess' }
         - { name: 'play-htaccess', path: 'play/.htaccess' }
         - { name: 'rest-htaccess', path: 'rest/.htaccess' }
+      notify: reload apache
 
     - name: Remove Ampache default site
       file: >
         name=/etc/apache2/{{ item }}.conf state=absent
-      notify: reload apache
-      with_items:
+      loop:
         - conf-available/ampache
         - conf-enabled/ampache
         - sites-available/000-default
         - sites-enabled/000-default
+      notify: reload apache
 
     - name: Configure Ampache site
       template: >
@@ -106,7 +106,7 @@
         );"
       changed_when: "'Duplicate' not in _ampache_register.stderr"
       failed_when: _ampache_register is failure and 'Duplicate' not in _ampache_register.stderr
+      loop: '{{ ampache_users }}'
       register: _ampache_register
-      with_items: ampache_users
   become: yes
   tags: [ampache, databases]

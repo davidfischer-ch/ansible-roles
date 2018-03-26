@@ -11,7 +11,7 @@
         rsync {{ djsite_app_directory }}/test/{{ item }}/ {{ djsite_release_directory }}/{{ item }}/
         {{ djsite_rsync_release_excludes|format_items('--exclude={0}')|join(' ') }}
         --archive --delete --hard-links --links
-      with_items:
+      loop:
         - server
         - venv
 

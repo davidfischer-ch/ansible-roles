@@ -7,7 +7,7 @@
     - name: Install UFW packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ ufw_packages }}'
+      loop: '{{ ufw_packages }}'
   become: yes
   tags: [ufw, packages]
 
@@ -58,6 +58,6 @@
     dest: '{{ item.dest|default(omit) }}'  # to_ip
     port: '{{ item.port|default(omit) }}'  # to_port
   become: yes
+  loop: '{{ ufw_rules }}'
   notify: reload ufw
   tags: [ufw, rules]
-  with_items: '{{ ufw_rules }}'

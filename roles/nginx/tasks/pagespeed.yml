@@ -29,11 +29,11 @@
       get_url: >
         url={{ item.url }} dest={{ local_source_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }}
         force=no
-      with_items: '{{ nginx_pagespeed_module_items|default([]) }}'
+      loop: '{{ nginx_pagespeed_module_items|default([]) }}'
 
     - name: Extract PageSpeed module source code
       unarchive: >
         src={{ local_source_directory }}/{{ item.file }} dest={{ local_source_directory }}/{{ item.path }} copy=no
-      with_items: '{{ nginx_pagespeed_module_items|default([]) }}'
+      loop: '{{ nginx_pagespeed_module_items|default([]) }}'
   become: yes
   tags: [nginx, packages]

@@ -11,8 +11,8 @@
     - name: Install extra repositories
       apt_repository: >
         repo={{ item }} update_cache=yes state=present
+      loop: '{{ extra_apt_repositories }}'
       register: _apt_extra_repositories
-      with_items: '{{ extra_apt_repositories }}'
 
     - name: Refresh package manager cache
       apt: >
@@ -28,13 +28,13 @@
     - name: Install package manager tools
       package: >
         name={{ item }} state=present
-      with_items: '{{ package_manager_tools }}'
+      loop: '{{ package_manager_tools }}'
 
     - name: Install SNI tools for Python<2.7.9
       package: >
         name={{ item }} state=present
+      loop: '{{ apt_sni_tools }}'
       when: ansible_python_version is version('2.7.9', '<')
-      with_items: '{{ apt_sni_tools }}'
 
     - block:
         - name: Upgrade the packages

@@ -21,12 +21,12 @@
     - name: Install Logstash packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ logstash_packages }}'
+      loop: '{{ logstash_packages }}'
 
     - name: Create Logstash directories
       file: >
         name={{ item }} state=directory owner=logstash group=logstash mode=755
-      with_items:
+      loop:
         - '{{ logstash_data_directory }}'
         - '{{ logstash_log_directory }}'
   become: yes
@@ -46,9 +46,9 @@
   template: >
     src={{ item.config_file }} dest=/etc/logstash/conf.d/{{ item.name }}.conf mode=644
   become: yes
-  tags: [logstash, agents]
+  loop: '{{ logstash_agents }}'
   notify: reload logstash
-  with_items: '{{ logstash_agents }}'
+  tags: [logstash, agents]
 
 - block:
     - name: Start Logstash service

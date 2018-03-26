@@ -4,5 +4,5 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ juju_packages }}'
   tags: [juju, packages]
-  with_items: '{{ juju_packages }}'

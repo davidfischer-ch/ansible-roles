@@ -10,12 +10,12 @@
 - name: Install file systems packages
   package: >
     name={{ mounts_packages_by_fstype[item] }} state=present
+  become: yes
+  loop: "{{ mounts_filesystem_types|union(mounts.values()|map(attribute='fstype')|list)|unique|sort }}"
   loop_control:
     label: "{{ item }} -> {{ mounts_packages_by_fstype[item]|default('missing') }}"
-  when: item in mounts_packages_by_fstype or not mounts_packages_by_fstype_skip_missing|bool
-  with_items: "{{ mounts_filesystem_types|union(mounts.values()|map(attribute='fstype')|list)|unique|sort }}"
-  become: yes
   tags: [mounts, packages]
+  when: item in mounts_packages_by_fstype or not mounts_packages_by_fstype_skip_missing|bool
 
 - block:
     - name: Create file systems

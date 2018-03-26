@@ -4,14 +4,14 @@
     - name: Install GitLab (manual install) packages
       package: >
         name={{ item }} state=present
+      loop: '{{ gitlab_manual_depend_packages }}'
       when: gitlab_install_mode == 'manual'
-      with_items: '{{ gitlab_manual_depend_packages }}'
 
     - name: Install GitLab (Omnibus install) packages
       package: >
         name={{ item }} state=present
+      loop: '{{ gitlab_omnibus_depend_packages }}'
       when: gitlab_install_mode == 'omnibus'
-      with_items: '{{ gitlab_omnibus_depend_packages }}'
   become: yes
   tags: [gitlab, packages]
 
@@ -78,7 +78,7 @@
     - name: Check GitLab data directory
       file: >
         name={{ gitlab_data_directory }}{{ item }} state=directory owner=git group=root mode=700
-      with_items:
+      loop:
         - ''
         - '/repositories'
 
@@ -92,17 +92,17 @@
       lineinfile: >
         dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
         line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}" backup=yes
+      loop: gitlab_settings
       notify: restart gitlab
       register: _gitlab_setings
-      with_items: gitlab_settings
 
     - name: Stop GitLab services to free up some memory
       command: >
         gitlab-ctl stop {{ item }}
-      when: _gitlab_url is change or _gitlab_port is change or _gitlab_data is change or _gitlab_setings is change
-      with_items:
+      loop:
         - unicorn
         - sidekiq
+      when: _gitlab_url is change or _gitlab_port is change or _gitlab_data is change or _gitlab_setings is change
 
     - name: Generate GitLab configuration
       command: >

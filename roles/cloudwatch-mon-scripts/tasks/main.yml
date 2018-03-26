@@ -6,7 +6,7 @@
         - name: Install CloudWatch monitoring scripts packages
           package: >
             name={{ item }} state=present
-          with_items: '{{ cloudwatch_mon_scripts_packages }}'
+          loop: '{{ cloudwatch_mon_scripts_packages }}'
 
         - name: Download CloudWatch monitoring scripts package
           get_url: >

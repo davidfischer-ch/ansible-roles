@@ -6,5 +6,5 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ programming_packages }}'
   tags: [development, packages]
-  with_items: '{{ programming_packages }}'

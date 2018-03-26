@@ -12,7 +12,7 @@
     - name: Install TLP power management packages
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - tlp
         - tlp-rdw
   become: yes

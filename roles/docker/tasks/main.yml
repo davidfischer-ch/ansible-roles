@@ -38,7 +38,7 @@
     - name: Install Docker Engine packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ docker_packages }}'
+      loop: '{{ docker_packages }}'
   become: yes
   tags: [docker, packages]
   when: docker_install_engine|bool
@@ -47,8 +47,8 @@
   pip: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ docker_python_packages }}'
   tags: [docker, packages]
-  with_items: '{{ docker_python_packages }}'
 
 # FIXME https://github.com/docker/compose/pull/2513#issuecomment-172494821 issue with non tty
 # - name: Check Docker Compose version
@@ -66,7 +66,7 @@
       assert:
         that:
           "kernel_config[item] == 'y'"
-      with_items:
+      loop:
         - memcg
         - memcg_kmem
         - memcg_swap
@@ -135,13 +135,13 @@
     - name: Get images from Docker Hub
       docker_image: >
         name={{ item }}
-      with_items: '{{ docker_images }}'
+      loop: '{{ docker_images }}'
 
     - name: Tag and push to local registry
       docker_image: >
          name={{ item }} push=yes repository=localhost:5000/{{ item }} tag=latest
+      loop: '{{ docker_images }}'
       when: docker_install_registry|bool
-      with_items: '{{ docker_images }}'
   tags: [docker, images]
 
 # To stop your registry, you would:

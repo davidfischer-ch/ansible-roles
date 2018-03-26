@@ -10,7 +10,7 @@
     - name: Install package manager tools
       package: >
         name={{ item }} state=present
-      with_items: '{{ package_manager_tools }}'
+      loop: '{{ package_manager_tools }}'
 
     - name: Upgrade the packages
       yum: >

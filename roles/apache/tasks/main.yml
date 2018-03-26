@@ -10,7 +10,7 @@
     - name: Install Apache packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ apache_packages }}'
+      loop: '{{ apache_packages }}'
 
     - name: Install Apache macro package if available
       package: >
@@ -33,7 +33,7 @@
       file: >
         name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
         state=directory
-      with_items:
+      loop:
         - { name: '/etc/apache2/sites-auth/'    }
         - { name: '/etc/apache2/sites-dhparam/' }
         - { name: '/etc/apache2/sites-ssl/'     }
@@ -66,31 +66,31 @@
     - name: Configure Apache base modules
       template: >
         src=modules/{{ item }}.conf.j2 dest=/etc/apache2/mods-available/{{ item }}.conf mode=644
-      notify: restart apache
-      with_items:
+      loop:
         - mpm_event
         - mpm_prefork
         - mpm_worker
         - ssl
+      notify: restart apache
 
     - name: Enable Apache modules
       apache2_module: >
         name={{ item }} state=present
       ignore_errors: yes
+      loop: '{{ apache_modules }}'
       notify: restart apache
       register: _apache_enable_modules
-      with_items: '{{ apache_modules }}'
 
     - name: Enable Apache modules (fallback to a2enmod)
       command: >
         a2enmod {{ item.item }}
+      loop: '{{ _apache_enable_modules.results }}'
       loop_control:
         label: '{{ item.item }}'
       changed_when: "'already enabled' not in _apache_enable_modules_fallback.stdout"
       notify: restart apache
       register: _apache_enable_modules_fallback
       when: item is failure
-      with_items: '{{ _apache_enable_modules.results }}'
   become: yes
   tags: [apache, config]
 

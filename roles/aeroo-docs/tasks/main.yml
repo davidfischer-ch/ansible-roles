@@ -18,12 +18,12 @@
     - name: Install Aeroo Docs python packages
       pip: >
         name={{ item }} executable=pip3 state=present
-      with_items: '{{ aeroo_docs_python_packages }}'
+      loop: '{{ aeroo_docs_python_packages }}'
 
     - name: Create Aeroo Docs directories
       file: >
         name={{ item }} owner={{ aeroo_docs_daemon_user }} group={{ aeroo_docs_daemon_group }} mode=755 state=directory
-      with_items:
+      loop:
         - '{{ aeroo_docs_app_directory }}'
         - '{{ aeroo_docs_log_directory }}'
 

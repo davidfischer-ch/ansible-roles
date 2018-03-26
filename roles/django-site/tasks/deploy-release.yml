@@ -62,7 +62,7 @@
         - name: Install Application Python packages
           command: >
             {{ djsite_app_directory }}/test/venv/bin/pip install {{ item }}
-          with_items: '{{ djsite_python_packages }}'
+          loop: '{{ djsite_python_packages }}'
 
         - name: Find Application requirement files
           find: >
@@ -73,10 +73,10 @@
         - name: Install requirements into virtualenv
           command: >
             {{ djsite_app_directory }}/test/venv/bin/pip install --exists-action w -r {{ item.path }}
+          loop: '{{ _djsite_requirements.files }}'
           loop_control:
             label: '{{ item.path }}'
           when: "item.path.split('.')[-1] == 'pip' + djsite_config.python_version[0]"
-          with_items: '{{ _djsite_requirements.files }}'
 
         - name: Trigger virtualenv hook
           include: '{{ djsite_virtualenv_tasks_file }}'

@@ -20,12 +20,12 @@
     - name: Install Nginx build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ nginx_build_packages }}'
+      loop: '{{ nginx_build_packages }}'
 
     - name: Install Nginx extra packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ nginx_extra_packages }}'
+      loop: '{{ nginx_extra_packages }}'
   become: yes
   tags: [nginx, packages]
 
@@ -136,7 +136,7 @@
             dest={{ local_source_directory }}/nginx/src/http/ngx_http_header_filter_module.c
             replace='{{ item }}[] = "Server: {{ nginx_server_header_engine }}" CRLF;'
             regexp='{{ item }}\[\] = "Server: [^;]+;$'
-          with_items:
+          loop:
             - ngx_http_server_string
             - ngx_http_server_full_string
             - ngx_http_server_build_string
@@ -181,7 +181,7 @@
       file: >
         name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
         state=directory
-      with_items:
+      loop:
         - { name: '/etc/nginx/conf.d'        }
         - { name: '/etc/nginx/sites-auth'    }
         - { name: '/etc/nginx/sites-dhparam' }
@@ -193,10 +193,10 @@
     - name: Configure Nginx
       template: >
         src={{ item.src }} dest=/etc/nginx/{{ item.dest }} mode=644
-      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
-      with_items:
+      loop:
         - { src: '{{ nginx_config_file }}',          dest: 'nginx.conf'           }
         - { src: '{{ nginx_security_config_file }}', dest: 'conf.d/security.conf' }
+      notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
 
     - name: Remove default site
       file: >

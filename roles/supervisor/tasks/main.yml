@@ -23,7 +23,7 @@
     - name: Create Supervisor directories
       file: >
         name={{ item }} mode=755 state=directory
-      with_items:
+      loop:
         - /etc/supervisor/conf.d
         - /var/log/supervisor/
 

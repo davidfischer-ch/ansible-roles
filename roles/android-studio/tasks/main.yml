@@ -5,12 +5,12 @@
       apt_repository: >
         repo={{ item }} update_cache=yes state=present
       when: "ansible_pkg_mgr == 'apt'"
-      with_items: '{{ android_studio_apt_repositories }}'
+      loop: '{{ android_studio_apt_repositories }}'
 
     - name: Install Android Studio packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ android_studio_packages }}'
+      loop: '{{ android_studio_packages }}'
   become: yes
   tags: [android-studio, packages]
 

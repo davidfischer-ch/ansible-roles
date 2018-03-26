@@ -13,7 +13,7 @@
     - name: Install Redis packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ redis_packages }}'
+      loop: '{{ redis_packages }}'
   become: yes
   tags: [redis, packages]
 

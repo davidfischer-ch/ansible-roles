@@ -10,14 +10,14 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ memcache_packages }}'
   tags: [memcache, packages]
-  with_items: '{{ memcache_packages }}'
 
 - block:
     - name: Create memcache directories
       file: >
         name={{ item }} owner={{ memcache_daemon_user }} group={{ memcache_daemon_group }} mode=755 state=directory
-      with_items:
+      loop:
         - '{{ memcache_log_file|dirname }}'
         - '{{ memcache_pid_file|dirname }}'
 

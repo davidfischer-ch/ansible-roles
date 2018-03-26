@@ -4,8 +4,8 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ rsyslog_packages }}'
   tags: [rsyslog, packages]
-  with_items: '{{ rsyslog_packages }}'
 
 - block:
     - name: Create logs directory
@@ -15,10 +15,10 @@
     - name: Configure standard log files
       lineinfile: >
         dest={{ rsyslog_default_config_file }} regexp=^#?{{ item.expr }} line='{{ item.name }} {{ item.file }}'
+      loop:
+        - { expr: cron\.\*, name: cron.*, file: '{{ rsyslog_cron_log }}' }
       loop_control:
         label: '{{ item.name }}'
       notify: reload rsyslog
-      with_items:
-        - { expr: cron\.\*, name: cron.*, file: '{{ rsyslog_cron_log }}' }
   become: yes
   tags: [rsyslog, config]

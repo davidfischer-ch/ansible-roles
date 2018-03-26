@@ -14,6 +14,6 @@
     - name: Install MySQL client packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ mysql_client_packages }}'
+      loop: '{{ mysql_client_packages }}'
   become: yes
   tags: [mysql-client, packages]

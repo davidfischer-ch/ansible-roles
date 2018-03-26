@@ -5,8 +5,8 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ openssl_packages }}'
   tags: [openssl, packages]
-  with_items: '{{ openssl_packages }}'
 
 - block:
     - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
@@ -74,7 +74,7 @@
     - name: Create self-signed SSL certificate directory
       file: >
         name={{ item|dirname }} state=directory
-      with_items:
+      loop:
         - '{{ ssl_cert_crt_filename }}'
         - '{{ ssl_cert_key_filename }}'
 

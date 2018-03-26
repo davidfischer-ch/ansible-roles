@@ -14,13 +14,13 @@
     - name: Install NFS Client packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ nfs_client_packages }}'
+      loop: '{{ nfs_client_packages }}'
 
     - name: Install NFS Server packages
       package: >
         name={{ item }} state=present
+      loop: '{{ nfs_server_packages }}'
       when: nfs_server_enabled|bool
-      with_items: '{{ nfs_server_packages }}'
   become: yes
   tags: [nfs, packages]
 
@@ -28,12 +28,12 @@
     - name: Configure NFS Client
       template: >
         src={{ item }}.j2 dest=/etc/default/{{ item }} mode=644
+      loop:
+        - nfs-common
+        - quota
       notify:
         - restart nfs-kernel-server
         - restart rpcbind
-      with_items:
-        - nfs-common
-        - quota
 
     - name: Configure NFS Server
       template: >

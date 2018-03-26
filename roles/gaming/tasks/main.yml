@@ -4,5 +4,5 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ gaming_packages }}'
   tags: [gaming, packages]
-  with_items: '{{ gaming_packages }}'

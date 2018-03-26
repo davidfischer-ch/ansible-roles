@@ -4,4 +4,4 @@
   package: >
     name={{ item }} state=present
   become: yes
-  with_items: '{{ vagrant_packages }}'
+  loop: '{{ vagrant_packages }}'

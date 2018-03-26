@@ -10,8 +10,8 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ mysql_packages }}'
   tags: [mysql, packages]
-  with_items: '{{ mysql_packages }}'
 
 - name: Start MySQL service
   service: >
@@ -34,12 +34,12 @@
     - name: Remove default MySQL configuration
       file: >
         path=/etc/mysql/{{ item }} state=absent
-      notify: restart mysql
-      with_items:
+      loop:
         - conf.d/mysql.cnf
         - conf.d/mysqldump.cnf
         - mysql.conf.d/mysqld.cnf
         - mysql.conf.d/mysqld_safe_syslog.cnf
+      notify: restart mysql
 
     - name: Copy user my.cnf file with root credentials
       template: >
@@ -48,7 +48,7 @@
     - name: Configure MySQL root password
       mysql_user: >
         name=root host={{ item }} password={{ mysql_root_password }} check_implicit_admin=yes state=present
-      with_items:
+      loop:
         - '{{ ansible_hostname }}'
         - localhost
         - 127.0.0.1

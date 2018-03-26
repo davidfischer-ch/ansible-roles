@@ -8,14 +8,14 @@
   cloudwatchevent_rule:
     name: '{{ aws_schedule_environment }}-{{ item.name }}'
     state: absent
-  with_items: '{{ aws_schedule_functions }}'
+  loop: '{{ aws_schedule_functions }}'
 
 - name: Remove the resources scheduling lambda functions
   lambda:
     name: '{{ aws_schedule_environment }}-{{ item.name }}'
     region: '{{ aws_schedule_region }}'
     state: absent
-  with_items: '{{ aws_schedule_functions }}'
+  loop: '{{ aws_schedule_functions }}'
 
 - name: Remove the resources scheduling policy
   iam_policy:

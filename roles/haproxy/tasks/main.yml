@@ -14,7 +14,7 @@
     - name: Install HAProxy build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ haproxy_build_packages }}'
+      loop: '{{ haproxy_build_packages }}'
 
     - name: Clone HAProxy source code
       git: >
@@ -30,7 +30,7 @@
       make:
         chdir: '{{ local_source_directory }}/haproxy'
         target: 'install-{{ item }}'
-      with_items:
+      loop:
         - bin
         - man
         # - doc  # stderr: install: cannot stat ‘doc/haproxy-en.txt’: No such file or directory
@@ -41,7 +41,7 @@
     - name: Create HAProxy directories
       file: >
         name={{ item }} mode=755 state=directory
-      with_items:
+      loop:
         - /etc/haproxy/
         - /var/lib/haproxy/
 
@@ -61,10 +61,10 @@
     - name: Install HAProxy service
       template: >
         src={{ item.src }}.j2 dest=/etc/{{ item.src }}/haproxy mode={{ item.mode }}
-      notify: restart haproxy
-      with_items:
+      loop:
         - {src: default, mode: 644}
         - {src: init.d,  mode: 755}
+      notify: restart haproxy
 
     - name: Copy default HAProxy error pages
       copy: >

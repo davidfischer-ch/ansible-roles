@@ -5,7 +5,7 @@
     - name: Install s3fs build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ s3fs_build_packages }}'
+      loop: '{{ s3fs_build_packages }}'
 
     - name: Clone s3fs source code
       git: >

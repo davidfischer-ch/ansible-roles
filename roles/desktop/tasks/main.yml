@@ -3,10 +3,10 @@
 - name: Enable Canonical partners repository
   apt_repository: >
     repo='{{ item }} http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner' state=present
-  with_items:
+  become: yes
+  loop:
     - deb
     - deb-src
-  become: yes
   tags: [desktop, config]
 
 - block:
@@ -22,7 +22,7 @@
     - name: Install Ubuntu packages
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - '{{ desktop_package }}'
         - ubuntu-minimal
         - ubuntu-restricted-addons
@@ -33,18 +33,18 @@
     - name: Install office packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ office_packages }}'
+      loop: '{{ office_packages }}'
 
     - name: Install Ubuntu desktop packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ ubuntu_desktop_packages }}'
+      loop: '{{ ubuntu_desktop_packages }}'
       when: desktop_package == 'ubuntu-desktop'
 
     - name: Install system packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ system_packages }}'
+      loop: '{{ system_packages }}'
 
     - name: Update apt-file cache
       command: >
@@ -54,28 +54,28 @@
     - name: Remove bumblebee packages
       package: >
         name={{ item }} state=absent
-      with_items:
+      loop:
         - bumblebee
         - bumblebee-nvidia
 
     - name: Install files utilities packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ file_utility_packages }}'
+      loop: '{{ file_utility_packages }}'
 
     - name: Install miscellaneous packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ miscellaneous_packages }}'
+      loop: '{{ miscellaneous_packages }}'
 
     - name: Install virtualization packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ virtualization_packages }}'
+      loop: '{{ virtualization_packages }}'
 
     - name: Install web packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ web_packages }}'
+      loop: '{{ web_packages }}'
   become: yes
   tags: [desktop, packages]

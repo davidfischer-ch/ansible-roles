@@ -15,7 +15,7 @@
     - name: Install PostgreSQL client packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ postgresql_client_packages }}'
+      loop: '{{ postgresql_client_packages }}'
 
     - name: Install PostgreSQL python packages
       pip: >

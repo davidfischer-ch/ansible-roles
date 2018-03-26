@@ -27,14 +27,14 @@
 - name: Create machines metadata directories
   file: >
     name={{ vagrant_machines_directory }}/.vagrant/machines/{{ item.name }}/{{ item.provider }} state=directory
+  loop: '{{ vagrant_machines }}'
   loop_control:
     label: '{{ item.name }}'
-  with_items: '{{ vagrant_machines }}'
 
 - name: Update machines IDs file
   copy: >
     dest={{ vagrant_machines_directory }}/.vagrant/machines/{{ item.name }}/{{ item.provider }}/id
     content={{ item.uuid }} force=yes
+  loop: '{{ vagrant_machines }}'
   loop_control:
     label: '{{ item.name }}'
-  with_items: '{{ vagrant_machines }}'

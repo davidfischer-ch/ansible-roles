@@ -40,7 +40,7 @@
       when: not djsite_repository_is_local|bool or djsite_has_private_requirements|bool
 
     - debug: var={{ item }}
-      with_items:
+      loop:
         - djsite_release_directory
         - djsite_repository_is_local
   tags: always

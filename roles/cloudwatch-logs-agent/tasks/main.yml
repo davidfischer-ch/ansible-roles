@@ -12,7 +12,7 @@
         - name: Create CloudWatch logs agent directories
           file: >
             name={{ item }} mode=755 state=directory
-          with_items:
+          loop:
             - /etc/awslogs
 
         - name: Configure CloudWatch logs agent
@@ -31,9 +31,10 @@
     - name: Toggle CloudWatch logs agent service
       service: >
         name=awslogs state={{ item }} enabled={{ item == 'started' }}
-      tags: services
-      with_items:
+      loop:
         - "{{ (cloudwatch_logs_agent_logs|length > 0)|ternary('started', 'stopped') }}"
+      tags: services
+
   become: yes
   tags: cloudwatch-logs-agent
   when: ec2_dns_name is defined or ansible_ec2_hostname is defined or not cloudwatch_logs_agent_only_on_ec2|bool

@@ -12,9 +12,9 @@
         Principal:
           Service: lambda.amazonaws.com
     state: present
+  loop: '{{ aws_lambda_functions }}'
   loop_control:
     label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
-  with_items: '{{ aws_lambda_functions }}'
 
 - name: Create the policies
   iam_policy:
@@ -24,10 +24,10 @@
     policy_json: "{{ lookup('template', item.directory + '/Policy.json.j2') }}"
     region: '{{ aws_lambda_region }}'
     state: present
+  loop: '{{ aws_lambda_functions }}'
   loop_control:
     label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
   register: _aws_lambda_policies
-  with_items: '{{ aws_lambda_functions }}'
 
 - name: Wait some time for the policies to be available
   pause: seconds=10
@@ -42,19 +42,19 @@
       synchronize: >
         src={{ item.directory }}/ dest=/tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}/
         archive=yes delete=yes links=yes
+      loop: '{{ aws_lambda_functions }}'
       loop_control:
         label: '{{ item.name }}'
-      with_items: '{{ aws_lambda_functions }}'
 
     - name: Build lambda functions
       command: >
         ./build
       args:
         chdir: '/tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}'
+      loop: '{{ aws_lambda_functions }}'
       loop_control:
         label: '{{ item.name }}'
       register: _aws_lambda_build
-      with_items: '{{ aws_lambda_functions }}'
 
     - debug: var=_aws_lambda_build
 
@@ -70,9 +70,9 @@
         timeout: '{{ item.timeout|int }}'
         zip_file: /tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}/package.zip
         state: present
+      loop: '{{ aws_lambda_functions }}'
       loop_control:
         label: '{{ aws_lambda_environment }}-{{ item.name }}'
-      with_items: '{{ aws_lambda_functions }}'
 
     - name: Create the S3 events policies
       lambda_policy:
@@ -113,9 +113,10 @@
     #       - id: '{{ aws_lambda_environment }}-{{ item.name }}'
     #         arn: 'arn:aws:lambda:{{ aws_lambda_region }}:{{ aws_lambda_account_id }}:function:{{ aws_lambda_environment }}-{{ item.name }}'
     #     state: present
+    #   loop: '{{ aws_lambda_functions }}'
     #   loop_control:
     #     label: '{{ item.name }}'
-    #   with_items: '{{ aws_lambda_functions }}'
+
   always:
     - name: Cleanup temporary directory
       file: >

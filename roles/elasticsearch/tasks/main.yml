@@ -22,7 +22,7 @@
     - name: Install ElasticSearch packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ elasticsearch_packages }}'
+      loop: '{{ elasticsearch_packages }}'
 
     # FIXME Useless when https://github.com/ansible/ansible/issues/18889 is fixed
     - name: Toggle ElastiSearch packages version hold marker
@@ -30,14 +30,14 @@
         apt-mark {{ ('=' in item)|ternary('hold', 'unhold') }} {{ item.split('=')[0] }}
       changed_when: _elasticsearch_hold.rc != -11
       failed_when: _elasticsearch_hold is failure and _elasticsearch_hold.rc != -11
+      loop: '{{ elasticsearch_packages }}'
       register: _elasticsearch_hold
       when: ansible_pkg_mgr == 'apt'
-      with_items: '{{ elasticsearch_packages }}'
 
     - name: Create ElasticSearch directories
       file: >
         name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=755
-      with_items:
+      loop:
         - '{{ elasticsearch_data_directory }}'
         - '{{ elasticsearch_log_directory }}'
   become: yes

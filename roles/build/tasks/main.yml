@@ -10,6 +10,6 @@
 - name: Install building and development tools
   package: >
     name={{ item }} state=present
-  with_items: '{{ build_packages }}'
   become: yes
+  loop: '{{ build_packages }}'
   tags: [build, packages]

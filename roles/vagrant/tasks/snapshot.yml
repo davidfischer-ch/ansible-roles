@@ -21,7 +21,7 @@
     vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
   args:
     chdir: '{{ vagrant_machines_directory }}'
+  loop: '{{ vagrant_snapshot_list.results|default([]) }}'
   loop_control:
     label: '{{ item.item.key }} snapshot {{ item.item.value }}'
   when: "' {{ item.item.value }} ' not in item.stdout"
-  with_items: '{{ vagrant_snapshot_list.results|default([]) }}'

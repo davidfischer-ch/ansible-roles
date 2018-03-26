@@ -21,7 +21,7 @@
     - name: Install Jenkins packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ jenkins_packages }}'
+      loop: '{{ jenkins_packages }}'
   become: yes
   tags: [jenkins, packages]
 
@@ -30,17 +30,17 @@
       file: >
         name={{ jenkins_directory }}/{{ item }} state=directory
         owner={{ jenkins_daemon_user }} group={{ jenkins_daemon_group }} mode=755
-      with_items:
+      loop:
         - updates
 
     - name: Configure Jenkins
       lineinfile: >
         dest=/etc/default/jenkins regexp='{{ item.name }}\s*=' line='{{ item.name }}={{ item.value }}'
-      notify: restart jenkins
-      with_items:
+      loop:
         - { name: HTTP_HOST, value: '{{ jenkins_bind_address }}'                                        }
         - { name: HTTP_PORT, value: '{{ jenkins_port|int }}'                                            }
         - { name: JAVA_ARGS, value: '{{ jenkins_java_options }}' }  # -Djenkins.install.runSetupWizard=false
+      notify: restart jenkins
 
     # Multiple options:
     # 1. Generate users/<name>/user.xml
@@ -99,12 +99,12 @@
       args:
         creates: '{{ jenkins_directory }}/plugins/{{ item.name }}.jpi'
       delay: '{{ jenkins_cli_delay|int }}'
+      loop: '{{ jenkins_plugins }}'
       loop_control:
         label: '{{ item.name }}'
       notify: restart jenkins
       register: _jenkins_install_plugin
       retries: '{{ jenkins_cli_retries|int }}'
       until: _jenkins_install_plugin is success
-      with_items: '{{ jenkins_plugins }}'
   become: yes
   tags: [jenkins, plugins]

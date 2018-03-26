@@ -6,7 +6,7 @@
     name={{ item }} state=present
   become: yes
   tags: [postgresql, packages]
-  with_items: '{{ postgresql_packages }}'
+  loop: '{{ postgresql_packages }}'
 
 - block:
     - name: Configure PostgreSQL
@@ -37,7 +37,7 @@
     - name: Install PostGIS packages
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - postgis
         - 'postgresql-{{ postgresql_version }}-postgis-2.1'
         - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
@@ -45,7 +45,7 @@
     - name: Install geolocation prerequisites required for all back-ends
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - binutils
         - libgeos-3.4.2
         - libgeos-c1
@@ -54,7 +54,7 @@
     - name: Install geolocation prerequisites required for PostgreSQL and SQLite
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - libproj-dev
         - proj-bin
         - proj-data
@@ -62,7 +62,7 @@
     - name: Install geolocation prerequisites optional but required for SQLite
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - gdal-bin
         - libgdal1-dev
         - python3-gdal
@@ -70,7 +70,7 @@
     - name: install optional IP-based geolocation library
       package: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - libgeoip1
   become: yes
   tags: [postgresql, packages]

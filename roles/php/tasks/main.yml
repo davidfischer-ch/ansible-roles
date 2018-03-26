@@ -15,7 +15,7 @@
     - name: Install PHP packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ php_packages }}'
+      loop: '{{ php_packages }}'
 
     - name: Install Apache PHP module
       package: >
@@ -83,10 +83,10 @@
       script: >
         scripts/php_enable_module {{ php_version }} {{ item }}
       changed_when: "'changed' in _php_enable_module.stdout|default('')"
+      loop: '{{ php_modules }}'
       notify: php_config_changed
       register: _php_enable_module
       when: php_detected_version is version('5.4', '>=')
-      with_items: '{{ php_modules }}'
 
     - name: WARNING Enable PHP modules is not implemented with PHP < 5.4
       pause: >
@@ -113,8 +113,8 @@
     - name: Configure suhosin to whitelist phar
       copy: >
         content='suhosin.executor.include.whitelist = phar' dest={{ item }}/suhosin.ini
+      loop: '{{ php_extra_config_directories }}'
       notify: php_config_changed
-      with_items: '{{ php_extra_config_directories }}'
   become: yes
   tags: [php, config]
 

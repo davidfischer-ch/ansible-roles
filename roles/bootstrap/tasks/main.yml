@@ -31,7 +31,7 @@
     - name: Enable password-less ssh
       authorized_key: >
         user={{ user }} key="{{ lookup('file', item) }}"
-      with_items: '{{ ssh_authorized_keys }}'
+      loop: '{{ ssh_authorized_keys }}'
 
     - name: Configure sudoers PATH variable
       lineinfile:

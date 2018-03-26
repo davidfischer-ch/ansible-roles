@@ -8,16 +8,16 @@
 #   cloudwatchevent_rule:
 #     name: '{{ aws_lambda_environment }}-{{ item.name }}'
 #     state: absent
-#   with_items: '{{ aws_lambda_functions }}'
+#   loop: '{{ aws_lambda_functions }}'
 
 - name: Remove the lambda functions
   lambda:
     name: '{{ aws_lambda_environment }}-{{ item.name }}'
     region: '{{ aws_lambda_region }}'
     state: absent
+  loop: '{{ aws_lambda_functions }}'
   loop_control:
     label: '{{ aws_lambda_environment }}-{{ item.name }}'
-  with_items: '{{ aws_lambda_functions }}'
 
 - name: Remove the policies
   iam_policy:
@@ -26,15 +26,15 @@
     policy_name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
     region: '{{ aws_lambda_region }}'
     state: absent
+  loop: '{{ aws_lambda_functions }}'
   loop_control:
     label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
-  with_items: '{{ aws_lambda_functions }}'
 
 - name: Remove the roles
   iam:
     iam_type: role
     name: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
     state: absent
+  loop: '{{ aws_lambda_functions }}'
   loop_control:
     label: '{{ aws_lambda_environment }}-lambda-{{ item.name }}'
-  with_items: '{{ aws_lambda_functions }}'

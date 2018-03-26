@@ -9,22 +9,22 @@
     - name: Install imaging packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ imaging_packages }}'
+      loop: '{{ imaging_packages }}'
 
     - name: Install audio related packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ audio_packages }}'
+      loop: '{{ audio_packages }}'
 
     - name: Install video related packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ video_packages }}'
+      loop: '{{ video_packages }}'
 
     - name: Install media players packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ media_player_packages }}'
+      loop: '{{ media_player_packages }}'
 
     - name: Install encrypted DVD playback packages
       package: >

@@ -6,13 +6,13 @@
   vagrant_machine: >
     chdir={{ vagrant_machines_directory }} name={{ item.name }} state=absent
     timeout={{ item.timeout|int if item.timeout is defined else omit }}
+  loop: '{{ vagrant_machines }}'
   loop_control:
     label: '{{ item.name }}'
-  with_items: '{{ vagrant_machines }}'
 
 - name: Cleanup machines SSH authentication footprints
   known_hosts: >
     name={{ item.host_public }} state=absent
+  loop: '{{ vagrant_machines }}'
   loop_control:
     label: '{{ item.name }}'
-  with_items: '{{ vagrant_machines }}'

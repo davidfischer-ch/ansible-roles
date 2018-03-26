@@ -5,8 +5,8 @@
     - name: Install uWSGI packages
       package: >
         name={{ item }} state=present
+      loop: '{{ uwsgi_packages }}'
       when: uwsgi_system_install|bool
-      with_items: '{{ uwsgi_packages }}'
 
     # FIXME disable because it breaks running Python 2 applications
     # - name: Upgrade uWSGI

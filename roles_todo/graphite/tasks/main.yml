@@ -24,7 +24,7 @@
     name={{ item }} state=present virtualenv={{ graphite_bin_directory }}
     extra_args='--install-option="--prefix={{ graphite_bin_directory }} --install-lib={{ graphite_bin_directory }}/lib"'
   tags: [graphite, packages]
-  with_items:
+  loop:
     - cairocffi
     - carbon
     - django<1.7

@@ -4,7 +4,7 @@
     - name: Install jMeter packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ jmeter_packages }}'
+      loop: '{{ jmeter_packages }}'
 
     - name: Download jMeter binary package
       get_url: >

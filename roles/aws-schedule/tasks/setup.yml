@@ -35,13 +35,13 @@
   template: >
     src={{ item.name }}.py.j2
     dest=/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.py
-  with_items: '{{ aws_schedule_functions }}'
+  loop: '{{ aws_schedule_functions }}'
 
 - name: Archive the resources scheduling lambda functions
   archive: >
     path=['/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.py']
     dest=/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.zip format=zip
-  with_items: '{{ aws_schedule_functions }}'
+  loop: '{{ aws_schedule_functions }}'
 
 - name: Deploy the resources scheduling lambda functions
   lambda:
@@ -54,7 +54,7 @@
     timeout: 60
     zip_file: /tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.zip
     state: present
-  with_items: '{{ aws_schedule_functions }}'
+  loop: '{{ aws_schedule_functions }}'
 
 - name: Configure the resources scheduling events
   cloudwatchevent_rule:
@@ -65,4 +65,4 @@
       - id: '{{ aws_schedule_environment }}-{{ item.name }}'
         arn: 'arn:aws:lambda:{{ aws_schedule_region }}:{{ aws_schedule_account_id }}:function:{{ aws_schedule_environment }}-{{ item.name }}'
     state: present
-  with_items: '{{ aws_schedule_functions }}'
+  loop: '{{ aws_schedule_functions }}'

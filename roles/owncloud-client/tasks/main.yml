@@ -15,6 +15,6 @@
     - name: Install ownCloud client packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ owncloud_client_packages }}'
+      loop: '{{ owncloud_client_packages }}'
   become: yes
   tags: [owncloud-client, packages]

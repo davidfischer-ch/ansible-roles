@@ -28,7 +28,7 @@
     - name: Install ownCloud packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ owncloud_packages }}'
+      loop: '{{ owncloud_packages }}'
   become: yes
   tags: [owncloud, packages]
 
@@ -36,7 +36,7 @@
     - name: Enable Apache 2 modules
       apache2_module: >
         name={{ item }} state=present
-      with_items:
+      loop:
         - ssl
         - rewrite
 
@@ -51,12 +51,12 @@
     - name: Remove ownCloud default site
       file: >
         name=/etc/apache2/{{ item }}.conf state=absent
-      notify: reload apache
-      with_items:
+      loop:
         - conf-available/owncloud
         - conf-enabled/owncloud
         - sites-available/000-default
         - sites-enabled/000-default
+      notify: reload apache
 
     - name: Configure ownCloud site
       template: >

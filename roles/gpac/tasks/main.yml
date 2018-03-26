@@ -11,7 +11,7 @@
     - name: Install GPAC build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ gpac_build_packages }}'
+      loop: '{{ gpac_build_packages }}'
 
     - name: Clone GPAC source code
       git: >

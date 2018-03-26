@@ -11,5 +11,5 @@
         logrotate --debug {{ item }}
       changed_when: no
       check_mode: no
-      with_items: "{{ _logrotate_log_rotations.files|map(attribute='path')|sort }}"
+      loop: "{{ _logrotate_log_rotations.files|map(attribute='path')|sort }}"
   become: yes

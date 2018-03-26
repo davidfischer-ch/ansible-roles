@@ -9,8 +9,8 @@
     - name: Install MariaDB packages
       package: >
         name={{ item }} state=present
+      loop: '{{ mariadb_packages }}'
       tags: packages
-      with_items: '{{ mariadb_packages }}'
 
     - name: Configure MariaDB
       template: >
@@ -28,13 +28,13 @@
     - name: Remove default MySQL configuration
       file: >
         path=/etc/mysql/{{ item }} state=absent
-      notify: restart mariadb
-      tags: config
-      with_items:
+      loop:
         - conf.d/mariadb.cnf
         - conf.d/mysql.cnf
         - conf.d/mysqld_safe_syslog.cnf
         - conf.d/mysqldump.cnf
+      notify: restart mariadb
+      tags: config
 
     - name: Start MariaDB service
       service: >
@@ -49,12 +49,12 @@
     - name: Configure MariaDB root password
       mysql_user: >
         name=root host={{ item }} password={{ mariadb_root_password }} check_implicit_admin=yes state=present
-      tags: config
-      with_items:
+      loop:
         - '{{ ansible_hostname }}'
         - localhost
         - 127.0.0.1
         - ::1
+      tags: config
 
     - name: Remove anonymous MariaDB user
       mysql_user: >

@@ -3,8 +3,8 @@
 - name: Install Application packages
   package: >
     name={{ item }} state=present
-  with_items: '{{ djsite_packages }}'
   become: yes
+  loop: '{{ djsite_packages }}'
   tags: packages
 
 - block:
@@ -12,7 +12,7 @@
       file: >
         name={{ item.name }} owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode={{ item.mode }}
         state=directory
-      with_items:
+      loop:
         - { name: '{{ djsite_app_directory }}',                                    mode: 755 }
         - { name: '{{ djsite_app_directory }}/.ssh',                               mode: 700 }
         - { name: '{{ djsite_app_directory }}/data',                               mode: 755 }
@@ -33,11 +33,11 @@
           copy: >
             src={{ item.path }} dest={{ djsite_app_directory }}/.ssh/{{ item.name }}
             owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=0600
-          loop_control:
-            label: '{{ item.name }}'
-          with_items:
+          loop:
             - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa'     }
             - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub' }
+          loop_control:
+            label: '{{ item.name }}'
 
         - name: Register Application repository RSA key
           known_hosts: >
@@ -102,7 +102,7 @@
             {{ djsite_app_directory }}/test/venv/bin/python ../manage.py compilemessages
           args:
             chdir: '{{ djsite_app_directory }}/test/server/{{ item }}'
-          with_items: '{{ djsite_config.custom_applications }}'
+          loop: '{{ djsite_config.custom_applications }}'
       tags: [unit-test-extra, update]
 
     - name: Check the applications for common errors

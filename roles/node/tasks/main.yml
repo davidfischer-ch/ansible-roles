@@ -17,7 +17,7 @@
     - name: Install node packages
       package: >
         name={{ item }} state={{ (_node_apt_repository is change)|ternary('latest', 'present') }}
-      with_items: '{{ node_packages }}'
+      loop: '{{ node_packages }}'
 
     - name: Check node command is available
       command: >

@@ -16,7 +16,7 @@
     - name: Install Kibana packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ kibana_packages }}'
+      loop: '{{ kibana_packages }}'
   become: yes
   tags: [kibana, packages]
 

@@ -10,6 +10,6 @@
   vagrant_machine: >
     chdir={{ vagrant_machines_directory }} name={{ item.name }} provider={{ item.provider }}
     timeout={{ item.timeout|int if item.timeout is defined else omit }} state={{ vagrant_power_mode }}
+  loop: "{{ vagrant_machines[::1 if vagrant_power_mode == 'running' else -1] }}"
   loop_control:
     label: '{{ item.name }}'
-  with_items: "{{ vagrant_machines[::1 if vagrant_power_mode == 'running' else -1] }}"

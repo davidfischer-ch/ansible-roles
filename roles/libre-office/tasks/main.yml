@@ -4,7 +4,7 @@
   package: >
     name={{ item }} state=present
   become: yes
-  with_items: '{{ libre_office_packages }}'
+  loop: '{{ libre_office_packages }}'
   tags: [libre-office, packages]
 
 - block:

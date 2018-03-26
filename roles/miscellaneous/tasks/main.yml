@@ -14,7 +14,7 @@
   package: >
     name={{ item }} state=present
   become: yes
-  with_items: '{{ extra_packages }}'
+  loop: '{{ extra_packages }}'
   tags: [miscellaneous, packages]
 
 - block:
@@ -59,11 +59,11 @@
     - name: Install usefull system tools
       package: >
         name={{ item }} state=present
-      with_items: '{{ system_tools }}'
+      loop: '{{ system_tools }}'
 
     - name: Install usefull system administration tools
       package: >
         name={{ item }} state=present
-      with_items: '{{ system_administration_tools }}'
+      loop: '{{ system_administration_tools }}'
   become: yes
   tags: [miscellaneous, packages]

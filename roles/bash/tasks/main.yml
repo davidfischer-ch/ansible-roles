@@ -13,6 +13,6 @@
       template: >
         src={{ bash_user_config_file }} dest={{ ansible_user_dir }}/.bashrc mode=644
       become_user: '{{ item }}'
-      with_items: '{{ bash_users }}'
+      loop: '{{ bash_users }}'
   become: yes
   tags: [bash, config]

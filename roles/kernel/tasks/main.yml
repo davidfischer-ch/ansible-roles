@@ -25,5 +25,5 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ kernel_packages }}'
   tags: [kernel, packages]
-  with_items: '{{ kernel_packages }}'

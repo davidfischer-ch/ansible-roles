@@ -13,6 +13,6 @@
     - name: Install Java packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ java_packages }}'
+      loop: '{{ java_packages }}'
   become: yes
   tags: [java, packages]

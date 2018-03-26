@@ -16,6 +16,6 @@
     - name: Install MariaDB client packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ mariadb_client_packages }}'
+      loop: '{{ mariadb_client_packages }}'
   become: yes
   tags: [mariadb-client, packages]

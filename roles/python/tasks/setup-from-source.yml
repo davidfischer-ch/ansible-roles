@@ -4,7 +4,7 @@
     - name: Install Python build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ python_build_packages }}'
+      loop: '{{ python_build_packages }}'
 
     - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
 

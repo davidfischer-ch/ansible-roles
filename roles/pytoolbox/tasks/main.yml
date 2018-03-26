@@ -10,12 +10,12 @@
     - name: Install pytoolbox packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ pytoolbox_packages }}'
+      loop: '{{ pytoolbox_packages }}'
 
     - name: Install pytoolbox Python packages
       pip: >
         name=pytoolbox executable=pip{{ item }} state={{ (pytoolbox_version == 'latest')|ternary('latest', omit) }}
         version={{ (pytoolbox_version == 'latest')|ternary(omit, pytoolbox_version) }}
-      with_items: '{{ pytoolbox_python_versions }}'
+      loop: '{{ pytoolbox_python_versions }}'
   become: yes
   tags: [pytoolbox, packages]

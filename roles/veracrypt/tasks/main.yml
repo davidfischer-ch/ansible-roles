@@ -5,7 +5,7 @@
     - name: Install VeraCrypt build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ veracrypt_build_packages }}'
+      loop: '{{ veracrypt_build_packages }}'
 
     - name: Clone VeraCrypt source code
       git: >

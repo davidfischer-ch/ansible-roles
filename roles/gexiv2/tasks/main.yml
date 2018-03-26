@@ -5,7 +5,7 @@
     - name: Install GExiv2 build packages
       package: >
         name={{ item }} state=present
-      with_items: '{{ gexiv2_build_packages }}'
+      loop: '{{ gexiv2_build_packages }}'
 
     - name: Remove old GExiv2 package
       package: >

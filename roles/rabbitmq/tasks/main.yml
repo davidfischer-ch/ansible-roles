@@ -5,8 +5,8 @@
   package: >
     name={{ item }} state=present
   become: yes
+  loop: '{{ rabbitmq_packages }}'
   tags: [rabbitmq, packages]
-  with_items: '{{ rabbitmq_packages }}'
 
 - name: Start RabbitMQ service
   service: >

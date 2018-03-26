@@ -4,8 +4,8 @@
   local_action: >
     pip name={{ item }} executable=pip2 state=present
   become: yes
+  loop: '{{ github_python_packages }}'
   tags: [github, packages]
-  with_items: '{{ github_python_packages }}'
 
 - block:
     - name: Lookup GitHub IP addresses if necessary

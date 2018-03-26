@@ -3,11 +3,11 @@
     - name: Set the default locale
       debconf: >
         name=locales question=locales/{{ item.name }} value='{{ item.value }}' vtype={{ item.type }}
-      loop_control:
-        label: '{{ item.name }} = {{ item.value }}'
-      with_items:
+      loop:
         - { name: 'default_environment_locale', value: '{{ locale }}', type: 'select' }
         #- { name: 'locales_to_be_generated',    value: "{{ locale }} {{ locale|split('.')[1] }}", type: 'multiselect' }
+      loop_control:
+        label: '{{ item.name }} = {{ item.value }}'
 
     - name: Install locales package
       package: >
