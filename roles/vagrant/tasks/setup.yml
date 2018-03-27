@@ -1,7 +1,7 @@
 ---
 
 - block:
-    - import_tasks: setup-from-{{ 'release' if vagrant_from_release|bool else 'repository' }}.yml
+    - include_tasks: setup-from-{{ 'release' if vagrant_from_release|bool else 'repository' }}.yml
 
     - name: Get installed Vagrant plugins
       command: >
