@@ -44,8 +44,3 @@ djsite_release_mode: normal
 djsite_release_ok_flag: ok.flag
 djsite_test_options: --failfast --no-input
 djsite_update_database_migrations: yes
-
-# Hooks
-djsite_configure_tasks_file: ''
-djsite_update_tasks_file: ''
-djsite_virtualenv_tasks_file: ''
