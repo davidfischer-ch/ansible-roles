@@ -40,7 +40,7 @@
       file: >
         src=/etc/supervisor/supervisord.conf dest=/etc/supervisord.conf state=link
 
-    - include: setup-service-{{ supervisor_daemon_mode }}.yml
+    - include_tasks: 'setup-service-{{ supervisor_daemon_mode }}.yml'
 
     - meta: flush_handlers
   become: yes

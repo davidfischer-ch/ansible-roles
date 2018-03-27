@@ -1,7 +1,7 @@
 ---
 
 - block:
-    - include: setup-from-{{ 'release' if vagrant_from_release|bool else 'repository' }}.yml
+    - import_tasks: setup-from-{{ 'release' if vagrant_from_release|bool else 'repository' }}.yml
 
     - name: Get installed Vagrant plugins
       command: >
@@ -18,7 +18,7 @@
   tags: packages
 
 - block:
-    - include: configure.yml
+    - import_tasks: configure.yml
 
     - name: Check boxes are up-to-date
       command: >

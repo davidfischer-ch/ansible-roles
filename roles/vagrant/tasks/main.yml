@@ -1,6 +1,6 @@
 ---
 
 - block:
-    - include: facts.yml
-    - include: '{{ vagrant_role_action }}.yml'
+    - import_tasks: facts.yml
+    - import_tasks: '{{ vagrant_role_action }}.yml'
   tags: vagrant

@@ -6,7 +6,7 @@
         name={{ item }} state=present
       loop: '{{ python_build_packages }}'
 
-    - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
+    - include_tasks: 'setup-build-dep-{{ ansible_pkg_mgr }}.yml'
 
     - set_fact:
         _python_latest_version: '{{ python_latest_versions[_python_version|string] }}'

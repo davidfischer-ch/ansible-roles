@@ -50,8 +50,8 @@
 # Release
 
 - block:
-    - include: deploy-release.yml
-    - include: make-migrations.yml
+    - import_tasks: deploy-release.yml
+    - include_tasks: make-migrations.yml
       tags: database
       when: djsite_repository_is_local|bool and djsite_update_database_migrations|bool
 
@@ -176,12 +176,12 @@
 # Release
 
 - block:
-    - include: 'release-{{ djsite_release_mode }}.yml'
-    - include: sync-release.yml
-    - include: activate-release.yml
+    - import_tasks: 'release-{{ djsite_release_mode }}.yml'
+    - import_tasks: sync-release.yml
+    - import_tasks: activate-release.yml
       tags: activate
 
-    - include: cleanup-releases.yml
+    - import_tasks: cleanup-releases.yml
       tags: cleanup
   become: yes
   tags: update

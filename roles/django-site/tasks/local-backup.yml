@@ -42,7 +42,7 @@
       tags: data
 
     - block:
-        - include: get-production-link.yml
+        - import_tasks: get-production-link.yml
 
         - name: Save virtualenv absolute path to a file
           local_action: >

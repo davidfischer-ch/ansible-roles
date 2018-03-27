@@ -109,7 +109,7 @@
         email: '{{ seafile_admin_email }}'
         password: '{{ seafile_admin_password }}'
 
-    - include: setup-service-{{ seafile_daemon_mode }}.yml
+    - include_tasks: 'setup-service-{{ seafile_daemon_mode }}.yml'
 
     - block:
         - name: Start Seafile services

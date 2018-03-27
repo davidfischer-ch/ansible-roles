@@ -7,7 +7,7 @@
     must_match: yes
   tags: [miscellaneous, always]
 
-- include: setup-upgrade-{{ ansible_pkg_mgr }}.yml
+- include_tasks: 'setup-upgrade-{{ ansible_pkg_mgr }}.yml'
   tags: [miscellaneous, packages, upgrade]
 
 - name: Install extra packages
@@ -31,7 +31,7 @@
   become: yes
   tags: [miscellaneous, sysctl, config]
 
-- include: setup-locale-{{ ansible_pkg_mgr }}.yml
+- include_tasks: 'setup-locale-{{ ansible_pkg_mgr }}.yml'
   tags: [miscellaneous, locale, config]
   when: locale|length > 0
 

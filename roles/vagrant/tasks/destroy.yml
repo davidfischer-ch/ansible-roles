@@ -1,6 +1,6 @@
 ---
 
-- include: configure.yml
+- import_tasks: configure.yml
 
 - name: Destroy machines
   vagrant_machine: >

@@ -1,6 +1,6 @@
 ---
 
 - block:
-    - include: facts.yml
-    - include: '{{ aws_lambda_role_action }}.yml'
+    - import_tasks: facts.yml
+    - import_tasks: '{{ aws_lambda_role_action }}.yml'
   tags: aws-lambda

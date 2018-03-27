@@ -9,7 +9,7 @@
   tags: [openssl, packages]
 
 - block:
-    - include: setup-build-dep-{{ ansible_pkg_mgr }}.yml
+    - include_tasks: 'setup-build-dep-{{ ansible_pkg_mgr }}.yml'
 
     - name: Set OpenSSL build environment
       set_fact:

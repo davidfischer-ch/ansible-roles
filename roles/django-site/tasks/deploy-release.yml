@@ -26,7 +26,7 @@
         recurse=yes state=directory
       become_user: root
 
-    - include: read-config.yml
+    - import_tasks: read-config.yml
 
     - name: Cleanup the unit-test area
       command: >
@@ -79,15 +79,15 @@
           when: "item.path.split('.')[-1] == 'pip' + djsite_config.python_version[0]"
 
         - name: Trigger virtualenv hook
-          include: '{{ djsite_virtualenv_tasks_file }}'
+          import_tasks: '{{ djsite_virtualenv_tasks_file }}'
           when: djsite_virtualenv_tasks_file|length > 0
       tags: virtualenv
 
-    - include: configure.yml
+    - import_tasks: configure.yml
       tags: [config, unit-test-extra, update]
 
     - name: Trigger update hook
-      include: '{{ djsite_update_tasks_file }}'
+      import_tasks: '{{ djsite_update_tasks_file }}'
       when: djsite_update_tasks_file|length > 0
   become: yes
   become_user: '{{ djsite_daemon_user }}'

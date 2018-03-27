@@ -4,7 +4,7 @@
     that:
       - vagrant_power_mode in vagrant_power_modes
 
-- include: configure.yml
+- import_tasks: configure.yml
 
 - name: Set machines power mode
   vagrant_machine: >

@@ -21,11 +21,11 @@
   become: yes
   tags: [apache, packages]
 
-- include: pagespeed.yml
+- include_tasks: pagespeed.yml
   tags: [apache, packages]
   when: apache_pagespeed_module_enabled|bool
 
-- include: get-version.yml
+- import_tasks: get-version.yml
   tags: [apache, always]
 
 - block:

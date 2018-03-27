@@ -1,4 +1,4 @@
 ---
 
-- include: deploy-release.yml
-- include: make-migrations.yml
+- import_tasks: deploy-release.yml
+- import_tasks: make-migrations.yml

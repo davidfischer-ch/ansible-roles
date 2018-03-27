@@ -77,7 +77,7 @@
           - php_config_files|length > 0
           - php_extra_config_directories|length > 0
 
-    - include: get-version.yml
+    - import_tasks: get-version.yml
 
     - name: Enable PHP modules
       script: >

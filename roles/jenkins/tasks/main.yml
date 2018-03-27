@@ -58,7 +58,7 @@
       service: >
         name=jenkins state=started enabled=yes
 
-    - include: get-initial-admin-password.yml
+    - import_tasks: get-initial-admin-password.yml
 
     - name: Wait for Jenkins to start up
       uri: >

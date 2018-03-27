@@ -24,7 +24,7 @@
     - set_fact:
         python_missing_versions: "{{ _python_command.results|selectattr('changed')|map(attribute='item')|list }}"
 
-    - include: setup-from-source.yml
+    - include_tasks: setup-from-source.yml
       loop: '{{ python_missing_versions|default([]) }}'
       loop_control:
         loop_var: _python_version

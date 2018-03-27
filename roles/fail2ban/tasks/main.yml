@@ -8,7 +8,7 @@
   tags: [fail2ban, always]
 
 - block:
-    - include: setup-repository-{{ ansible_pkg_mgr }}.yml
+    - include_tasks: 'setup-repository-{{ ansible_pkg_mgr }}.yml'
 
     - name: Install fail2ban packages
       package: >
