@@ -3,7 +3,7 @@
 ---
 
 - block:
-    - include_tasks: 'setup-{{ ansible_pkg_mgr }}.yml'
+    - include_tasks: setup-{{ ansible_pkg_mgr }}.yml
 
     - name: Install Varnish packages
       package: >

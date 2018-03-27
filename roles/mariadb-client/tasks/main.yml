@@ -11,7 +11,7 @@
       package: >
         name=python-mysqldb state=present
 
-    - include_tasks: 'setup-{{ ansible_pkg_mgr }}.yml'
+    - include_tasks: setup-{{ ansible_pkg_mgr }}.yml
 
     - name: Install MariaDB client packages
       package: >

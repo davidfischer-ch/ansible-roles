@@ -8,7 +8,7 @@
   tags: [redis, always]
 
 - block:
-    - include_tasks: 'setup-repository-{{ ansible_pkg_mgr }}.yml'
+    - include_tasks: setup-repository-{{ ansible_pkg_mgr }}.yml
 
     - name: Install Redis packages
       package: >

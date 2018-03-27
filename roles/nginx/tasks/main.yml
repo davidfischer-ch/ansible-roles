@@ -203,7 +203,7 @@
         path=/etc/nginx/sites-enabled/default state=absent
       notify: '{{ nginx_daemon_modes[nginx_daemon_mode] }} reload nginx'
 
-    - include_tasks: 'setup-service-{{ nginx_daemon_mode }}.yml'
+    - include_tasks: setup-service-{{ nginx_daemon_mode }}.yml
   become: yes
   tags: [nginx, config]
 

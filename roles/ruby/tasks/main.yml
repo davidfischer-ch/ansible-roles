@@ -15,7 +15,7 @@
   tags: [ruby, packages]
 
 - block:
-    - include_tasks: 'setup-build-dep-{{ ansible_pkg_mgr }}.yml'
+    - include_tasks: setup-build-dep-{{ ansible_pkg_mgr }}.yml
 
     - name: Set Ruby build environment
       set_fact:
