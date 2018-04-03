@@ -1,8 +1,10 @@
 ---
 
-- name: Download Vagrant release {{ vagrant_version }}
-  get_url: >
-    url={{ vagrant_release_url }} dest={{ local_source_directory }}/{{ vagrant_release_url|basename }} force=no
-  become: yes
+- block:
+    - name: Download Vagrant release {{ vagrant_version }}
+      get_url: >
+        url={{ vagrant_release_url }} dest={{ local_source_directory }}/{{ vagrant_release_url|basename }} force=no
+      become: yes
 
-- include_tasks: setup-from-release-{{ ansible_pkg_mgr }}.yml
+    - include_tasks: setup-from-release-{{ ansible_pkg_mgr }}.yml
+  tags: [vagrant, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

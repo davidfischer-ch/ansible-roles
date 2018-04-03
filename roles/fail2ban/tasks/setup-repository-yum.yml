@@ -4,3 +4,4 @@
   package:
     name=epel-release state=present
   become: yes
+  tags: [fail2ban, packages]  # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

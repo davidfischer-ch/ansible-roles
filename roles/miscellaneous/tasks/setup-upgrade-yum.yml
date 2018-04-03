@@ -19,3 +19,4 @@
       poll: '{{ upgrade_packages_poll }}'
       when: upgrade_packages|bool
   become: yes
+  tags: [miscellaneous, packages, upgrade] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

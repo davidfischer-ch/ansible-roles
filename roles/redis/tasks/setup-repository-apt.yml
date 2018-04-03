@@ -4,3 +4,4 @@
   apt_repository: >
     repo={{ redis_apt_repository }} filename=ansible_roles_redis update_cache=yes state=present
   become: yes
+  tags: [redis, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

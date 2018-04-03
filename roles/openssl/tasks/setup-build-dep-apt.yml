@@ -6,3 +6,4 @@
   become: yes
   changed_when: _openssl_build_dep.stdout_lines|length > 4
   register: _openssl_build_dep
+  tags: [openssl, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

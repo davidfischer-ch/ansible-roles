@@ -8,4 +8,4 @@
   check_mode: no
   failed_when: _python_build_dep is failure and 'Exiting on user command' not in _python_build_dep.stdout
   register: _python_build_dep
-
+  tags: [python, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

@@ -11,3 +11,4 @@
         name=oracle-java8-installer question=shared/accepted-oracle-license-v1-1 value=true vtype=select
       when: java_from_oracle|bool
   become: yes
+  tags: [java, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

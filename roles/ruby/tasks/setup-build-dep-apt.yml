@@ -6,3 +6,4 @@
   become: yes
   changed_when: _ruby_build_dep.stdout_lines|length > 5
   register: _ruby_build_dep
+  tags: [ruby, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

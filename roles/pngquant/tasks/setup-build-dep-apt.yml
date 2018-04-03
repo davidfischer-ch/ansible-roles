@@ -6,3 +6,4 @@
   become: yes
   changed_when: _pngquant_build_dep.stdout_lines|length > 4
   register: _pngquant_build_dep
+  tags: [pngquant, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

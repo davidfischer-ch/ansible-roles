@@ -15,3 +15,4 @@
       apt: >
         deb={{ local_source_directory }}/{{ apache_pagespeed_module_url|basename }} state=present
   become: yes
+  tags: [apache, packages]  # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

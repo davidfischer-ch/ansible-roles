@@ -4,3 +4,4 @@
   template: >
     src=supervisor dest=/etc/init.d/supervisor mode=755
   notify: restart supervisor
+  tags: [supervisor, config] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

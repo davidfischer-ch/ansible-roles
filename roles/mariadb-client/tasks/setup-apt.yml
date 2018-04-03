@@ -9,3 +9,4 @@
       apt_repository: >
         repo={{ mariadb_apt_repository }} filename=ansible_roles_mariadb_client update_cache=yes state=present
   when: mariadb_apt_repository|length > 0
+  tags: [mariadb-client, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882
