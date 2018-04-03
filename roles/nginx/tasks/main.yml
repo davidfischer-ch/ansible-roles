@@ -41,6 +41,7 @@
   tags: [nginx, config]
 
 - include_tasks: pagespeed.yml
+  tags: [nginx, packages]
   when: nginx_pagespeed_module_enabled|bool
 
 - block:
