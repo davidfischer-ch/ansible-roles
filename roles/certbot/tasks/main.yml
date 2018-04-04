@@ -1,0 +1,18 @@
+# Install and configure Certbot
+---
+
+- block:
+    - name: Install Certbot apt repository
+      apt_repository: >
+        repo={{ certbot_apt_repository }} filename=ansible_roles_certbot update_cache=yes state=present
+      when: ansible_pkg_mgr == 'apt' and certbot_apt_repository|length > 0
+
+    - name: Install Certbot packages
+      package: >
+        name={{ item }} state=present
+      loop: '{{ certbot_packages }}'
+  become: yes
+  tags: [certbot, packages]
+
+# Create the certificate manually, and copy file inside challenges folder:
+# sudo certbot certonly --manual -d <domain-name> -m <email> --agree-tos

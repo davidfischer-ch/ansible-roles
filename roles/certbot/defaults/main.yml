@@ -1,0 +1,3 @@
+certbot_apt_repository: ppa:certbot/certbot
+certbot_packages:
+  - certbot
