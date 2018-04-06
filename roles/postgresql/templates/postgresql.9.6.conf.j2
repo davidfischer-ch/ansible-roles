@@ -121,6 +121,7 @@ shared_buffers = {{ postgresql_shared_buffers }}          # min 128kB
 # you actively intend to use prepared transactions.
 work_mem = {{ postgresql_work_mem }}             # min 64kB
 maintenance_work_mem = {{ postgresql_maintenance_work_mem }}        # min 1MB
+#replacement_sort_tuples = 150000   # limits use of replacement selection sort
 #autovacuum_work_mem = -1       # min 1MB, or -1 to use maintenance_work_mem
 #max_stack_depth = 2MB          # min 100kB
 dynamic_shared_memory_type = posix  # the default is the first option
@@ -134,7 +135,7 @@ dynamic_shared_memory_type = posix  # the default is the first option
 
 # - Disk -
 
-#temp_file_limit = -1           # limits per-session temp file space
+#temp_file_limit = -1           # limits per-process temp file space
                     # in kB, or -1 for no limit
 
 # - Kernel Resource Usage -
@@ -155,12 +156,17 @@ dynamic_shared_memory_type = posix  # the default is the first option
 
 #bgwriter_delay = 200ms         # 10-10000ms between rounds
 #bgwriter_lru_maxpages = 100        # 0-1000 max buffers written/round
-#bgwriter_lru_multiplier = 2.0      # 0-10.0 multipler on buffers scanned/round
+#bgwriter_lru_multiplier = 2.0      # 0-10.0 multiplier on buffers scanned/round
+#bgwriter_flush_after = 512kB       # measured in pages, 0 disables
 
 # - Asynchronous Behavior -
 
 #effective_io_concurrency = 1       # 1-1000; 0 disables prefetching
-#max_worker_processes = 8
+#max_worker_processes = 8       # (change requires restart)
+#max_parallel_workers_per_gather = 0    # taken from max_worker_processes
+#old_snapshot_threshold = -1        # 1min-60d; -1 disables; 0 is immediate
+                    # (change requires restart)
+#backend_flush_after = 0        # measured in pages, 0 disables
 
 
 #------------------------------------------------------------------------------
@@ -169,11 +175,13 @@ dynamic_shared_memory_type = posix  # the default is the first option
 
 # - Settings -
 
-#wal_level = minimal            # minimal, archive, hot_standby, or logical
+#wal_level = minimal            # minimal, replica, or logical
                     # (change requires restart)
-#fsync = on             # turns forced synchronization on or off
+#fsync = on             # flush data to disk for crash safety
+                        # (turning this off can cause
+                        # unrecoverable data corruption)
 #synchronous_commit = on        # synchronization level;
-                    # off, local, remote_write, or on
+                    # off, local, remote_write, remote_apply, or on
 #wal_sync_method = fsync        # the default is the first option
                     # supported by the operating system:
                     #   open_datasync
@@ -188,16 +196,18 @@ dynamic_shared_memory_type = posix  # the default is the first option
 #wal_buffers = -1           # min 32kB, -1 sets based on shared_buffers
                     # (change requires restart)
 #wal_writer_delay = 200ms       # 1-10000 milliseconds
+#wal_writer_flush_after = 1MB       # measured in pages, 0 disables
 
 #commit_delay = 0           # range 0-100000, in microseconds
 #commit_siblings = 5            # range 1-1000
 
 # - Checkpoints -
 
-#checkpoint_timeout = 5min      # range 30s-1h
+#checkpoint_timeout = 5min      # range 30s-1d
 #max_wal_size = 1GB
 #min_wal_size = 80MB
 #checkpoint_completion_target = 0.5 # checkpoint target duration, 0.0 - 1.0
+#checkpoint_flush_after = 256kB     # measured in pages, 0 disables
 #checkpoint_warning = 30s       # 0 disables
 
 # - Archiving -
@@ -235,7 +245,7 @@ dynamic_shared_memory_type = posix  # the default is the first option
 # These settings are ignored on a standby server.
 
 #synchronous_standby_names = '' # standby servers that provide sync rep
-                # comma-separated list of application_name
+                # number of sync standbys and comma-separated list of application_name
                 # from standby(s); '*' = all
 #vacuum_defer_cleanup_age = 0   # number of xacts by which cleanup is delayed
 
@@ -287,6 +297,9 @@ dynamic_shared_memory_type = posix  # the default is the first option
 #cpu_tuple_cost = 0.01          # same scale as above
 #cpu_index_tuple_cost = 0.005       # same scale as above
 #cpu_operator_cost = 0.0025     # same scale as above
+#parallel_tuple_cost = 0.1      # same scale as above
+#parallel_setup_cost = 1000.0   # same scale as above
+#min_parallel_relation_size = 8MB
 effective_cache_size = {{ postgresql_effective_cache_size }}
 
 # - Genetic Query Optimizer -
@@ -307,6 +320,7 @@ effective_cache_size = {{ postgresql_effective_cache_size }}
 #from_collapse_limit = 8
 #join_collapse_limit = 8        # 1 disables collapsing of explicit
                     # JOIN clauses
+#force_parallel_mode = off
 
 
 #------------------------------------------------------------------------------
@@ -350,6 +364,8 @@ effective_cache_size = {{ postgresql_effective_cache_size }}
 # These are relevant when logging to syslog:
 #syslog_facility = 'LOCAL0'
 #syslog_ident = 'postgres'
+#syslog_sequence_numbers = on
+#syslog_split_messages = on
 
 # This is only relevant when logging to eventlog (win32):
 # (change requires restart)
@@ -423,6 +439,7 @@ log_line_prefix = '%m [%p] %q%u@%d '            # special values:
                     #   %p = process ID
                     #   %t = timestamp without milliseconds
                     #   %m = timestamp with milliseconds
+                    #   %n = timestamp with milliseconds (as a Unix epoch)
                     #   %i = command tag
                     #   %e = SQL state
                     #   %c = session ID
@@ -521,6 +538,7 @@ stats_temp_directory = '/var/run/postgresql/{{ postgresql_version }}-main.pg_sta
 #session_replication_role = 'origin'
 #statement_timeout = 0          # in milliseconds, 0 is disabled
 #lock_timeout = 0           # in milliseconds, 0 is disabled
+#idle_in_transaction_session_timeout = 0        # in milliseconds, 0 is disabled
 #vacuum_freeze_min_age = 50000000
 #vacuum_freeze_table_age = 150000000
 #vacuum_multixact_freeze_min_age = 5000000
