@@ -1,6 +1,7 @@
 mounts_dynamic_defaults:
   centos:
     mounts_packages_by_fstype:
+      efs: []  # Use efs role instead
       nfs: [nfs-utils]
       none: []  # Bind mount
       fuse.s3fs: []  # Use s3fs role instead
@@ -9,6 +10,7 @@ mounts_dynamic_defaults:
       - nfs
     mounts_packages_by_fstype:
       cifs: [cifs-utils, ntfs-3g]
+      efs: []  # Use efs role instead
       nfs: [nfs-common]
       none: []  # Bind mount
       fuse.s3fs: []  # Use s3fs role instead
