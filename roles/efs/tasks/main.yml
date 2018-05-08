@@ -1,0 +1,54 @@
+# Install EFS file-system
+---
+
+- block:
+    - name: Install EFS build packages
+      package: >
+        name={{ item }} state=present
+      loop: '{{ efs_build_packages }}'
+
+    - name: Clone EFS source code
+      git: >
+        repo=https://github.com/aws/efs-utils.git dest={{ local_source_directory }}/efs force=yes
+        version={{ efs_version }}
+      register: _efs_git
+
+    - name: Set EFS build environment
+      set_fact:
+        efs_build_env: >
+          {{ _efs_git.after }}
+
+    - name: Detect if EFS must be reinstalled
+      command: >
+        cat '{{ local_source_directory }}/efs.build.cfg'
+      changed_when: >
+        efs_build_env|trim != efs_build.stdout|default('')|trim
+      check_mode: no
+      failed_when: no
+      register: efs_build
+
+    - block:
+        - name: Reset EFS build process
+          file: >
+            name={{ local_source_directory }}/efs/build state=absent
+
+        - name: Build EFS from source
+          command: >
+            ./build-deb.sh
+          args:
+            chdir: '{{ local_source_directory }}/efs'
+
+        - find:
+            paths={{ local_source_directory }}/efs/build patterns=*.deb
+          register: _efs_deb_packages
+
+        - name: Install EFS from source
+          apt: >
+            deb={{ (_efs_deb_packages.files|first).path }} state=present
+
+        - name: Save build environment
+          copy: >
+            content={{ efs_build_env }} dest={{ local_source_directory }}/efs.build.cfg
+      when: efs_build is change
+  become: yes
+  tags: [efs, packages]
