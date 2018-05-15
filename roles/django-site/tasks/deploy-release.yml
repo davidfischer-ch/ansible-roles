@@ -22,8 +22,8 @@
 
     - name: Set Application source code ownership
       file: >
-        name={{ djsite_app_directory }}/source owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
-        recurse=yes state=directory
+        name={{ djsite_app_directory }}/source follow=no recurse=yes state=directory
+        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
       become_user: root
 
     - import_tasks: read-config.yml
