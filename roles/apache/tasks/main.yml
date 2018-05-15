@@ -133,8 +133,8 @@
 
     - name: Create the Apache sites logs directory
       file: >
-        name=/var/log/apache2/{{ item.value.name }} owner={{ apache_daemon_user }} group={{ apache_daemon_group }} mode=755
-        recurse=yes state=directory
+        name=/var/log/apache2/{{ item.value.name }} follow=no recurse=yes state=directory
+        owner={{ apache_daemon_user }} group={{ apache_daemon_group }} mode=755
       loop_control:
         label: '{{ item.value.name }}'
       with_dict: '{{ apache_sites }}'

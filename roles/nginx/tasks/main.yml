@@ -180,8 +180,8 @@
 - block:
     - name: Create Nginx directories
       file: >
-        name={{ item.name }} owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
-        state=directory
+        name={{ item.name }} state=directory
+        owner={{ item.owner|default(omit) }} group={{ item.group|default(omit) }} mode=755
       loop:
         - { name: '/etc/nginx/conf.d'        }
         - { name: '/etc/nginx/sites-auth'    }
@@ -280,8 +280,8 @@
 
     - name: Create the Nginx sites logs directory
       file: >
-        name=/var/log/nginx/{{ item.value.name }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755
-        recurse=yes state=directory
+        name=/var/log/nginx/{{ item.value.name }} follow=no recurse=yes state=directory
+        owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }} mode=755
       loop_control:
         label: '{{ item.value.name }}'
       with_dict: '{{ nginx_sites }}'
