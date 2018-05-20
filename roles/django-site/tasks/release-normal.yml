@@ -32,4 +32,5 @@
         msg='Release process failed!'
   become: yes
   become_user: '{{ djsite_daemon_user }}'
+  tags: [django-site, update] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882
   when: djsite_is_master|bool
