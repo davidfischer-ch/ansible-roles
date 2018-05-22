@@ -2,7 +2,7 @@
 
 - name: restart cron
   service: >
-    name=cron state=reloaded
+    name=cron state=restarted
   become: yes
 
 - name: restart celery workers
