@@ -1,6 +1,6 @@
 ---
 
-- name: reload cron
+- name: restart cron
   service: >
     name=cron state=reloaded
   become: yes

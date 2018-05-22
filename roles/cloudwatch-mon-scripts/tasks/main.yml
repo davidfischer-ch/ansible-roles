@@ -32,7 +32,7 @@
             name='Report memory metrics to CloudWatch' minute=*/5
             state="{{ cloudwatch_mon_scripts_report_enabled|bool|ternary('present', 'absent') }}"
             job='{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}'
-          notify: reload cron
+          notify: restart cron
       tags: config
   become: yes
   tags: cloudwatch-mon-scripts

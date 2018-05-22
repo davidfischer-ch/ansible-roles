@@ -213,7 +213,7 @@
         minute=*/5 user={{ djsite_daemon_user }} state=present
       loop_control:
         label: '{{ item.value.name }}'
-      notify: reload cron
+      notify: restart cron
       when: item.value.type == 'beat'
       with_dict: '{{ djsite_celery_workers }}'
   become: yes
