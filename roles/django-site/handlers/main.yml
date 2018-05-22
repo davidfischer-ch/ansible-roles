@@ -1,5 +1,10 @@
 ---
 
+- name: reload cron
+  service: >
+    name=cron state=reloaded
+  become: yes
+
 - name: restart celery workers
   supervisorctl: >
     name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=restarted
