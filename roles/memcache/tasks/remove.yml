@@ -1,0 +1,33 @@
+---
+
+- assert:
+    that:
+      - memcache_log_file.split('/') > 3  # Ensure 'Create memcache directories' will not change /var/log directly
+      - memcache_pid_file.split('/') > 3  # Ensure 'Create memcache directories' will not change /var/run directly
+  tags: [memcache, always]
+
+- name: Stop memcache service
+  service: >
+    name=memcached state=stopped enabled=no
+  become: yes
+  failed_when: _memcache_stop is failed and 'not find' not in _memcache_stop.msg
+  register: _memcache_stop
+  tags: [memcache, services]
+
+- name: Remove memcache packages
+  package: >
+    name={{ item }} state=absent
+  become: yes
+  loop: '{{ memcache_packages }}'
+  tags: [memcache, packages]
+
+- name: Remove memcache files and directories
+  file: >
+    name={{ item }} state=absent
+  loop:
+    - /etc/memcached.conf
+    - /etc/init.d/memcached
+    - '{{ memcache_log_file|dirname }}'
+    - '{{ memcache_pid_file|dirname }}'
+  become: yes
+  tags: [memcache, config]
