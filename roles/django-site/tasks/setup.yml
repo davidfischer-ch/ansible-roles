@@ -61,6 +61,9 @@
             {{ djsite_app_directory }}/test/venv/bin/python manage.py bower_install --traceback -- --config.interactive=false
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
+          changed_when: _djsite_bower_auto is success
+          failed_when: _djsite_bower_auto is failure and 'unrecognized arguments' not in _djsite_bower_auto.stderr
+          register: _djsite_bower_auto
           tags: config
 
         - name: Download web (js) packages with bower
