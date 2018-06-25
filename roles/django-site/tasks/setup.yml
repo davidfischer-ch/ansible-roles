@@ -33,11 +33,13 @@
           copy: >
             src={{ item.path }} dest={{ djsite_app_directory }}/.ssh/{{ item.name }}
             owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=0600
+          diff: not item.hidden|bool
           loop:
-            - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa'     }
-            - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub' }
+            - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa',     hidden: yes }
+            - { path: '{{ djsite_ssh_key_public }}',  name: 'id_rsa.pub', hidden: no  }
           loop_control:
             label: '{{ item.name }}'
+          no_log: item.hidden|bool
 
         - name: Register Application repository RSA key
           known_hosts: >
@@ -171,7 +173,9 @@
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
       changed_when: _djsite_admin is success and 'already exists' not in _djsite_admin.stderr
+      diff: no
       failed_when: _djsite_admin is failure and 'already exists' not in _djsite_admin.stderr
+      no_log: yes
       register: _djsite_admin
       tags: [database, flush-extra]
   become: yes
