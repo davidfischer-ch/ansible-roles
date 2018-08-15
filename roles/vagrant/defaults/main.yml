@@ -12,7 +12,7 @@ vagrant_dynamic_defaults:
     vagrant_from_release: yes
     vagrant_packages:
       - vagrant
-vagrant_machines: {}
+vagrant_machines: []
 vagrant_machines_directory: "/tmp/vagrant-{{ vagrant_machines|to_yaml|hash('md5') }}"
 vagrant_plugins: []  # e.g. vbox-snapshot
 vagrant_update_boxes: yes
