@@ -3,10 +3,11 @@ djsite_release_modes:
   - direct
   - normal
 djsite_role_actions:
-  - manage
-  - setup
   - local-backup
   - local-restore
+  - manage
+  - none
+  - setup
   - update-migrations
 
 djsite_rsync_backup_excludes:  # production -> backup
