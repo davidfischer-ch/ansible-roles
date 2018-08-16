@@ -15,7 +15,7 @@
         chdir: '{{ djsite_app_directory }}/source'
       changed_when: no
       check_mode: no
-      failed_when: _djsite_git_log is failure and 'Not a git' not in _djsite_git_log.stderr
+      failed_when: _djsite_git_log is failure and 'not a git' not in _djsite_git_log.stderr|lower
       register: _djsite_git_log
 
     - name: Set application variables
@@ -29,7 +29,7 @@
         that:
           - djsite_config.configuration_templates is defined
           - djsite_config.custom_applications is defined
-          - djsite_config.python_version in python_versions
+          - python_versions is undefined or djsite_config.python_version in python_versions
           - djsite_config.source_path is defined
   become: yes
   become_user: '{{ djsite_daemon_user }}'
