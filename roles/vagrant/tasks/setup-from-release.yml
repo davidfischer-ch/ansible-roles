@@ -3,7 +3,8 @@
 - block:
     - name: Download Vagrant release {{ vagrant_version }}
       get_url: >
-        url={{ vagrant_release_url }} dest={{ local_source_directory }}/{{ vagrant_release_url|basename }} force=no
+        url={{ vagrant_release_url }} dest={{ local_source_directory }}/{{ vagrant_release_url|basename }}
+        checksum={{ vagrant_release_checksum }} force=no validate_certs={{ vagrant_release_validate_certs|bool }}
       become: yes
 
     - include_tasks: setup-from-release-{{ ansible_pkg_mgr }}.yml
