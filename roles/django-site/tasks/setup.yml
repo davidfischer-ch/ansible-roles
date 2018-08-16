@@ -172,10 +172,16 @@
         echo "from django.contrib.auth.models import User; User.objects.create_superuser('{{ djsite_superuser.name }}', '{{ djsite_superuser.email }}', '{{ djsite_superuser.password }}')" | {{ djsite_app_directory }}/test/venv/bin/python ./manage.py shell
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
-      changed_when: _djsite_admin is success and 'already exists' not in _djsite_admin.stderr
+      changed_when: >
+        _djsite_admin is success
+        and 'already exists' not in _djsite_admin.stderr
+        and 'IntegrityError' not in _djsite_admin.stderr
       diff: no
-      failed_when: _djsite_admin is failure and 'already exists' not in _djsite_admin.stderr
-      no_log: yes
+      failed_when: >
+        _djsite_admin is failure
+        and 'already exists' not in _djsite_admin.stderr
+        and 'IntegrityError' not in _djsite_admin.stderr
+      # no_log: yes
       register: _djsite_admin
       tags: [database, flush-extra]
   become: yes
