@@ -50,6 +50,7 @@
             PGPASSWORD={{ djsite_database_password }} \
               pg_restore \
                 --clean --no-acl --no-owner \
+                --exit-on-error --single-transaction \
                 --dbname {{ djsite_database_name }} \
                 --host {{ djsite_database_host }} \
                 --port {{ djsite_database_port }} \
