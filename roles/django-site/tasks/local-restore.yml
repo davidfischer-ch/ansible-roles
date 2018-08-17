@@ -45,34 +45,38 @@
       when: djsite_is_master|bool
 
     - block:
-        - name: Restore Website database
-          shell: >
-            PGPASSWORD={{ djsite_database_password }} \
-              pg_restore \
-                --clean --no-acl --no-owner \
-                --exit-on-error --single-transaction \
-                --dbname {{ djsite_database_name }} \
-                --host {{ djsite_database_host }} \
-                --port {{ djsite_database_port }} \
-                --username {{ djsite_database_user }} \
-                {{ _tmp_directory }}/{{ _dump_format.path }}
-          register: djsite_db_restore
+        - block:
+            - name: Restore Website database
+              shell: >
+                PGPASSWORD={{ djsite_database_password }} \
+                  pg_restore \
+                    --clean --no-acl --no-owner \
+                    --exit-on-error --single-transaction \
+                    --dbname {{ djsite_database_name }} \
+                    --host {{ djsite_database_host }} \
+                    --port {{ djsite_database_port }} \
+                    --username {{ djsite_database_user }} \
+                    {{ _tmp_directory }}/{{ _dump_format.path }}
+              register: djsite_db_restore
+
+            - debug: var=_socialease_db_restore.stdout_lines
           when: djsite_database_dump_format != 'plain_text'
 
-        - name: Restore Website database
-          shell: >
-            PGPASSWORD={{ djsite_database_password }} \
-              psql \
-                --set ON_ERROR_STOP=on --single-transaction \
-                --dbname {{ djsite_database_name }} \
-                --host {{ djsite_database_host }} \
-                --port {{ djsite_database_port }} \
-                --username {{ djsite_database_user }} \
-                --file {{ _tmp_directory }}/{{ _dump_format.path }}
-          register: _djsite_db_restore
-          when: djsite_database_dump_format == 'plain_text'
+        - block:
+            - name: Restore Website database
+              shell: >
+                PGPASSWORD={{ djsite_database_password }} \
+                  psql \
+                    --set ON_ERROR_STOP=on --single-transaction \
+                    --dbname {{ djsite_database_name }} \
+                    --host {{ djsite_database_host }} \
+                    --port {{ djsite_database_port }} \
+                    --username {{ djsite_database_user }} \
+                    --file {{ _tmp_directory }}/{{ _dump_format.path }}
+              register: _djsite_db_restore
 
-        - debug: var=_socialease_db_restore.stdout_lines
+            - debug: var=_socialease_db_restore.stdout_lines
+          when: djsite_database_dump_format == 'plain_text'
       tags: database
       when: djsite_is_master|bool
 

@@ -19,6 +19,7 @@
             PGPASSWORD={{ djsite_database_password }} \
               pg_dump {{ djsite_database_name }} \
                 --no-acl --no-owner \
+                {% if djsite_database_dump_format == 'plain_text' %}--clean{%endif %} \
                 --file {{ _tmp_directory }}/{{ _backup_format.path }} \
                 --format {{ _backup_format.code }} \
                 --host {{ djsite_database_host }} \
