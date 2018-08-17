@@ -13,13 +13,17 @@
       tags: code
 
     - block:
+        - set_fact:
+            _dump_format: '{{ djsite_database_dump_formats[djsite_database_dump_format] }}'
+
         - name: Create temporary directory
           file: >
             name={{ _tmp_directory }} state=directory
 
         - name: Transfer Website database dump
           synchronize: >
-            src={{ djsite_local_restore_directory }}/db.sql dest={{ _tmp_directory }}/db.sql
+            src={{ djsite_local_restore_directory }}/{{ _dump_format.path }}
+            dest={{ _tmp_directory }}/{{ _dump_format.path }}
       tags: database
       when: djsite_is_master|bool
 
@@ -40,12 +44,34 @@
       tags: data
       when: djsite_is_master|bool
 
-    - name: Restore Website database
-      shell: >
-        PGPASSWORD={{ djsite_database_password }} pg_restore --clean \
-          --dbname {{ djsite_database_name }} --no-acl --no-owner \
-          --host {{ djsite_database_host }} --port {{ djsite_database_port }} \
-          --username {{ djsite_database_user }} {{ _tmp_directory }}/db.sql
+    - block:
+        - name: Restore Website database
+          shell: >
+            PGPASSWORD={{ djsite_database_password }} \
+              pg_restore \
+                --clean --no-acl --no-owner \
+                --dbname {{ djsite_database_name }} \
+                --host {{ djsite_database_host }} \
+                --port {{ djsite_database_port }} \
+                --username {{ djsite_database_user }} \
+                {{ _tmp_directory }}/{{ _dump_format.path }}
+          register: djsite_db_restore
+          when: djsite_database_dump_format != 'plain_text'
+
+        - name: Restore Website database
+          shell: >
+            PGPASSWORD={{ djsite_database_password }} \
+              psql \
+                --set ON_ERROR_STOP=on --single-transaction \
+                --dbname {{ djsite_database_name }} \
+                --host {{ djsite_database_host }} \
+                --port {{ djsite_database_port }} \
+                --username {{ djsite_database_user }} \
+                --file {{ _tmp_directory }}/{{ _dump_format.path }}
+          register: _djsite_db_restore
+          when: djsite_database_dump_format == 'plain_text'
+
+        - debug: var=_socialease_db_restore.stdout_lines
       tags: database
       when: djsite_is_master|bool
 

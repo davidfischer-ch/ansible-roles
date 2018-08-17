@@ -1,3 +1,16 @@
+djsite_database_dump_formats:
+  custom:
+    code: c
+    path: db.psql
+  directory:
+    code: d
+    path: db/
+  plain_text:
+    code: p
+    path: db.sql
+  tar:
+    code: t
+    path: db.tar
 djsite_media_file_mode: ugo=rwX  # FIXME maybe disallow writing to others on some sub-directories, ?
 djsite_release_modes:
   - direct

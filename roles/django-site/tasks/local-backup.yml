@@ -8,6 +8,7 @@
     - block:
         - set_fact:
             _tmp_directory: '/tmp/djsite-{{ djsite_instance_name }}-backup'
+            _backup_format: '{{ djsite_database_dump_formats[djsite_database_dump_format] }}'
 
         - name: Create temporary directory
           file: >
@@ -15,10 +16,14 @@
 
         - name: Dump Website database
           shell: >
-            PGPASSWORD={{ djsite_database_password }} pg_dump {{ djsite_database_name }} \
-              --file {{ _tmp_directory }}/db.sql --format c --no-acl --no-owner \
-              --host {{ djsite_database_host }} --port {{ djsite_database_port }} \
-              --username {{ djsite_database_user }}
+            PGPASSWORD={{ djsite_database_password }} \
+              pg_dump {{ djsite_database_name }} \
+                --no-acl --no-owner \
+                --file {{ _tmp_directory }}/{{ _backup_format.path }} \
+                --format {{ _backup_format.code }} \
+                --host {{ djsite_database_host }} \
+                --port {{ djsite_database_port }} \
+                --username {{ djsite_database_user }}
 
         - name: Backup Website database dump locally
           synchronize: >
