@@ -169,7 +169,7 @@
 
     - name: Create the super-user
       shell: >
-        echo "from django.contrib.auth.models import User; User.objects.create_superuser('{{ djsite_superuser.name }}', '{{ djsite_superuser.email }}', '{{ djsite_superuser.password }}')" | {{ djsite_app_directory }}/test/venv/bin/python ./manage.py shell
+        echo "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('{{ djsite_superuser.name }}', '{{ djsite_superuser.email }}', '{{ djsite_superuser.password }}')" | {{ djsite_app_directory }}/test/venv/bin/python ./manage.py shell
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
       changed_when: >
