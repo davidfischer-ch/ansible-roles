@@ -2,7 +2,38 @@
 
 You must make sure your nginx host(s) are authorized to access the proxy-ed S3 bucket.
 
-If you do not want to use an unmaintained nginx module for S3, then you can write a policy like:
+If you do not want to use an unmaintained nginx module for S3, there are (at least) two options:
+
+1. VPC Endpoint + Bucket Policy (preferred)
+
+With a VPC Endpoint to S3, you can restrict access to the VPC or the VPC Endpoint itself.
+
+{
+    "Version": "2012-10-17",
+    "Id": "AuthorizeNginxProxy",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:Get*",
+            "Resource": [
+                "arn:aws:s3:::your-bucket-name",
+                "arn:aws:s3:::your-bucket-name/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "aws:sourceVpce": "your-vpc-endpoint-id"
+                }
+            }
+        }
+    ]
+}
+
+Reference: https://stackoverflow.com/a/44378622/2116569
+
+2. Static Hosting + EIP White-Listing (not recommended)
+
+Otherwise then you can write a policy like:
 {
     "Version": "2012-10-17",
     "Id": "AuthorizeNginxProxy",
