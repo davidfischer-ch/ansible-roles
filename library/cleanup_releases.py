@@ -36,6 +36,11 @@ options:
     description:
       - The regular expression to look for in the name of the releases directories.
         Uses Python regular expressions; see U(http://docs.python.org/2/library/re.html).
+  skip_missing:
+    required: false
+    default: false
+    description:
+      - Skip cleanup if directory is missing.
 """
 
 EXAMPLES = r"""
@@ -50,23 +55,40 @@ def main():
             directory=dict(required=True, type='path'),
             keep=dict(default=None, type='int'),
             ok_flag=dict(default=None),
-            regexp=dict(required=True)
+            regexp=dict(required=True),
+            skip_missing=dict(required=False, default=False, type='bool')
         ),
         supports_check_mode=True
     )
-    directory, keep, ok_flag, regexp = (module.params[k] for k in ('directory', 'keep', 'ok_flag', 'regexp'))
+    directory, keep, ok_flag, regexp, skip_missing = (
+        module.params[k] for k in ('directory', 'keep', 'ok_flag', 'regexp', 'skip_missing')
+    )
     regexp = re.compile(regexp)
     if keep is not None and keep < 1:
         module.fail_json(msg="'keep' should be a positive number")
 
-    releases, remove_releases = set(os.path.join(directory, r) for r in os.listdir(directory) if regexp.match(r)), set()
+    try:
+        releases = {os.path.join(directory, r) for r in os.listdir(directory) if regexp.match(r)}
+    except OSError:
+        if not skip_missing:
+            raise
+        releases = set()
+    remove_releases = set()
     if ok_flag is not None:
         remove_releases = set(r for r in releases if not os.path.exists(os.path.join(r, ok_flag)))
         releases = releases - remove_releases
     if keep is not None:
         remove_releases.update(sorted(releases, reverse=True)[keep:])
     remove_releases = sorted(remove_releases, reverse=True)  # For cosmetic reasons
-    diff = [{'after': 'absent', 'after_header': r, 'before': get_state(r), 'before_header': r} for r in remove_releases]
+    diff = [
+        {
+            'after': 'absent',
+            'after_header': r,
+            'before': get_state(r),
+            'before_header': r
+        }
+        for r in remove_releases
+    ]
     if not module.check_mode:
         for release in remove_releases:
             if os.path.isdir(release):
@@ -88,6 +110,7 @@ def get_state(b_path):
         # could be many other things, but defaulting to file
         return 'file'
     return 'absent'
+
 
 if __name__ == '__main__':
     main()
