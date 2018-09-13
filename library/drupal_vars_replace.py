@@ -86,5 +86,6 @@ def set_drupal_variable(drush, directory, name, value):
     if returncode:
         raise ValueError(name, value, stdout, stderr)
 
+
 if __name__ == '__main__':
     main()

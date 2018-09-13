@@ -85,5 +85,6 @@ def toggle_drupal_modules(drush, directory, enable=None, disable=None, simulate=
                 subprocess.check_call([drush, action, '-y'] + modules_for_action, cwd=directory)
     return updated_modules
 
+
 if __name__ == '__main__':
     main()

@@ -63,7 +63,8 @@ EXAMPLES = r"""
 
 def main():
     # See https://newrelic.com/infrastructure/pricing (CPU Cores + GB RAM) x hours used
-    module = AnsibleModule(argument_spec=dict(
+    module = AnsibleModule(
+        argument_spec=dict(
             hostvars=dict(required=True, type='dict'),
             defaults=dict(required=True, type='dict'),
             lookup_keys=dict(required=False, default=LOOKUP_KEYS, type='list'),
@@ -95,6 +96,7 @@ def main():
     outputs.append([lookup_keys, facts.copy()])
     facts['dynamic_defaults_outputs'] = outputs
     module.exit_json(ansible_facts=facts, changed=False)
+
 
 if __name__ == '__main__':
     main()

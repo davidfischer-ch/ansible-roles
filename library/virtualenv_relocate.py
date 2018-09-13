@@ -97,5 +97,6 @@ def relocate(source_directory, destination_directory, encoding='utf-8'):
                 f.write(updated_content)
                 f.truncate()
 
+
 if __name__ == '__main__':
     main()

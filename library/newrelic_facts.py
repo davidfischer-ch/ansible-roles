@@ -27,10 +27,16 @@ EXAMPLES = r"""
 
 def main():
     # See https://newrelic.com/infrastructure/pricing (CPU Cores + GB RAM) x hours used
-    module = AnsibleModule(argument_spec=dict(hours=dict(default=730, type='int')), supports_check_mode=True)
+    module = AnsibleModule(
+        argument_spec=dict(
+            hours=dict(default=730, type='int')
+        ),
+        supports_check_mode=True
+    )
     module.exit_json(changed=False, ansible_facts=dict(
         newrelic_cu=(multiprocessing.cpu_count() + psutil.virtual_memory().total // 1000 ** 3) * module.params['hours']
     ))
+
 
 if __name__ == '__main__':
     main()

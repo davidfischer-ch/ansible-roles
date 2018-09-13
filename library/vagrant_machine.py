@@ -128,5 +128,6 @@ def get_state(directory, name, wait=False, timeout=120):
             raise RuntimeError('Timed-out during a transition, current state: %s.' % state)
         time.sleep(1)
 
+
 if __name__ == '__main__':
     main()
