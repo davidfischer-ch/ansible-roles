@@ -1,4 +1,4 @@
-    ssl on;
+    {% if item.value.ssl_use_directive|default(true)|bool %}ssl on;{% endif %}
     ssl_certificate     {{ item.value.ssl_crt_file|default('sites-ssl/' + item.value.name + '.crt') }};
     ssl_certificate_key {{ item.value.ssl_key_file|default('sites-ssl/' + item.value.name + '.key') }};
 
