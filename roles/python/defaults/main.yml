@@ -1,5 +1,4 @@
 python_dynamic_defaults:
-
   centos:
     python_build_packages:
       - bzip2-devel
@@ -19,18 +18,43 @@ python_dynamic_defaults:
     python_versions:
       - '2.7'
       - '3.6'
-
   debian-lenny-sid:
     python_packages:
       - python-dev
     python_versions:
       - '2.5'
-
   debian-8.*:
     python_versions:
       - '2.7'
       - '3.4'
-
+  linux mint-19:
+    python_versions:
+      - '2.7'
+      - '3.6'
+  ubuntu-12.*:
+    python_versions:
+      - '2.7'
+      # - '3.2' pip do not support it anymore
+  ubuntu-14.*:
+    python_versions:
+      - '2.7'
+      - '3.4'
+  ubuntu-15.*:
+    python_versions:
+      - '2.7'
+      - '3.4'
+  ubuntu-16.*:
+    python_versions:
+      - '2.7'
+      - '3.5'
+  ubuntu-17.*:
+    python_versions:
+      - '2.7'
+      - '3.6'
+  ubuntu-18.*:
+    python_versions:
+      - '2.7'
+      - '3.6'
   linux:
     python_build_packages:
       - dpkg-dev
@@ -55,46 +79,9 @@ python_dynamic_defaults:
     python_versions:
       - '2.7'
       - '3.5'
-
-  linux mint-19:
-    python_versions:
-      - '2.7'
-      - '3.6'
-
   macosx:
     python_versions:
       - '2.7'
-
-  ubuntu-12.*:
-    python_versions:
-      - '2.7'
-      # - '3.2' pip do not support it anymore
-
-  ubuntu-14.*:
-    python_versions:
-      - '2.7'
-      - '3.4'
-
-  ubuntu-15.*:
-    python_versions:
-      - '2.7'
-      - '3.4'
-
-  ubuntu-16.*:
-    python_versions:
-      - '2.7'
-      - '3.5'
-
-  ubuntu-17.*:
-    python_versions:
-      - '2.7'
-      - '3.6'
-
-  ubuntu-18.*:
-    python_versions:
-      - '2.7'
-      - '3.6'
-
 python_build_flags: []
   # - '--enable-optimizations'
 python_default_version: '{{ python_versions|first }}'

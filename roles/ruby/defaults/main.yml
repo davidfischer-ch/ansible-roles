@@ -1,13 +1,10 @@
 ruby_dynamic_defaults:
-
   centos:
     ruby_build_packages:
       - openssl-devel
-
   linux:
     ruby_build_packages:
       - libssl-dev
-
 ruby_build_cfg: ''
 ruby_checksum: 93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c
 ruby_packages: []

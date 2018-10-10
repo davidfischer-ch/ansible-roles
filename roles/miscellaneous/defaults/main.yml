@@ -6,7 +6,6 @@ miscellaneous_dynamic_defaults:
   yum:
     package_manager_tools:
       - yum-utils
-
   centos:
     ntp_service: ntpd
     system_administration_tools:

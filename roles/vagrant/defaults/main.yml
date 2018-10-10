@@ -5,13 +5,13 @@ vagrant_dynamic_defaults:
     vagrant_release_validate_certs: no
   yum:
     vagrant_release_url: 'https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.rpm'
+  linux:
+    vagrant_from_release: yes
+    vagrant_packages:
+      - vagrant
   macosx:
     vagrant_from_release: no
     vagrant_release_url: 'https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.dmg'
-    vagrant_packages:
-      - vagrant
-  linux:
-    vagrant_from_release: yes
     vagrant_packages:
       - vagrant
   default:

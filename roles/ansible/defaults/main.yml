@@ -1,5 +1,4 @@
 the_ansible_dynamic_defaults:
-
   centos:
     the_ansible_packages:
       # - keychain
@@ -9,7 +8,6 @@ the_ansible_dynamic_defaults:
       - openssl-devel
       - sshpass
       - xz-devel
-
   linux:
     the_ansible_packages:
       - keychain
@@ -19,7 +17,6 @@ the_ansible_dynamic_defaults:
       - libssl-dev
       - openssl
       - sshpass
-
 the_ansible_github_username: davidfischer-ch
 the_ansible_modules: []
 the_ansible_modules_packages:
