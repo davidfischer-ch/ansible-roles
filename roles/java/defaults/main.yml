@@ -1,4 +1,6 @@
 java_dynamic_defaults:
+  linux-mint-19:
+    java_apt_repository: ''
   ubuntu-17.10:
     java_apt_repository: ''
   default:

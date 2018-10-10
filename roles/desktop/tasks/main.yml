@@ -8,6 +8,7 @@
     - deb
     - deb-src
   tags: [desktop, config]
+  when: ansible_distribution == 'Ubuntu'
 
 - block:
     # Miscellaneous
@@ -29,6 +30,7 @@
         - ubuntu-restricted-extras
         - libavcodec-extra
         - ubuntu-standard
+      when: ansible_distribution == 'Ubuntu'
 
     - name: Install office packages
       package: >
