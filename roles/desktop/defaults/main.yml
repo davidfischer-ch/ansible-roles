@@ -3,7 +3,7 @@ file_utility_packages:
   - dos2unix
   - odt2txt
   - pdfshuffler
-  - pyrenamer
+  #- pyrenamer
   - tofrodos
   - unoconv
 miscellaneous_packages:
