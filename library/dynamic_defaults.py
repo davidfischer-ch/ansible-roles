@@ -76,11 +76,11 @@ def main():
         module.params[k] for k in ('hostvars', 'defaults', 'lookup_keys', 'must_match')
     )
     try:
-        lookup_keys = tuple(k.format(**hostvars).replace('/', '-').lower() for k in lookup_keys)
+        lookup_keys = tuple(clean_key(k.format(**hostvars)) for k in lookup_keys)
     except AttributeError:
         # Python 2.5 - 'str' object has no attribute 'format'
         lookup_keys = tuple(
-            (k.replace('{', '%(').replace('}', ')s') % hostvars).replace('/', '-').lower() for k in lookup_keys
+            clean_key(k.replace('{', '%(').replace('}', ')s') % hostvars) for k in lookup_keys
         )
     facts, match = {}, False
     for lookup_key in lookup_keys:
@@ -97,6 +97,9 @@ def main():
     facts['dynamic_defaults_outputs'] = outputs
     module.exit_json(ansible_facts=facts, changed=False)
 
+
+def clean_key(key):
+    return key.replace('/', '-').replace(' ', '-').lower()
 
 if __name__ == '__main__':
     main()
