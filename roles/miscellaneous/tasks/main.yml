@@ -29,7 +29,20 @@
       failed_when: _tcp_sack is failure and 'No such file' not in _tcp_sack.msg
       register: _tcp_sack
   become: yes
-  tags: [miscellaneous, sysctl, config]
+  tags: [miscellaneous, network, sysctl, config]
+
+- block:
+    - name: Remove default WiFi PowerSafe Configuration
+      file: >
+        name=/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf state=absent
+      notify: restart network manager
+
+    - name: Configure WiFi PowerSafe Mode
+      template: >
+        src=wifi.powersave.conf.j2 dest=/etc/NetworkManager/conf.d/ansible-role-miscellaneous-wifi-powersafe.conf
+      notify: restart network manager
+  become: yes
+  tags: [miscellaneous, network, config]
 
 - include_tasks: setup-locale-{{ ansible_pkg_mgr }}.yml
   tags: [miscellaneous, locale, config]

@@ -76,6 +76,7 @@ extra_apt_repositories: []
 extra_packages: []
 locale: ''
 net_tcp_sack: no  # for security reasons (http://serverfault.com/questions/10955/when-to-turn-tcp-sack-off)
+net_wifi_powersafe: 2  # avoid slooooooooowwww network https://forums.linuxmint.com/viewtopic.php?t=242927
 timezone: ''
 upgrade_packages: yes
 upgrade_packages_cache_valid_time: 3600
