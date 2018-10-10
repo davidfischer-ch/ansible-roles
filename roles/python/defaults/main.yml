@@ -56,6 +56,11 @@ python_dynamic_defaults:
       - '2.7'
       - '3.5'
 
+  linux mint-19:
+    python_versions:
+      - '2.7'
+      - '3.6'
+
   macosx:
     python_versions:
       - '2.7'

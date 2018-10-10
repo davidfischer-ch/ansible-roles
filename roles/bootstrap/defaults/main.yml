@@ -6,5 +6,6 @@ sudoers_secure_paths:
   - /usr/local/bin
   - /sbin
   - /bin
+  - /snap/bin
   - /usr/sbin
   - /usr/bin
