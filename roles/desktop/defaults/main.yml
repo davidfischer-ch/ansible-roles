@@ -28,6 +28,7 @@ system_packages:
 virtualization_packages:
   - virtualbox
   - virtualbox-guest-additions-iso
+  - virtualbox-qt
 web_packages:
   - chromium-browser
   - chromium-chromedriver
