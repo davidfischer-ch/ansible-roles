@@ -1,0 +1,13 @@
+---
+
+- name: Configure GRUB
+  lineinfile: >
+    dest=/etc/default/grub regexp=^#?{{ item.key|upper }}\s*=.*
+    line='{{ item.key|upper }}={{ item.value }}' state=present
+  become: yes
+  loop_control:
+    label: '{{ item.key }}: {{ item.value }}'
+  notify: update grub
+  tags: [grub, config]
+  when: item.key is match('^grub_.+')
+  with_dict: '{{ hostvars[inventory_hostname] }}'
