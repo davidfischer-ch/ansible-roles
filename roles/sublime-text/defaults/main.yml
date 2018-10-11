@@ -1,4 +1,3 @@
 sublime_text_apt_channel: "{{ sublime_text_has_license|bool|ternary('dev', 'stable') }}"
 sublime_text_apt_repository: 'deb https://download.sublimetext.com/ apt/{{ sublime_text_apt_channel }}/'
 sublime_text_has_license: no  # If like me you paid a license, set to yes
-sublime_text_install:
