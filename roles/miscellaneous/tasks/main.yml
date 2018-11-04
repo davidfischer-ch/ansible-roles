@@ -32,15 +32,22 @@
   tags: [miscellaneous, network, sysctl, config]
 
 - block:
+    - name: Check Network Manager configuration directory exists
+      stat: >
+        path=/etc/NetworkManager
+      register: _network_manager_config
+
     - name: Remove default WiFi PowerSafe Configuration
       file: >
         name=/etc/NetworkManager/conf.d/default-wifi-powersave-on.conf state=absent
       notify: restart network manager
+      when: _network_manager_config.stat.exists
 
     - name: Configure WiFi PowerSafe Mode
       template: >
         src=wifi.powersave.conf.j2 dest=/etc/NetworkManager/conf.d/ansible-role-miscellaneous-wifi-powersafe.conf
       notify: restart network manager
+      when: _network_manager_config.stat.exists
   become: yes
   tags: [miscellaneous, network, config]
 
