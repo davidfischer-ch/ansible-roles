@@ -34,7 +34,7 @@
 - block:
     - name: Check Network Manager configuration directory exists
       stat: >
-        path=/etc/NetworkManager
+        path=/etc/NetworkManager/conf.d
       register: _network_manager_config
 
     - name: Remove default WiFi PowerSafe Configuration
