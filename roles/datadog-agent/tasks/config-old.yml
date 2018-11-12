@@ -1,0 +1,20 @@
+
+- block:
+    - name: Configure Datadog agent
+      template:
+        src: datadog.conf.j2
+        dest: /etc/dd-agent/datadog.conf
+        mode: 0644
+      notify: reload datadog-agent
+
+    - name: Configure Datadog agent checks
+      copy:
+        content: '{{ item.value|to_yaml }}'
+        dest: /etc/dd-agent/conf.d/{{ item.key }}.yaml
+        mode: 0644
+      loop_control:
+        label: '{{ item.key }}'
+      notify: reload datadog-agent
+      with_dict: '{{ datadog_agent_checks }}'
+  become: yes
+  tags: [datadog-agent, config]  # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

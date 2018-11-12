@@ -45,7 +45,7 @@ default_integration_http_timeout: {{ datadog_agent_default_integration_http_time
 # create_dd_check_tags: no
 
 # Collect AWS EC2 custom tags as agent tags (requires an IAM role associated with the instance)
-# collect_ec2_tags: no
+collect_ec2_tags: {{ datadog_agent_collect_ec2_tags|bool|ternary('yes', 'no') }}
 # Incorporate security-groups into tags collected from AWS EC2
 # collect_security_groups: no
 

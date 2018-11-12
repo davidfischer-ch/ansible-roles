@@ -8,44 +8,43 @@
 
 - block:
     - name: Register Datadog agent apt key
-      apt_key: >
-        keyserver=keyserver.ubuntu.com id=382E94DE state=present
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 382E94DE
+        state: present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Datadog agent apt repository
-      apt_repository: >
-        repo={{ datadog_agent_apt_repository }} filename=ansible_roles_datadog_agent update_cache=yes state=present
+      apt_repository:
+        repo: '{{ datadog_agent_apt_repository }}'
+        filename: ansible_roles_datadog_agent
+        update_cache: yes
+        state: present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Datadog agent packages
-      package: >
-        name={{ item }} state=present
+      package:
+        name: '{{ item }}'
+        state: present
       loop: '{{ datadog_agent_packages }}'
   become: yes
   tags: [datadog-agent, packages]
 
 - block:
     - name: Configure Datadog agent groups
-      user: >
-        name=dd-agent createhome=no groups={{ datadog_agent_groups }}
+      user:
+        name: dd-agent
+        createhome: no
+        groups: '{{ datadog_agent_groups }}'
 
-    - name: Configure Datadog agent
-      template: >
-        src=datadog.conf.j2 dest=/etc/dd-agent/datadog.conf mode=644
-      notify: reload datadog-agent
-
-    - name: Configure Datadog agent checks
-      copy: >
-        content={{ item.value|to_yaml }} dest=/etc/dd-agent/conf.d/{{ item.key }}.yaml mode=644
-      loop_control:
-        label: '{{ item.key }}'
-      notify: reload datadog-agent
-      with_dict: '{{ datadog_agent_checks }}'
+    - include_tasks: config-{{ datadog_agent_config_version }}.yml
   become: yes
   tags: [datadog-agent, config]
 
 - name: Start Datadog agent service
-  service: >
-    name=datadog-agent state=started enabled=yes
+  service:
+    name: datadog-agent
+    state: started
+    enabled: yes
   become: yes
   tags: [datadog-agent, services]
