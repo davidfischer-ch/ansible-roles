@@ -1,0 +1,17 @@
+---
+
+- block:
+    - name: Disable CloudWatch logs agent
+      service: >
+        name=awslogs state=stopped enabled=no
+      tags: services
+
+    - name: Remove CloudWatch logs agent
+      file: >
+        path={{ item }} state=absent
+      loop:
+        - '{{ local_source_directory }}/awslogs-agent-setup-{{ cloudwatch_logs_agent_version }}.py'
+        - /etc/awslogs/
+      tags: packages
+  become: yes
+  tags: cloudwatch-logs-agent
