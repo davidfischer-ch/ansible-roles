@@ -70,6 +70,7 @@ class FilterModule(object):
             'oldest_ec2_snapshots': oldest_ec2_snapshots
         }
 
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
