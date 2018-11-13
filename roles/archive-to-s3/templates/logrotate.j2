@@ -1,0 +1,12 @@
+{{ archive_to_s3_log_directory }}/*.log {
+       daily
+       dateext
+       missingok
+       rotate {{ archive_to_s3_log_rotations_max_count|int }}
+       compress
+       delaycompress
+       nomail
+       notifempty
+       create 644 root root
+       sharedscripts
+}

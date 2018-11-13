@@ -1,0 +1,61 @@
+---
+
+- block:
+    - assert:
+        that:
+          - archive_to_s3_config is defined
+          - archive_to_s3_execute_at is defined
+      tags: always
+
+    - name: Install Archive to S3 Python packages
+      pip:
+        name: '{{ item }}'
+        executable: pip3
+        state: present
+      loop: '{{ archive_to_s3_python_packages }}'
+      become: yes
+      tags: packages
+
+    - name: Install Archive to S3
+      template:
+        src: process.j2
+        dest: /usr/local/bin/archive_to_s3.py
+        owner: root
+        group: root
+        mode: 0775
+      become: yes
+      tags: update
+
+    - block:
+        - name: Create Archive to S3 directories
+          file:
+            name: '{{ item }}'
+            owner: root
+            group: root
+            mode: 775
+            state: directory
+          loop:
+            - '{{ archive_to_s3_config_directory }}'
+            - '{{ archive_to_s3_log_directory }}'
+
+        - name: Configure Archive to S3
+          copy:
+            content: '{{ archive_to_s3_config|to_yaml }}'
+            dest: '{{ archive_to_s3_config_directory }}/config.yml'
+            mode: 0644
+
+        - name: Toggle Archive to S3 cron task
+          cron:
+            name: Execute archive-to-s3 cron task
+            job: '/usr/local/bin/archive_to_s3.py --config {{ archive_to_s3_config_directory }}/config.yml --verbosity {{ archive_to_s3_verbosity|int }} >> {{ archive_to_s3_log_directory }}/process.log'
+            minute: 0
+            hour: '{{ archive_to_s3_execute_at }}'
+            user: root
+            state: '{{ item }}'
+          loop:
+            - "{{ archive_to_s3_enabled|bool|ternary('present', 'absent') }}"
+          notify: restart cron
+      become: yes
+      tags: config
+  tags: archive-to-s3
+  when: ec2_dns_name is defined or ansible_ec2_hostname is defined or not archive_to_s3_only_on_ec2|bool
