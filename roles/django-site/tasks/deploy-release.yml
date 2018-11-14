@@ -12,11 +12,19 @@
       until: _djsite_git is success
 
     - name: Copy Application source code
-      synchronize: >
-        src={{ djsite_repository_url }}/ dest={{ djsite_app_directory }}/source/
-        archive=yes checksum=yes delete=yes
-      args:
-        rsync_opts: ['--chown', '{{ djsite_daemon_user }}:{{ djsite_daemon_group }}']
+      synchronize:
+        src: '{{ djsite_repository_url }}/'
+        dest: '{{ djsite_app_directory }}/source/'
+        archive: yes
+        checksum: yes
+        delete: yes
+        rsync_opts:
+          - --chown
+          - '{{ djsite_daemon_user }}:{{ djsite_daemon_group }}'
+          - --exclude
+          - __pycache__/
+          - --exclude
+          - '*.pyc'
       become_user: root
       when: djsite_repository_is_local|bool
 
