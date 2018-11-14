@@ -1,5 +1,5 @@
 # Install node using the official repository
-# https://deb.nodesource.com/setup_6.x
+# https://deb.nodesource.com/setup_6.x -> 8.x
 ---
 
 - block:
