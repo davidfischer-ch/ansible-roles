@@ -2,6 +2,8 @@
 
 import itertools
 
+from ansible import errors
+
 
 def chunk(objects, length, of_type=list):
     """
@@ -38,6 +40,13 @@ def map_items(items, key, **defaults):
         yield item_dict
 
 
+def really_mandatory(item):
+    from jinja2.runtime import Undefined
+    if isinstance(item, Undefined) or not item:
+        raise errors.AnsibleFilterError('Mandatory variable is empty or not defined.')
+    return item
+
+
 def ec2_group_rules(cidr_ips, **defaults):
     for cidr_ip in cidr_ips:
         rule = defaults.copy()
@@ -65,6 +74,7 @@ class FilterModule(object):
             'enumerate': enumerate_,
             'format_items': format_items,
             'map_items': map_items,
+            'really_mandatory': really_mandatory,
             'ec2_group_rules': ec2_group_rules,
             'ec2_vpc_routes': ec2_vpc_routes,
             'oldest_ec2_snapshots': oldest_ec2_snapshots
