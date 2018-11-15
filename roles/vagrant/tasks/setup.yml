@@ -52,9 +52,12 @@
       when: _vagrant_outdated is change
 
     - name: Provision machines
-      vagrant_machine: >
-        chdir={{ vagrant_machines_directory }} name={{ item.name }} provider={{ item.provider }} state=running
-        timeout={{ item.timeout|int if item.timeout is defined else omit }}
+      vagrant_machine:
+        chdir: '{{ vagrant_machines_directory }}'
+        name: '{{ item.name }}'
+        provider: '{{ item.provider }}'
+        state: running
+        timeout: '{{ item.timeout|int if item.timeout is defined else omit }}'
       loop: '{{ vagrant_machines }}'
       loop_control:
         label: '{{ item.name }}'
@@ -62,8 +65,9 @@
   always:
     # FIXME less verbose output https://github.com/ansible/ansible/issues/5564
     - name: Cleanup machines SSH authentication footprints
-      known_hosts: >
-        name={{ item.item.host_public }} state=absent
+      known_hosts:
+        name: '{{ item.item.host_public }}'
+        state: absent
       loop: '{{ _vagrant_provision.results|default([]) }}'
       loop_control:
         label: '{{ item.item.name }}'

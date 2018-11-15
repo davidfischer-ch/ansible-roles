@@ -28,19 +28,22 @@
   when: _aws_schedule_policy is change
 
 - name: Create temporary directory
-  file: >
-    name=/tmp/aws-schedule/{{ aws_schedule_environment }} state=directory
+  file:
+    name: /tmp/aws-schedule/{{ aws_schedule_environment }}
+    state: directory
 
 - name: Generate the resources scheduling lambda functions
-  template: >
-    src={{ item.name }}.py.j2
-    dest=/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.py
+  template:
+    src: '{{ item.name }}.py.j2'
+    dest: /tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.py
   loop: '{{ aws_schedule_functions }}'
 
 - name: Archive the resources scheduling lambda functions
-  archive: >
-    path=['/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.py']
-    dest=/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.zip format=zip
+  archive:
+    path:
+      - '/tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.py'
+    dest: /tmp/aws-schedule/{{ aws_schedule_environment }}/{{ item.name }}.zip
+    format: zip
   loop: '{{ aws_schedule_functions }}'
 
 - name: Deploy the resources scheduling lambda functions

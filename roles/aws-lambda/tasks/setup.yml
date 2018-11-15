@@ -34,14 +34,18 @@
   when: _aws_lambda_policies is change
 
 - name: Create temporary directory
-  file: >
-    name=/tmp/aws-lambda/{{ aws_lambda_environment }} state=directory
+  file:
+    name: /tmp/aws-lambda/{{ aws_lambda_environment }}
+    state: directory
 
 - block:
     - name: Synchronize source code
-      synchronize: >
-        src={{ item.directory }}/ dest=/tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}/
-        archive=yes delete=yes links=yes
+      synchronize:
+        src: '{{ item.directory }}/'
+        dest: /tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}/
+        archive: yes
+        delete: yes
+        links: yes
       loop: '{{ aws_lambda_functions }}'
       loop_control:
         label: '{{ item.name }}'
@@ -119,5 +123,6 @@
 
   always:
     - name: Cleanup temporary directory
-      file: >
-        name=/tmp/aws-lambda/{{ aws_lambda_environment }} state=absent
+      file:
+        name: /tmp/aws-lambda/{{ aws_lambda_environment }}
+        state: absent

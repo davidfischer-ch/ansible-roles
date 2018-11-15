@@ -3,14 +3,17 @@
 
 - block:
     - name: Install Cordova packages
-      package: >
-        name={{ item }} state=present
+      package:
+        name: '{{ cordova_packages }}'
+        state: present
       become: yes
-      loop: '{{ cordova_packages }}'
 
     - name: Install Cordova npm packages
-      npm: >
-        name={{ item }} global=yes production=yes state=present
+      npm:
+        name: '{{ item }}'
+        global: yes
+        production: yes
+        state: present
       become: yes
       loop: '{{ cordova_npm_packages }}'
 
@@ -23,8 +26,10 @@
       register: _cordova_node
 
     - name: Add symlink nodejs = node
-      file: >
-        src=/usr/bin/nodejs dest=/usr/bin/node state=link
+      file:
+        src: /usr/bin/nodejs
+        dest: /usr/bin/node
+        state: link
       become: yes
       when: _cordova_node is failure
 

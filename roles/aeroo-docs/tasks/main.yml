@@ -4,54 +4,73 @@
 
 - block:
     - name: Create Aeroo Docs daemon group
-      group: >
-        name={{ aeroo_docs_daemon_group }} system=yes state=present
+      group:
+        name: '{{ aeroo_docs_daemon_group }}'
+        state: present
+        system: yes
 
     - name: Create Aeroo Docs daemon user
-      user: >
-        name={{ aeroo_docs_daemon_user }} group={{ aeroo_docs_daemon_group }}
-        createhome=no home=/tmp system=yes state=present
+      user:
+        name: '{{ aeroo_docs_daemon_user }}'
+        group: '{{ aeroo_docs_daemon_group }}'
+        createhome: no
+        home: /tmp
+        state: present
+        system: yes
   become: yes
   tags: [aeroo-docs, config]
 
 - block:
     - name: Install Aeroo Docs python packages
-      pip: >
-        name={{ item }} executable=pip3 state=present
-      loop: '{{ aeroo_docs_python_packages }}'
+      pip:
+        name: '{{ aeroo_docs_python_packages }}'
+        executable: pip3
+        state: present
 
     - name: Create Aeroo Docs directories
-      file: >
-        name={{ item }} owner={{ aeroo_docs_daemon_user }} group={{ aeroo_docs_daemon_group }} mode=755 state=directory
+      file:
+        name: '{{ item }}'
+        owner: '{{ aeroo_docs_daemon_user }}'
+        group: '{{ aeroo_docs_daemon_group }}'
+        mode: 0755
+        state: directory
       loop:
         - '{{ aeroo_docs_app_directory }}'
         - '{{ aeroo_docs_log_directory }}'
 
     - name: Clone Aeroo Docs source code
-      git: >
-        repo={{ aeroo_docs_repository_url }} dest={{ aeroo_docs_app_directory }} force=yes
-        version={{ aeroo_docs_version }}
+      git:
+        repo: '{{ aeroo_docs_repository_url }}'
+        dest: '{{ aeroo_docs_app_directory }}'
+        force: yes
+        version: '{{ aeroo_docs_version }}'
   become: yes
   tags: [aeroo-docs, packages]
 
 - block:
     - name: Configure Aeroo Docs
-      template: >
-        src=aeroo-docs.conf.j2 dest=/etc/aeroo-docs.conf mode=644
+      template:
+        src: aeroo-docs.conf.j2
+        dest: /etc/aeroo-docs.conf
+        mode: 0644
 
     - name: Configure Aeroo Docs service
-      template: >
-        src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/aeroo-docs.conf mode=644
+      template:
+        src: supervisor.conf.j2
+        dest: /etc/supervisor/conf.d/aeroo-docs.conf
+        mode: 0644
       notify: restart aeroo-docs
 
     - name: Install Aeroo Docs service
-      supervisorctl: >
-        name=aeroo-docs state=present
+      supervisorctl:
+        name: aeroo-docs
+        state: present
   become: yes
   tags: [aeroo-docs, config]
 
 - name: Start Aeroo Docs service
-  supervisorctl: >
-    name=aeroo-docs state=started
+  supervisorctl:
+    name: aeroo-docs
+    state: started
   become: yes
   tags: [aeroo-docs, services]

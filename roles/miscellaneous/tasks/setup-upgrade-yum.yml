@@ -4,17 +4,20 @@
 - block:
     - name: Install EPEL repository
       package:
-        name=epel-release state=present
+        name: epel-release
+        state: present
       when: yum_epel_repository|bool
 
     - name: Install package manager tools
-      package: >
-        name={{ item }} state=present
-      loop: '{{ package_manager_tools }}'
+      package:
+        name: '{{ package_manager_tools }}'
+        state: present
 
     - name: Upgrade the packages
-      yum: >
-        name=* update_cache=yes state=latest
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes
       async: '{{ upgrade_packages_async }}'
       poll: '{{ upgrade_packages_poll }}'
       when: upgrade_packages|bool

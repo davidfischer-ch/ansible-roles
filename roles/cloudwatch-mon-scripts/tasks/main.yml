@@ -4,19 +4,21 @@
 - block:
     - block:
         - name: Install CloudWatch monitoring scripts packages
-          package: >
-            name={{ item }} state=present
-          loop: '{{ cloudwatch_mon_scripts_packages }}'
+          package:
+            name: {{ cloudwatch_mon_scripts_packages }}'
+            state: present
 
         - name: Download CloudWatch monitoring scripts package
-          get_url: >
-            url=http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip force=no
-            dest={{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
+          get_url:
+            url: http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
+            dest: '{{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip'
+            force: no
 
         - name: Extract CloudWatch monitoring scripts package
-          unarchive: >
-            src={{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip
-            dest={{ local_source_directory }} copy=no
+          unarchive:
+            src: '{{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip'
+            dest: '{{ local_source_directory }}'
+            copy: no
       tags: packages
 
     - block:
@@ -28,10 +30,11 @@
           register: _cloudwatch_mon_scripts_check
 
         - name: Setup periodic memory metrics report
-          cron: >
-            name='Report memory metrics to CloudWatch' minute=*/5
-            state="{{ cloudwatch_mon_scripts_report_enabled|bool|ternary('present', 'absent') }}"
-            job='{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}'
+          cron:
+            name: 'Report memory metrics to CloudWatch'
+            job: '{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}'
+            minute: '*/5'
+            state: "{{ cloudwatch_mon_scripts_report_enabled|bool|ternary('present', 'absent') }}"
           notify: restart cron
       tags: config
   become: yes

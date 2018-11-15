@@ -3,8 +3,8 @@
 # FIXME install package control, gitgutter ... configure ...
 
 - name: Install programming packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ programming_packages }}'
+    state: present
   become: yes
-  loop: '{{ programming_packages }}'
   tags: [development, packages]

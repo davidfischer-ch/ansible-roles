@@ -2,16 +2,22 @@
 
 - block:
     - name: Configure BASH
-      template: >
-        src={{ bash_config_file }} dest=/etc/bash.bashrc mode=644
+      template:
+        src: '{{ bash_config_file }}'
+        dest: /etc/bash.bashrc
+        mode: 0644
 
     - name: Configure BASH user profile skeleton
-      template: >
-        src={{ bash_user_config_file }} dest=/etc/skel/.bashrc mode=644
+      template:
+        src: '{{ bash_user_config_file }}'
+        dest: /etc/skel/.bashrc
+        mode: 0644
 
     - name: Configure BASH users profile
-      template: >
-        src={{ bash_user_config_file }} dest={{ ansible_user_dir }}/.bashrc mode=644
+      template:
+        src: '{{ bash_user_config_file }}'
+        dest: '{{ ansible_user_dir }}/.bashrc'
+        mode: 0644
       become_user: '{{ item }}'
       loop: '{{ bash_users }}'
   become: yes

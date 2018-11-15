@@ -7,9 +7,12 @@
 - import_tasks: configure.yml
 
 - name: Set machines power mode
-  vagrant_machine: >
-    chdir={{ vagrant_machines_directory }} name={{ item.name }} provider={{ item.provider }}
-    timeout={{ item.timeout|int if item.timeout is defined else omit }} state={{ vagrant_power_mode }}
+  vagrant_machine:
+    chdir: '{{ vagrant_machines_directory }}'
+    name: '{{ item.name }}'
+    provider: '{{ item.provider }}'
+    state: '{{ vagrant_power_mode }}'
+    timeout: '{{ item.timeout|int if item.timeout is defined else omit }}'
   loop: "{{ vagrant_machines[::1 if vagrant_power_mode == 'running' else -1] }}"
   loop_control:
     label: '{{ item.name }}'

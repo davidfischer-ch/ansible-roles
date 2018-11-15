@@ -1,13 +1,15 @@
 ---
 
 - name: reload apache
-  service: >
-    name=apache2 state=reloaded
+  service:
+    name: apache2
+    state: reloaded
   become: yes
 
 - name: restart apache
-  service: >
-    name=apache2 state=restarted
+  service:
+    name: apache2
+    state: restarted
   become: yes
   failed_when: _apache_restart is failure and 'not find' not in _apache_restart.msg
   listen: php_config_changed

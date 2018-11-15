@@ -1,13 +1,15 @@
 ---
 
 - name: restart cron
-  service: >
-    name=cron state=restarted
+  service:
+    name: cron
+    state: restarted
   become: yes
 
 - name: restart celery workers
-  supervisorctl: >
-    name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=restarted
+  supervisorctl:
+    name: '{{ djsite_instance_name }}-celery-{{ item.value.name }}'
+    state: restarted
   become: yes
   loop_control:
     label: '{{ item.value.name }}'

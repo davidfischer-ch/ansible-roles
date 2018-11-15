@@ -3,14 +3,17 @@
 
 - block:
     - name: Install Certbot apt repository
-      apt_repository: >
-        repo={{ certbot_apt_repository }} filename=ansible_roles_certbot update_cache=yes state=present
+      apt_repository:
+        repo: '{{ certbot_apt_repository }}'
+        filename: ansible_roles_certbot
+        state: present
+        update_cache: yes
       when: ansible_pkg_mgr == 'apt' and certbot_apt_repository|length > 0
 
     - name: Install Certbot packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ certbot_packages }}'
+      package:
+        name: '{{ certbot_packages }}'
+        state: present
   become: yes
   tags: [certbot, packages]
 

@@ -2,14 +2,22 @@
 
 - block:
     - name: Create daemon group
-      group: >
-        name={{ daemon_group }} system=yes state=present
+      group:
+        name: '{{ daemon_group }}'
+        state: present
+        system: yes
 
     - name: Create daemon user
-      user: >
-        name={{ daemon_user }} group={{ daemon_group }} groups={{ daemon_groups }} comment='{{ daemon_comment }}'
-        password={{ daemon_password|password_hash(daemon_password_hash_algorithm, daemon_password_hash_salt) if daemon_password|length > 0 else omit }}
-        home={{ daemon_directory }} createhome=no shell=/bin/bash system=yes
-        state=present
+      user:
+        name: '{{ daemon_user }}'
+        comment: '{{ daemon_comment }}'
+        group: '{{ daemon_group }}'
+        groups: '{{ daemon_groups }}'
+        home: '{{ daemon_directory }}'
+        createhome: no
+        password: '{{ daemon_password|password_hash(daemon_password_hash_algorithm, daemon_password_hash_salt) if daemon_password|length > 0 else omit }}'
+        shell: /bin/bash
+        state: present
+        system: yes
   become: yes
   tags: daemon

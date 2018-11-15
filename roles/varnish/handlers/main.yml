@@ -6,6 +6,7 @@
   become: yes
 
 - name: restart varnish
-  service: >
-    name=varnish state=restarted
+  service:
+    name: varnish
+    state: restarted
   become: yes

@@ -3,21 +3,27 @@
 
 - block:
     - name: Download CloudWatch logs agent setup script
-      get_url: >
-        url=https://s3.amazonaws.com/aws-cloudwatch/downloads/{{ cloudwatch_logs_agent_version }}/awslogs-agent-setup.py force=no
-        dest={{ local_source_directory }}/awslogs-agent-setup-{{ cloudwatch_logs_agent_version }}.py mode=775
+      get_url:
+        url: https://s3.amazonaws.com/aws-cloudwatch/downloads/{{ cloudwatch_logs_agent_version }}/awslogs-agent-setup.py
+        dest: '{{ local_source_directory }}/awslogs-agent-setup-{{ cloudwatch_logs_agent_version }}.py'
+        force: no
+        mode: 0775
       tags: packages
 
     - block:
         - name: Create CloudWatch logs agent directories
-          file: >
-            name={{ item }} mode=755 state=directory
+          file:
+            name: '{{ item }}'
+            mode: 0755
+            state: directory
           loop:
             - /etc/awslogs
 
         - name: Configure CloudWatch logs agent
-          template: >
-            src={{ cloudwatch_logs_agent_config_file }} dest=/etc/awslogs/awslogs.conf mode=644
+          template:
+            src: '{{ cloudwatch_logs_agent_config_file }}'
+            dest: /etc/awslogs/awslogs.conf
+            mode: 0644
           notify: restart cloudwatch logs agent
 
         - name: Execute CloudWatch logs agent setup script
@@ -29,8 +35,10 @@
       tags: config
 
     - name: Toggle CloudWatch logs agent service
-      service: >
-        name=awslogs state={{ item }} enabled={{ item == 'started' }}
+      service:
+        name: awslogs
+        state: '{{ item }}'
+        enabled: "{{ item == 'started' }}"
       loop:
         - "{{ (cloudwatch_logs_agent_logs|length > 0)|ternary('started', 'stopped') }}"
       tags: services
