@@ -8,16 +8,7 @@
         must_match: yes
 
     - name: Get current GNU/Linux Kernel configuration
-      script:
-        get-kernel-config
-      changed_when: no
-      check_mode: no
-      register: _kernel_config
-      when: kernel_get_config|bool
-
-    - set_fact:
-        # [-1] is an hack to filter the boring 'bash: warning: setlocale: ...
-        kernel_config: '{{ _kernel_config.stdout_lines[-1]|default({}) }}'
+      kernel_facts:
       when: kernel_get_config|bool
   tags: [kernel, always]
 

@@ -1,22 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-"""
-Return a JSON string with the GNU/Linux Kernel configuration.
-
-*Example usage*
-
-Retrieve current kernel configuration::
-
-    $ get-kernel-config
-    ...
-
-Retrieve current kernel configuration (bis)::
-
-    $ get-kernel-config $(uname -r)
-"""
-
-import argparse, errno, json, os, re, sys
+import errno, os, re, sys
 
 PY2 = sys.version_info[0] < 3
 if PY2:
@@ -24,17 +9,43 @@ if PY2:
 else:
     import configparser
 
+from ansible.module_utils.basic import AnsibleModule
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('release', default=None, nargs='?')
-    args = parser.parse_args()
-    sys.stdout.write(json.dumps(get_kernel_config(args.release)))
+DOCUMENTATION = r"""
+---
+module: kernel_facts
+author: "David Fischer (@davidfischer-ch)"
+short_description: Gather facts about the GNU/Linux Kernel configuration.
+options:
+  release:
+    required: false
+    default: null
+    description:
+      - Release to scan, defaults to active Kernel.
+"""
 
+EXAMPLES = r"""
+- kernel_facts:
+"""
 
 CONFIG_PREFIX = re.compile(r'^config_')
 DRIVER_IN_KERNEL = 'y'
 DRIVER_HAS_MODULE = 'm'
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            release=dict(default=None)
+        ),
+        supports_check_mode=True
+    )
+    module.exit_json(
+        changed=False,
+        ansible_facts=dict(
+            kernel_config=get_kernel_config()
+        )
+    )
 
 
 def get_kernel_config(release=None):
@@ -49,6 +60,7 @@ def get_kernel_config(release=None):
             return {}
         raise
     return {CONFIG_PREFIX.sub('', k): v for k, v in config.items('kernel')}
+
 
 if __name__ == '__main__':
     main()
