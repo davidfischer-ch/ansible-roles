@@ -16,16 +16,16 @@
         mode: '{{ item.mode }}'
         state: directory
       loop:
-        - { name: '{{ djsite_app_directory }}',                                    mode: 0755 }
-        - { name: '{{ djsite_app_directory }}/.ssh',                               mode: 0700 }
-        - { name: '{{ djsite_app_directory }}/data',                               mode: 0755 }
-        - { name: '{{ djsite_app_directory }}/source',                             mode: 0755 }
-        - { name: '{{ djsite_app_directory }}/releases',                           mode: 0755 }
-        - { name: '{{ djsite_app_directory }}/run',                                mode: 0775 }
-        - { name: '{{ djsite_app_directory }}/test/server/bower/bower_components', mode: 0755 }
-        - { name: '{{ djsite_data_directory }}/media',                             mode: 0755 }
-        - { name: '{{ djsite_data_directory }}/releases',                          mode: 0755 }
-        - { name: '{{ djsite_log_directory }}',                                    mode: 0750 }
+        - { name: '{{ djsite_app_directory }}',                                    mode: 755 }
+        - { name: '{{ djsite_app_directory }}/.ssh',                               mode: 700 }
+        - { name: '{{ djsite_app_directory }}/data',                               mode: 755 }
+        - { name: '{{ djsite_app_directory }}/source',                             mode: 755 }
+        - { name: '{{ djsite_app_directory }}/releases',                           mode: 755 }
+        - { name: '{{ djsite_app_directory }}/run',                                mode: 775 }
+        - { name: '{{ djsite_app_directory }}/test/server/bower/bower_components', mode: 755 }
+        - { name: '{{ djsite_data_directory }}/media',                             mode: 755 }
+        - { name: '{{ djsite_data_directory }}/releases',                          mode: 755 }
+        - { name: '{{ djsite_log_directory }}',                                    mode: 750 }
 
     - name: Create link to Application media directory
       file:
