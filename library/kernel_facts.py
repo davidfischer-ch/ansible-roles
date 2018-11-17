@@ -3,13 +3,13 @@
 
 import errno, os, re, sys
 
+from ansible.module_utils.basic import AnsibleModule
+
 PY2 = sys.version_info[0] < 3
 if PY2:
     import ConfigParser as configparser, io
 else:
     import configparser
-
-from ansible.module_utils.basic import AnsibleModule
 
 DOCUMENTATION = r"""
 ---
