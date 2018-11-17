@@ -7,7 +7,7 @@
   tags: [graphite, unit_test_extra]
 
 # - name: Flush the database
-#   command: >
+#   command:
 #     graphite-manage flush
 #   become: yes
 #   tags: [graphite, flush]
@@ -21,7 +21,7 @@
 #   when: (standalone or graphite_master in ansible_all_ipv4_addresses) and superuser
 
 # - name: Create the database
-#   command: >
+#   command:
 #     graphite-manage syncdb
 #   become: yes
 #   tags: [graphite, flush-extra, databases]

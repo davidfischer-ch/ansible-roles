@@ -3,24 +3,29 @@
 
 - block:
     - name: Register PostgreSQL apt key
-      apt_key: >
-        url={{ postgresql_apt_key }} state=present
+      apt_key:
+        url: '{{ postgresql_apt_key }}'
+        state: present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install PostgreSQL apt repository
-      apt_repository: >
-        repo={{ postgresql_apt_repository }} filename=ansible_roles_postgresql_client update_cache=yes state=present
+      apt_repository:
+        repo: '{{ postgresql_apt_repository }}'
+        filename: ansible_roles_postgresql_client
+        state: present
+        update_cache: yes
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install PostgreSQL client packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ postgresql_client_packages }}'
+      package:
+        name: '{{ postgresql_client_packages }}'
+        state: present
 
     - name: Install PostgreSQL python packages
-      pip: >
-        name=psycopg2-binary executable=pip2
-        state={{ (postgresql_psycopg2_version == 'latest')|ternary('latest', omit) }}
-        version={{ (postgresql_psycopg2_version == 'latest')|ternary(omit, postgresql_psycopg2_version) }}
+      pip:
+        name: psycopg2-binary
+        executable: pip2
+        state: "{{ (postgresql_psycopg2_version == 'latest')|ternary('latest', omit) }}"
+        version: "{{ (postgresql_psycopg2_version == 'latest')|ternary(omit, postgresql_psycopg2_version) }}"
   become: yes
   tags: [postgresql-client, packages]

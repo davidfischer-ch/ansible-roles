@@ -2,12 +2,14 @@
 - block:
     - name: Execute Django management command
       command: >
-        {{ djsite_app_directory }}/production/venv/bin/python ./manage.py {{ djsite_manage_arguments|join(' ') }}
+        {{ djsite_app_directory }}/production/venv/bin/python
+        ./manage.py {{ djsite_manage_arguments|join(' ') }}
       args:
         chdir: '{{ djsite_app_directory }}/production/server'
       register: _djsite_manage
 
-    - debug: var=_djsite_manage.stdout_lines
+    - debug:
+        var: _djsite_manage.stdout_lines
   become: yes
   become_user: '{{ djsite_daemon_user }}'
   when: djsite_is_master|bool

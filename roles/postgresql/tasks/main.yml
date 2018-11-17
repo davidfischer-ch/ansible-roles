@@ -2,76 +2,85 @@
 ---
 
 - name: Install PostgreSQL packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ postgresql_packages }}'
+    state: present
   become: yes
   tags: [postgresql, packages]
-  loop: '{{ postgresql_packages }}'
 
 - block:
     - name: Configure PostgreSQL
-      template: >
-        src={{ postgresql_config_file }} dest=/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf mode=644
+      template:
+        src: '{{ postgresql_config_file }}'
+        dest: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+        mode: 0644
       register: _postgresql_config
 
     - name: Configure PostgreSQL allowed hosts
-      template: >
-        src=pg_hba.conf.j2 dest=/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf mode=644
+      template:
+        src: pg_hba.conf.j2
+        dest: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        mode: 0644
       register: _postgresql_allow
 
     - name: Restart PostgreSQL service
-      service: >
-        name=postgresql state=restarted enabled=yes
+      service:
+        name: postgresql
+        enabled: yes
+        state: restarted
       tags: flush-extra
       when: _postgresql_config is change or _postgresql_allow is change
   become: yes
   tags: [postgresql, config]
 
 - name: Start PostgreSQL service
-  service: >
-    name=postgresql state=started enabled=yes
+  service:
+    name: postgresql
+    enabled: yes
+    state: started
   become: yes
   tags: [postgresql, services]
 
 - block:
     - name: Install PostGIS packages
-      package: >
-        name={{ item }} state=present
-      loop:
-        - postgis
-        - 'postgresql-{{ postgresql_version }}-postgis-2.1'
-        - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
+      package:
+        name:
+          - postgis
+          - 'postgresql-{{ postgresql_version }}-postgis-2.1'
+          - 'postgresql-{{ postgresql_version }}-postgis-2.1-scripts'
+        state: present
 
     - name: Install geolocation prerequisites required for all back-ends
-      package: >
-        name={{ item }} state=present
-      loop:
-        - binutils
-        - libgeos-3.4.2
-        - libgeos-c1
-        - libgeos-dev
+      package:
+        name:
+          - binutils
+          - libgeos-3.4.2
+          - libgeos-c1
+          - libgeos-dev
+        state: present
 
     - name: Install geolocation prerequisites required for PostgreSQL and SQLite
-      package: >
-        name={{ item }} state=present
-      loop:
-        - libproj-dev
-        - proj-bin
-        - proj-data
+      package:
+        name:
+          - libproj-dev
+          - proj-bin
+          - proj-data
+        state: present
 
     - name: Install geolocation prerequisites optional but required for SQLite
-      package: >
-        name={{ item }} state=present
-      loop:
-        - gdal-bin
-        - libgdal1-dev
-        - python3-gdal
+      package:
+        name:
+          - gdal-bin
+          - libgdal1-dev
+          - python3-gdal
+        state: present
 
     - name: install optional IP-based geolocation library
-      package: >
-        name={{ item }} state=present
-      loop:
-        - libgeoip1
+      package:
+        name:
+          - libgeoip1
+        state: present
+
   become: yes
   tags: [postgresql, packages]
   when: "'postgis' in postgresql_extensions"

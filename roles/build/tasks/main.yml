@@ -8,8 +8,8 @@
   tags: [build, always]
 
 - name: Install building and development tools
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ build_packages }}'
+    state: present
   become: yes
-  loop: '{{ build_packages }}'
   tags: [build, packages]

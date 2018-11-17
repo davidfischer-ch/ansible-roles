@@ -39,7 +39,8 @@
           - djsite_ssh_key_public is defined
       when: not djsite_repository_is_local|bool or djsite_has_private_requirements|bool
 
-    - debug: var={{ item }}
+    - debug:
+        var: '{{ item }}'
       loop:
         - djsite_release_directory
         - djsite_repository_is_local

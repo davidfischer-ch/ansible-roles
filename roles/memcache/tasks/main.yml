@@ -9,47 +9,58 @@
   tags: [memcache, always]
 
 - name: Install memcache packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ memcache_packages }}'
+    state: present
   become: yes
-  loop: '{{ memcache_packages }}'
   tags: [memcache, packages]
 
 - block:
     - name: Create memcache directories
-      file: >
-        name={{ item }} owner={{ memcache_daemon_user }} group={{ memcache_daemon_group }} mode=755 state=directory
+      file:
+        name: '{{ item }}'
+        owner: '{{ memcache_daemon_user }}'
+        group: '{{ memcache_daemon_group }}'
+        mode: 0755
+        state: directory
       loop:
         - '{{ memcache_log_file|dirname }}'
         - '{{ memcache_pid_file|dirname }}'
 
     - name: Configure memcache
-      template: >
-        src={{ memcache_config_file }} dest=/etc/memcached.conf owner=root group=root mode=0644
+      template:
+        src: '{{ memcache_config_file }}'
+        dest: /etc/memcached.conf
+        owner: root
+        group: root
+        mode: 0644
       notify: restart memcache
 
     - name: Detect memcache init script
-      stat: >
-        path=/etc/init.d/memcached
+      stat:
+        path: /etc/init.d/memcached
       register: _memcache_init_file
 
     - name: Configure path to memcache process ID file
-      lineinfile: >
-        dest=/etc/init.d/memcached
-        regexp='  PIDFILE="/var/run/.*\${NAME}.pid"' line='  PIDFILE="/var/run/${NAME}/${NAME}.pid"'
+      lineinfile:
+        dest: /etc/init.d/memcached
+        line: '  PIDFILE="/var/run/${NAME}/${NAME}.pid"'
+        regexp: '  PIDFILE="/var/run/.*\${NAME}.pid"'
       when: _memcache_init_file.stat.exists
   become: yes
   tags: [memcache, config]
 
 - block:
     - name: Start memcache service
-      service: >
-        name=memcached state=started enabled=yes
+      service:
+        name: memcached
+        enabled: yes
+        state: started
 
     - meta: flush_handlers
 
     - name: Read memcache settings
-      shell: >
+      shell:
         echo 'stats settings' | nc {{ memcache_bind_addresses|first }} {{ memcache_port }} -w {{ memcache_read_timeout|int }}
       changed_when: no
       check_mode: no

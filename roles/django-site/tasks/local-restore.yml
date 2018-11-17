@@ -8,8 +8,8 @@
     - set_fact:
         _tmp_directory: '/tmp/djsite-{{ djsite_instance_name }}-restore'
 
-    - fail: >
-        msg='Restoring Website directory not yet implemented'
+    - fail:
+        msg: 'Restoring Website directory not yet implemented'
       tags: code
 
     - block:
@@ -17,27 +17,35 @@
             _dump_format: '{{ djsite_database_dump_formats[djsite_database_dump_format] }}'
 
         - name: Create temporary directory
-          file: >
-            name={{ _tmp_directory }} state=directory
+          file:
+            name: '{{ _tmp_directory }}'
+            state: directory
 
         - name: Transfer Website database dump
-          synchronize: >
-            src={{ djsite_local_restore_directory }}/{{ _dump_format.path }}
-            dest={{ _tmp_directory }}/{{ _dump_format.path }}
+          synchronize:
+            src: '{{ djsite_local_restore_directory }}/{{ _dump_format.path }}'
+            dest: '{{ _tmp_directory }}/{{ _dump_format.path }}'
       tags: database
       when: djsite_is_master|bool
 
     - block:
         - name: Create Website media directory
-          file: >
-            name={{ djsite_data_directory }}/media/ state=directory
-            owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
+          file:
+            name: '{{ djsite_data_directory }}/media/'
+            owner: '{{ djsite_daemon_user }}'
+            group: '{{ djsite_daemon_group }}'
+            state: directory
 
         - name: Restore Website media directory
-          synchronize: >
-            src={{ djsite_local_restore_directory }}/media/ dest={{ djsite_data_directory }}/media/
-            archive=yes checksum=yes delete=yes group=yes links=yes owner=yes
-          args:
+          synchronize:
+            src: '{{ djsite_local_restore_directory }}/media/'
+            dest: '{{ djsite_data_directory }}/media/'
+            archive: yes
+            checksum: yes
+            delete: yes
+            group: yes
+            links: yes
+            owner: yes
             rsync_opts:
               - '--chmod={{ djsite_media_file_mode }}'
               - '--chown={{ djsite_daemon_user }}:{{ djsite_daemon_group }}'
@@ -59,7 +67,8 @@
                     {{ _tmp_directory }}/{{ _dump_format.path }}
               register: djsite_db_restore
 
-            - debug: var=_socialease_db_restore.stdout_lines
+            - debug:
+                var: _socialease_db_restore.stdout_lines
           when: djsite_database_dump_format != 'plain_text'
 
         - block:
@@ -75,15 +84,17 @@
                     --file {{ _tmp_directory }}/{{ _dump_format.path }}
               register: _djsite_db_restore
 
-            - debug: var=_socialease_db_restore.stdout_lines
+            - debug:
+                var: _socialease_db_restore.stdout_lines
           when: djsite_database_dump_format == 'plain_text'
       tags: database
       when: djsite_is_master|bool
 
   always:
     - name: Remove temporary directory
-      file: >
-        name={{ _tmp_directory }} state=absent
+      file:
+        name: '{{ _tmp_directory }}'
+        state: absent
       tags: database
       when: djsite_is_master|bool
   become: yes

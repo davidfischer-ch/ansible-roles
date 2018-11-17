@@ -2,11 +2,15 @@
 
 - block:
     - name: Register Varnish apt key
-      apt_key: >
-        url={{ varnish_apt_key }} state=present
+      apt_key:
+        url: '{{ varnish_apt_key }}'
+        state: present
 
     - name: Install Varnish apt repository
-      apt_repository: >
-        repo={{ varnish_apt_repository }} filename=ansible_roles_varnish update_cache=yes state=present
+      apt_repository:
+        repo: '{{ varnish_apt_repository }}'
+        filename: ansible_roles_varnish
+        state: present
+        update_cache: yes
   become: yes
   tags: [varnish, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

@@ -1,26 +1,31 @@
 ---
 
 - name: reload systemd
-  command: >
+  command:
     systemctl daemon-reload
   become: yes
 
 - name: supervisor restart nginx
-  supervisorctl: >
-    name=nginx state=restarted
+  supervisorctl:
+    name: nginx
+    state: restarted
   become: yes
 
 - name: supervisor reload nginx
-  command: >
+  command:
     supervisorctl signal HUP nginx
   become: yes
 
 - name: system restart nginx
-  service: >
-    name=nginx use={{ nginx_daemon_mode }} state=restarted
+  service:
+    name: nginx
+    state: restarted
+    use: '{{ nginx_daemon_mode }}'
   become: yes
 
 - name: system reload nginx
-  service: >
-    name=nginx use={{ nginx_daemon_mode }} state=reloaded
+  service:
+    name: nginx
+    state: reloaded
+    use: '{{ nginx_daemon_mode }}'
   become: yes

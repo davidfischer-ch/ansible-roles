@@ -11,15 +11,15 @@
     - include_tasks: setup-repository-{{ ansible_pkg_mgr }}.yml
 
     - name: Install fail2ban packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ fail2ban_packages }}'
+      package:
+        name: '{{ fail2ban_packages }}'
+        state: present
   become: yes
   tags: [fail2ban, packages]
 
 - block:
     - name: Detect fail2ban version
-      shell: >
+      shell:
         fail2ban-client -V | grep -o 'Fail2Ban v[0-9]\.[0-9]' | cut -dv -f 2
       changed_when: no
       check_mode: no
@@ -29,22 +29,25 @@
         fail2ban_version: '{{ _fail2ban_version.stdout }}'
         fail2ban_conf_suffix: "{{ (_fail2ban_version.stdout is version('0.9', '>='))|ternary('new', 'old') }}"
 
-    - debug: >
-        msg='fail2ban version {{ fail2ban_version }}, detected as {{ fail2ban_conf_suffix }}'
+    - debug:
+        msg: 'fail2ban version {{ fail2ban_version }}, detected as {{ fail2ban_conf_suffix }}'
 
     - name: Configure fail2ban rules
-      template: >
-        src={{ item }} dest=/etc/fail2ban/jail.conf mode=644
+      template:
+        src: '{{ item }}'
+        dest: /etc/fail2ban/jail.conf
+        mode: 0644
       become: yes
       notify: reload fail2ban
       with_first_found:
-        - files:
-            - 'jail.conf.{{ fail2ban_conf_suffix }}.{{ ansible_distribution|lower }}.j2'
-            - 'jail.conf.{{ fail2ban_conf_suffix }}.j2'
+        - jail.conf.{{ fail2ban_conf_suffix }}.{{ ansible_distribution|lower }}.j2
+        - jail.conf.{{ fail2ban_conf_suffix }}.j2
   tags: [fail2ban, config]
 
 - name: Start fail2ban service
-  service: >
-    name=fail2ban state={{ fail2ban_enabled|bool|ternary('started', 'stopped') }} enabled={{ fail2ban_enabled|bool }}
+  service:
+    name: fail2ban
+    enabled: '{{ fail2ban_enabled|bool }}'
+    state: "{{ fail2ban_enabled|bool|ternary('started', 'stopped') }}"
   become: yes
   tags: [fail2ban, services]

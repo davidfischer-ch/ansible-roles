@@ -32,7 +32,7 @@
             name: '{{ item }}'
             owner: root
             group: root
-            mode: 775
+            mode: 0775
             state: directory
           loop:
             - '{{ archive_to_s3_config_directory }}'

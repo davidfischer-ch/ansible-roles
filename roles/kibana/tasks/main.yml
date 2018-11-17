@@ -3,48 +3,61 @@
 ---
 
 - block:
-    - name: Register Kibana apt key
-      apt_key: >
-        url={{ kibana_apt_key }} state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - block:
+        - name: Register Kibana apt key
+          apt_key:
+            url: '{{ kibana_apt_key }}'
+            state: present
 
-    - name: Install Kibana apt repository
-      apt_repository: >
-        repo={{ kibana_apt_repository }} filename=ansible_roles_elk_stack update_cache=yes state=present
+        - name: Install Kibana apt repository
+          apt_repository:
+            repo: '{{ kibana_apt_repository }}'
+            filename: ansible_roles_elk_stack
+            state: present
+            update_cache: yes
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Kibana packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ kibana_packages }}'
+      package:
+        name: '{{ kibana_packages }}'
+        state: present
   become: yes
   tags: [kibana, packages]
 
 - name: Configure Kibana
-  template: >
-    src={{ item }} dest=/etc/kibana/kibana.yml mode=644
+  template:
+    src: '{{ item }}'
+    dest: /etc/kibana/kibana.yml
+    mode: 0644
   become: yes
   notify: reload kibana
   tags: [kibana, config]
   with_first_found:
-    - 'kibana.{{ kibana_version }}.yml.j2'
-    - 'kibana.{{ kibana_version[0] }}.yml.j2'
+    - kibana.{{ kibana_version }}.yml.j2
+    - kibana.{{ kibana_version[0] }}.yml.j2
 
 - block:
     - name: Start Kibana service
-      service: >
-        name=kibana state=started enabled=yes
+      service:
+        name: kibana
+        enabled: yes
+        state: started
       become: yes
 
     - meta: flush_handlers
 
     - name: Wait for Kibana to be ready
-      wait_for: >
-        host={{ ansible_default_ipv4.address }} port={{ kibana_port|int }} connect_timeout=1 delay=0 timeout=10
+      wait_for:
+        host: '{{ ansible_default_ipv4.address }}'
+        port: '{{ kibana_port|int }}'
+        connect_timeout: 1
+        delay: 0
+        timeout: 10
 
     - name: Check Kibana home page
-      uri: >
-        url=http://{{ ansible_default_ipv4.address }}:{{ kibana_port|int }} return_content=yes
+      uri:
+        url: http://{{ ansible_default_ipv4.address }}:{{ kibana_port|int }}
+        return_content: yes
       failed_when: "'kibana' not in _kibana_check.content"
       register: _kibana_check
   tags: [kibana, services]

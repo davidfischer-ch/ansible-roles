@@ -4,7 +4,7 @@
 - block:
     - block:
         - name: Retrieve timestamp
-          command: >
+          command:
             python -c "import datetime; print(datetime.datetime.utcnow().strftime('%Y%m%dT%H%M%S'))"
           changed_when: no
           check_mode: no
@@ -13,7 +13,7 @@
 
         - name: Save timestamp
           set_fact:
-            '{{ timestamp_variable }}': "{{ _timestamp.stdout }}"
+            '{{ timestamp_variable }}': '{{ _timestamp.stdout }}'
           delegate_facts: yes
           delegate_to: localhost
       when: hostvars['localhost'][timestamp_variable] is undefined
@@ -22,5 +22,6 @@
       set_fact:
         '{{ timestamp_variable }}': "{{ hostvars['localhost'][timestamp_variable] }}"
 
-    - debug: var={{ timestamp_variable }}
+    - debug:
+        var: '{{ timestamp_variable }}'
   tags: always

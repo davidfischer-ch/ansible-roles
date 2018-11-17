@@ -10,19 +10,23 @@
 
 - block:
     - name: Register ElasticSearch apt key
-      apt_key: >
-        url={{ elasticsearch_apt_key }} state=present
+      apt_key:
+        url: '{{ elasticsearch_apt_key }}'
+        state: present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install ElasticSearch apt repository
-      apt_repository: >
-        repo={{ elasticsearch_apt_repository }} filename=ansible_roles_elk_stack update_cache=yes state=present
+      apt_repository:
+        repo: '{{ elasticsearch_apt_repository }}'
+        filename: ansible_roles_elk_stack
+        state: present
+        update_cache: yes
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install ElasticSearch packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ elasticsearch_packages }}'
+      package:
+        name: '{{ elasticsearch_packages }}'
+        state: present
 
     # FIXME Useless when https://github.com/ansible/ansible/issues/18889 is fixed
     - name: Toggle ElastiSearch packages version hold marker
@@ -35,8 +39,12 @@
       when: ansible_pkg_mgr == 'apt'
 
     - name: Create ElasticSearch directories
-      file: >
-        name={{ item }} state=directory owner=elasticsearch group=elasticsearch mode=755
+      file:
+        name: '{{ item }}'
+        owner: elasticsearch
+        group: elasticsearch
+        mode: 0755
+        state: directory
       loop:
         - '{{ elasticsearch_data_directory }}'
         - '{{ elasticsearch_log_directory }}'
@@ -44,34 +52,44 @@
   tags: [elasticsearch, packages]
 
 - name: Configure ElasticSearch
-  template: >
-    src={{ item }} dest=/etc/elasticsearch/elasticsearch.yml mode=644
+  template:
+    src: '{{ item }}'
+    dest: /etc/elasticsearch/elasticsearch.yml
+    mode: 0644
   become: yes
   notify: reload elasticsearch
   tags: [elasticsearch, config]
   with_first_found:
-    - 'elasticsearch.{{ elasticsearch_version }}.yml.j2'
-    - 'elasticsearch.{{ elasticsearch_version[0] }}.yml.j2'
+    - elasticsearch.{{ elasticsearch_version }}.yml.j2
+    - elasticsearch.{{ elasticsearch_version[0] }}.yml.j2
 
 - block:
     - name: Start ElasticSearch service
-      service: >
-        name=elasticsearch state=started enabled=yes
+      service:
+        name: elasticsearch
+        enabled: yes
+        state: started
       become: yes
 
     - meta: flush_handlers
 
     - name: Wait for ElasticSearch to be ready
-      wait_for: >
-        host={{ ansible_default_ipv4.address }} port={{ elasticsearch_port|int }} connect_timeout=1 delay=0 timeout=10
+      wait_for:
+        host: '{{ ansible_default_ipv4.address }}'
+        port: '{{ elasticsearch_port|int }}'
+        connect_timeout: 1
+        delay: 0
+        timeout: 10
 
     - name: Retrieve ElasticSearch configuration
-      uri: >
-        url=http://{{ ansible_default_ipv4.address }}:{{ elasticsearch_port|int }} return_content=yes
+      uri:
+        url: http://{{ ansible_default_ipv4.address }}:{{ elasticsearch_port|int }}
+        return_content: yes
       check_mode: no
       register: _elasticsearch_check
 
-    - debug: var=_elasticsearch_check
+    - debug:
+        var: _elasticsearch_check
 
     - name: Check ElasticSearch configuration
       assert:

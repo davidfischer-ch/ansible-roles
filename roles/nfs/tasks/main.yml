@@ -12,22 +12,24 @@
 
 - block:
     - name: Install NFS Client packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ nfs_client_packages }}'
+      package:
+        name: '{{ nfs_client_packages }}'
+        state: present
 
     - name: Install NFS Server packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ nfs_server_packages }}'
+      package:
+        name: '{{ nfs_server_packages }}'
+        state: present
       when: nfs_server_enabled|bool
   become: yes
   tags: [nfs, packages]
 
 - block:
     - name: Configure NFS Client
-      template: >
-        src={{ item }}.j2 dest=/etc/default/{{ item }} mode=644
+      template:
+        src: '{{ item }}.j2'
+        dest: /etc/default/{{ item }}
+        mode: 0644
       loop:
         - nfs-common
         - quota
@@ -36,8 +38,10 @@
         - restart rpcbind
 
     - name: Configure NFS Server
-      template: >
-        src=nfs-kernel-server.j2 dest=/etc/default/nfs-kernel-server mode=644
+      template:
+        src: nfs-kernel-server.j2
+        dest: /etc/default/nfs-kernel-server
+        mode: 0644
       notify:
         - restart nfs-kernel-server
         - restart rpcbind
@@ -47,18 +51,23 @@
 
 - block:
     - name: Create shared directories
-      file: >
-        path={{ item.value.path }} owner={{ item.value.user|default(user) }} group={{ item.value.group|default(group) }}
-        mode={{ item.value.mode|default(755) }} state=directory
+      file:
+        path: '{{ item.value.path }}'
+        owner: '{{ item.value.user|default(user) }}'
+        group: '{{ item.value.group|default(group) }}'
+        mode: '{{ item.value.mode|default(0755) }}'
+        state: directory
       loop_control:
         label: '{{ item.value.path }}'
       when: nfs_server_enabled|bool
       with_dict: '{{ nfs_exports }}'
 
     - name: Setup shared directories
-      lineinfile: >
-        dest=/etc/exports regexp="ansible-roles-key-{{ item.key }}" state={{ item.value.state|default('present') }}
-        line="{{ item.value.path }} {{ item.value.rules|join(' ') }}  # ansible-roles-key-{{ item.key }}"
+      lineinfile:
+        dest: /etc/exports
+        line: "{{ item.value.path }} {{ item.value.rules|join(' ') }}  # ansible-roles-key-{{ item.key }}"
+        regexp: 'ansible-roles-key-{{ item.key }}'
+        state: "{{ item.value.state|default('present') }}"
       loop_control:
         label: '{{ item.value.path }}'
       notify: reload nfs-kernel-server

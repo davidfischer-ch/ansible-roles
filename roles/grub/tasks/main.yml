@@ -1,9 +1,11 @@
 ---
 
 - name: Configure GRUB
-  lineinfile: >
-    dest=/etc/default/grub regexp=^#?{{ item.key|upper }}\s*=.*
-    line='{{ item.key|upper }}={{ item.value }}' state=present
+  lineinfile:
+    dest: /etc/default/grub
+    line: '{{ item.key|upper }}={{ item.value }}'
+    regexp: ^#?{{ item.key|upper }}\s*=.*
+    state: present
   become: yes
   loop_control:
     label: '{{ item.key }}: {{ item.value }}'

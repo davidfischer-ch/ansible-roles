@@ -4,14 +4,14 @@
     - include_tasks: setup-from-{{ 'release' if vagrant_from_release|bool else 'repository' }}.yml
 
     - name: Get installed Vagrant plugins
-      command: >
+      command:
         vagrant plugin list
       changed_when: no
       check_mode: no
       register: _vagrant_plugin
 
     - name: Install Vagrant plugins
-      command: >
+      command:
         vagrant plugin install vagrant-{{ item }}
       loop: '{{ vagrant_plugins }}'
       when: item not in _vagrant_plugin.stdout
@@ -21,7 +21,7 @@
     - import_tasks: configure.yml
 
     - name: Check boxes are up-to-date
-      command: >
+      command:
         vagrant box outdated
       args:
         chdir: '{{ vagrant_machines_directory }}'
@@ -32,13 +32,13 @@
 
     - block:
         - name: Update boxes
-          command: >
+          command:
             vagrant box update
           args:
             chdir: '{{ vagrant_machines_directory }}'
 
         - name: Cleanup boxes
-          command: >
+          command:
             vagrant box prune --force {{ ansible_check_mode|ternary('--dry-run', '') }}
           changed_when: >
             _vagrant_prune is success and (
@@ -52,9 +52,12 @@
       when: _vagrant_outdated is change
 
     - name: Provision machines
-      vagrant_machine: >
-        chdir={{ vagrant_machines_directory }} name={{ item.name }} provider={{ item.provider }} state=running
-        timeout={{ item.timeout|int if item.timeout is defined else omit }}
+      vagrant_machine:
+        chdir: '{{ vagrant_machines_directory }}'
+        name: '{{ item.name }}'
+        provider: '{{ item.provider }}'
+        state: running
+        timeout: '{{ item.timeout|int if item.timeout is defined else omit }}'
       loop: '{{ vagrant_machines }}'
       loop_control:
         label: '{{ item.name }}'
@@ -62,8 +65,9 @@
   always:
     # FIXME less verbose output https://github.com/ansible/ansible/issues/5564
     - name: Cleanup machines SSH authentication footprints
-      known_hosts: >
-        name={{ item.item.host_public }} state=absent
+      known_hosts:
+        name: '{{ item.item.host_public }}'
+        state: absent
       loop: '{{ _vagrant_provision.results|default([]) }}'
       loop_control:
         label: '{{ item.item.name }}'
@@ -71,8 +75,11 @@
   tags: provision
 
 - name: Wait for machines to be started
-  local_action: >
-    wait_for host={{ item.host_public }} port=22 state=started
+  local_action:
+    module: wait_for
+    host: '{{ item.host_public }}'
+    port: 22
+    state: started
   loop: '{{ vagrant_machines }}'
   loop_control:
     label: '{{ item.name }}'

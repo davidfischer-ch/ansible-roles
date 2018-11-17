@@ -2,8 +2,11 @@
 
 - block:
     - name: Clone Application source code
-      git: >
-        repo={{ djsite_repository_url }} dest={{ djsite_app_directory }}/source force=yes version={{ djsite_version }}
+      git:
+        repo: '{{ djsite_repository_url }}'
+        dest: '{{ djsite_app_directory }}/source'
+        force: yes
+        version: '{{ djsite_version }}'
       when: not djsite_repository_is_local|bool
       # FIXME Temporary hack to fix issue with git module
       delay: 1
@@ -19,68 +22,82 @@
         checksum: yes
         delete: yes
         rsync_opts:
-          - --chown
-          - '{{ djsite_daemon_user }}:{{ djsite_daemon_group }}'
-          - --exclude
-          - __pycache__/
-          - --exclude
-          - '*.pyc'
+          - '--chown={{ djsite_daemon_user }}:{{ djsite_daemon_group }}'
+          - '--exclude=__pycache__/'
+          - '--exclude=*.pyc'
       become_user: root
       when: djsite_repository_is_local|bool
 
     - name: Set Application source code ownership
-      file: >
-        name={{ djsite_app_directory }}/source follow=no recurse=yes state=directory
-        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }}
+      file:
+        name: '{{ djsite_app_directory }}/source'
+        owner: '{{ djsite_daemon_user }}'
+        group: '{{ djsite_daemon_group }}'
+        follow: no
+        recurse: yes
+        state: directory
       become_user: root
 
     - import_tasks: read-config.yml
 
     - name: Cleanup the unit-test area
       command: >
-        find {{ djsite_app_directory }}/test/server/ -depth \( -type d -name '__pycache__' -o -type f -name '*.pyc' \)
+        find {{ djsite_app_directory }}/test/server/
+        -depth \( -type d -name '__pycache__' -o -type f -name '*.pyc' \)
         -exec rm -rf {} \;
-      failed_when: _djsite_cleanup is failure and 'No such file or directory' not in _djsite_cleanup.stderr
+      failed_when: >
+        _djsite_cleanup is failure and
+        'No such file or directory' not in _djsite_cleanup.stderr
       register: _djsite_cleanup
       tags: [update, unit-test-extra]
 
     - name: Deploy the Application in the unit-test area
       command: >
-        rsync {{ djsite_app_directory }}/source/{{ djsite_config.source_path }}/ {{ djsite_app_directory }}/test/server/
+        rsync
+        {{ djsite_app_directory }}/source/{{ djsite_config.source_path }}/
+        {{ djsite_app_directory }}/test/server/
         {{ djsite_rsync_test_excludes|format_items('--exclude={0}')|join(' ') }}
         {{ djsite_config.configuration_templates|format_items('--exclude {0}')|join(' ') }}
         --archive --checksum --delete --hard-links --links
       tags: [update, unit-test-extra]
 
     - name: Disallow robots
-      template: >
-        src=disallow.robots.txt.j2 dest={{ djsite_app_directory }}/test/server/robots.txt
-        owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=644
+      template:
+        src: disallow.robots.txt.j2
+        dest: '{{ djsite_app_directory }}/test/server/robots.txt'
+        owner: '{{ djsite_daemon_user }}'
+        group: '{{ djsite_daemon_group }}'
+        mode: 0644
       tags: [update, unit-test-extra]
       when: djsite_disallow_robots|bool
 
     - block:
         - name: Create virtualenv
           command: >
-            virtualenv -p python{{ djsite_config.python_version }} --no-site-packages
-            {{ djsite_app_directory }}/test/venv
+            virtualenv -p python{{ djsite_config.python_version }}
+            --no-site-packages {{ djsite_app_directory }}/test/venv
           args:
             creates: '{{ djsite_app_directory }}/test/venv'
 
         - name: Install Application Python packages
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/pip install {{ item }}
+            {{ djsite_app_directory }}/test/venv/bin/pip
+            install {{ item }}
           loop: '{{ djsite_python_packages }}'
 
         - name: Find Application requirement files
-          find: >
-            paths={{ djsite_app_directory }}/test/server follow=yes recurse=yes use_regex=yes
-            patterns=requirements\.[a-z]+\.[a-z0-9]+
+          find:
+            paths: '{{ djsite_app_directory }}/test/server'
+            patterns: requirements\.[a-z]+\.[a-z0-9]+
+            follow: yes
+            recurse: yes
+            use_regex: yes
           register: _djsite_requirements
 
         - name: Install requirements into virtualenv
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/pip install --exists-action w -r {{ item.path }}
+            {{ djsite_app_directory }}/test/venv/bin/pip
+            install --exists-action w -r {{ item.path }}
           loop: '{{ _djsite_requirements.files }}'
           loop_control:
             label: '{{ item.path }}'

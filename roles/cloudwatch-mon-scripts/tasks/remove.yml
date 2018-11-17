@@ -2,14 +2,16 @@
 
 - block:
     - name: Remove periodic memory metrics report
-      cron: >
-        name='Report memory metrics to CloudWatch' state=absent
+      cron:
+        name: 'Report memory metrics to CloudWatch'
+        state: absent
       notify: restart cron
       tags: config
 
     - name: Remove CloudWatch monitoring scripts
-      file: >
-        path={{ item }} state=absent
+      file:
+        path: '{{ item }}'
+        state: absent
       loop:
         - '{{ local_source_directory }}/CloudWatchMonitoringScripts-{{ cloudwatch_mon_scripts_version }}.zip'
         - '{{ local_source_directory }}/aws-scripts-mon'

@@ -8,7 +8,7 @@
         must_match: yes
 
     - name: Get current GNU/Linux Kernel configuration
-      script: >
+      script:
         get-kernel-config
       changed_when: no
       check_mode: no
@@ -22,8 +22,8 @@
   tags: [kernel, always]
 
 - name: Install GNU/Linux kernel packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ kernel_packages }}'
+    state: present
   become: yes
-  loop: '{{ kernel_packages }}'
   tags: [kernel, packages]

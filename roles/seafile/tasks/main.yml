@@ -14,29 +14,38 @@
 
 - block:
     - name: Install Seafile packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ seafile_packages }}'
+      package:
+        name: '{{ seafile_packages }}'
+        state: present
 
     - name: Install Seafile Python packages
-      pip: >
-        name={{ item }} executable=pip2 state=present
-      loop: '{{ seafile_python_packages }}'
+      pip:
+        name: '{{ seafile_python_packages }}'
+        executable: pip2
+        state: present
 
     - name: Download Seafile distribution package
       get_url: >
-        url={{ seafile_package_url }} dest={{ local_source_directory }}/{{ seafile_package_url|basename }} force=no
+        url: '{{ seafile_package_url }}'
+        dest: '{{ local_source_directory }}/{{ seafile_package_url|basename }}'
+        force: no
 
     - name: Extract Seafile distribution package
-      unarchive: >
-        src={{ local_source_directory }}/{{ seafile_package_url|basename }} dest={{ local_source_directory }} copy=no
+      unarchive:
+        src: '{{ local_source_directory }}/{{ seafile_package_url|basename }}'
+        dest: '{{ local_source_directory }}'
+        copy: no
   become: yes
   tags: [seafile, packages]
 
 - name: Create Application directories
-  file: >
-    name={{ item }} recurse=no state=directory
-    owner={{ seafile_daemon_user }} group={{ seafile_daemon_group }} mode=755
+  file:
+    name: '{{ item }}'
+    owner: '{{ seafile_daemon_user }}'
+    group: '{{ seafile_daemon_group }}'
+    mode: 0755
+    recurse: no
+    state: directory
   become: yes
   loop:
     - '{{ seafile_app_directory }}'
@@ -45,9 +54,13 @@
 
 # FIXME multi-tier architecture
 - name: Setup Application database user
-  mysql_user: >
-    name={{ seafile_database_user }} host=127.0.0.1 password={{ seafile_database_password }}
-    priv={{ seafile_database_name_prefix }}-{{ item }}.*:ALL append_privs=yes state=present
+  mysql_user:
+    name: '{{ seafile_database_user }}'
+    append_privs: yes
+    host: 127.0.0.1
+    password: '{{ seafile_database_password }}'
+    priv: '{{ seafile_database_name_prefix }}-{{ item }}.*:ALL'
+    state: present
   become: yes
   loop:
     - ccnet
@@ -64,9 +77,10 @@
           --archive --checksum --delete
 
     - name: Prevent useless DNS lookup
-      replace: >
-        name={{ seafile_app_directory }}/seafile-server/setup-seafile-mysql.py
-        regexp='socket.gethostbyname\(socket.gethostname\(\)\)' replace='args.server_ip'
+      replace:
+        name: '{{ seafile_app_directory }}/seafile-server/setup-seafile-mysql.py'
+        regexp: socket.gethostbyname\(socket.gethostname\(\)\)
+        replace: args.server_ip
 
     # https://manual.seafile.com/deploy/using_mysql.html
     - name: Execute setup script
@@ -94,16 +108,18 @@
       register: _seafile_setup
 
     - name: Connect Seafile to MemCache
-      blockinfile: >
-        path={{ seafile_app_directory }}/conf/seahub_settings.py
-        insertafter=EOF marker='# {mark} Connect Seafile to MemCache'
-        content="{{ lookup('template', 'seahub_settings.cache.py.j2') }}"
+      blockinfile:
+        path: '{{ seafile_app_directory }}/conf/seahub_settings.py'
+        content: "{{ lookup('template', 'seahub_settings.cache.py.j2') }}"
+        insertafter: EOF
+        marker: '# {mark} Connect Seafile to MemCache'
       notify: '{{ seafile_daemon_modes[seafile_daemon_mode] }} restart seahub'
 
     - name: Set administrator credentials
-      replace: >
-        name={{ seafile_app_directory }}/seafile-server/check_init_admin.py
-        regexp='= ask_admin_{{ item.key }}\(\)' replace='= "{{ item.value }}"'
+      replace:
+        name: '{{ seafile_app_directory }}/seafile-server/check_init_admin.py'
+        regexp: '= ask_admin_{{ item.key }}\(\)'
+        replace: '= "{{ item.value }}"'
       diff: no
       no_log: yes
       with_dict:
@@ -114,18 +130,20 @@
 
     - block:
         - name: Start Seafile services
-          service: >
-            name={{ item }} state=started enabled=yes
+          service:
+            name: '{{ item }}'
+            enabled: yes
+            state: started
           loop:
             - seafile
             - seahub
 
         - name: Wait few seconds for the initial auto-configuration
-          pause: >
-            seconds=10
+          pause:
+            seconds: 10
 
         - name: Trigger Seafile restart
-          command: >
+          command:
             ls /dev/null
           changed_when: yes
           check_mode: no
@@ -140,8 +158,10 @@
   tags: [seafile, update]
 
 - name: Start Seafile services
-  service: >
-    name={{ item }} state=started enabled=yes
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
   become: yes
   loop:
     - seafile

@@ -9,13 +9,17 @@
 
 - block:
     - name: Install GPAC build packages
-      package: >
-        name={{ item }} state=present
+      package:
+        name: '{{ item }}'
+        state: present
       loop: '{{ gpac_build_packages }}'
 
     - name: Clone GPAC source code
-      git: >
-        repo={{ gpac_repository_url }} dest={{ local_source_directory }}/gpac force=yes version={{ gpac_version }}
+      git:
+        repo: '{{ gpac_repository_url }}'
+        dest: '{{ local_source_directory }}/gpac'
+        force: yes
+        version: '{{ gpac_version }}'
       register: _gpac_git
 
     - name: Set GPAC build environment
@@ -24,7 +28,7 @@
           {{ _gpac_git.after }}
 
     - name: Detect if GPAC must be reinstalled
-      command: >
+      command:
         cat '{{ local_source_directory }}/gpac.build.cfg'
       changed_when: >
         gpac_build_env|trim != gpac_build.stdout|default('')|trim
@@ -34,7 +38,7 @@
 
     - block:
         - name: Configure GPAC build process
-          command: >
+          command:
             ./configure
           args:
             chdir: '{{ local_source_directory }}/gpac'
@@ -51,9 +55,9 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ gpac_build_env }} dest={{ local_source_directory }}/gpac.build.cfg
-
+          copy:
+            content: '{{ gpac_build_env }}'
+            dest: '{{ local_source_directory }}/gpac.build.cfg'
       when: gpac_build is change
   become: yes
   tags: [gpac, packages]

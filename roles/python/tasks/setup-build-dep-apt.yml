@@ -1,8 +1,9 @@
 ---
 
 - name: Install Python build dependencies
-  apt: >
-    name=python state=build-dep
+  apt:
+    name: python
+    state: build-dep
   become: yes
   changed_when: _python_build_dep.stdout_lines|length > 4
   register: _python_build_dep

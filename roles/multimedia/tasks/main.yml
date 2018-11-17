@@ -2,41 +2,44 @@
 
 - block:
     - name: Add webupd8 repository to install the pulseaudio equalizer
-      apt_repository: >
-        repo=ppa:nilarimogard/webupd8 state=present update_cache=yes
-      when: "ansible_pkg_mgr == 'apt' and 'pulseaudio-equalizer' in audio_packages"
+      apt_repository:
+        repo: ppa:nilarimogard/webupd8
+        state: present
+        update_cache: yes
+      when: ansible_pkg_mgr == 'apt' and 'pulseaudio-equalizer' in audio_packages
 
     - name: Install imaging packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ imaging_packages }}'
+      package:
+        name: '{{ imaging_packages }}'
+        state: present
 
     - name: Install audio related packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ audio_packages }}'
+      package:
+        name: '{{ audio_packages }}'
+        state: present
 
     - name: Install video related packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ video_packages }}'
+      package:
+        name: '{{ video_packages }}'
+        state: present
 
     - name: Install media players packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ media_player_packages }}'
+      package:
+        name: '{{ media_player_packages }}'
+        state: present
 
     - name: Install encrypted DVD playback packages
-      package: >
-        name=libdvdread4 state=present
+      package:
+        name: libdvdread4
+        state: present
 
     - name: Retrieve encrypted DVD playback script
-      stat: >
-        path=/usr/share/doc/libdvdread4/install-css.sh
+      stat:
+        path: /usr/share/doc/libdvdread4/install-css.sh
       register: dvd_script
 
     - name: Enable encrypted DVD playback
-      command: >
+      command:
         /usr/share/doc/libdvdread4/install-css.sh
       when: dvd_script.stat.exists
   become: yes

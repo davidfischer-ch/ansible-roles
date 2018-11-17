@@ -2,11 +2,14 @@
 
 - block:
     - name: Switch production symlink
-      file: >
-        src={{ djsite_release_directory }} dest={{ djsite_app_directory }}/production state=link
+      file:
+        src: '{{ djsite_release_directory }}'
+        dest: '{{ djsite_app_directory }}/production'
+        state: link
 
     - name: Trigger application reload
-      file: >
-        name={{ djsite_app_directory }}/run/uwsgi.reload state=touch
+      file:
+        name: '{{ djsite_app_directory }}/run/uwsgi.reload'
+        state: touch
   become: yes
   become_user: root

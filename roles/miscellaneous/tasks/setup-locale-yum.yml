@@ -2,7 +2,10 @@
 
 - name: Set the default locale
   command: >
-    localedef --force --inputfile {{ locale.split('.')[0] }} --charmap {{ locale.split('.')[1] }} {{ locale }}
+    localedef
+    --force
+    --inputfile {{ locale.split('.')[0] }}
+    --charmap {{ locale.split('.')[1] }} {{ locale }}
   become: yes
   # changed_when:  FIXME to implement
   tags: [miscellaneous, locale, config] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

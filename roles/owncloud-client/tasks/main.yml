@@ -2,19 +2,23 @@
 ---
 
 - block:
-    - name: Register ownCloud client apt key
-      apt_key: >
-        url={{ owncloud_client_apt_key }} state=present
-      when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
+    - block:
+        - name: Register ownCloud client apt key
+          apt_key:
+            url: '{{ owncloud_client_apt_key }}'
+            state: present
 
-    - name: Install ownCloud client apt repository
-      apt_repository: >
-        repo={{ owncloud_client_apt_repository }} filename=ansible_roles_owncloud_client update_cache=yes state=present
+        - name: Install ownCloud client apt repository
+          apt_repository:
+            repo: '{{ owncloud_client_apt_repository }}'
+            filename: ansible_roles_owncloud_client
+            state: present
+            update_cache: yes
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 15
 
     - name: Install ownCloud client packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ owncloud_client_packages }}'
+      package:
+        name: '{{ owncloud_client_packages }}'
+        state: present
   become: yes
   tags: [owncloud-client, packages]

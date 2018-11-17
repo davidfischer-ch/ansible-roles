@@ -10,35 +10,44 @@
 - block:
     - block:
         - name: Register Jenkins apt key
-          apt_key: >
-            url={{ jenkins_apt_key_url }} state=present
+          apt_key:
+            url: '{{ jenkins_apt_key_url }}'
+            state: present
 
         - name: Register Jenkins apt repository
-          apt_repository: >
-            repo={{ jenkins_apt_repository }} filename=ansible_roles_jenkins update_cache=yes state=present
+          apt_repository:
+            repo: '{{ jenkins_apt_repository }}'
+            filename: ansible_roles_jenkins
+            state: present
+            update_cache: yes
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Jenkins packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ jenkins_packages }}'
+      package:
+        name: '{{ jenkins_packages }}'
+        state: present
   become: yes
   tags: [jenkins, packages]
 
 - block:
     - name: Create Jenkins directories
-      file: >
-        name={{ jenkins_directory }}/{{ item }} state=directory
-        owner={{ jenkins_daemon_user }} group={{ jenkins_daemon_group }} mode=755
+      file:
+        name: '{{ jenkins_directory }}/{{ item }}'
+        owner: '{{ jenkins_daemon_user }}'
+        group: '{{ jenkins_daemon_group }}'
+        mode: 0755
+        state: directory
       loop:
         - updates
 
     - name: Configure Jenkins
-      lineinfile: >
-        dest=/etc/default/jenkins regexp='{{ item.name }}\s*=' line='{{ item.name }}={{ item.value }}'
+      lineinfile:
+        dest: /etc/default/jenkins
+        line: '{{ item.name }}={{ item.value }}'
+        regexp: '{{ item.name }}\s*='
       loop:
-        - { name: HTTP_HOST, value: '{{ jenkins_bind_address }}'                                        }
-        - { name: HTTP_PORT, value: '{{ jenkins_port|int }}'                                            }
+        - { name: HTTP_HOST, value: '{{ jenkins_bind_address }}' }
+        - { name: HTTP_PORT, value: '{{ jenkins_port|int }}'     }
         - { name: JAVA_ARGS, value: '{{ jenkins_java_options }}' }  # -Djenkins.install.runSetupWizard=false
       notify: restart jenkins
 
@@ -46,8 +55,8 @@
     # 1. Generate users/<name>/user.xml
     # 2. Use Groovy script
     - name: FIXME Configure Jenkins users
-      pause: seconds=1
-
+      pause:
+        seconds: 1
   become: yes
   tags: [jenkins, config]
 
@@ -55,15 +64,20 @@
     - meta: flush_handlers
 
     - name: Start Jenkins service
-      service: >
-        name=jenkins state=started enabled=yes
+      service:
+        name: jenkins
+        enabled: yes
+        state: started
 
     - import_tasks: get-initial-admin-password.yml
 
     - name: Wait for Jenkins to start up
-      uri: >
-        url=http://localhost:{{ jenkins_port|int }} timeout={{ jenkins_start_timeout|int }}
-        force_basic_auth=yes user=admin password={{ jenkins_initial_admin_password }}
+      uri:
+        url: 'http://localhost:{{ jenkins_port|int }}'
+        force_basic_auth: yes
+        user: admin
+        password: '{{ jenkins_initial_admin_password }}'
+        timeout: '{{ jenkins_start_timeout|int }}'
       delay: '{{ jenkins_start_delay|int }}'
       register: _jenkins_service_status
       retries: '{{ jenkins_start_retries|int }}'
@@ -72,9 +86,11 @@
   tags: [jenkins, services]
 
 - name: Retrieve Jenkins CLI
-  get_url: >
-    url=http://localhost:{{ jenkins_port|int }}/jnlpJars/jenkins-cli.jar dest={{ jenkins_cli_path }}
-    url_username=admin url_password={{ jenkins_initial_admin_password }}
+  get_url:
+    url: http://localhost:{{ jenkins_port|int }}/jnlpJars/jenkins-cli.jar
+    dest: '{{ jenkins_cli_path }}'
+    url_username: admin
+    url_password: '{{ jenkins_initial_admin_password }}'
   become: yes
   tags: [jenkins, packages]
 
@@ -82,9 +98,11 @@
     # See https://gist.github.com/rowan-m/1026918
 
     - name: Download Jenkins plugins data
-      get_url: >
-        url={{ jenkins_updates_url }}/update-center.json dest={{ jenkins_directory }}/updates/default.js
-        force={{ jenkins_force_updates|bool }} validate_certs={{ ansible_python_version is version('2.7.9', '>=') }}
+      get_url:
+        url: '{{ jenkins_updates_url }}/update-center.json'
+        dest: '{{ jenkins_directory }}/updates/default.js'
+        force: '{{ jenkins_force_updates|bool }}'
+        validate_certs: "{{ ansible_python_version is version('2.7.9', '>=') }}"
 
     - name: Remove first and last JS line wrappers
       shell: >
@@ -95,7 +113,10 @@
     - name: Install Jenkins plugins
       command: >
         java -jar {{ jenkins_cli_path }} -s http://localhost:{{ jenkins_port|int }}
-          install-plugin --username admin --password-file {{ jenkins_directory }}/secrets/initialAdminPassword {{ item.name }}
+          install-plugin
+          --username admin
+          --password-file {{ jenkins_directory }}/secrets/initialAdminPassword
+          {{ item.name }}
       args:
         creates: '{{ jenkins_directory }}/plugins/{{ item.name }}.jpi'
       delay: '{{ jenkins_cli_delay|int }}'

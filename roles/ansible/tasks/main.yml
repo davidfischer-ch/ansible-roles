@@ -10,38 +10,46 @@
 
 - block:
     - name: Install Ansible packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ the_ansible_packages }}'
+      package:
+        name: '{{ the_ansible_packages }}'
+        state: present
 
     - name: Install Ansible Python package from source
-      pip: >
-        name="git+https://github.com/{{ the_ansible_github_username }}/ansible.git@{{ the_ansible_version|regex_replace('^latest$', 'devel') }}#egg=ansible"
-        executable=pip2 extra_args='--src {{ local_source_directory }}' state=latest
+      pip:
+        name: "git+https://github.com/{{ the_ansible_github_username }}/ansible.git@{{ the_ansible_version|regex_replace('^latest$', 'devel') }}#egg=ansible"
+        executable: pip2
+        extra_args: '--src {{ local_source_directory }}'
+        state: latest
       when: the_ansible_from_source|bool
 
     - name: Install Ansible Python package from release
-      pip: >
-        name=ansible executable=pip2 state={{ (the_ansible_version == 'latest')|ternary('latest', omit) }}
-        version={{ (the_ansible_version == 'latest')|ternary(omit, the_ansible_version) }}
+      pip:
+        name: ansible
+        executable: pip2
+        state: "{{ (the_ansible_version == 'latest')|ternary('latest', omit) }}"
+        version: "{{ (the_ansible_version == 'latest')|ternary(omit, the_ansible_version) }}"
       when: not the_ansible_from_source|bool
 
     - name: Install Ansible Python packages
-      pip: >
-        name={{ item }} executable=pip2 state=present
-      loop: '{{ the_ansible_python_packages }}'
+      pip:
+        name: '{{ the_ansible_python_packages }}'
+        executable: pip2
+        state: present
 
     # FIXME may iterate over the_ansible_modules and use map('extract', ...)
 
     - name: Install Ansible modules packages
-      package: >
-        name="{{ item.value|join(' ') }}" state=present
+      package:
+        name: "{{ item.value|join(' ') }}"
+        state: present
       when: item.key in the_ansible_modules and item.value
       with_dict: '{{ the_ansible_modules_packages }}'
 
     - name: Install Ansible modules Python package
-      pip: >
-        name="{{ item.value|join(' ') }}" executable=pip2 state=present
+      pip:
+        name: "{{ item.value|join(' ') }}"
+        executable: pip2
+        state: present
       when: item.key in the_ansible_modules and item.value
       with_dict: '{{ the_ansible_modules_python_packages }}'
   become: yes

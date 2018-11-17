@@ -1,8 +1,8 @@
 ---
 
 - name: Install gaming packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ gaming_packages }}'
+    state: present
   become: yes
-  loop: '{{ gaming_packages }}'
   tags: [gaming, packages]

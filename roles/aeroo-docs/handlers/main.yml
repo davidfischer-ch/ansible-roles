@@ -1,6 +1,7 @@
 ---
 
 - name: restart aeroo-docs
-  supervisorctl: >
-    name=aeroo-docs state=restarted
+  supervisorctl:
+    name: aeroo-docs
+    state: restarted
   become: yes

@@ -11,23 +11,25 @@
 
 - block:
     - name: Download Ansible Tower setup
-      get_url: >
-        url=https://releases.ansible.com/awx/setup/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz
-        dest={{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz
+      get_url:
+        url: https://releases.ansible.com/awx/setup/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz
+        dest: '{{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz'
 
     - name: Extract Ansible Tower setup
-      unarchive: >
-        src={{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz
-        dest={{ local_source_directory }} copy=no exclude=inventory
+      unarchive:
+        src: '{{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}.tar.gz'
+        dest: '{{ local_source_directory }}'
+        copy: no
+        exclude: inventory
 
     - name: Configure Ansible Tower setup
-      template: >
-        src={{ ansible_tower_setup_inventory_file }}
-        dest={{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}/inventory
+      template:
+        src: '{{ ansible_tower_setup_inventory_file }}'
+        dest: '{{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}/inventory'
 
     - name: Gather information about configuration
-      stat: >
-        path={{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}/inventory
+      stat:
+        path: '{{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}/inventory'
       register: ansible_tower_setup_config
 
     - name: Set Ansible Tower setup environment
@@ -37,7 +39,7 @@
           {{ ansible_tower_setup_config.stat.checksum }}
 
     - name: Detect if Ansible Tower must be reinstalled
-      command: >
+      command:
         cat '{{ local_source_directory }}/ansible-tower.build.cfg'
       changed_when: >
         ansible_tower_setup_env|trim != ansible_tower_setup.stdout|default('')|trim
@@ -47,22 +49,24 @@
 
     - block:
         - name: Setup Ansible Tower
-          command: >
+          command:
             ./setup.sh
           args:
             chdir: '{{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}'
 
         - name: Save setup environment
-          copy: >
-            content={{ ansible_tower_setup_env }} dest={{ local_source_directory }}/ansible-tower.build.cfg
+          copy:
+            content: '{{ ansible_tower_setup_env }}'
+            dest: '{{ local_source_directory }}/ansible-tower.build.cfg'
       when: ansible_tower_setup is change
   become: yes
   tags: [ansible-tower, packages]
 
 - block:
     - name: Configure Ansible Tower
-      template: >
-        src={{ ansible_tower_config_file }} dest=/var/lib/awx/public/static/local_settings.json
+      template:
+        src: '{{ ansible_tower_config_file }}'
+        dest: /var/lib/awx/public/static/local_settings.json
       notify: restart ansible tower
   become: yes
   tags: [ansible-tower, config]

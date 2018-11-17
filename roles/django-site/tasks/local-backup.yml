@@ -11,8 +11,9 @@
             _backup_format: '{{ djsite_database_dump_formats[djsite_database_dump_format] }}'
 
         - name: Create temporary directory
-          file: >
-            name={{ _tmp_directory }} state=directory
+          file:
+            name: '{{ _tmp_directory }}'
+            state: directory
 
         - name: Dump Website database
           shell: >
@@ -27,38 +28,54 @@
                 --username {{ djsite_database_user }}
 
         - name: Backup Website database dump locally
-          synchronize: >
-            src={{ _tmp_directory }}/ dest={{ djsite_local_backup_directory }}/ mode=pull
+          synchronize:
+            src: '{{ _tmp_directory }}/'
+            dest: '{{ djsite_local_backup_directory }}/'
+            mode: pull
       always:
         - name: Remove temporary directory
-          file: >
-            name={{ _tmp_directory }} state=absent
+          file:
+            name: '{{ _tmp_directory }}'
+            state: absent
       tags: database
 
     - block:
         - name: Create local Website media directories
           local_action:
-            file name={{ djsite_local_backup_directory }}/media state=directory
+            module: file
+            name: '{{ djsite_local_backup_directory }}/media'
+            state: directory
           become: no
 
         - name: Backup Website media directory locally
-          synchronize: >
-            src={{ djsite_data_directory }}/media/ dest={{ djsite_local_backup_directory }}/media/
-            archive=yes checksum=yes delete=yes links=yes mode=pull
+          synchronize:
+            src: '{{ djsite_data_directory }}/media/'
+            dest: '{{ djsite_local_backup_directory }}/media/'
+            archive: yes
+            checksum: yes
+            delete: yes
+            links: yes
+            mode: pull
       tags: data
 
     - block:
         - import_tasks: get-production-link.yml
 
         - name: Save virtualenv absolute path to a file
-          local_action: >
-            copy content={{ djsite_production_link.stat.lnk_source }} dest={{ djsite_local_backup_directory }}/venv.path
+          local_action:
+            module: copy
+            content: '{{ djsite_production_link.stat.lnk_source }}'
+            dest: '{{ djsite_local_backup_directory }}/venv.path'
 
         - name: Backup Website web directory locally
-          synchronize: >
-            src={{ djsite_app_directory }}/production/ dest={{ djsite_local_backup_directory }}/web/
-            archive=yes checksum=yes delete=yes links=yes mode=pull
-          args:
+          synchronize:
+            src: '{{ djsite_app_directory }}/production/'
+            dest: '{{ djsite_local_backup_directory }}/web/'
+            archive: yes
+            checksum: yes
+            delete: yes
+            links: yes
+            mode: pull
             rsync_opts: "{{ djsite_rsync_backup_excludes|format_items('--exclude={0}')|join(' ') }}"
       tags: code
   become: yes

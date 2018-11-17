@@ -17,23 +17,31 @@
             sha256_checksum: '{{ nginx_pagespeed_module_library_checksum }}'
 
     - name: Create PageSpeed cache directory
-      file: >
-        name={{ nginx_pagespeed_module_cache_directory }} owner={{ nginx_daemon_user }} group={{ nginx_daemon_group }}
-        mode=755 state=directory
+      file:
+        name: '{{ nginx_pagespeed_module_cache_directory }}'
+        owner: '{{ nginx_daemon_user }}'
+        group: '{{ nginx_daemon_group }}'
+        mode: 0755
+        state: directory
 
     - name: Create PageSpeed source directories
-      file: >
-        name={{ local_source_directory }}/{{ nginx_pagespeed_module_name }}/psol state=directory
+      file:
+        name: '{{ local_source_directory }}/{{ nginx_pagespeed_module_name }}/psol'
+        state: directory
 
     - name: Download PageSpeed module source code
-      get_url: >
-        url={{ item.url }} dest={{ local_source_directory }}/{{ item.file }} sha256sum={{ item.sha256_checksum }}
-        force=no
+      get_url:
+        url: '{{ item.url }}'
+        dest: '{{ local_source_directory }}/{{ item.file }}'
+        force: no
+        sha256sum: '{{ item.sha256_checksum }}'
       loop: '{{ nginx_pagespeed_module_items|default([]) }}'
 
     - name: Extract PageSpeed module source code
-      unarchive: >
-        src={{ local_source_directory }}/{{ item.file }} dest={{ local_source_directory }}/{{ item.path }} copy=no
+      unarchive:
+        src: '{{ local_source_directory }}/{{ item.file }}'
+        dest: '{{ local_source_directory }}/{{ item.path }}'
+        copy: no
       loop: '{{ nginx_pagespeed_module_items|default([]) }}'
   become: yes
   tags: [nginx, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

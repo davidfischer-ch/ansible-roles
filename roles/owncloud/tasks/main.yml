@@ -8,49 +8,66 @@
 
 - block:
     - name: Create ownCloud data directory
-      file: >
-        name={{ owncloud_data_directory }} owner=www-data group=www-data state=directory
+      file:
+        name: '{{ owncloud_data_directory }}'
+        owner: www-data
+        group: www-data
+        state: directory
 
-    - name: Register ownCloud apt key
-      apt_key: >
-        url={{ owncloud_apt_key }} state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - block:
+        - name: Register ownCloud apt key
+          apt_key:
+            url: '{{ owncloud_apt_key }}'
+            state: present
 
-    - name: Install ownCloud apt repository
-      apt_repository: >
-        repo={{ owncloud_apt_repository }} filename=ansible_roles_owncloud update_cache=yes state=present
-      when: "ansible_pkg_mgr == 'apt'"
+        - name: Install ownCloud apt repository
+          apt_repository:
+            repo: '{{ owncloud_apt_repository }}'
+            filename: ansible_roles_owncloud
+            state: present
+            update_cache: yes
+      when: ansible_pkg_mgr == 'apt'
 
     - name: Install LibreOffice packages
-      apt: >
-        name=libreoffice-common install_recommends=no state=present
+      apt:
+        name: libreoffice-common
+        install_recommends: no
+        state: present
 
     - name: Install ownCloud packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ owncloud_packages }}'
+      package:
+        name: '{{ owncloud_packages }}'
+        state: present
   become: yes
   tags: [owncloud, packages]
 
 - block:
     - name: Enable Apache 2 modules
-      apache2_module: >
-        name={{ item }} state=present
-      loop:
-        - ssl
-        - rewrite
+      apache2_module:
+        name:
+          - ssl
+          - rewrite
+      state: present
 
     - name: Configure Apache 2 options
-      lineinfile: >
-        dest=/etc/apache2/apache2.conf regexp=^HostnameLookups line='HostnameLookups On'
+      lineinfile:
+        dest: /etc/apache2/apache2.conf
+        line: 'HostnameLookups On'
+        regexp: '^HostnameLookups'
 
     - name: Configure ownCloud
-      template: >
-        src=config.php.j2 dest=/var/www/owncloud/config/config.php backup=yes owner=www-data group=www-data mode=640
+      template:
+        src: config.php.j2
+        dest: /var/www/owncloud/config/config.php
+        backup: yes
+        owner: www-data
+        group: www-data
+        mode: 0640
 
     - name: Remove ownCloud default site
-      file: >
-        name=/etc/apache2/{{ item }}.conf state=absent
+      file:
+        name: /etc/apache2/{{ item }}.conf
+        state: absent
       loop:
         - conf-available/owncloud
         - conf-enabled/owncloud
@@ -59,24 +76,35 @@
       notify: reload apache
 
     - name: Configure ownCloud site
-      template: >
-        src=owncloud.conf.j2 dest=/etc/apache2/sites-available/owncloud.conf owner=root group=root mode=644
+      template:
+        src: owncloud.conf.j2
+        dest: /etc/apache2/sites-available/owncloud.conf
+        owner: root
+        group: root
+        mode: 0644
       notify: reload apache
 
     - name: Enable ownCloud site
-      file: >
-        src=/etc/apache2/sites-available/owncloud.conf dest=/etc/apache2/sites-enabled/owncloud.conf state=link
+      file:
+        src: /etc/apache2/sites-available/owncloud.conf
+        dest: /etc/apache2/sites-enabled/owncloud.conf
+        state: link
       notify: reload apache
   become: yes
   tags: [owncloud, config]
 
 - block:
     - name: Setup ownCloud MySQL database
-      mysql_db: >
-        name=owncloud state=present
+      mysql_db:
+        name: owncloud
+        state: present
 
     - name: Setup ownCloud MySQL user
-      mysql_user: >
-        name=owncloud host=localhost password={{ owncloud_mysql_password }} priv=owncloud.*:ALL state=present
+      mysql_user:
+        name: owncloud
+        host: localhost
+        password: '{{ owncloud_mysql_password }}'
+        priv: owncloud.*:ALL
+        state: present
   become: yes
   tags: [owncloud, databases]

@@ -1,7 +1,8 @@
 ---
 
 - name: Install Vagrant release {{ vagrant_version }}
-  yum: >
-    name={{ local_source_directory }}/{{ vagrant_release_url|basename }} state=present
+  yum:
+    name: '{{ local_source_directory }}/{{ vagrant_release_url|basename }}'
+    state: present
   become: yes
   tags: [vagrant, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

@@ -1,10 +1,12 @@
 ---
 
 - name: Install GitHub python packages
-  local_action: >
-    pip name={{ item }} executable=pip2 state=present
+  local_action:
+    module: pip
+    name: '{{ github_python_packages }}'
+    executable: pip2
+    state: present
   become: yes
-  loop: '{{ github_python_packages }}'
   tags: [github, packages]
 
 - block:
@@ -13,12 +15,17 @@
         github_ips: "{{ github_ips|default(lookup('dig', 'github.com').split(',')) }}"
 
     - name: Add GitHub public key to known_hosts file
-      lineinfile: >
-        dest={{ ansible_user_dir }}/.ssh/known_hosts regexp=^github.com
-        line='github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}' create=yes
+      lineinfile:
+        dest: '{{ ansible_user_dir }}/.ssh/known_hosts'
+        create: yes
+        line: "github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}"
+        regexp: ^github.com
 
     - name: Add GitHub IP addresses to hosts file
-      lineinfile: >
-        dest=/etc/hosts regexp=' github.com$' line='{{ github_ips|sort|first }} github.com' create=yes
+      lineinfile:
+        dest: /etc/hosts
+        create: yes
+        line: '{{ github_ips|sort|first }} github.com'
+        regexp: ' github.com$'
       become: yes
   tags: [github, config]

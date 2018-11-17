@@ -3,27 +3,30 @@
 
 - block:
     - name: Install GExiv2 build packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ gexiv2_build_packages }}'
+      package:
+        name: '{{ gexiv2_build_packages }}'
+        state: present
 
     - name: Remove old GExiv2 package
-      package: >
-        name=gir1.2-gexiv2-0.10 state=absent
+      package:
+        name: gir1.2-gexiv2-0.10
+        state: absent
 
     - name: Clone GExiv2 source code
-      git: >
-        repo=https://git.gnome.org/browse/gexiv2 dest={{ local_source_directory }}/gexiv2 force=yes
-        version={{ gexiv2_version }}
+      git:
+        repo: https://git.gnome.org/browse/gexiv2
+        dest: '{{ local_source_directory }}/gexiv2'
+        force: yes
+        version: '{{ gexiv2_version }}'
 
     - name: Generate GExiv2 build configuration
-      command: >
+      command:
         ./autogen.sh
       args:
         chdir: '{{ local_source_directory }}/gexiv2'
 
     - name: Configure GExiv2 build process
-      command: >
+      command:
         ./configure --enable-introspection
       args:
         chdir: '{{ local_source_directory }}/gexiv2'

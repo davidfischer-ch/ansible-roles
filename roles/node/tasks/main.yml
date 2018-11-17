@@ -3,24 +3,29 @@
 ---
 
 - block:
-    - name: Register node apt key
-      apt_key: >
-        url={{ node_apt_key }} id=68576280 state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - block:
+        - name: Register node apt key
+          apt_key:
+            url: '{{ node_apt_key }}'
+            id: 68576280
+            state: present
 
-    - name: Register node apt repository
-      apt_repository: >
-        repo={{ node_apt_repository }} filename=ansible_roles_node update_cache=yes state=present
-      register: _node_apt_repository
+        - name: Register node apt repository
+          apt_repository:
+            repo: '{{ node_apt_repository }}'
+            filename: ansible_roles_node
+            state: present
+            update_cache: yes
+          register: _node_apt_repository
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install node packages
-      package: >
-        name={{ item }} state={{ (_node_apt_repository is change)|ternary('latest', 'present') }}
-      loop: '{{ node_packages }}'
+      package:
+        name: '{{ node_packages }}'
+        state: "{{ (_node_apt_repository is change)|ternary('latest', 'present') }}"
 
     - name: Check node command is available
-      command: >
+      command:
         node
       changed_when: _node_command is failure
       check_mode: no
@@ -28,12 +33,14 @@
       register: _node_command
 
     - name: Add symlink nodejs = node
-      file: >
-        src=/usr/bin/nodejs dest=/usr/bin/node state=link
+      file:
+        src: /usr/bin/nodejs
+        dest: /usr/bin/node
+        state: link
       when: _node_command is failure
 
     - name: Check node version
-      command: >
+      command:
         node --version
       changed_when: no
       check_mode: no

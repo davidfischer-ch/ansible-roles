@@ -5,7 +5,7 @@
       - vagrant_snapshots is defined
 
 - name: Retrieve snapshots
-  command: >
+  command:
     vagrant snapshot list {{ item.key }}
   args:
     chdir: '{{ vagrant_machines_directory }}'
@@ -17,7 +17,7 @@
   with_dict: '{{ vagrant_snapshots }}'
 
 - name: Take snapshots
-  command: >
+  command:
     vagrant snapshot take {{ item.item.key }} {{ item.item.value }}
   args:
     chdir: '{{ vagrant_machines_directory }}'

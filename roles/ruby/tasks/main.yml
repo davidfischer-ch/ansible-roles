@@ -8,10 +8,10 @@
   tags: [ruby, always]
 
 - name: Install Ruby build packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ ruby_build_packages }}'
+    state: present
   become: yes
-  loop: '{{ ruby_build_packages }}'
   tags: [ruby, packages]
 
 - block:
@@ -25,7 +25,7 @@
           {{ ruby_version }}
 
     - name: Detect if Ruby must be reinstalled
-      command: >
+      command:
         cat '{{ local_source_directory }}/ruby.build.cfg'
       changed_when: >
         ruby_build_env|trim != ruby_build.stdout|default('')|trim
@@ -35,16 +35,20 @@
 
     - block:
         - name: Download Ruby source code
-          get_url: >
-            url=http://ftp.ruby-lang.org/pub/ruby/{{ (ruby_version|string|splitext)[0] }}/{{ ruby_source_package }} force=no
-            dest={{ local_source_directory }}/{{ ruby_source_package }} sha256sum={{ ruby_checksum }}
+          get_url:
+            url: http://ftp.ruby-lang.org/pub/ruby/{{ (ruby_version|string|splitext)[0] }}/{{ ruby_source_package }}
+            dest: '{{ local_source_directory }}/{{ ruby_source_package }}'
+            force: no
+            sha256sum: '{{ ruby_checksum }}'
 
         - name: Extract Ruby source code
-          unarchive: >
-            src={{ local_source_directory }}/{{ ruby_source_package }} dest={{ local_source_directory }} copy=no
+          unarchive:
+            src: '{{ local_source_directory }}/{{ ruby_source_package }}'
+            dest: '{{ local_source_directory }}'
+            copy: no
 
         - name: Configure Ruby build process
-          command: >
+          command:
             ./configure {{ ruby_build_cfg }}
           args:
             chdir: '{{ local_source_directory }}/{{ ruby_source_directoy }}'
@@ -61,12 +65,13 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ ruby_build_env }} dest={{ local_source_directory }}/ruby.build.cfg
+          copy:
+            content: '{{ ruby_build_env }}'
+            dest: '{{ local_source_directory }}/ruby.build.cfg'
       when: ruby_build is change
 
     - name: Check Ruby version
-      command: >
+      command:
         ruby --version
       changed_when: no
       check_mode: no

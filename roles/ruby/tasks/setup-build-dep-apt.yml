@@ -1,8 +1,9 @@
 ---
 
 - name: Install Ruby build dependencies
-  apt: >
-    name=ruby state=build-dep
+  apt:
+    name: ruby
+    state: build-dep
   become: yes
   changed_when: _ruby_build_dep.stdout_lines|length > 5
   register: _ruby_build_dep

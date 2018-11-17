@@ -1,8 +1,9 @@
 ---
 
 - name: Remove temporary directory
-  file: >
-    name=/tmp/aws-schedule/{{ aws_schedule_environment }} state=absent
+  file:
+    name: /tmp/aws-schedule/{{ aws_schedule_environment }}
+    state: absent
 
 - name: Remove the resources scheduling events
   cloudwatchevent_rule:

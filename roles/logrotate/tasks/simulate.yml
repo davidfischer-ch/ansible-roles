@@ -2,12 +2,13 @@
 
 - block:
     - name: Retrieve Logrotate configured log rotations
-      find: >
-        path=/etc/logrotate.d file_type=file
+      find:
+        path: /etc/logrotate.d
+        file_type: file
       register: _logrotate_log_rotations
 
     - name: Simulate the log rotations
-      command: >
+      command:
         logrotate --debug {{ item }}
       changed_when: no
       check_mode: no

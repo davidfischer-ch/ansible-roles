@@ -3,8 +3,11 @@
 
 - block:
     - name: Download Composer Setup
-      get_url: >
-        url=https://getcomposer.org/installer dest=/tmp/composer-setup.php mode=755 sha256sum={{ composer_checksum }}
+      get_url:
+        url: https://getcomposer.org/installer
+        dest: /tmp/composer-setup.php
+        mode: 0755
+        sha256sum: '{{ composer_checksum }}'
 
     - name: Install Composer
       command: >

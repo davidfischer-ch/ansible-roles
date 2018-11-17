@@ -2,15 +2,15 @@
 
 - block:
     - name: Install GitLab (manual install) packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ gitlab_manual_depend_packages }}'
+      package:
+        name: '{{ gitlab_manual_depend_packages }}'
+        state: present
       when: gitlab_install_mode == 'manual'
 
     - name: Install GitLab (Omnibus install) packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ gitlab_omnibus_depend_packages }}'
+      package:
+        name: '{{ gitlab_omnibus_depend_packages }}'
+        state: present
       when: gitlab_install_mode == 'omnibus'
   become: yes
   tags: [gitlab, packages]
@@ -31,8 +31,9 @@
 
 - block:
     - name: Install Kerberos package
-      package: >
-        name=libkrb5-dev state=present
+      package:
+        name: libkrb5-dev
+        state: present
       when: gitlab_kerberos_enabled|bool
 
     # - name: Install postfix server
@@ -45,59 +46,71 @@
 
 - block:
     - name: Download Omnibus setup script
-      get_url: >
-        url=https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
-        dest=/tmp/gitlab.deb.sh mode=755
+      get_url:
+        url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+        dest: /tmp/gitlab.deb.sh
+        mode: 0755
       notify: execute omnibus
 
     - name: Install GitLab Community Edition
-      package: >
-        name=gitlab-ce state=present
+      package:
+        name: gitlab-ce
+        state: present
       become: yes
 
     - debug:
-        msg='You must execute sudo gitlab-ctl reconfigure (root, 5iveL!fe)'
+        msg: 'You must execute sudo gitlab-ctl reconfigure (root, 5iveL!fe)'
   tags: [gitlab, packages]
   when: gitlab_install_mode == 'omnibus'
 
 - block:
     - name: Configure GitLab URL
-      lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp='^external_url \S+'
-        line="external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
+      lineinfile:
+        dest: /etc/gitlab/gitlab.rb
+        line: "external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
+        regexp: '^external_url \S+'
       notify: restart gitlab
       register: _gitlab_url
 
     - name: Configure GitLab port
-      lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*nginx\\['listen_port'\\]"
-        line="nginx['listen_port'] = {{ gitlab_port|int }}"
+      lineinfile:
+        dest: /etc/gitlab/gitlab.rb
+        line: "nginx['listen_port'] = {{ gitlab_port|int }}"
+        regexp: "^#?\\s*nginx\\['listen_port'\\]"
       notify: restart gitlab
       register: _gitlab_port
 
     - name: Check GitLab data directory
-      file: >
-        name={{ gitlab_data_directory }}{{ item }} state=directory owner=git group=root mode=700
+      file:
+        name: '{{ gitlab_data_directory }}{{ item }}'
+        owner: git
+        group: root
+        mode: 0700
+        state: directory
       loop:
         - ''
         - '/repositories'
 
     - name: Configure GitLab data directory
-      lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp='^git_data_dir \S+' line="git_data_dir '{{ gitlab_data_directory }}'"
+      lineinfile:
+        dest: /etc/gitlab/gitlab.rb
+        line: "git_data_dir '{{ gitlab_data_directory }}'"
+        regexp: '^git_data_dir \S+'
       notify: restart gitlab
       register: _gitlab_data
 
     - name: Configure GitLab (settings)
-      lineinfile: >
-        dest=/etc/gitlab/gitlab.rb regexp="^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
-        line="{{ item.group }}['{{ item.key }}'] = {{ item.value }}" backup=yes
+      lineinfile:
+        dest: /etc/gitlab/gitlab.rb
+        backup: yes
+        line: "{{ item.group }}['{{ item.key }}'] = {{ item.value }}"
+        regexp: "^#?\\s*{{ item.group }}\\['{{ item.key }}'\\]"
       loop: gitlab_settings
       notify: restart gitlab
       register: _gitlab_setings
 
     - name: Stop GitLab services to free up some memory
-      command: >
+      command:
         gitlab-ctl stop {{ item }}
       loop:
         - unicorn
@@ -105,7 +118,7 @@
       when: _gitlab_url is change or _gitlab_port is change or _gitlab_data is change or _gitlab_setings is change
 
     - name: Generate GitLab configuration
-      command: >
+      command:
         gitlab-ctl reconfigure
       changed_when: "'  - ' in _gitlab_reconfigure.stderr"
       register: _gitlab_reconfigure

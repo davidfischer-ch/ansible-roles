@@ -3,13 +3,16 @@
 
 - block:
     - name: Download Drupal Shell
-      get_url: >
-        url=https://github.com/drush-ops/drush/releases/download/{{ drush_version }}/drush.phar force=no
-        dest={{ local_source_directory }}/drush-{{ drush_version }}.phar
+      get_url:
+        url: https://github.com/drush-ops/drush/releases/download/{{ drush_version }}/drush.phar
+        force: no
+        dest: '{{ local_source_directory }}/drush-{{ drush_version }}.phar'
 
     - name: Make Drupal Shell executable
-      file: >
-        name={{ local_source_directory }}/drush-{{ drush_version }}.phar mode=755 state=file
+      file:
+        name: '{{ local_source_directory }}/drush-{{ drush_version }}.phar'
+        mode: 0755
+        state: file
 
     - name: Check Drupal Shell
       command: >
@@ -18,8 +21,11 @@
       check_mode: no
 
     - name: Install Drupal Shell
-      file: >
-        src={{ local_source_directory }}/drush-{{ drush_version }}.phar dest={{ drush_path }} force=yes state=link
+      file:
+        src: '{{ local_source_directory }}/drush-{{ drush_version }}.phar'
+        dest: '{{ drush_path }}'
+        force: yes
+        state: link
 
     # - name: Enrich the bash startup file with completion and aliases
     #   command: >

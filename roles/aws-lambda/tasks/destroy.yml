@@ -1,8 +1,9 @@
 ---
 
 - name: Remove temporary directory
-  file: >
-    name=/tmp/aws-lambda/{{ aws_lambda_environment }} state=absent
+  file:
+    name: /tmp/aws-lambda/{{ aws_lambda_environment }}
+    state: absent
 
 # - name: Remove the events
 #   cloudwatchevent_rule:

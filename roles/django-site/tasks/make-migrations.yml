@@ -15,7 +15,8 @@
 
     - name: Generate graphs of the models
       shell: >
-        {{ djsite_app_directory }}/test/venv/bin/python ../manage.py graph_models | dot -Tpng -omigrations/models.png
+        {{ djsite_app_directory }}/test/venv/bin/python
+        ../manage.py graph_models | dot -Tpng -omigrations/models.png
       args:
         chdir: '{{ djsite_app_directory }}/test/server/{{ item }}'
       loop: '{{ djsite_config.custom_applications }}'

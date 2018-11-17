@@ -5,13 +5,16 @@
 
 - block:
     - name: Install Ampache packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ ampache_packages }}'
+      package:
+        name: '{{ ampache_packages }}'
+        state: present
 
     - name: Clone Ampache source code
-      git: >
-        repo={{ ampache_repository_url }} dest={{ local_source_directory }}/ampache force=yes version={{ ampache_version }}
+      git:
+        repo: '{{ ampache_repository_url }}'
+        dest: '{{ local_source_directory }}/ampache'
+        force: yes
+        version: '{{ ampache_version }}'
 
     - name: Install Ampache from source
       command: >
@@ -22,7 +25,7 @@
       register: _ampache_install
 
     - name: Install Ampache dependencies
-      command: >
+      command:
         composer install --prefer-source --no-interaction
       args:
         chdir: '{{ ampache_web_directory }}'
@@ -33,8 +36,13 @@
 
 - block:
     - name: Create Ampache directories
-      file: >
-        name={{ item }} owner=www-data group=www-data mode=755 recurse=no state=directory
+      file:
+        name: '{{ item }}'
+        owner: www-data
+        group: www-data
+        mode: 0755
+        recurse: no
+        state: directory
       loop:
         - '{{ ampache_log_directory }}'
         - '{{ ampache_metadata_directory }}'
@@ -42,15 +50,20 @@
       when: item|length > 0
 
     - name: Enable Apache 2 modules
-      apache2_module: >
-        name={{ item }} state=present
+      apache2_module:
+        name: '{{ item }}'
+        state: present
       loop:
         - ssl
         - rewrite
 
     - name: Configure Ampache
-      template: >
-        src={{ item.name }}.j2 dest=/usr/share/ampache/www2/{{ item.path }} owner=root group=root mode=644
+      template:
+        src: '{{ item.name }}.j2'
+        dest: /usr/share/ampache/www2/{{ item.path }}
+        owner: root
+        group: root
+        mode: 0644
       loop:
         - { name: 'ampache.cfg.{{ ampache_config_version|int }}.php', path: 'config/ampache.cfg.php' }
         - { name: 'channel-htaccess', path: 'channel/.htaccess' }
@@ -59,8 +72,9 @@
       notify: reload apache
 
     - name: Remove Ampache default site
-      file: >
-        name=/etc/apache2/{{ item }}.conf state=absent
+      file:
+        name: /etc/apache2/{{ item }}.conf
+        state: absent
       loop:
         - conf-available/ampache
         - conf-enabled/ampache
@@ -69,26 +83,37 @@
       notify: reload apache
 
     - name: Configure Ampache site
-      template: >
-        src=ampache.conf.j2 dest=/etc/apache2/sites-available/ampache.conf owner=root group=root mode=644
+      template:
+        src: ampache.conf.j2
+        dest: /etc/apache2/sites-available/ampache.conf
+        owner: root
+        group: root
+        mode: 0644
       notify: reload apache
 
     - name: Enable Ampache site
-      file: >
-        src=/etc/apache2/sites-available/ampache.conf dest=/etc/apache2/sites-enabled/ampache.conf state=link
+      file:
+        src: /etc/apache2/sites-available/ampache.conf
+        dest: /etc/apache2/sites-enabled/ampache.conf
+        state: link
       notify: reload apache
   become: yes
   tags: [ampache, config]
 
 - block:
     - name: Setup Ampache MySQL database
-      mysql_db: >
-        name=ampache state=present
+      mysql_db:
+        name: ampache
+        state: present
       register: _ampache_database
 
     - name: Setup Ampache MySQL user
-      mysql_user: >
-        name=ampache host=localhost password={{ ampache_mysql_password }} priv=ampache.*:ALL state=present
+      mysql_user:
+        name: ampache
+        host: localhost
+        password: '{{ ampache_mysql_password }}'
+        priv: 'ampache.*:ALL'
+        state: present
 
     - name: Initialize Ampache MySQL database
       shell: >

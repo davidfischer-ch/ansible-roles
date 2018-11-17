@@ -2,17 +2,24 @@
 
 - block:
     - name: Download PhantomJS {{ phantomjs_version }} binary package
-      get_url: >
-        url={{ phantomjs_package_url }} dest={{ local_source_directory }}/{{ phantomjs_package_url|basename }} force=no
+      get_url:
+        url: '{{ phantomjs_package_url }}'
+        dest: '{{ local_source_directory }}/{{ phantomjs_package_url|basename }}'
+        force: no
 
     - name: Extract PhantomJS {{ phantomjs_version }} binary package
-      unarchive: >
-        src={{ local_source_directory }}/{{ phantomjs_package_url|basename }} copy=no
-        dest={{ local_source_directory }}
+      unarchive:
+        src: '{{ local_source_directory }}/{{ phantomjs_package_url|basename }}'
+        dest: '{{ local_source_directory }}'
+        copy: no
 
     - name: Install PhantomJS {{ phantomjs_version }} binary
-      copy: >
-        src={{ local_source_directory }}/{{ phantomjs_package_name }}/bin/phantomjs remote_src=yes
-        dest={{ phantomjs_path }} owner=root group=root mode=775
+      copy:
+        src: '{{ local_source_directory }}/{{ phantomjs_package_name }}/bin/phantomjs'
+        dest: '{{ phantomjs_path }}'
+        owner: root
+        group: root
+        mode: 0775
+        remote_src: yes
   become: yes
   tags: [phantomjs, packages]
