@@ -101,5 +101,6 @@ def main():
 def clean_key(key):
     return key.replace('/', '-').replace(' ', '-').lower()
 
+
 if __name__ == '__main__':
     main()

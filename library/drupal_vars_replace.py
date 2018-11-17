@@ -9,7 +9,8 @@ DOCUMENTATION = r"""
 ---
 module: drupal_vars_replace
 author: "David Fischer (@davidfischer-ch)"
-short_description: Update Drupal variables replacing a pattern by a value. Recurse into (dict, list) data structures.
+short_description: Update Drupal variables replacing a pattern by a value.
+                   Recurse into (dict, list) data structures.
 options:
   path:
     required: true
@@ -39,14 +40,23 @@ def main():
         ),
         supports_check_mode=True
     )
-    drush, path, pattern, value = (module.params[k] for k in ('drush', 'path', 'pattern', 'value'))
-    updated_variables = replace_drupal_variables(drush, path, pattern, value, simulate=module.check_mode)
+    drush, path, pattern, value = (
+        module.params[k] for k in ('drush', 'path', 'pattern', 'value')
+    )
+    updated_variables = replace_drupal_variables(
+        drush,
+        path,
+        pattern,
+        value,
+        simulate=module.check_mode)
     module.exit_json(changed=bool(updated_variables), diff=updated_variables)
 
 
 def get_drupal_variables(drush, directory):
-    return json.loads(subprocess.check_output([drush, 'vget', '--format=json'], cwd=directory,
-                      env=get_drush_environment()).decode('utf-8'))
+    return json.loads(subprocess.check_output(
+        [drush, 'vget', '--format=json'],
+        cwd=directory,
+        env=get_drush_environment()).decode('utf-8'))
 
 
 def get_drush_environment():
@@ -74,14 +84,21 @@ def replace_drupal_variables(drush, directory, pattern, string, simulate=False):
             if not simulate:
                 set_drupal_variable(drush, directory, name, updated_value)
             updated_variables.append({
-                'after': updated_value, 'after_header': name, 'before': value, 'before_header': name
+                'after': updated_value,
+                'after_header': name,
+                'before': value,
+                'before_header': name
             })
     return updated_variables
 
 
 def set_drupal_variable(drush, directory, name, value):
-    process = subprocess.Popen([drush, 'vset', '--format=json', name, json.dumps(value)], cwd=directory,
-                               env=get_drush_environment(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(
+        [drush, 'vset', '--format=json', name, json.dumps(value)],
+        cwd=directory,
+        env=get_drush_environment(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
     (stdout, stderr), returncode = process.communicate(), process.poll()
     if returncode:
         raise ValueError(name, value, stdout, stderr)

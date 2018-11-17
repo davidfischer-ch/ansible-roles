@@ -34,7 +34,9 @@ def main():
         supports_check_mode=True
     )
     module.exit_json(changed=False, ansible_facts=dict(
-        newrelic_cu=(multiprocessing.cpu_count() + psutil.virtual_memory().total // 1000 ** 3) * module.params['hours']
+        newrelic_cu=(
+            multiprocessing.cpu_count() + psutil.virtual_memory().total // 1000 ** 3
+        ) * module.params['hours']
     ))
 
 

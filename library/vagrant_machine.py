@@ -69,11 +69,14 @@ def main():
     chdir, name, provider, state, timeout = (
         module.params[k] for k in ('chdir', 'name', 'provider', 'state', 'timeout')
     )
+
     if timeout < 1:
         module.fail_json(msg='Timeout must be greater than 0.')
+
     current_state = get_state(chdir, name)
     if current_state == 'absent' and state != 'absent' and not provider:
         module.fail_json(msg='A provider is required because machine "%s" is absent.' % name)
+
     if not module.check_mode:
         if current_state != state:
             try:
@@ -89,26 +92,37 @@ def set_state(directory, name, state, provider=None, timeout=120):
         try:
             action = ACTION_FOR_TRANSITION[current_state][state]
         except KeyError:
-            raise NotImplementedError('Unable to find a suitable action for the transition from %s to %s.' % (
-                current_state, state)
-            )
+            raise NotImplementedError(
+                'Unable to find a suitable action for the transition from %s to %s.' %
+                (current_state, state))
+
         if action[-1] == '--provider':
             action.append(provider)
+
         process = subprocess.Popen(
-            itertools.chain(['vagrant'], action, [name]), cwd=directory, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
+            itertools.chain(['vagrant'], action, [name]),
+            cwd=directory,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+
         if current_state in STOP_TO_START_STATES:
             start_time = time.time()
             while True:
                 time.sleep(1)
-                new_state = get_state(directory, name, wait=True, timeout=timeout + start_time - time.time())
+                new_state = get_state(
+                    directory,
+                    name,
+                    wait=True,
+                    timeout=timeout + start_time - time.time())
                 if new_state == state:
                     process.kill()
                     break
                 if new_state != current_state:
-                    raise NotImplementedError('Unexpected transition from %s to %s.' % (current_state, new_state))
+                    raise NotImplementedError(
+                        'Unexpected transition from %s to %s.' % (current_state, new_state))
                 if time.time() - start_time > timeout:
-                    raise RuntimeError('Transition to %s timed-out, current state: %s.' % (state, new_state))
+                    raise RuntimeError(
+                        'Transition to %s timed-out, current state: %s.' % (state, new_state))
         else:
             stdout, stderr = process.communicate()
             if process.returncode:
@@ -118,7 +132,10 @@ def set_state(directory, name, state, provider=None, timeout=120):
 def get_state(directory, name, wait=False, timeout=120):
     start_time = time.time()
     while True:
-        match = VBOX_LIST_REGEX.search(subprocess.check_output(['vagrant', 'status', name], cwd=directory))
+        match = VBOX_LIST_REGEX.search(
+            subprocess.check_output(
+                ['vagrant', 'status', name],
+                cwd=directory))
         state = match.groupdict()['status'] if match else 'not created'
         if state == 'not created':
             state = 'absent'

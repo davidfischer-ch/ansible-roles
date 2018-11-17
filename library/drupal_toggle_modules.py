@@ -39,9 +39,16 @@ def main():
         ),
         supports_check_mode=True
     )
-    drush, path, enable, disable = (module.params[k] for k in ('drush', 'path', 'enable', 'disable'))
+    drush, path, enable, disable = (
+        module.params[k] for k in ('drush', 'path', 'enable', 'disable')
+    )
     try:
-        updated_modules = toggle_drupal_modules(drush, path, enable=enable, disable=disable, simulate=module.check_mode)
+        updated_modules = toggle_drupal_modules(
+            drush,
+            path,
+            enable=enable,
+            disable=disable,
+            simulate=module.check_mode)
     except MissingModuleError as e:
         module.fail_json(msg=str(e))
     module.exit_json(changed=bool(updated_modules), diff=updated_modules)
@@ -53,7 +60,10 @@ class MissingModuleError(RuntimeError):
 
 def get_drupal_modules(drush, directory):
     return json.loads(
-        subprocess.check_output([drush, 'pm-list', '--format=json'], cwd=directory, env=get_drush_environment())
+        subprocess.check_output(
+            [drush, 'pm-list', '--format=json'],
+            cwd=directory,
+            env=get_drush_environment())
     )
 
 
@@ -68,7 +78,10 @@ get_drush_environment.env = None
 def toggle_drupal_modules(drush, directory, enable=None, disable=None, simulate=False):
     modules = get_drupal_modules(drush, directory)
     toggle_modules, updated_modules = collections.defaultdict(list), []
-    for module, state in itertools.chain(((m, 'enabled') for m in enable), ((m, 'disabled') for m in disable)):
+    for module, state in itertools.chain(
+        ((m, 'enabled') for m in enable),
+        ((m, 'disabled') for m in disable)
+    ):
         if module not in modules:
             raise MissingModuleError('Module {0} is not installed.'.format(module))
         status = modules[module]['status'].lower()
