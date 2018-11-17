@@ -12,8 +12,6 @@
   when: ansible_distribution == 'Ubuntu'
 
 - block:
-    # Miscellaneous
-
     - name: Install Nemo apt repository
       apt_repository:
         repo: ppa:webupd8team/nemo
@@ -21,8 +19,6 @@
         state: present
         update_cache: yes
       when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
-
-    # Desktop
 
     - name: Install Ubuntu packages
       package:
@@ -71,7 +67,7 @@
 
     - name: Install miscellaneous packages
       package:
-        name='{{ miscellaneous_packages }}'
+        name: '{{ miscellaneous_packages }}'
         state: present
 
     - name: Install virtualization packages

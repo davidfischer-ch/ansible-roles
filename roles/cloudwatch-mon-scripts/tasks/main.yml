@@ -5,7 +5,7 @@
     - block:
         - name: Install CloudWatch monitoring scripts packages
           package:
-            name: {{ cloudwatch_mon_scripts_packages }}'
+            name: '{{ cloudwatch_mon_scripts_packages }}'
             state: present
 
         - name: Download CloudWatch monitoring scripts package
@@ -32,7 +32,7 @@
         - name: Setup periodic memory metrics report
           cron:
             name: 'Report memory metrics to CloudWatch'
-            job: '{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}'
+            job: "{{ local_source_directory }}/aws-scripts-mon/mon-put-instance-data.pl --from-cron {{ cloudwatch_mon_scripts_report_arguments|join(' ') }}"
             minute: '*/5'
             state: "{{ cloudwatch_mon_scripts_report_enabled|bool|ternary('present', 'absent') }}"
           notify: restart cron

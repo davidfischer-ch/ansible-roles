@@ -27,7 +27,7 @@
         name: ansible
         executable: pip2
         state: "{{ (the_ansible_version == 'latest')|ternary('latest', omit) }}"
-        version: '{{ (the_ansible_version == 'latest')|ternary(omit, the_ansible_version) }}'
+        version: "{{ (the_ansible_version == 'latest')|ternary(omit, the_ansible_version) }}"
       when: not the_ansible_from_source|bool
 
     - name: Install Ansible Python packages

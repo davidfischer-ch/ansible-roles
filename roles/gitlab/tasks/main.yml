@@ -76,7 +76,7 @@
       lineinfile:
         dest: /etc/gitlab/gitlab.rb
         line: "nginx['listen_port'] = {{ gitlab_port|int }}"
-        regexp: "^#?\s*nginx\\['listen_port'\\]"
+        regexp: "^#?\\s*nginx\\['listen_port'\\]"
       notify: restart gitlab
       register: _gitlab_port
 
@@ -104,7 +104,7 @@
         dest: /etc/gitlab/gitlab.rb
         backup: yes
         line: "{{ item.group }}['{{ item.key }}'] = {{ item.value }}"
-        regexp: "^#?\s*{{ item.group }}\\['{{ item.key }}'\\]"
+        regexp: "^#?\\s*{{ item.group }}\\['{{ item.key }}'\\]"
       loop: gitlab_settings
       notify: restart gitlab
       register: _gitlab_setings

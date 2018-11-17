@@ -15,7 +15,7 @@
         state: file
 
     - name: Check Drupal Shell
-      command:
+      command: >
         {{ local_source_directory }}/drush-{{ drush_version }}.phar core-status
       changed_when: no
       check_mode: no

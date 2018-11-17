@@ -3,7 +3,7 @@
 
 - assert:
     that:
-      apache_log_level in apache_log_levels
+      - apache_log_level in apache_log_levels
   tags: [apache, always]
 
 - block:
@@ -180,7 +180,7 @@
       file:
         src: /etc/apache2/sites-available/{{ item.value.name }}.conf
         dest: /etc/apache2/sites-enabled/{{ item.value.name }}.conf
-        state:link
+        state: link
       loop_control:
         label: '{{ item.value.name }}'
       notify: reload apache

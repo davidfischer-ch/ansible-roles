@@ -1,7 +1,7 @@
 ---
 
 - name: Check the application for common errors
-  command:
+  command: >
     {{ graphite_bin_directory }}/bin/python /opt/graphite/bin/django-admin.py check
   become: yes
   tags: [graphite, unit_test_extra]

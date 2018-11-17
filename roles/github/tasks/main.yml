@@ -18,7 +18,7 @@
       lineinfile:
         dest: '{{ ansible_user_dir }}/.ssh/known_hosts'
         create: yes
-        line: 'github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}'
+        line: "github.com,{{ github_ips|sort|join(',') }} ssh-rsa {{ github_rsa }}"
         regexp: ^github.com
 
     - name: Add GitHub IP addresses to hosts file
