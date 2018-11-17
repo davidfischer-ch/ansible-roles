@@ -60,8 +60,8 @@
   notify: reload elasticsearch
   tags: [elasticsearch, config]
   with_first_found:
-    - 'elasticsearch.{{ elasticsearch_version }}.yml.j2'
-    - 'elasticsearch.{{ elasticsearch_version[0] }}.yml.j2'
+    - elasticsearch.{{ elasticsearch_version }}.yml.j2
+    - elasticsearch.{{ elasticsearch_version[0] }}.yml.j2
 
 - block:
     - name: Start ElasticSearch service

@@ -2,11 +2,16 @@
 
 - block:
     - name: Register MariaDB apt key
-      apt_key: >
-        keyserver=hkp://keyserver.ubuntu.com:80 id={{ mariadb_apt_key }} state=present
+      apt_key:
+        id: '{{ mariadb_apt_key }}'
+        keyserver: hkp://keyserver.ubuntu.com:80
+        state: present
 
     - name: Register MariaDB apt repository
-      apt_repository: >
-        repo={{ mariadb_apt_repository }} filename=ansible_roles_mariadb_client update_cache=yes state=present
+      apt_repository:
+        repo: '{{ mariadb_apt_repository }}'
+        filename: ansible_roles_mariadb_client
+        state: present
+        update_cache: yes
   when: mariadb_apt_repository|length > 0
   tags: [mariadb-client, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

@@ -8,24 +8,32 @@
   tags: [logstash, always]
 
 - block:
-    - name: Register Logstash apt key
-      apt_key: >
-        url={{ logstash_apt_key }} state=present
-      when: "ansible_pkg_mgr == 'apt'"
+    - block:
+        - name: Register Logstash apt key
+          apt_key:
+            url: '{{ logstash_apt_key }}'
+            state: present
 
-    - name: Install Logstash apt repository
-      apt_repository: >
-        repo={{ logstash_apt_repository }} filename=ansible_roles_elk_stack update_cache=yes state=present
-      when: "ansible_pkg_mgr == 'apt'"
+        - name: Install Logstash apt repository
+          apt_repository:
+            repo: '{{ logstash_apt_repository }}'
+            filename: ansible_roles_elk_stack
+            state: present
+            update_cache: yes
+      when: ansible_pkg_mgr == 'apt'
 
     - name: Install Logstash packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ logstash_packages }}'
+      package:
+        name: '{{ logstash_packages }}'
+        state: present
 
     - name: Create Logstash directories
-      file: >
-        name={{ item }} state=directory owner=logstash group=logstash mode=755
+      file:
+        name: '{{ item }}'
+        owner: logstash
+        group: logstash
+        mode: 0755
+        state: directory
       loop:
         - '{{ logstash_data_directory }}'
         - '{{ logstash_log_directory }}'
@@ -33,18 +41,22 @@
   tags: [logstash, packages]
 
 - name: Configure Logstash
-  template: >
-    src={{ item }} dest=/etc/logstash/logstash.yml mode=644
+  template:
+    src: '{{ item }}'
+    dest: /etc/logstash/logstash.yml
+    mode: 0644
   become: yes
   notify: reload logstash
   tags: [logstash, config]
   with_first_found:
-    - 'logstash.{{ logstash_version }}.yml.j2'
-    - 'logstash.{{ logstash_version[0] }}.yml.j2'
+    - logstash.{{ logstash_version }}.yml.j2
+    - logstash.{{ logstash_version[0] }}.yml.j2
 
 - name: Setup Logstash agents
-  template: >
-    src={{ item.config_file }} dest=/etc/logstash/conf.d/{{ item.name }}.conf mode=644
+  template:
+    src: '{{ item.config_file }}'
+    dest: /etc/logstash/conf.d/{{ item.name }}.conf
+    mode: 0644
   become: yes
   loop: '{{ logstash_agents }}'
   notify: reload logstash
@@ -52,15 +64,18 @@
 
 - block:
     - name: Start Logstash service
-      service: >
-        name=logstash state=started enabled=yes
+      service:
+        name: logstash
+        enabled: yes
+        state: started
       become: yes
 
     - meta: flush_handlers
 
     - name: Retrieve Logstash configuration
-      uri: >
-        url=http://{{ ansible_default_ipv4.address }}:{{ logstash_port|int }} return_content=yes
+      uri:
+        url: http://{{ ansible_default_ipv4.address }}:{{ logstash_port|int }}
+        return_content: yes
       delay: '{{ logstash_check_delay|int }}'
       register: _logstash_check
       retries: '{{ logstash_check_retries|int }}'
@@ -69,6 +84,6 @@
     - name: Check Logstash configuration
       assert:
         that:
-          - "_logstash_check.json.version == '{{ logstash_version }}'"
+          - _logstash_check.json.version == '{{ logstash_version }}'
       when: _logstash_check.content_type == 'application/json'
   tags: [logstash, services]

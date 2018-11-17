@@ -1,8 +1,8 @@
 ---
 
 - name: Install JuJu packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ juju_packages }}'
+    state: present
   become: yes
-  loop: '{{ juju_packages }}'
   tags: [juju, packages]

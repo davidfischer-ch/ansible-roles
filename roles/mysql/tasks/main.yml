@@ -7,33 +7,44 @@
   tags: [mysql, always]
 
 - name: Install MySQL packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ mysql_packages }}'
+    state: present
   become: yes
-  loop: '{{ mysql_packages }}'
   tags: [mysql, packages]
 
 - name: Start MySQL service
-  service: >
-    name=mysql state=started enabled=yes
+  service:
+    name: mysql
+    enabled: yes
+    state: started
   become: yes
   tags: [mysql, services]
 
 - block:
     - name: Configure MySQL
-      template: >
-        src={{ mysql_config_file }} dest=/etc/mysql/my.cnf owner=root group=root mode=600
+      template:
+        src: '{{ mysql_config_file }}'
+        dest: /etc/mysql/my.cnf
+        owner: root
+        group: root
+        mode: 0600
       notify: restart mysql
 
     - name: Configure socket for Debian
-      replace: >
-        dest=/etc/mysql/debian.cnf owner=root group=root mode=600
-        regexp='^socket\s+=\s+\S+' replace='socket = {{ mysql_socket_file }}'
+      replace:
+        dest: /etc/mysql/debian.cnf
+        owner: root
+        group: root
+        mode: 0600
+        regexp: '^socket\s+=\s+\S+'
+        replace: 'socket = {{ mysql_socket_file }}'
       when: ansible_os_family == 'Debian'
 
     - name: Remove default MySQL configuration
-      file: >
-        path=/etc/mysql/{{ item }} state=absent
+      file:
+        path: /etc/mysql/{{ item }}
+        state: absent
       loop:
         - conf.d/mysql.cnf
         - conf.d/mysqldump.cnf
@@ -42,12 +53,20 @@
       notify: restart mysql
 
     - name: Copy user my.cnf file with root credentials
-      template: >
-        src=root.my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+      template:
+        src: root.my.cnf.j2
+        dest: /root/.my.cnf
+        owner: root
+        group: root
+        mode: 0600
 
     - name: Configure MySQL root password
-      mysql_user: >
-        name=root host={{ item }} password={{ mysql_root_password }} check_implicit_admin=yes state=present
+      mysql_user:
+        name: root
+        check_implicit_admin: yes
+        host: '{{ item }}'
+        password: '{{ mysql_root_password }}'
+        state: present
       loop:
         - '{{ ansible_hostname }}'
         - localhost
@@ -55,11 +74,13 @@
         - ::1
 
     - name: Remove anonymous MySQL user
-      mysql_user: >
-        name='' state=absent
+      mysql_user:
+        name: ''
+        state: absent
 
     - name: Remove MySQL test database
-      mysql_db: >
-        name=test state=absent
+      mysql_db:
+        name: test
+        state: absent
   become: yes
   tags: [mysql, config]

@@ -8,12 +8,12 @@
 
 - block:
     - name: Install Python packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ python_packages }}'
+      package:
+        name: '{{ python_packages }}'
+        state: present
 
     - name: Detect missing Python versions
-      command: >
+      command:
         python{{ item }}
       changed_when: _python_command is failure
       check_mode: no
@@ -30,33 +30,45 @@
         loop_var: _python_version
 
     - name: Download pip bootstrap script
-      get_url: >
-        url=https://bootstrap.pypa.io{{ (item|string == '3.2')|ternary('/3.2', '') }}/get-pip.py
-        dest={{ local_source_directory }}/get-pip-{{ item }}.py
+      get_url:
+        url: https://bootstrap.pypa.io{{ (item|string == '3.2')|ternary('/3.2', '') }}/get-pip.py
+        dest: '{{ local_source_directory }}/get-pip-{{ item }}.py'
       loop: '{{ python_versions }}'
 
     - name: Install pip
       command: >
-        python{{ item }} {{ local_source_directory }}/get-pip-{{ item }}.py {{ python_get_pip_options }} pip{{ python_pip_version }}
-      changed_when: "'already up-to-date' not in _get_pip.stdout|default('') and 'are using pip' not in _get_pip.stderr|default('')"
-      failed_when: "_get_pip is failure and 'are using pip' not in _get_pip.stderr|default('')"
+        python{{ item }} {{ local_source_directory }}/get-pip-{{ item }}.py
+        {{ python_get_pip_options }} pip{{ python_pip_version }}
+      changed_when: >
+        'already up-to-date' not in _get_pip.stdout|default('') and
+        'are using pip' not in _get_pip.stderr|default('')
+      failed_when: >
+        _get_pip is failure and
+        'are using pip' not in _get_pip.stderr|default('')
       loop: '{{ python_versions }}'
       register: _get_pip
 
     - name: Set pip default version
-      file: >
-        src={{ python_pip_path }}{{ python_default_version }} dest={{ python_pip_path }} force=yes state=link
+      file:
+        src: '{{ python_pip_path }}{{ python_default_version }}'
+        dest: '{{ python_pip_path }}'
+        force: yes
+        state: link
 
     - name: Install setuptools
-      pip: >
-        name=setuptools executable=pip{{ item }} state={{ (python_setuptools_version == 'latest')|ternary('latest', omit) }}
-        version={{ (python_setuptools_version == 'latest')|ternary(omit, python_setuptools_version) }}
+      pip:
+        name: setuptools
+        executable: pip{{ item }}
+        state: "{{ (python_setuptools_version == 'latest')|ternary('latest', omit) }}"
+        version: "{{ (python_setuptools_version == 'latest')|ternary(omit, python_setuptools_version) }}"
       loop: '{{ python_versions }}'
 
     - name: Install virtualenv
-      pip: >
-        name=virtualenv executable=pip{{ item }} state={{ (python_virtualenv_version == 'latest')|ternary('latest', omit) }}
-        version={{ (python_virtualenv_version == 'latest')|ternary(omit, python_virtualenv_version) }}
+      pip:
+        name: virtualenv
+        executable: pip{{ item }}
+        state: "{{ (python_virtualenv_version == 'latest')|ternary('latest', omit) }}"
+        version: "{{ (python_virtualenv_version == 'latest')|ternary(omit, python_virtualenv_version) }}"
       loop: '{{ python_versions }}'
   become: yes
   tags: [python, packages]

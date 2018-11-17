@@ -2,31 +2,40 @@
 ---
 
 - name: Install RabbitMQ packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ rabbitmq_packages }}'
+    state: present
   become: yes
-  loop: '{{ rabbitmq_packages }}'
   tags: [rabbitmq, packages]
 
 - name: Start RabbitMQ service
-  service: >
-    name=rabbitmq-server state=started enabled=yes
+  service:
+    name: rabbitmq-server
+    enabled: yes
+    state: started
   become: yes
   tags: [rabbitmq, services]
 
 - block:
     - name: Remove guest RabbitMQ user
-      rabbitmq_user: >
-        user=guest state=absent
+      rabbitmq_user:
+        user: guest
+        state: absent
 
     - name: Setup our RabbitMQ vhost
-      rabbitmq_vhost: >
-        name=/ state=present
+      rabbitmq_vhost:
+        name: /
+        state: present
 
     - name: Setup our RabbitMQ user
-      rabbitmq_user: >
-        user={{ rabbitmq_user }} password={{ rabbitmq_password }} vhost=/
-        configure_priv=.* read_priv=.* write_priv=.* state=present
+      rabbitmq_user:
+        user: '{{ rabbitmq_user }}'
+        password: '{{ rabbitmq_password }}'
+        configure_priv: '.*'
+        read_priv: '.*'
+        write_priv: '.*'
+        state: present
+        vhost: /
   become: yes
   tags: [rabbitmq, vhosts]
   when: rabbitmq_is_master|bool

@@ -8,14 +8,16 @@
 
 - block:
     - name: Install pytoolbox packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ pytoolbox_packages }}'
+      package:
+        name: '{{ pytoolbox_packages }}'
+        state: present
 
     - name: Install pytoolbox Python packages
-      pip: >
-        name=pytoolbox executable=pip{{ item }} state={{ (pytoolbox_version == 'latest')|ternary('latest', omit) }}
-        version={{ (pytoolbox_version == 'latest')|ternary(omit, pytoolbox_version) }}
+      pip:
+        name: pytoolbox
+        executable: pip{{ item }}
+        state: "{{ (pytoolbox_version == 'latest')|ternary('latest', omit) }}"
+        version: "{{ (pytoolbox_version == 'latest')|ternary(omit, pytoolbox_version) }}"
       loop: '{{ pytoolbox_python_versions }}'
   become: yes
   tags: [pytoolbox, packages]

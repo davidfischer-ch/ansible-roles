@@ -7,23 +7,26 @@
   tags: [memcache, always]
 
 - name: Stop memcache service
-  service: >
-    name=memcached state=stopped enabled=no
+  service:
+    name: memcached
+    enabled: no
+    state: stopped
   become: yes
   failed_when: _memcache_stop is failed and 'not find' not in _memcache_stop.msg
   register: _memcache_stop
   tags: [memcache, services]
 
 - name: Remove memcache packages
-  package: >
-    name={{ item }} state=absent
+  package:
+    name: '{{ memcache_packages }}'
+    state: absent
   become: yes
-  loop: '{{ memcache_packages }}'
   tags: [memcache, packages]
 
 - name: Remove memcache files and directories
-  file: >
-    name={{ item }} state=absent
+  file:
+    name: '{{ item }}'
+    state: absent
   loop:
     - /etc/memcached.conf
     - /etc/init.d/memcached

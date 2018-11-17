@@ -11,10 +11,10 @@
       user:
         name: '{{ daemon_user }}'
         comment: '{{ daemon_comment }}'
+        createhome: no
         group: '{{ daemon_group }}'
         groups: '{{ daemon_groups }}'
         home: '{{ daemon_directory }}'
-        createhome: no
         password: '{{ daemon_password|password_hash(daemon_password_hash_algorithm, daemon_password_hash_salt) if daemon_password|length > 0 else omit }}'
         shell: /bin/bash
         state: present

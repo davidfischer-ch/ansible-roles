@@ -11,22 +11,26 @@
     - include_tasks: setup-repository-{{ ansible_pkg_mgr }}.yml
 
     - name: Install Redis packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ redis_packages }}'
+      package:
+        name: '{{ redis_packages }}'
+        state: present
   become: yes
   tags: [redis, packages]
 
 - name: Setup Redis
-  template: >
-    src=redis.conf.j2 dest={{ redis_config_path }} mode=644
+  template:
+    src: redis.conf.j2
+    dest: '{{ redis_config_path }}'
+    mode: 0644
   notify: restart redis
   become: yes
   tags: [redis, config]
 
 - name: Start Redis service
-  service: >
-    name={{ redis_service }} state=started enabled=yes
+  service:
+    name: '{{ redis_service }}'
+    enabled: yes
+    state: started
   become: yes
   tags: [redis, services]
 
@@ -34,7 +38,7 @@
     - meta: flush_handlers
 
     - name: Benchmark Redis
-      command: >
+      command:
         redis-benchmark -q -n 10000 -c 50 -P 12
       changed_when: no
       check_mode: no

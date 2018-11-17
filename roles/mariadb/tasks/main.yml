@@ -8,26 +8,33 @@
 - block:
     - name: Install MariaDB packages
       package: >
-        name={{ item }} state=present
-      loop: '{{ mariadb_packages }}'
+        name: '{{ mariadb_packages }}'
+        state: present
       tags: packages
 
     - name: Configure MariaDB
       template: >
-        src=server.{{ mariadb_version }}.my.cnf.j2 dest=/etc/mysql/my.cnf mode=644
+        src: server.{{ mariadb_version }}.my.cnf.j2
+        dest: /etc/mysql/my.cnf
+        mode: 0644
       notify: restart mariadb
       tags: config
 
     - name: Configure socket for Debian
-      replace: >
-        dest=/etc/mysql/debian.cnf owner=root group=root mode=600
-        regexp='^socket\s+=\s+\S+' replace='socket = {{ mariadb_socket_file }}'
+      replace:
+        dest: /etc/mysql/debian.cnf
+        owner: root
+        group: root
+        mode: 0600
+        regexp: '^socket\s+=\s+\S+'
+        replace: 'socket = {{ mariadb_socket_file }}'
       tags: config
       when: ansible_os_family == 'Debian'
 
     - name: Remove default MySQL configuration
-      file: >
-        path=/etc/mysql/{{ item }} state=absent
+      file:
+        path: /etc/mysql/{{ item }}
+        state: absent
       loop:
         - conf.d/mariadb.cnf
         - conf.d/mysql.cnf
@@ -37,18 +44,28 @@
       tags: config
 
     - name: Start MariaDB service
-      service: >
-        name=mysql state=started enabled=yes
+      service:
+        name: mysql
+        enabled: yes
+        state: started
       tags: services
 
     - name: Copy user my.cnf file with root credentials
-      template: >
-        src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+      template:
+        src: my.cnf.j2
+        dest: /root/.my.cnf
+        owner: root
+        group: root
+        mode: 0600
       tags: config
 
     - name: Configure MariaDB root password
-      mysql_user: >
-        name=root host={{ item }} password={{ mariadb_root_password }} check_implicit_admin=yes state=present
+      mysql_user:
+        name: root
+        host: '{{ item }}'
+        password: '{{ mariadb_root_password }}'
+        check_implicit_admin: yes
+        state: present
       loop:
         - '{{ ansible_hostname }}'
         - localhost
@@ -57,13 +74,15 @@
       tags: config
 
     - name: Remove anonymous MariaDB user
-      mysql_user: >
-        name='' state=absent
+      mysql_user:
+        name: ''
+        state: absent
       tags: config
 
     - name: Remove MariaDB test database
-      mysql_db: >
-        name=test state=absent
+      mysql_db:
+        name: test
+        state: absent
       tags: config
   become: yes
   tags: mariadb

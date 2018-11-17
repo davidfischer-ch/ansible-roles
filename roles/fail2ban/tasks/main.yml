@@ -40,9 +40,8 @@
       become: yes
       notify: reload fail2ban
       with_first_found:
-        - files:
-            - 'jail.conf.{{ fail2ban_conf_suffix }}.{{ ansible_distribution|lower }}.j2'
-            - 'jail.conf.{{ fail2ban_conf_suffix }}.j2'
+        - jail.conf.{{ fail2ban_conf_suffix }}.{{ ansible_distribution|lower }}.j2
+        - jail.conf.{{ fail2ban_conf_suffix }}.j2
   tags: [fail2ban, config]
 
 - name: Start fail2ban service

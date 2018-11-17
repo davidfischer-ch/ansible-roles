@@ -11,8 +11,8 @@
     - include_tasks: setup-{{ ansible_pkg_mgr }}.yml
 
     - name: Install Java packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ java_packages }}'
+      package:
+        name: '{{ java_packages }}'
+        state: present
   become: yes
   tags: [java, packages]

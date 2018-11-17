@@ -18,7 +18,7 @@
           {{ _pngquant_git.after }}
 
     - name: Detect if pngquant must be reinstalled
-      command: >
+      command:
         cat '{{ local_source_directory }}/pngquant.build.cfg'
       changed_when: >
         pngquant_build_env|trim != pngquant_build.stdout|default('')|trim

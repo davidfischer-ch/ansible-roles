@@ -1,6 +1,7 @@
 ---
 
 - name: restart libre-office
-  supervisorctl: >
-    name=libre-office state=restarted
+  supervisorctl:
+    name: libre-office
+    state: restarted
   become: yes

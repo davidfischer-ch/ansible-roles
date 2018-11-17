@@ -1,8 +1,9 @@
 ---
 
 - name: Install rsync build dependencies
-  apt: >
-    name=rsync state=build-dep
+  apt:
+    name: rsync
+    state: build-dep
   become: yes
   changed_when: _rsync_build_dep.stdout_lines|length > 4
   register: _rsync_build_dep

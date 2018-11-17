@@ -3,33 +3,40 @@
 
 - block:
     - name: Register PHP apt key
-      apt_key: >
-        url={{ php_apt_key }} state=present
+      apt_key:
+        url: '{{ php_apt_key }}'
+        state: present
       when: ansible_pkg_mgr == 'apt' and php_apt_key|length > 0
 
     - name: Install PHP apt repository
-      apt_repository: >
-        repo={{ php_apt_repository }} filename=ansible_roles_php update_cache=yes state=present
+      apt_repository:
+        repo: '{{ php_apt_repository }}'
+        filename: ansible_roles_php
+        state: present
+        update_cache: yes
       when: ansible_pkg_mgr == 'apt' and php_apt_repository|length > 0
 
     - name: Install PHP packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ php_packages }}'
+      package:
+        name: '{{ php_packages }}'
+        state: present
 
     - name: Install Apache PHP module
-      package: >
-        name={{ php_apache_package }} state=present
+      package:
+        name: '{{ php_apache_package }}'
+        state: present
       when: php_apache_package|length > 0
 
     - name: Install PHP FPM module
-      package: >
-        name={{ php_fpm_package }} state=present
+      package:
+        name: '{{ php_fpm_package }}'
+        state: present
       when: php_fpm_package|length > 0
 
     - name: Install PHP mbstring package if available
-      package: >
-        name={{ php_mbstring_package }} state=present
+      package:
+        name: '{{ php_mbstring_package }}'
+        state: present
       failed_when: _php_mbstring is failure and 'available' not in _php_mbstring.msg
       register: _php_mbstring
       when: php_mbstring_package|length > 0
@@ -80,7 +87,7 @@
     - import_tasks: get-version.yml
 
     - name: Enable PHP modules
-      script: >
+      script:
         scripts/php_enable_module {{ php_version }} {{ item }}
       changed_when: "'changed' in _php_enable_module.stdout|default('')"
       loop: '{{ php_modules }}'
@@ -89,34 +96,41 @@
       when: php_detected_version is version('5.4', '>=')
 
     - name: WARNING Enable PHP modules is not implemented with PHP < 5.4
-      pause: >
-        seconds=5
+      pause:
+        seconds: 5
       when: php_detected_version is version('5.4', '<')
 
     - name: Configure PHP
-      lineinfile: >
-        dest={{ item.0 }} regexp='^(;\s*)?{{ item.1 }}\s*=' line='{{ item.1 }} = {{ item.2 }}' state=present
+      lineinfile:
+        dest: '{{ item.0 }}'
+        line: '{{ item.1 }} = {{ item.2 }}'
+        regexp: '^(;\s*)?{{ item.1 }}\s*='
+        state: present
       loop: "{{ lookup('nested', php_config_files|default([]), php_options.items()|default([])|list) }}"
       notify: php_config_changed
 
     - name: Configure PHP modules
-      lineinfile: >
-        dest={{ item.0 }}/{{ item.1 }}.ini state=present
-        regexp='^(;\s*)?{{ item.2 }}\s*=' line='{{ item.2 }} = {{ item.3 }}'
+      lineinfile:
+        dest: '{{ item.0 }}/{{ item.1 }}.ini'
+        line: '{{ item.2 }} = {{ item.3 }}'
+        regexp: '^(;\s*)?{{ item.2 }}\s*='
+        state: present
       loop: "{{ lookup('nested', php_modules_config_directories, php_modules_options) }}"
       notify: php_config_changed
 
     - name: Configure suhosin to whitelist phar
-      copy: >
-        content='suhosin.executor.include.whitelist = phar' dest={{ item }}/suhosin.ini
+      copy:
+        content: 'suhosin.executor.include.whitelist = phar'
+        dest: '{{ item }}/suhosin.ini'
       loop: '{{ php_extra_config_directories }}'
       notify: php_config_changed
   become: yes
   tags: [php, config]
 
 - name: Trigger PHP FPM reload
-  service: >
-    name=php{{ php_version }}-fpm state=started
+  service:
+    name: php{{ php_version }}-fpm
+    state: started
   become: yes
   check_mode: yes
   changed_when: _php_fpm.msg is undefined

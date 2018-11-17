@@ -2,9 +2,9 @@
 
 - block:
     - name: Install Python build packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ python_build_packages }}'
+      package:
+        name: '{{ python_build_packages }}'
+        state: present
 
     - include_tasks: setup-build-dep-{{ ansible_pkg_mgr }}.yml
 
@@ -12,22 +12,27 @@
         _python_latest_version: '{{ python_latest_versions[_python_version|string] }}'
 
     - name: Download Python {{ _python_latest_version }} source package
-      get_url: >
-        url=https://www.python.org/ftp/python/{{ _python_latest_version }}/Python-{{ _python_latest_version }}.tgz force=no
-        dest={{ local_source_directory }}/Python-{{ _python_latest_version }}.tgz
+      get_url:
+        url: https://www.python.org/ftp/python/{{ _python_latest_version }}/Python-{{ _python_latest_version }}.tgz
+        dest: '{{ local_source_directory }}/Python-{{ _python_latest_version }}.tgz'
+        force: no
 
     - name: Extract Python {{ _python_latest_version }} source code
-      unarchive: >
-        src={{ local_source_directory }}/Python-{{ _python_latest_version }}.tgz dest={{ local_source_directory }} copy=no
+      unarchive:
+        src: '{{ local_source_directory }}/Python-{{ _python_latest_version }}.tgz'
+        dest: '{{ local_source_directory }}'
+        copy: no
 
     - name: Bootstrap Python {{ _python_latest_version }} build process
-      command: >
+      command:
         ./configure {{ python_build_flags|join(' ') }}
       args:
         chdir: '{{ local_source_directory }}/Python-{{ _python_latest_version }}'
       register: _python_configure
 
-    - debug: var=_python_configure.stdout_lines verbosity=3
+    - debug:
+        var: _python_configure.stdout_lines
+        verbosity: 3
 
     - name: Build Python {{ _python_latest_version }} from source
       make:
@@ -36,7 +41,9 @@
           '--jobs': '{{ ansible_processor_cores }}'
       register: _python_build
 
-    - debug: var=_python_build verbosity=3
+    - debug:
+        var: _python_build
+        verbosity: 3
 
     - name: Install Python {{ _python_latest_version }} from source
       make:

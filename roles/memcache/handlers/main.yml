@@ -1,6 +1,7 @@
 ---
 
 - name: restart memcache
-  service: >
-    name=memcached state=restarted
+  service:
+    name: memcached
+    state: restarted
   become: yes

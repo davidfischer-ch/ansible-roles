@@ -8,8 +8,9 @@
   tags: [mounts, always]
 
 - name: Install file systems packages
-  package: >
-    name={{ mounts_packages_by_fstype[item] }} state=present
+  package:
+    name: '{{ mounts_packages_by_fstype[item] }}'
+    state: present
   become: yes
   loop: "{{ mounts_filesystem_types|union(mounts.values()|map(attribute='fstype')|list)|unique|sort }}"
   loop_control:
@@ -19,66 +20,66 @@
 
 - block:
     - name: Create file systems
-      filesystem: >
-        dev={{ item.value.source }}
-        fstype={{ item.value.fstype }}
-        opts={{ item.value.create_options|default(omit) }}
-        resizefs={{ item.value.resize|default(false)|bool }}
+      filesystem:
+        dev: '{{ item.value.source }}'
+        fstype: '{{ item.value.fstype }}'
+        opts: '{{ item.value.create_options|default(omit) }}'
+        resizefs: '{{ item.value.resize|default(false)|bool }}'
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length > 0 and item.value.fstype != 'swap' and item.value.create|default(false)|bool
       with_dict: '{{ mounts }}'
 
     - name: Create mount directories
-      file: >
-        name={{ item.value.directory }}
-        owner={{ item.value.user|default(omit) }}
-        group={{ item.value.group|default(omit) }}
-        mode={{ item.value.mode|default(omit) }}
-        state=directory
+      file:
+        name: '{{ item.value.directory }}'
+        owner: '{{ item.value.user|default(omit) }}'
+        group: '{{ item.value.group|default(omit) }}'
+        mode: '{{ item.value.mode|default(omit) }}'
+        state: directory
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: "item.value.fstype != 'swap'"
       with_dict: '{{ mounts }}'
 
     - name: Unmount the target directories
-      mount: >
-        fstype={{ item.value.fstype }}
-        name={{ item.value.directory }}
-        opts={{ item.value.options }}
-        src={{ item.value.source }}
-        state={{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}
+      mount:
+        fstype: '{{ item.value.fstype }}'
+        name: '{{ item.value.directory }}'
+        opts: '{{ item.value.options }}'
+        src: '{{ item.value.source }}'
+        state: "{{ (item.value.fstype == 'swap')|ternary('absent', 'unmounted') }}"
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length == 0 or 'bind' in item.value.options.split(',')
       with_dict: '{{ mounts }}'
 
     - name: Mount the target directories
-      mount: >
-        fstype={{ item.value.fstype }}
-        name={{ item.value.directory }}
-        opts={{ item.value.options }}
-        src={{ item.value.source }}
-        state={{ (item.value.fstype == 'swap')|ternary('present', 'mounted') }}
+      mount:
+        fstype: '{{ item.value.fstype }}'
+        name: '{{ item.value.directory }}'
+        opts: '{{ item.value.options }}'
+        src: '{{ item.value.source }}'
+        state: "{{ (item.value.fstype == 'swap')|ternary('present', 'mounted') }}"
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.source|length > 0
       with_dict: '{{ mounts }}'
 
     - name: Check root can write and chown
-      file: >
-        name={{ item.value.directory }}/{{ inventory_hostname }}
-        owner={{ item.value.user|default(omit) }}
-        group={{ item.value.group|default(omit) }}
-        mode={{ item.value.mode|default(omit) }}
-        state=directory
+      file:
+        name: '{{ item.value.directory }}/{{ inventory_hostname }}'
+        owner: '{{ item.value.user|default(omit) }}'
+        group: '{{ item.value.group|default(omit) }}'
+        mode: '{{ item.value.mode|default(omit) }}'
+        state: directory
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.check|bool and item.value.fstype != 'swap'
       with_dict: '{{ mounts }}'
 
     - name: Check required NFS service is reachable
-      command: >
+      command:
         rpcinfo -u {{ item.value.source|regex_replace(':[^:]+$', '') }} status
       changed_when: no
       check_mode: no
@@ -94,8 +95,9 @@
       with_dict: '{{ mounts }}'
 
     - name: Final cleanup
-      file: >
-        name={{ item.value.directory }}/{{ inventory_hostname }} state=absent
+      file:
+        name: '{{ item.value.directory }}/{{ inventory_hostname }}'
+        state: absent
       loop_control:
         label: '{{ item.value.source }} type {{ item.value.fstype }} -> {{ item.value.directory }}'
       when: item.value.check|bool and item.value.fstype != 'swap'

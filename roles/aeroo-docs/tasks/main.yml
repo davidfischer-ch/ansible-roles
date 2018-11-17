@@ -12,8 +12,8 @@
     - name: Create Aeroo Docs daemon user
       user:
         name: '{{ aeroo_docs_daemon_user }}'
-        group: '{{ aeroo_docs_daemon_group }}'
         createhome: no
+        group: '{{ aeroo_docs_daemon_group }}'
         home: /tmp
         state: present
         system: yes
