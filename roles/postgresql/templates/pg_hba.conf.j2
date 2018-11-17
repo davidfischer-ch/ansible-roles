@@ -6,17 +6,11 @@ local postgres postgres trust
 {% for database in postgresql_databases.itervalues()|sort %}
 
 local {{ database.name }} postgres trust
-{% if database.with_test|default(false)|bool %}
-local test_{{ database.name }} postgres trust
-{% endif %}
 {% if database.clients is defined %}
 {% for client in database.clients %}
 {% if database.user is defined %}
 host postgres {{ database.user }} {{ client }} md5
 host {{ database.name }} {{ database.user }} {{ client }} md5
-{% endif %}
-{% if database.with_test|default(false)|bool %}
-host test_{{ database.name }} {{ database.user }} {{ client }} md5
 {% endif %}
 {% endfor %}
 {% endif %}

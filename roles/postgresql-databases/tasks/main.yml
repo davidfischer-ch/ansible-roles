@@ -67,20 +67,6 @@
         - "{{ postgresql_databases.values()|selectattr('extensions', 'defined')|list }}"
         - extensions
 
-    - name: Remove PostgreSQL unit-test databases
-      postgresql_db:
-        name: test_{{ item.value.name }}
-        login_host: '{{ item.value.host|default(omit) }}'
-        login_user: '{{ item.value.login_user|default(omit) }}'
-        login_password: '{{ item.value.login_password|default(omit) }}'
-        port: '{{ item.value.port|default(omit) }}'
-        state: absent
-      loop_control:
-        label: '{{ item.value.name }}'
-      tags: unit_test
-      when: item.value.with_test|default(false)|bool
-      with_dict: '{{ postgresql_databases }}'
-
     - name: Allow PostgreSQL users to access PostgreSQL databases
       postgresql_privs:
         db: '{{ item.value.name }}'

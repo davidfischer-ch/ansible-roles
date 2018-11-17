@@ -22,7 +22,6 @@ postgresql_databases:
   template1:
     name: template1
     extensions: []
-    with_test: no
   application:
     template: template1
     clients:
@@ -31,5 +30,4 @@ postgresql_databases:
     name: my-database
     user: my-user
     password: some-password-here
-    with_test: no
 ```
