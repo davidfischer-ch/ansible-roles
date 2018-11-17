@@ -3,9 +3,11 @@
 
 - block:
     - name: Install Docker Machine
-      get_url: >
-        url=https://github.com/docker/machine/releases/download/v{{ docker_machine_version }}/docker-machine-{{ ansible_system }}-{{ ansible_architecture }}
-        dest='{{ docker_machine_path }}' mode=755 sha256sum={{ docker_machine_checksum }}
+      get_url:
+        url: https://github.com/docker/machine/releases/download/v{{ docker_machine_version }}/docker-machine-{{ ansible_system }}-{{ ansible_architecture }}
+        dest: '{{ docker_machine_path }}'
+        mode: 0755
+        sha256sum: '{{ docker_machine_checksum }}'
       become: yes
 
     - name: Provision Docker Machines
@@ -17,37 +19,44 @@
   when: docker_install_machine|bool
 
 - name: Install Docker Compose
-  get_url: >
-    url=https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/run.sh
-    dest='{{ docker_compose_path }}' mode=755 sha256sum={{ docker_compose_checksum }}
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/run.sh
+    dest: '{{ docker_compose_path }}'
+    mode: 0755
+    sha256sum: '{{ docker_compose_checksum }}'
   become: yes
   tags: [docker, packages]
   when: docker_install_compose|bool
 
 - block:
     - name: Register Docker apt key
-      apt_key: >
-        keyserver=hkp://p80.pool.sks-keyservers.net:80 id={{ docker_apt_key }} state=present
+      apt_key:
+        keyserver: hkp://p80.pool.sks-keyservers.net:80
+        id: '{{ docker_apt_key }}'
+        state: present
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Register Docker apt repository
-      apt_repository: >
-        repo={{ docker_apt_repository }} filename=ansible_roles_docker update_cache=yes state=present
+      apt_repository:
+        repo: '{{ docker_apt_repository }}'
+        filename: ansible_roles_docker
+        state: present
+        update_cache: yes
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Docker Engine packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ docker_packages }}'
+      package:
+        name: '{{ docker_packages }}'
+        state: present
   become: yes
   tags: [docker, packages]
   when: docker_install_engine|bool
 
 - name: Install Docker Engine Python packages
-  pip: >
-    name={{ item }} state=present
+  pip:
+    name: '{{ docker_python_packages }}'
+    state: present
   become: yes
-  loop: '{{ docker_python_packages }}'
   tags: [docker, packages]
 
 # FIXME https://github.com/docker/compose/pull/2513#issuecomment-172494821 issue with non tty
@@ -72,14 +81,18 @@
         - memcg_swap
 
     - name: Enable the memory/swap accounting
-      lineinfile: >
-        dest=/etc/default/grub regexp='GRUB_CMDLINE_LINUX=' backup=yes state=present
-        line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 noprompt"'
+      lineinfile:
+        dest: /etc/default/grub
+        backup: yes
+        line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 noprompt"'
+        regexp: 'GRUB_CMDLINE_LINUX='
+        state: present
       notify: update grub
 
     - name: Create the docker group
-      group: >
-        name=docker state=present
+      group:
+        name: docker
+        state: present
 
     - name: Check memory/swap accounting is active
       command: >
@@ -96,8 +109,11 @@
     # Allow our user to communicate with docker daemon without sudo
 
     - name: Add our user to the docker group
-      user: >
-        name={{ ansible_user }} groups=docker append=yes state=present
+      user:
+        name: '{{ ansible_user }}'
+        append: yes
+        groups: docker
+        state: present
       notify:
         - restart
         - wait started
@@ -110,12 +126,14 @@
 
 - block:
     - name: Start Docker service
-      service: >
-        name=docker state=started enabled=yes
+      service:
+        name: docker
+        enabled: yes
+        state: started
       become: yes
 
     - name: Verify Docker is installed correctly
-      command: >
+      command:
         docker run hello-world
       changed_when: no
   tags: [docker, services]
@@ -124,8 +142,12 @@
 # https://github.com/docker/distribution/blob/master/docs/deploying.md
 
 - name: Start Docker Registry service
-  docker: >
-    name=registry image=registry ports=5000:5000 restart_policy=always state=started
+  docker:
+    name: registry
+    image: registry
+    ports: 5000:5000
+    restart_policy: always
+    state: started
   tags: [docker, services]
   when: docker_install_registry|bool
 
@@ -133,13 +155,16 @@
 
 - block:
     - name: Get images from Docker Hub
-      docker_image: >
-        name={{ item }}
+      docker_image:
+        name: '{{ item }}'
       loop: '{{ docker_images }}'
 
     - name: Tag and push to local registry
-      docker_image: >
-         name={{ item }} push=yes repository=localhost:5000/{{ item }} tag=latest
+      docker_image:
+         name: '{{ item }}'
+         push: yes
+         repository: localhost:5000/{{ item }}
+         tag: latest
       loop: '{{ docker_images }}'
       when: docker_install_registry|bool
   tags: [docker, images]

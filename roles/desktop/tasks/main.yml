@@ -53,7 +53,7 @@
         state: present
 
     - name: Update apt-file cache
-      command: >
+      command:
         apt-file update
       when: "ansible_pkg_mgr == 'apt'"
 

@@ -51,7 +51,7 @@
         label: '{{ item.name }}'
 
     - name: Build lambda functions
-      command: >
+      command:
         ./build
       args:
         chdir: '/tmp/aws-lambda/{{ aws_lambda_environment }}/{{ item.name }}'
@@ -60,7 +60,8 @@
         label: '{{ item.name }}'
       register: _aws_lambda_build
 
-    - debug: var=_aws_lambda_build
+    - debug:
+        var: _aws_lambda_build
 
     - name: Deploy the lambda functions
       lambda:

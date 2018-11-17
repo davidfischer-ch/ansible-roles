@@ -18,7 +18,7 @@
       loop: '{{ cordova_npm_packages }}'
 
     - name: Check node command is available
-      command: >
+      command:
         node
       changed_when: _cordova_node is failure
       check_mode: no
@@ -34,7 +34,7 @@
       when: _cordova_node is failure
 
     - name: Check cordova command is available
-      command: >
+      command:
         cordova
       changed_when: no
       check_mode: no

@@ -8,37 +8,48 @@
 
 - block:
     - name: Remove Supervisor package
-      package: >
-        name=supervisor state=absent
+      package:
+        name: supervisor
+        state: absent
 
     - name: Install Supervisor Python packages
-      pip: >
-        name=supervisor executable=pip2 state={{ (supervisor_version == 'latest')|ternary('latest', omit) }}
-        version={{ (supervisor_version == 'latest')|ternary(omit, supervisor_version) }}
+      pip:
+        name: supervisor
+        executable: pip2
+        state: "{{ (supervisor_version == 'latest')|ternary('latest', omit) }}"
+        version: "{{ (supervisor_version == 'latest')|ternary(omit, supervisor_version) }}"
       notify: restart supervisor
   become: yes
   tags: [supervisor, packages]
 
 - block:
     - name: Create Supervisor directories
-      file: >
-        name={{ item }} mode=755 state=directory
+      file:
+        name: '{{ item }}'
+        mode: 0755
+        state: directory
       loop:
         - /etc/supervisor/conf.d
         - /var/log/supervisor/
 
     - name: Create Supervisor socket group
-      group: >
-        name={{ supervisor_socket_group }} system=yes state=present
+      group:
+        name: '{{ supervisor_socket_group }}'
+        state: present
+        system: yes
 
     - name: Configure Supervisor
-      template: >
-        src=supervisord.conf.j2 dest=/etc/supervisor/supervisord.conf mode=644
+      template:
+        src: supervisord.conf.j2
+        dest: /etc/supervisor/supervisord.conf
+        mode: 0644
       notify: restart supervisor
 
     - name: Symlink Configuration for supervisorctl
-      file: >
-        src=/etc/supervisor/supervisord.conf dest=/etc/supervisord.conf state=link
+      file:
+        src: /etc/supervisor/supervisord.conf
+        dest: /etc/supervisord.conf
+        state: link
 
     - include_tasks: setup-service-{{ supervisor_daemon_mode }}.yml
 
@@ -47,7 +58,9 @@
   tags: [supervisor, config]
 
 - name: Start Supervisor service
-  service: >
-    name=supervisor state=started enabled=yes
+  service:
+    name: supervisor
+    enabled: yes
+    state: started
   become: yes
   tags: [supervisor, services]

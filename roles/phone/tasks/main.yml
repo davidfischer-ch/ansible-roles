@@ -5,13 +5,13 @@
 
 - block:
     - name: Copy the cleanup script
-      template: >
-        src=cleanup.py
-        dest=/tmp/cleanup.py
-        mode=755
+      template:
+        src: cleanup.py
+        dest: /tmp/cleanup.py
+        mode: 0755
 
     - name: Execute the cleanup script
-      command: >
+      command:
         python3 /tmp/cleanup.py -k {{ keyboards|join(',') }}
       changed_when: _phone_cleanup.stdout != ''
       register: _phone_cleanup

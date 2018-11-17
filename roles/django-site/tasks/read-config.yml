@@ -2,7 +2,7 @@
 
 - block:
     - name: Read application configuration file
-      command: >
+      command:
         cat {{ djsite_app_directory }}/source/config.yml
       changed_when: no
       check_mode: no
@@ -15,7 +15,9 @@
         chdir: '{{ djsite_app_directory }}/source'
       changed_when: no
       check_mode: no
-      failed_when: _djsite_git_log is failure and 'not a git' not in _djsite_git_log.stderr|lower
+      failed_when: >
+        _djsite_git_log is failure and
+        'not a git' not in _djsite_git_log.stderr|lower
       register: _djsite_git_log
 
     - name: Set application variables
@@ -23,7 +25,8 @@
         djsite_config: '{{ _djsite_config.stdout|from_yaml }}'
         djsite_git_log: '{{ _djsite_git_log.stdout_lines }}'
 
-    - debug: var=djsite_config
+    - debug:
+        var: djsite_config
 
     - assert:
         that:

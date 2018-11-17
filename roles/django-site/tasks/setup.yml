@@ -1,17 +1,20 @@
 ---
 
 - name: Install Application packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ djsite_packages }}'
+    state: present
   become: yes
-  loop: '{{ djsite_packages }}'
   tags: packages
 
 - block:
     - name: Create Application directories
-      file: >
-        name={{ item.name }} owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode={{ item.mode }}
-        state=directory
+      file:
+        name: '{{ item.name }}'
+        owner: '{{ djsite_daemon_user }}'
+        group: '{{ djsite_daemon_group }}'
+        mode: '{{ item.mode }}'
+        state: directory
       loop:
         - { name: '{{ djsite_app_directory }}',                                    mode: 755 }
         - { name: '{{ djsite_app_directory }}/.ssh',                               mode: 700 }
@@ -25,14 +28,20 @@
         - { name: '{{ djsite_log_directory }}',                                    mode: 750 }
 
     - name: Create link to Application media directory
-      file: >
-        src={{ djsite_data_directory }}/media dest={{ djsite_app_directory }}/test/server/media force=yes state=link
+      file:
+        src: '{{ djsite_data_directory }}/media'
+        dest: '{{ djsite_app_directory }}/test/server/media'
+        force: yes
+        state: link
 
     - block:
         - name: Install Application repository SSH key pair
-          copy: >
-            src={{ item.path }} dest={{ djsite_app_directory }}/.ssh/{{ item.name }}
-            owner={{ djsite_daemon_user }} group={{ djsite_daemon_group }} mode=0600
+          copy:
+            src: '{{ item.path }}'
+            dest: '{{ djsite_app_directory }}/.ssh/{{ item.name }}'
+            owner: '{{ djsite_daemon_user }}'
+            group: '{{ djsite_daemon_group }}'
+            mode: 0600
           diff: not item.hidden|bool
           loop:
             - { path: '{{ djsite_ssh_key_private }}', name: 'id_rsa',     hidden: yes }
@@ -42,8 +51,10 @@
           no_log: item.hidden|bool
 
         - name: Register Application repository RSA key
-          known_hosts: >
-            name={{ djsite_repository_host }} key='{{ djsite_repository_key }}' state=present
+          known_hosts:
+            name: '{{ djsite_repository_host }}'
+            key: '{{ djsite_repository_key }}'
+            state: present
           become_user: '{{ djsite_daemon_user }}'
       when: not djsite_repository_is_local|bool or djsite_has_private_requirements|bool
   become: yes
@@ -60,51 +71,57 @@
     - block:
         - name: Configure bower in non-interactive mode
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/python manage.py bower_install --traceback -- --config.interactive=false
+            {{ djsite_app_directory }}/test/venv/bin/python
+            manage.py bower_install --traceback -- --config.interactive=false
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
           changed_when: _djsite_bower_auto is success
-          failed_when: _djsite_bower_auto is failure and 'unrecognized arguments' not in _djsite_bower_auto.stderr
+          failed_when: >
+            _djsite_bower_auto is failure and
+            'unrecognized arguments' not in _djsite_bower_auto.stderr
           register: _djsite_bower_auto
           tags: config
 
         - name: Download web (js) packages with bower
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/python manage.py bower_install --traceback -F
+            {{ djsite_app_directory }}/test/venv/bin/python
+            manage.py bower_install --traceback -F
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
           failed_when: "'error' in _djsite_bower_install.stderr"
           register: _djsite_bower_install
           tags: packages
 
-        - debug: var=_djsite_bower_install.stdout_lines
+        - debug:
+            var: _djsite_bower_install.stdout_lines
           tags: packages
       when: djsite_bower_enabled|bool
 
     - block:
         - name: Compile the assets (SASS/SCSS)
-          django_manage: >
-            command=compilescss
-            app_path={{ djsite_app_directory }}/test/server
-            virtualenv={{ djsite_app_directory }}/test/venv
+          django_manage:
+            command: compilescss
+            app_path: '{{ djsite_app_directory }}/test/server'
+            virtualenv: '{{ djsite_app_directory }}/test/venv'
           when: djsite_sass_enabled|bool
 
         - name: Collect the static files
-          django_manage: >
-            command=collectstatic
-            app_path={{ djsite_app_directory }}/test/server
-            virtualenv={{ djsite_app_directory }}/test/venv
+          django_manage:
+            command: collectstatic
+            app_path: '{{ djsite_app_directory }}/test/server'
+            virtualenv: '{{ djsite_app_directory }}/test/venv'
 
         - name: Compress the assets (CSS/JS)
-          django_manage: >
-            command=compress
-            app_path={{ djsite_app_directory }}/test/server
-            virtualenv={{ djsite_app_directory }}/test/venv
+          django_manage:
+            command: compress
+            app_path: '{{ djsite_app_directory }}/test/server'
+            virtualenv: '{{ djsite_app_directory }}/test/venv'
           when: djsite_compress_enabled|bool and djsite_compress_offline|bool
 
         - name: Compile translations
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/python ../manage.py compilemessages
+            {{ djsite_app_directory }}/test/venv/bin/python
+            ../manage.py compilemessages
           args:
             chdir: '{{ djsite_app_directory }}/test/server/{{ item }}'
           loop: '{{ djsite_config.custom_applications }}'
@@ -112,7 +129,8 @@
 
     - name: Check the applications for common errors
       command: >
-        {{ djsite_app_directory }}/test/venv/bin/python manage.py check {{ djsite_config.custom_applications|join(' ')}}
+        {{ djsite_app_directory }}/test/venv/bin/python
+        manage.py check {{ djsite_config.custom_applications|join(' ')}}
       args:
         chdir: '{{ djsite_app_directory }}/test/server'
       tags: unit-test
@@ -133,38 +151,43 @@
 
         - name: Generate the unit-tests coverage report
           command: >
-            {{ djsite_app_directory }}/test/venv/bin/coverage html -d {{ djsite_app_directory }}/test/cover/
+            {{ djsite_app_directory }}/test/venv/bin/coverage
+            html -d {{ djsite_app_directory }}/test/cover/
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
 
         - name: Copy the unit-tests coverage report in the local machine
-          synchronize: >
-            src={{ djsite_app_directory }}/test/cover/
-            dest={{ djsite_repository_url }}/{{ djsite_config.source_path }}/cover/
-            archive=yes checksum=yes delete=yes mode=pull
+          synchronize:
+            src: '{{ djsite_app_directory }}/test/cover/'
+            dest: '{{ djsite_repository_url }}/{{ djsite_config.source_path }}/cover/'
+            archive: yes
+            checksum: yes
+            delete: yes
+            mode: pull
           when: djsite_repository_is_local|bool
 
         - name: Retrieve unit-tests coverage
           shell: >
-            {{ djsite_app_directory }}/test/venv/bin/coverage report | tail -n 1 | sed -r 's:.*\s+([0-9]+)%:\1:'
+            {{ djsite_app_directory }}/test/venv/bin/coverage \
+            report | tail -n 1 | sed -r 's:.*\s+([0-9]+)%:\1:'
           args:
             chdir: '{{ djsite_app_directory }}/test/server'
           register: _djsite_coverage
 
-        - debug: >
-            msg='Coverage {{ _djsite_coverage.stdout }}% (min {{ djsite_coverage_minimum }}%)'
+        - debug:
+            msg: 'Coverage {{ _djsite_coverage.stdout }}% (min {{ djsite_coverage_minimum }}%)'
 
         - name: Ensure unit-tests coverage is sufficient
-          fail: >
-            msg='Unit-tests coverage of {{ _djsite_coverage.stdout }}% is under the minimum set at {{ djsite_coverage_minimum }}%'
+          fail:
+            msg: 'Unit-tests coverage of {{ _djsite_coverage.stdout }}% is under the minimum set at {{ djsite_coverage_minimum }}%'
           when: _djsite_coverage.stdout|int < djsite_coverage_minimum|int
       tags: unit-test
 
     - name: Migrate the database
-      django_manage: >
-        command=migrate
-        app_path={{ djsite_app_directory }}/test/server
-        virtualenv={{ djsite_app_directory }}/test/venv
+      django_manage:
+        command: migrate
+        app_path: '{{ djsite_app_directory }}/test/server'
+        virtualenv: '{{ djsite_app_directory }}/test/venv'
       tags: [database, flush-extra]
 
     - name: Create the super-user
@@ -206,27 +229,30 @@
 
 - block:
     - name: Configure Celery workers
-      template: >
-        src={{ item.value.config_file|default('example.celery.worker.conf.j2') }}
-        dest=/etc/supervisor/conf.d/{{ djsite_instance_name }}-celery-{{ item.value.name }}.conf
-        mode=644
+      template:
+        src: "{{ item.value.config_file|default('example.celery.worker.conf.j2') }}"
+        dest: /etc/supervisor/conf.d/{{ djsite_instance_name }}-celery-{{ item.value.name }}.conf
+        mode: 0644
       loop_control:
         label: '{{ item.value.name }}'
       notify: restart celery workers
       with_dict: '{{ djsite_celery_workers }}'
 
     - name: Install Celery workers
-      supervisorctl: >
-        name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=present
+      supervisorctl:
+        name: '{{ djsite_instance_name }}-celery-{{ item.value.name }}'
+        state: present
       loop_control:
         label: '{{ item.value.name }}'
       with_dict: '{{ djsite_celery_workers }}'
 
     - name: Setup periodic copy of Celery beat DB to shared storage
-      cron: >
-        name='Copy {{ djsite_instance_name }}-celery-{{ item.value.name }} database to shared storage'
-        job='cp {{ djsite_app_directory }}/data/celery-beat.db.* {{ djsite_data_directory }}/'
-        minute=*/5 user={{ djsite_daemon_user }} state=present
+      cron:
+        name: 'Copy {{ djsite_instance_name }}-celery-{{ item.value.name }} database to shared storage'
+        job: 'cp {{ djsite_app_directory }}/data/celery-beat.db.* {{ djsite_data_directory }}/'
+        minute: '*/5'
+        user: '{{ djsite_daemon_user }}'
+        state: present
       loop_control:
         label: '{{ item.value.name }}'
       notify: restart cron
@@ -237,8 +263,9 @@
 
 - block:
     - name: Start Celery workers
-      supervisorctl: >
-        name={{ djsite_instance_name }}-celery-{{ item.value.name }} state=started
+      supervisorctl:
+        name: '{{ djsite_instance_name }}-celery-{{ item.value.name }}'
+        state: started
       ignore_errors: yes
       loop_control:
         label: '{{ item.value.name }}'

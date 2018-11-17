@@ -1,12 +1,12 @@
 ---
 
 - name: reload uwsgi
-  command: >
+  command:
     service uwsgi reload || service uwsgi restart
   become: yes
 
 - name: reload uwsgi apps
-  command: >
+  command:
     supervisorctl uwsgi-{{ item.value.name }} reload
   become: yes
   loop_control:
@@ -14,13 +14,15 @@
   with_dict: '{{ uwsgi_apps }}'
 
 - name: restart uwsgi
-  service: >
-    name=uwsgi state=restarted
+  service:
+    name: uwsgi
+    state: restarted
   become: yes
 
 - name: restart uwsgi apps
-  supervisorctl: >
-    name=uwsgi-{{ item.value.name }} state=restarted
+  supervisorctl:
+    name: uwsgi-{{ item.value.name }}
+    state: restarted
   become: yes
   loop_control:
     label: '{{ item.value.name }}'

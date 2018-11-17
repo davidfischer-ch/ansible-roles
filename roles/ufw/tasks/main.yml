@@ -5,32 +5,40 @@
     - include_tasks: setup-repository-{{ ansible_pkg_mgr }}.yml
 
     - name: Install UFW packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ ufw_packages }}'
+      package:
+        name: '{{ ufw_packages }}'
+        state: present
   become: yes
   tags: [ufw, packages]
 
 - name: Start UFW service
-  service: >
-    name=ufw state=started enabled=yes
+  service:
+    name: ufw
+    enabled: yes
+    state: started
   become: yes
   tags: [ufw, services]
 
 - block:
     - name: Allow ssh
-      ufw: >
-        port={{ ssh_port }} proto=tcp rule=allow
+      ufw:
+        port: '{{ ssh_port }}'
+        proto: tcp
+        rule: allow
       notify: reload ufw
 
     - name: Toggle IPv6
-      lineinfile: >
-        dest=/etc/default/ufw regexp=^IPV6 line="IPV6={{ ufw_ipv6_enabled|bool|ternary('yes', 'no') }}"
+      lineinfile:
+        dest: /etc/default/ufw
+        line: "IPV6={{ ufw_ipv6_enabled|bool|ternary('yes', 'no') }}"
+        regexp: ^IPV6
       notify: reload ufw
 
     - name: Configure UFW
-      ufw: >
-        state={{ ufw_enabled|bool|ternary('enabled', 'disabled') }} logging={{ ufw_logging }} policy={{ ufw_policy }}
+      ufw:
+        logging: '{{ ufw_logging }}'
+        policy: '{{ ufw_policy }}'
+        state: "{{ ufw_enabled|bool|ternary('enabled', 'disabled') }}"
       notify: reload ufw
   become: yes
   tags: [ufw, rules]

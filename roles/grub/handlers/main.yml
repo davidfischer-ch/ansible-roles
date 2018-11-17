@@ -1,7 +1,8 @@
 ---
 
 - name: update grub
-  command: update-grub
+  command:
+    update-grub
   become: yes
   failed_when: "'error' in grub_update.stderr"
   register: grub_update

@@ -97,7 +97,7 @@
       register: _apache_enable_modules
 
     - name: Enable Apache modules (fallback to a2enmod)
-      command: >
+      command:
         a2enmod {{ item.item }}
       loop: '{{ _apache_enable_modules.results }}'
       loop_control:
@@ -143,7 +143,7 @@
       when: item.0.ssl_files_prefix|default('')|length > 0
 
     - name: Setup the Apache sites Diffie-Hellman parameters
-      command: >
+      command:
         openssl dhparam -out /etc/apache2/sites-dhparam/{{ item.value.name }}.pem 2048
       args:
         creates: /etc/apache2/sites-dhparam/{{ item.value.name }}.pem

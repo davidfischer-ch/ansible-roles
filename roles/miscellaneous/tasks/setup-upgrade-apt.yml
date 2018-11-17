@@ -25,7 +25,7 @@
       when: _apt_sources is change and not _apt_extra_repositories is change
 
     - name: Fix any previously running packages upgrade
-      command: >
+      command:
         dpkg --configure -a
       changed_when: _upgrade_fix.stdout|default('')|length > 0
       register: _upgrade_fix

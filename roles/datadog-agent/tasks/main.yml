@@ -18,8 +18,8 @@
       apt_repository:
         repo: '{{ datadog_agent_apt_repository }}'
         filename: ansible_roles_datadog_agent
-        update_cache: yes
         state: present
+        update_cache: yes
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Datadog agent packages

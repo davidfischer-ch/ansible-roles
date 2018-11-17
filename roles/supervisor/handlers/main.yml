@@ -1,11 +1,13 @@
 ---
 
 - name: reload systemd
-  command: >
+  command:
     systemctl daemon-reload
   become: yes
 
 - name: restart supervisor
-  service: >
-    name=supervisor use={{ supervisor_daemon_mode }} state=restarted
+  service:
+    name: supervisor
+    state: restarted
+    use: '{{ supervisor_daemon_mode }}'
   become: yes

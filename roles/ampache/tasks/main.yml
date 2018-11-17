@@ -25,7 +25,7 @@
       register: _ampache_install
 
     - name: Install Ampache dependencies
-      command: >
+      command:
         composer install --prefer-source --no-interaction
       args:
         chdir: '{{ ampache_web_directory }}'

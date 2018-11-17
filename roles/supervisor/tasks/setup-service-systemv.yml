@@ -1,8 +1,10 @@
 ---
 
 - name: Install Supervisor service
-  template: >
-    src=supervisor dest=/etc/init.d/supervisor mode=755
+  template:
+    src: supervisor
+    dest: /etc/init.d/supervisor
+    mode: 0755
   become: yes
   notify: restart supervisor
   tags: [supervisor, config] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

@@ -4,10 +4,11 @@
     - include_tasks: setup-build-dep-{{ ansible_pkg_mgr }}.yml
 
     - name: Clone pngquant source code
-      git: >
-        repo=https://github.com/kornelski/pngquant.git
-        dest={{ local_source_directory }}/pngquant force=yes
-        version={{ pngquant_version }}
+      git:
+        repo: https://github.com/kornelski/pngquant.git
+        dest: '{{ local_source_directory }}/pngquant'
+        force: yes
+        version: '{{ pngquant_version }}'
       register: _pngquant_git
 
     - name: Set pngquant build environment
@@ -27,7 +28,7 @@
 
     - block:
         - name: Configure pngquant build process
-          command: >
+          command:
             ./configure {{ pngquant_build_cfg }}
           args:
             chdir: '{{ local_source_directory }}/pngquant'
@@ -44,8 +45,9 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ pngquant_build_env }} dest={{ local_source_directory }}/pngquant.build.cfg
+          copy:
+            content: '{{ pngquant_build_env }}'
+            dest: '{{ local_source_directory }}/pngquant.build.cfg'
       when: pngquant_build is change
   become: yes
   tags: [pngquant, packages]

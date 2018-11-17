@@ -3,14 +3,16 @@
 
 - block:
     - name: Install exFAT build packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ exfat_build_packages }}'
+      package:
+        name: '{{ exfat_build_packages }}'
+        state: present
 
     - name: Clone exFAT source code
-      git: >
-        repo=https://github.com/relan/exfat.git dest={{ local_source_directory }}/exfat force=yes
-        version={{ exfat_version }}
+      git:
+        repo: https://github.com/relan/exfat.git
+        dest: '{{ local_source_directory }}/exfat'
+        force: yes
+        version: '{{ exfat_version }}'
       register: _exfat_git
 
     - name: Set exFAT build environment
@@ -20,7 +22,7 @@
           {{ _exfat_git.after }}
 
     - name: Detect if exFAT must be reinstalled
-      command: >
+      command:
         cat '{{ local_source_directory }}/exfat.build.cfg'
       changed_when: >
         exfat_build_env|trim != exfat_build.stdout|default('')|trim
@@ -30,13 +32,13 @@
 
     - block:
         - name: Reset exFAT build process
-          command: >
+          command:
             autoreconf --install
           args:
             chdir: '{{ local_source_directory }}/exfat'
 
         - name: Configure exFAT build process
-          command: >
+          command:
             ./configure {{ exfat_build_cfg }}
           args:
             chdir: '{{ local_source_directory }}/exfat'
@@ -53,8 +55,9 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ exfat_build_env }} dest={{ local_source_directory }}/exfat.build.cfg
+          copy:
+            content: '{{ exfat_build_env }}'
+            dest: '{{ local_source_directory }}/exfat.build.cfg'
       when: exfat_build is change
   become: yes
   tags: [exfat, packages]

@@ -8,8 +8,12 @@
   become: yes
 
 - name: wait started
-  local_action: >
-    wait_for host={{ ansible_host }} port=22 delay=10 state=started
+  local_action:
+    module: wait_for
+    host: '{{ ansible_host }}'
+    port: 22
+    delay: 10
+    state: started
 
 - name: update grub
   command:

@@ -3,7 +3,7 @@
 
 - block:
     - name: Define master node (1/2)
-      command: >
+      command:
         echo '{{ inventory_hostname }}'
       changed_when: no
       check_mode: no
@@ -14,5 +14,6 @@
       set_fact:
         '{{ is_master_variable }}': '{{ _is_master.stdout == inventory_hostname }}'
 
-    - debug: var={{ is_master_variable }}
+    - debug:
+        var: '{{ is_master_variable }}'
   tags: always

@@ -8,8 +8,9 @@
   tags: [ruby, always]
 
 - name: Install Ruby build packages
-  package: >
-    name={{ item }} state=present
+  package:
+    name: '{{ item }}'
+    state: present
   become: yes
   loop: '{{ ruby_build_packages }}'
   tags: [ruby, packages]
@@ -35,13 +36,17 @@
 
     - block:
         - name: Download Ruby source code
-          get_url: >
-            url=http://ftp.ruby-lang.org/pub/ruby/{{ (ruby_version|string|splitext)[0] }}/{{ ruby_source_package }} force=no
-            dest={{ local_source_directory }}/{{ ruby_source_package }} sha256sum={{ ruby_checksum }}
+          get_url:
+            url: http://ftp.ruby-lang.org/pub/ruby/{{ (ruby_version|string|splitext)[0] }}/{{ ruby_source_package }}
+            dest: '{{ local_source_directory }}/{{ ruby_source_package }}'
+            force: no
+            sha256sum: '{{ ruby_checksum }}'
 
         - name: Extract Ruby source code
-          unarchive: >
-            src={{ local_source_directory }}/{{ ruby_source_package }} dest={{ local_source_directory }} copy=no
+          unarchive:
+            src: '{{ local_source_directory }}/{{ ruby_source_package }}'
+            dest: '{{ local_source_directory }}'
+            copy: no
 
         - name: Configure Ruby build process
           command: >
@@ -61,8 +66,9 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ ruby_build_env }} dest={{ local_source_directory }}/ruby.build.cfg
+          copy:
+            content: '{{ ruby_build_env }}'
+            dest: '{{ local_source_directory }}/ruby.build.cfg'
       when: ruby_build is change
 
     - name: Check Ruby version

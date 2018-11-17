@@ -39,7 +39,7 @@
           {{ ansible_tower_setup_config.stat.checksum }}
 
     - name: Detect if Ansible Tower must be reinstalled
-      command: >
+      command:
         cat '{{ local_source_directory }}/ansible-tower.build.cfg'
       changed_when: >
         ansible_tower_setup_env|trim != ansible_tower_setup.stdout|default('')|trim
@@ -49,7 +49,7 @@
 
     - block:
         - name: Setup Ansible Tower
-          command: >
+          command:
             ./setup.sh
           args:
             chdir: '{{ local_source_directory }}/ansible-tower-setup-{{ ansible_tower_version }}'
