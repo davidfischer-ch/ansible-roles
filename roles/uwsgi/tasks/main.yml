@@ -10,12 +10,17 @@
 
     # FIXME disable because it breaks running Python 2 applications
     # - name: Upgrade uWSGI
-    #   pip: >
-    #     executable=pip3 name=uwsgi state=latest
+    #   pip:
+    #     name: uwsgi
+    #     executable: pip3
+    #     state: latest
 
     # - name: Enable upgraded uWSGI
-    #   file: >
-    #     src=/usr/local/bin/uwsgi dest=/usr/bin/uwsgi force=yes state=link
+    #   file:
+    #     src: /usr/local/bin/uwsgi
+    #     dest: /usr/bin/uwsgi
+    #     force: yes
+    #     state: link
     #   notify: restart uwsgi
 
     - meta: flush_handlers

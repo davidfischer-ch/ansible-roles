@@ -5,57 +5,62 @@
 # https://uwsgi-docs.readthedocs.org/en/latest/
 
 # - name: Create graphite user
-#   user: >
-#     name=graphite createhome=no home=/usr/local/src/graphite shell=/bin/false state=present
+#   user:
+#     name: graphite
+#     createhome: no
+#     home: /usr/local/src/graphite
+#     shell: /bin/false
+#     state: present
 #   become: yes
 #   tags: bootstrap
 
 # Packages
 
 - name: Create virtualenv
-  shell: >
+  shell:
     virtualenv -p python2.7 --system-site-packages {{ graphite_bin_directory }}
   args:
-    creates: "{{ graphite_bin_directory }}"
+    creates: '{{ graphite_bin_directory }}'
   tags: [graphite, packages]
 
 - name: Install requirements into virtualenv
-  pip: >
-    name={{ item }} state=present virtualenv={{ graphite_bin_directory }}
-    extra_args='--install-option="--prefix={{ graphite_bin_directory }} --install-lib={{ graphite_bin_directory }}/lib"'
+  pip:
+    name:
+      - cairocffi
+      - carbon
+      - django<1.7
+      - django-tagging
+      - graphite-web
+      - twisted<12.0
+      - whisper
+    extra_args: '--install-option="--prefix={{ graphite_bin_directory }} --install-lib={{ graphite_bin_directory }}/lib"'
+    state: present
+    virtualenv: '{{ graphite_bin_directory }}'
   tags: [graphite, packages]
-  loop:
-    - cairocffi
-    - carbon
-    - django<1.7
-    - django-tagging
-    - graphite-web
-    - twisted<12.0
-    - whisper
 
 - name: Create symbolic link cairo -> cairocffi
-  file: >
-    src={{ graphite_bin_directory }}/lib/python2.7/site-packages/cairocffi
-    dest={{ graphite_bin_directory }}/lib/python2.7/site-packages/cairo
-    state=link
+  file:
+    src: '{{ graphite_bin_directory }}/lib/python2.7/site-packages/cairocffi'
+    dest: '{{ graphite_bin_directory }}/lib/python2.7/site-packages/cairo'
+    state: link
   tags: [graphite, packages]
 
 # Configuration
 
 - name: Deploy Carbon settings
-  template: >
-    src={{ item }}
-    dest={{ graphite_bin_directory }}/conf/{{ item|basename|pathname }}
-    mode=644
+  template:
+    src: '{{ item }}'
+    dest: '{{ graphite_bin_directory }}/conf/{{ item|basename|pathname }}'
+    mode: 0644
   tags: [graphite, config]
   with_fileglob:
     - ../templates/*.conf.j2
     - ../templates/*.wsgi.j2
 
 - name: Deploy Graphite settings
-  template: >
-    src=local_settings.py.j2
-    dest={{ graphite_bin_directory }}/webapp/graphite/local_settings.py
-    mode=644
+  template:
+    src: local_settings.py.j2
+    dest: '{{ graphite_bin_directory }}/webapp/graphite/local_settings.py'
+    mode: 0644
   become: yes
   tags: [graphite, config]
