@@ -3,6 +3,7 @@
 - block:
     - assert:
         that:
+          - djsite_configure_tasks_file is defined
           - djsite_database_host is defined
           - djsite_database_name is defined
           - djsite_database_password is defined
@@ -21,6 +22,8 @@
           - djsite_superuser.email is defined
           - djsite_superuser.name is defined
           - djsite_superuser.password is defined
+          - djsite_update_tasks_file is defined
+          - djsite_virtualenv_tasks_file is defined
 
     - set_fact:
         djsite_release_directory: "{{ djsite_app_directory }}/{{ (djsite_release_mode == 'direct')|ternary('test', 'releases/'+djsite_release_timestamp) }}"

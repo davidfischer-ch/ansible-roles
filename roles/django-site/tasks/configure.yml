@@ -21,6 +21,6 @@
         label: '{{ item.item }}'
 
     - name: Trigger configure hook
-      import_tasks: "{{ djsite_configure_tasks_file or 'none.yml' }}"
+      include_tasks: "{{ djsite_configure_tasks_file or 'none.yml' }}"
   become: yes
   become_user: root

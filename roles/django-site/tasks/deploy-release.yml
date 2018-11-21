@@ -104,13 +104,13 @@
           when: "item.path.split('.')[-1] == 'pip' + djsite_config.python_version[0]"
 
         - name: Trigger virtualenv hook
-          import_tasks: "{{ djsite_virtualenv_tasks_file or 'none.yml' }}"
+          include_tasks: "{{ djsite_virtualenv_tasks_file or 'none.yml' }}"
       tags: virtualenv
 
     - import_tasks: configure.yml
       tags: [config, unit-test-extra, update]
 
     - name: Trigger update hook
-      import_tasks: "{{ djsite_update_tasks_file or 'none.yml' }}"
+      include_tasks: "{{ djsite_update_tasks_file or 'none.yml' }}"
   become: yes
   become_user: '{{ djsite_daemon_user }}'
