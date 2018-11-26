@@ -1,0 +1,18 @@
+---
+
+- block:
+    - name: Trigger uWSGI restart
+      command:
+        ls /dev/null
+      changed_when: yes
+      check_mode: no
+      notify: restart uwsgi
+      when: uwsgi_system_install|bool
+
+    - name: Trigger uWSGI applications restart
+      command:
+        ls /dev/null
+      changed_when: yes
+      check_mode: no
+      notify: restart uwsgi apps
+  tags: uwsgi

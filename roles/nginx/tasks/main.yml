@@ -2,12 +2,7 @@
 # https://blog.engineyard.com/2011/useful-rewrites-for-nginx
 ---
 
-- assert:
-    that:
-      - nginx_daemon_mode in nginx_daemon_modes
-      - nginx_sites is defined
-      - nginx_version is defined
-  tags: [nginx, always]
+- import_tasks: facts.yml
 
 - block:
     - name: Install Nginx build dependencies
