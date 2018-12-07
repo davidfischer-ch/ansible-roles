@@ -1,5 +1,5 @@
 /var/log/apache2/*.log /var/log/apache2/*/*.log {
-       daily
+       {{ apache_log_rotations_frequency }}
        dateext
        missingok
        rotate {{ apache_log_rotations_max_count|int }}

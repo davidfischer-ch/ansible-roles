@@ -20,6 +20,7 @@ djsite_max_body_size: 100k
 djsite_ssl_enabled: no
 
 # logging
+django_log_rotations_frequency: daily
 djsite_log_rotations_max_count: 49
 djsite_log_rotations_config_file: logrotate.j2
 djsite_log_rotations:

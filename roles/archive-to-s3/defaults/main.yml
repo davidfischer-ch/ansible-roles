@@ -1,11 +1,12 @@
 archive_to_s3_python_packages:
-  - 'pytoolbox[aws]>=12.2.3<13'
-  - 'JSON-log-formatter>=0.2.0'
+  - 'pytoolbox[aws]>=13.0.4<14'
+  - 'JSON-log-formatter>=0.2.0<1.0'
 
 archive_to_s3_config_directory: /etc/archive-to-s3
 archive_to_s3_log_directory: /var/log/archive-to-s3
 
 # logging
+archive_to_s3_log_rotations_frequency: daily
 archive_to_s3_log_rotations_max_count: 49
 archive_to_s3_log_rotations:
   - name: archive-to-s3

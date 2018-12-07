@@ -1,6 +1,6 @@
 {{ seafile_app_directory }}/logs/ccnet.log
 {
-       daily
+       {{ seafile_log_rotations_frequency }}
        dateext
        missingok
        rotate {{ seafile_log_rotations_max_count|int }}
@@ -17,7 +17,7 @@
 
 {{ seafile_app_directory }}/logs/controller.log {{ seafile_app_directory }}/logs/index.log {{ seafile_app_directory }}/logs/seahub*.log
 {
-       daily
+       {{ seafile_log_rotations_frequency }}
        dateext
        missingok
        rotate {{ seafile_log_rotations_max_count|int }}
@@ -31,7 +31,7 @@
 
 {{ seafile_app_directory }}/logs/seafile.log
 {
-       daily
+       {{ seafile_log_rotations_frequency }}
        dateext
        missingok
        rotate {{ seafile_log_rotations_max_count|int }}

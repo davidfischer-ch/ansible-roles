@@ -1,5 +1,5 @@
 /var/log/nginx/*.log /var/log/nginx/*/*.log {
-       daily
+       {{ nginx_log_rtations_frequency }}
        dateext
        missingok
        rotate {{ nginx_log_rotations_max_count|int }}

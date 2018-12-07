@@ -1,5 +1,5 @@
 /var/log/{{ djsite_instance_name }}/*.log {
-       daily
+       {{ django_log_rotations_frequency }}
        dateext
        missingok
        rotate {{ djsite_log_rotations_max_count|int }}

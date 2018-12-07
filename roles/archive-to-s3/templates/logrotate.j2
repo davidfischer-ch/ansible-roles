@@ -1,5 +1,5 @@
 {{ archive_to_s3_log_directory }}/*.log {
-       daily
+       {{ archive_to_s3_log_rotations_frequency }}
        dateext
        missingok
        rotate {{ archive_to_s3_log_rotations_max_count|int }}

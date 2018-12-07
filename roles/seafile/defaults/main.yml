@@ -36,6 +36,7 @@ seafile_database_user: '{{ seafile_instance_name }}'
 # web
 seafile_domains: []
 # logging
+seafile_log_rotations_frequency: daily
 seafile_log_rotations_max_count: 49
 seafile_log_rotations_config_file: logrotate.j2
 seafile_log_rotations:

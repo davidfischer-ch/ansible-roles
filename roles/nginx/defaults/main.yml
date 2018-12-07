@@ -40,6 +40,7 @@ nginx_pagespeed_module_enabled: no
 nginx_upload_module_enabled: no
 nginx_zip_module_enabled: no
 # logging
+nginx_log_rtations_frequency: daily
 nginx_log_rotations_max_count: 49
 nginx_log_rotations_config_file: logrotate.j2
 nginx_log_rotations:
