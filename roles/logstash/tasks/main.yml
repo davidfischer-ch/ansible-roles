@@ -5,6 +5,7 @@
 - assert:
     that:
       - logstash_log_level in logstash_log_levels
+      - logstash_version is defined
   tags: [logstash, always]
 
 - block:

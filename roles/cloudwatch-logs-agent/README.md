@@ -22,6 +22,7 @@ Stable
 cloudwatch_logs_agent_default_buffer_duration: 10000
 cloudwatch_logs_agent_default_group_name: production
 cloudwatch_logs_agent_default_initial_position: start
+cloudwatch_logs_agent_version: latest  # can be 1.3.9
 cloudwatch_logs_agent_logs:
 
   dpkg:
@@ -107,4 +108,6 @@ cloudwatch_logs_agent_logs:
     file: /var/log/uwsgi/app/application.log
     datetime_format: '%c'  # e.g. May  8 12:50:17 2017
     stream_name: 'uwsgi application {instance_id}'
+
+cloudwatch_mon_scripts_version: 1.2.1  # 16/01/2017
 ```

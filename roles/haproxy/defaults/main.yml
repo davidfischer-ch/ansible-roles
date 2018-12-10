@@ -37,4 +37,4 @@ haproxy_ufw_rules:
     port: '{{ haproxy_https_port }}'
     proto: tcp
     rule: allow
-haproxy_version: v1.6.0  # 10/11/2015
+# haproxy_version: v1.6.0  # 10/11/2015

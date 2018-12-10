@@ -1,4 +1,4 @@
-ampache_config_version: 34
+# ampache_config_version: 34
 ampache_debug: no
 ampache_debug_level: 5
 ampache_interface: null
@@ -29,6 +29,6 @@ ampache_ufw_rules:
     proto: tcp
     rule: allow
 ampache_users: []
-ampache_version: master
+# ampache_version: master
 ampache_web_directory: /usr/share/ampache/www2
 ampache_web_path: /ampache

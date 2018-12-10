@@ -2,4 +2,4 @@ efs_build_packages:
   - binutils
   - nfs-common
   - stunnel
-efs_version: master
+# efs_version: master

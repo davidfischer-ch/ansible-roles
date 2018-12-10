@@ -9,6 +9,7 @@
     - assert:
         that:
           - vagrant_role_action in vagrant_role_actions
+          - vagrant_version is defined
 
     - name: Make machines directory variable constant
       set_fact:

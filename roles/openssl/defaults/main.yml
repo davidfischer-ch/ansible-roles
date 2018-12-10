@@ -5,5 +5,5 @@ openssl_packages:
   - openssl
 openssl_source_package: "OpenSSL_{{ (openssl_version|string).replace('.', '_') }}.tar.gz"
 openssl_source_directoy: "openssl-OpenSSL_{{ (openssl_version|string).replace('.', '_') }}"
-openssl_version: 1.1.0f  # by default only used when installing from source
+# openssl_version: 1.1.1a  # 10/12/2018 by default only used when installing from source
 ssl_cert_days: 365

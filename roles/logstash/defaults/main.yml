@@ -19,7 +19,7 @@ logstash_pipeline_batch_size: 125
 logstash_pipeline_output_workers: 1
 logstash_pipeline_workers: '{{ ansible_processor_cores }}'
 logstash_port: 9300
-logstash_version: 5.0.1
+# logstash_version: 5.0.1  # 22/11/2016
 logstash_ufw_rules:
   - direction: in
     interface: '{{ logstash_interface or omit }}'

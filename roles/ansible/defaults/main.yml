@@ -28,5 +28,5 @@ the_ansible_modules_python_packages:
     - boto3
 the_ansible_python_packages:
   - dateutils
-the_ansible_version: latest
+# the_ansible_version: latest
 the_ansible_from_source: no

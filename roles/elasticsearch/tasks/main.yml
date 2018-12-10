@@ -6,6 +6,7 @@
     that:
       - elasticsearch_cluster_name is defined
       - elasticsearch_nodes_group is defined
+      - elasticsearch_version is defined
   tags: [elasticsearch, always]
 
 - block:

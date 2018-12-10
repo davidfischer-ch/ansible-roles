@@ -91,6 +91,8 @@ source_path: src/myproject
     - python
     - mounts
     - rsync
+  vars:
+    rsync_version: 3.1.3  # 10/12/2108
 
 # Application Services
 
@@ -118,9 +120,16 @@ source_path: src/myproject
     - nginx
     - uwsgi
   vars:
+    supervisor_daemon_mode: systemv
+    supervisor_username: kikouman
+    supervisor_password: kikoupass
+    supervisor_version: 3.3.4  # 10/12/2018
+
     djsite_role_action: setup
     djsite_sass_enabled: yes
 
+    nginx_daemon_mode: supervisor
+    nginx_version: release-1.13.6  # 19/11/2017
     nginx_sites:
       site:
         name: '{{ djsite_instance_name }}'

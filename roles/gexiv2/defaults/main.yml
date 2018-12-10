@@ -3,4 +3,4 @@ gexiv2_build_packages:
   - gobject-introspection
   - libexiv2-dev
   - libgirepository1.0-dev
-gexiv2_version: 59977b0fb1c1942b8e97fc3e4519fbf24679e23b  # 30/08/2015
+# gexiv2_version: gexiv2-0.10.8  # 10/12/2018

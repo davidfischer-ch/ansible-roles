@@ -1,4 +1,4 @@
 supervisor_credentials_enabled: yes
 supervisor_dod_time: 10
 supervisor_socket_group: supervisor
-supervisor_version: 3.2.3  # 26/03/2016
+# supervisor_version: 3.3.4  # 10/12/2018

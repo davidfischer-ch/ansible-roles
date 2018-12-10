@@ -10,7 +10,7 @@ elasticsearch_node_settings: {}
 elasticsearch_packages:
   - 'elasticsearch={{ elasticsearch_version }}'
 elasticsearch_port: 9200
-elasticsearch_version: 5.0.1
+# elasticsearch_version: 5.0.1  # 22/11/2016
 elasticsearch_ufw_rules:
   - direction: in
     interface: '{{ elasticsearch_interface or omit }}'

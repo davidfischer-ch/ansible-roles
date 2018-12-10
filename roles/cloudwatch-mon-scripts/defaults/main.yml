@@ -8,4 +8,4 @@ cloudwatch_mon_scripts_report_arguments:
   - --disk-space-util
   - --disk-path=/
 cloudwatch_mon_scripts_report_enabled: yes
-cloudwatch_mon_scripts_version: 1.2.1
+# cloudwatch_mon_scripts_version: 1.2.1  # 16/01/2017

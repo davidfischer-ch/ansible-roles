@@ -11,4 +11,4 @@ s3fs_build_packages:
   - make
   - pkg-config
 s3fs_repository_url: https://github.com/s3fs-fuse/s3fs-fuse.git
-s3fs_version: v1.82
+# s3fs_version: v1.82  # 20/09/2018

@@ -10,4 +10,4 @@ ruby_checksum: 93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c
 ruby_packages: []
 ruby_source_package: 'ruby-{{ ruby_version }}.tar.gz'
 ruby_source_directoy: 'ruby-{{ ruby_version }}'
-ruby_version: '2.4.2'
+# ruby_version: 2.4.2  # 28/11/2017

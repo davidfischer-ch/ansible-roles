@@ -9,4 +9,4 @@ mariadb_dynamic_defaults:
 mariadb_apt_repository: 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/{{ mariadb_version }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'
 mariadb_client_packages:
   - 'mariadb-client-{{ mariadb_version }}'
-mariadb_version: 10.2  # 13/07/2017
+# mariadb_version: 10.2  # 13/07/2017

@@ -1,2 +1,2 @@
 drush_path: '/usr/local/bin/drush-{{ drush_version }}'
-drush_version: 8.1.10
+# drush_version: 8.1.10  # 15/03/2017

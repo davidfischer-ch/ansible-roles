@@ -54,4 +54,4 @@ gpac_dynamic_defaults:
       # OpenSVCDecoder, version 1.3
       - zlib1g-dev
 gpac_repository_url: https://github.com/gpac/gpac.git
-gpac_version: 04de29dc7ca41bfa0130b597149fb5b7fae9a697  # 10/10/2018 No release since v0.7.1 26/04/2017!
+# gpac_version: 04de29dc7ca41bfa0130b597149fb5b7fae9a697  # 10/10/2018 No release since v0.7.1 26/04/2017!

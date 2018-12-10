@@ -3,6 +3,7 @@
 - assert:
     that:
       - mariadb_root_password is defined
+      - mariadb_version is defined
   tags: [mariadb, always]
 
 - block:

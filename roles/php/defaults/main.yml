@@ -10,4 +10,4 @@ php_packages:
   - 'php{{ php_version }}-cli'
 
 php_fpm_reload_on_update: yes
-php_version: 5
+# php_version: 5  # 01/03/2016

@@ -22,7 +22,7 @@ postgresql_ufw_rules:
     port: '{{ postgresql_port }}'
     proto: tcp
     rule: allow
-postgresql_version: 9.6
+# postgresql_version: 9.6  # 15/08/2018
 postgresql_work_mem: '{{ 2 * postgresql_allocated_ram // postgresql_max_connections }}MB'
 # private
 _postgresql_allow: {}

@@ -18,7 +18,7 @@ kibana_packages:
   - 'kibana={{ kibana_version }}'
 kibana_port: 5601
 kibana_server_name: '{{ inventory_hostname }}'
-kibana_version: 5.0.1
+# kibana_version: 5.0.1  # 22/11/2016
 kibana_ufw_rules:
   - direction: in
     interface: '{{ kibana_interface or omit }}'
