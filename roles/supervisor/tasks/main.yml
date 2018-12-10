@@ -4,8 +4,8 @@
 - assert:
     that:
       - supervisor_daemon_mode in supervisor_daemon_modes
-      - supervisor_password is defined
-      - supervisor_username is defined
+      - not supervisor_credentials_enabled|bool or supervisor_password is defined
+      - not supervisor_credentials_enabled|bool or supervisor_username is defined
       - supervisor_version is defined
   tags: [supervisor, always]
 
