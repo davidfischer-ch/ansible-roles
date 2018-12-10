@@ -1,6 +1,6 @@
 vagrant_dynamic_defaults:
   apt:
-    vagrant_release_checksum: 'sha256:f614a60b258a856322f23d33a24201d26ab2555d047814fec403e834eb7d62b4'
+    # vagrant_release_checksum: 'sha256:f614a60b258a856322f23d33a24201d26ab2555d047814fec403e834eb7d62b4'
     vagrant_release_url: 'https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.deb'
     vagrant_release_validate_certs: no
   yum:
