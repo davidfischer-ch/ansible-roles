@@ -6,6 +6,16 @@ import boto3, json_log_formatter
 from pytoolbox import aws, crypto, filesystem
 from pytoolbox.argparse import is_file, FullPaths
 
+# https://docs.datadoghq.com/logs/processing/processors/#log-status-remapper
+# https://en.wikipedia.org/wiki/Syslog#Severity_level
+LEVEL_MAP = {
+    'debug': 'debug',
+    'info': 'info',
+    'warning': 'warning',
+    'error': 'error',
+    'exception': 'error'
+}
+
 
 def main():
     signal.signal(signal.SIGINT, lambda *args: sys.exit(0))
@@ -19,6 +29,7 @@ def main():
 
     def log_it(verbosity, level, message, **extra):
         if args.verbosity >= verbosity:
+            extra['level'] = LEVEL_MAP[level]
             getattr(log, level)(message, extra=extra)
 
     s3 = boto3.client('s3')
