@@ -1,0 +1,8 @@
+---
+
+dependencies:
+  - role: logrotate
+    logrotate_log_rotations: '{{ fail2ban_log_rotations }}'
+    logrotate_role_action: setup
+    tags: [fail2ban, dependencies]
+    when: fail2ban_log_rotations|length > 0

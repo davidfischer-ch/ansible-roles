@@ -12,3 +12,10 @@ fail2ban_ignore_ips:
   - 127.0.0.1/8
 fail2ban_log_encoding: auto
 fail2ban_max_retries: 10
+# logging
+fail2ban_log_rotations_frequency: weekly
+fail2ban_log_rotations_max_count: 4
+fail2ban_log_rotations_config_file: logrotate.j2
+fail2ban_log_rotations:
+  - name: fail2ban
+    config_file: '{{ fail2ban_log_rotations_config_file }}'
