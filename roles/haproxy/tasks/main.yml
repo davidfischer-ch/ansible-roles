@@ -8,8 +8,6 @@
       apt:
         name: haproxy
         state: build-dep
-      changed_when: _haproxy_build_dep.stdout_lines|length > 4
-      register: _haproxy_build_dep
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install HAProxy build packages

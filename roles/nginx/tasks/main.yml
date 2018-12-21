@@ -9,8 +9,6 @@
       apt:
         name: nginx
         state: build-dep
-      changed_when: _nginx_build_dep.stdout_lines|length > 4
-      register: _nginx_build_dep
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Install Nginx build packages
