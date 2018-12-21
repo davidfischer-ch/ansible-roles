@@ -1,5 +1,11 @@
 ---
 
 dependencies:
+  - role: daemon
+    daemon_user: '{{ libre_office_daemon_user }}'
+    daemon_group: '{{ libre_office_daemon_group }}'
+    daemon_directory: /tmp
+    tags: [libre-office, dependencies]
+
   - role: supervisor
     tags: [libre-office, dependencies]
