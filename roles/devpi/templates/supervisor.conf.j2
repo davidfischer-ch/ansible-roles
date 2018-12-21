@@ -1,0 +1,16 @@
+; ======================
+;  DevPI Server service
+; ======================
+
+[program:devpi-server]
+command=/usr/local/bin/devpi-server --config /etc/devpi-server.yml
+directory={{ devpi_server_app_directory }}
+numprocs=1
+user={{ devpi_server_daemon_user }}
+group={{ devpi_server_daemon_group }}
+stdout_logfile=/var/log/supervisor/devpi-server-stdout.log
+stderr_logfile=/var/log/supervisor/devpi-server-stderr.log
+autostart=true
+autorestart=true
+startsecs=5
+priority=999

@@ -1,0 +1,5 @@
+devpi-server:
+  host: {{ devpi_server_host }}
+  port: {{ devpi_server_port|int }}
+  serverdir: {{ devpi_server_app_directory }}/data
+  absolute-urls: {{ devpi_server_absolute_urls|bool }}

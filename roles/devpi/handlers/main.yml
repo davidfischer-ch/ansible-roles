@@ -1,0 +1,7 @@
+---
+
+- name: restart devpi-server
+  supervisorctl:
+    name: devpi-server
+    state: restarted
+  become: yes
