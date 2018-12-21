@@ -1,0 +1,6 @@
+location /.well-known/acme-challenge/ {
+    access_log /var/log/nginx/{{ item.value.name }}/access-certbot-challenge.log;
+    error_log  /var/log/nginx/{{ item.value.name }}/error-certbot-challenge.log warn;
+
+    alias /etc/certbot/challenges/{{ item.value.name }}/;
+}

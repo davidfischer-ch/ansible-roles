@@ -1,12 +1,11 @@
-server {
-    # Security - http://nginx.org/en/docs/http/request_processing.html
-    listen {{ nginx_port|int }};
-    return 444;
-}
+{% include 'templates/site.reject-unkown.conf.j2' %}
 
 server {
-    server_name {{ devpi_server_domains|join(' ') }};
     listen {{ nginx_port|int }};
+
+    {% include 'templates/site.real_ip.conf.j2' %}
+
+    server_name {{ devpi_server_domains|join(' ') }};
 
     gzip            on;
     gzip_min_length 2000;

@@ -2,11 +2,7 @@ upstream jenkins {
     server 127.0.0.1:{{ jenkins_port|int }} fail_timeout=0;
 }
 
-server {
-    # Security - http://nginx.org/en/docs/http/request_processing.html
-    listen {{ nginx_port|int }};
-    return 444;
-}
+{% include 'templates/site.reject-unkown.conf.j2' %}
 
 server {
     listen {{ nginx_port|int }};

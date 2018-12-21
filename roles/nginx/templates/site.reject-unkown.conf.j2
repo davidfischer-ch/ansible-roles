@@ -1,0 +1,8 @@
+server {
+    # Security - http://nginx.org/en/docs/http/request_processing.html
+    listen {{ nginx_port|int }};
+
+    {% include 'templates/site.real_ip.conf.j2' %}
+
+    return 444;
+}
