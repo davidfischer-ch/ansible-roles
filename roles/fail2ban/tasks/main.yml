@@ -20,7 +20,7 @@
 - block:
     - name: Detect fail2ban version
       shell:
-        fail2ban-client -V | grep -o 'Fail2Ban v[0-9]\.[0-9]' | cut -dv -f 2
+        fail2ban-client -V | egrep -o 'Fail2Ban v[0-9](\.[0-9]+)+' | cut -dv -f 2
       changed_when: no
       check_mode: no
       register: _fail2ban_version
