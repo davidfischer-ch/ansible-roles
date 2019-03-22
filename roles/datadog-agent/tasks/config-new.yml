@@ -7,6 +7,18 @@
         mode: 0644
       notify: reload datadog-agent
 
+    - name: Setup PostgreSQL Datadog users
+      postgresql_user:
+        db: postgres
+        name: '{{ item.username }}'
+        password: '{{ item.password }}'
+        priv: pg_stat_database:SELECT
+        state: present
+      loop: '{{ datadog_agent_checks.postgres.instances }}'
+      loop_control:
+        label: 'instance->{{ item.name }} user->{{ item.username }}'
+      when: datadog_agent_checks.postgres is defined and item.host == 'localhost'
+
     - name: Setup Datadog agent checks
       file:
         path: /etc/datadog-agent/conf.d/{{ item.key }}.d
