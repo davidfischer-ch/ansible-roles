@@ -1,4 +1,5 @@
 systemd_journal_daemon_config_file: journald.conf.j2
+systemd_journal_daemon_group: systemd-journal
 
 systemd_journal_daemon_storage: auto
 systemd_journal_daemon_compress: yes
