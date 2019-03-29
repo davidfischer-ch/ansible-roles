@@ -1,0 +1,15 @@
+systemd_journal_daemon_storages:
+  auto: auto
+  none: none
+  persistent: persistent
+  volatile: volatile
+
+systemd_journal_daemon_levels:
+  alert: alert
+  critical: crit
+  debug: debug
+  emergency: emerg
+  error: err
+  info: info
+  notice: notice
+  warning: warning

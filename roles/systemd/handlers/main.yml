@@ -1,0 +1,7 @@
+---
+
+- name: restart systemd journal daemon
+  service:
+    name: systemd-journald
+    state: restarted
+  become: yes

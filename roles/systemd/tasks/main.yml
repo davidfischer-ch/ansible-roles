@@ -1,0 +1,20 @@
+---
+
+- name: Configure SystemD Journal Daemon
+  template:
+    src: '{{ systemd_journal_daemon_config_file }}'
+    dest: /etc/systemd/journald.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify: restart systemd journal daemon
+  tags: [systemd, config]
+
+- name: Start SystemD Journal Daemon service
+  service:
+    name: systemd-journald
+    enabled: yes
+    state: started
+  become: yes
+  tags: [systemd, services]
