@@ -236,7 +236,7 @@ process_agent_enabled: {{ datadog_agent_process_agent_enabled|bool|ternary('true
 # Logging
 # ========================================================================== #
 
-# log_level: INFO
+log_level: {{ datadog_agent_log_level|upper }}
 
 # collector_log_file: /var/log/datadog/collector.log
 # forwarder_log_file: /var/log/datadog/forwarder.log
@@ -245,6 +245,6 @@ process_agent_enabled: {{ datadog_agent_process_agent_enabled|bool|ternary('true
 # if syslog is enabled but a host and port are not set, a local domain socket
 # connection will be attempted
 #
-# log_to_syslog: yes
+log_to_syslog: {{ datadog_agent_log_to_syslog|bool|ternary('yes, 'no') }}
 # syslog_host:
 # syslog_port:

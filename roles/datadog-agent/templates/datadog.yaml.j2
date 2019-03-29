@@ -349,8 +349,8 @@ logs_enabled: {{ datadog_agent_log_agent_enabled|bool|ternary('true', 'false') }
 
 # Logging
 #
-# log_level: info
-# log_file: /var/log/datadog/agent.log
+log_level: {{ datadog_agent_log_level }}
+log_file: {{ datadog_agent_log_file }}
 
 # Set to 'true' to output logs in JSON format
 log_format_json: {{ datadog_agent_log_format_json|bool|ternary('true', 'false') }}

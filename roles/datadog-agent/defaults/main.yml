@@ -8,16 +8,18 @@ datadog_agent_version: 6
 # Options for Version 6 only
 datadog_agent_apm_enabled: no
 datadog_agent_log_agent_enabled: no
+datadog_agent_log_file: /var/log/datadog/agent.log
 datadog_agent_log_format_json: no
 datadog_agent_log_to_console: yes
 datadog_agent_log_to_file: yes
-datadog_agent_log_to_syslog: no
 
 # Options for Version 5 and 6
 datadog_agent_checks: {}
 datadog_agent_collect_ec2_tags: no
 datadog_agent_forwarder_timeout: 20
 datadog_agent_hostname: '{{ inventory_hostname }}'
+datadog_agent_log_level: info
+datadog_agent_log_to_syslog: no
 datadog_agent_process_agent_enabled: no
 datadog_agent_tags: []
 
