@@ -1,0 +1,8 @@
+[all]
+localhost
+
+[vagrant]
+seafile-vm
+
+[seafile]
+seafile-vm

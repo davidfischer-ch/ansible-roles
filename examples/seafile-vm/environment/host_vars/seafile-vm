@@ -1,0 +1,64 @@
+ansible_host: 10.1.1.12
+
+mounts: {}
+
+# Platform ---------------------------------------------------------------------
+
+java_apt_repository: ''
+java_version: 8
+
+mariadb_interface: lo
+mariadb_root_password: Rd7cSVguEVwkrWph
+mariadb_version: 10.2
+
+memcache_interface: lo
+
+nginx_zip_module_enabled: no
+nginx_version: release-1.13.6  # 19/11/2017
+nginx_daemon_mode: supervisor
+nginx_build_flags:
+  - --with-http_addition_module
+  - --with-http_auth_request_module
+  - --with-http_dav_module
+  - --with-http_geoip_module
+  - --with-http_gzip_static_module
+  - --with-http_image_filter_module
+  - --with-http_realip_module
+  - --with-http_ssl_module
+  - --with-http_stub_status_module
+  - --with-http_sub_module
+  - --with-http_v2_module
+  - --with-http_xslt_module
+  - --with-ipv6
+  - --with-pcre-jit
+
+nginx_sites:
+  seafile:
+    name: '{{ seafile_instance_name }}'
+    config_file: '{{ playbook_dir }}/../roles-df/roles/seafile/templates/example.nginx.site.conf.j2'
+    domains: '{{ seafile_domains }}'
+    ssl_files_prefix: '/path/to/your/ssl/files_prefix'
+    with_dhparam: yes
+
+postfix_hostname: '{{ ansible_hostname }}'
+
+rsync_version: 3.1.3  # 10/12/2108
+
+supervisor_daemon_mode: '{{ ansible_service_mgr }}'
+supervisor_username: superman
+supervisor_password: mE295Ajw4bX4qJ3w
+supervisor_version: 3.3.4  # 10/12/2018
+
+# Application ------------------------------------------------------------------
+
+seafile_admin_email: you@example.com
+seafile_admin_password: your-password
+seafile_daemon_mode: systemd
+seafile_database_password: some-password
+seafile_data_directory: /data/seafile/
+seafile_domains:
+  - seafile.example.com
+  - 127.0.0.1
+seafile_instance_name: seafile
+seafile_interface: lo
+seafile_version: 6.1.9

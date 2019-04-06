@@ -1,0 +1,42 @@
+---
+
+- import_playbook: /path/to/roles-df/playbooks/ansible-bootstrap.yml
+
+- hosts:
+    - localhost
+  roles:
+    - register-ssh-hosts
+    - vagrant
+  vars:
+    vagrant_role_action: setup
+
+- hosts:
+    - all:!localhost
+  roles:
+    - bootstrap
+    - bash
+    - miscellaneous
+    - openssl
+    - kernel
+    - systemd
+    - python
+    - mounts
+    - rsync
+    - ufw
+    - fail2ban
+  tags: common-stack
+
+- hosts:
+    - seafile
+  roles:
+    - synapse-client
+    - memcache
+    - mariadb
+    - seafile
+    - nginx
+  # post_tasks:
+  #   - name: Enable eth2
+  #     blockinfile:
+  #       auto eth2
+  #       iface eth2 inet dhcp
+  tags: sync-stack

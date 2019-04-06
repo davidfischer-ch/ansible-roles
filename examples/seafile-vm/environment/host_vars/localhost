@@ -1,0 +1,11 @@
+ansible_connection: local
+
+vagrant_release_checksum: 'sha256:4dec711612c4350733e01745ab9f5acee2fbf9756ab9728b19a4664cae5c275d'
+vagrant_version: 2.2.2  # 10/12/2018
+vagrant_machines:
+  - name: seafile-vm
+    cpus: 2
+    memory: 2048
+    host_public: 192.168.56.103
+    box: bento/ubuntu-16.04
+    provider: virtualbox
