@@ -13,6 +13,7 @@
     - miscellaneous
     - openssl
     - kernel
+    - systemd
     - python
     - mounts
     - rsync
