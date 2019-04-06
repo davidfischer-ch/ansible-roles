@@ -1,0 +1,17 @@
+[all]
+localhost
+
+[vagrant]
+myapp-dev
+
+[caching]
+myapp-dev
+
+[database]
+myapp-dev
+
+[web]
+myapp-dev
+
+[myapp]
+myapp-dev

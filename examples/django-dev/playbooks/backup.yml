@@ -1,0 +1,11 @@
+---
+
+- hosts:
+    - web
+  roles:
+    # - myapp
+    - django-site
+  vars:
+    djsite_role_action: local-backup
+    djsite_database_dump_format: plain_text
+    djsite_local_backup_directory: /path/to/backup

@@ -1,0 +1,97 @@
+---
+
+- import_playbook: /path/to/roles-df/playbooks/ansible-bootstrap.yml
+
+- hosts:
+    - localhost
+  roles:
+    - register-ssh-hosts
+    - vagrant
+  vars:
+    vagrant_role_action: setup
+
+- hosts:
+    - aws
+  pre_tasks:
+    - ec2_metadata_facts:
+      tags: always
+  roles:
+    - cloudwatch-mon-scripts
+    - cloudwatch-logs-agent
+
+- hosts:
+    - all:!localhost
+  pre_tasks:
+    - name: Setup convenient myapp BASH aliases
+      set_fact:
+        bash_aliases:
+          # purge-spawn-tasks-queue: "sudo -H -u {{ djsite_daemon_user }} bash -c '{{ djsite_app_directory }}/production/venv/bin/celery worker --app myapp.tasks --hostname destructor --queues spawn-tasks --purge'"
+          nglogs: 'tail -f /var/log/nginx/{{ djsite_instance_name }}/*.log'
+          aplogs: 'tail -f /var/log/supervisor/*-{{ djsite_instance_name }}-*.log'
+          wklogs: "sudo -u {{ djsite_daemon_user }} tail -f {{ myapp_celery_logs|format_items('/var/log/'+djsite_instance_name+'/{0}')|join(' ') }}"
+          scuser: 'sudo su - {{ djsite_daemon_user }}'
+          wkps: "sudo ps -aux | grep 'celery worker' | egrep 'hostname \\S+' -o | sort"
+          scshell: "sudo -H -u {{ djsite_daemon_user }} bash -c '{{ djsite_app_directory }}/production/venv/bin/python {{ djsite_app_directory }}/production/server/manage.py shell_plus'"
+      tags: bash
+      when: "'myapp' in groups"
+  roles:
+    - bootstrap
+    - bash
+    - miscellaneous
+    - openssl
+    - kernel
+    - systemd
+    - python
+    - mounts
+    - rsync
+    - ufw
+    - fail2ban
+  tags: common-stack
+  vars:
+    myapp_celery_logs:
+      - celery-beat-stderr.log
+      - celery-beat-stdout.log
+      - celery-default-stderr.log
+      - celery-default-stdout.log
+    djsite_daemon_user: myapp
+
+- hosts:
+    - datadog
+  roles:
+    - datadog-agent
+  tags: monitoring-stack
+
+# My Application Django Stack
+
+- hosts:
+    - caching
+  roles:
+    - redis
+  tags: cache-stack
+
+- hosts:
+    - database
+  roles:
+    - postgresql
+  tags: database-stack
+
+- hosts:
+    - messaging
+  roles:
+    - rabbitmq
+  tags: messaging-stack
+
+- hosts:
+    - proxy
+  roles:
+    - haproxy
+  tags: proxy-stack
+
+- hosts:
+    - storage
+  roles:
+    - nfs
+  tags: storage-stack
+
+- import_playbook: update.yml
+  tags: web-stack

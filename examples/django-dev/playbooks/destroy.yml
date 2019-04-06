@@ -1,0 +1,8 @@
+---
+
+- hosts:
+    - localhost
+  roles:
+    - vagrant
+  vars:
+    vagrant_role_action: destroy

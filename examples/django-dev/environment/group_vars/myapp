@@ -1,0 +1,163 @@
+mounts: {}
+
+register_ssh_host: yes
+
+# Platform ---------------------------------------------------------------------
+
+extra_apt_repositories: []
+extra_packages:
+  # For the translations
+  - gettext
+
+  # For making XML
+  - libxml2
+  - libxml2-dev
+  - libxslt1-dev
+  - zlib1g-dev
+
+  # Miscellaneous
+  - libexiv2-dev
+  - libgexiv2-dev
+  - libpq-dev
+
+  # To generate the graphs of the models
+  - graphviz
+  - libgraphviz-dev
+
+  # For Pillow
+  - python-tk
+  - libfreetype6
+  - libfreetype6-dev
+  - libjpeg8
+  - libjpeg8-dev
+  - libtiff5
+  - libtiff5-dev
+  - tcl8.6
+  - tcl8.6-dev
+  - tk8.6
+  - tk8.6-dev
+  - zlib1g
+  - zlib1g-dev
+
+  # To transcode
+  - ffmpeg
+
+nginx_zip_module_enabled: yes
+nginx_zip_module_version: 255cf540ac53865df93e022bb8c20f1a1e9a54da  # 14/11/2018 Released 08/10/2017
+nginx_version: release-1.15.6                                       # 14/11/2018 Released 06/11/2018
+nginx_daemon_mode: supervisor
+nginx_build_flags:
+  - --with-http_addition_module
+  - --with-http_auth_request_module
+  - --with-http_dav_module
+  - --with-http_geoip_module
+  - --with-http_gzip_static_module
+  - --with-http_image_filter_module
+  - --with-http_realip_module
+  - --with-http_ssl_module
+  - --with-http_stub_status_module
+  - --with-http_sub_module
+  - --with-http_v2_module
+  - --with-http_xslt_module
+  - --with-ipv6
+  - --with-pcre-jit
+nginx_server_header_engine: myapp
+nginx_worker_processes: '{{ 4 * ansible_processor_count }}'
+
+nginx_sites:
+  site:
+    name: '{{ djsite_instance_name }}'
+    config_file: '{{ playbook_dir }}/../roles/myapp/templates/nginx.conf.j2'
+    debug: '{{ djsite_debug_enabled|bool }}'
+    domains: '{{ djsite_domains }}'
+    domain_old: ''
+    max_body_size: '{{ djsite_max_body_size }}'
+    redirect_ssl: '{{ djsite_redirect_ssl|bool }}'
+    ssl_files_prefix: ../private_files/fisch3r
+    with_dhparam: '{{ djsite_ssl_enabled|bool }}'
+    with_http2: '{{ djsite_http2_enabled|bool }}'
+    with_ssl: '{{ djsite_ssl_enabled|bool }}'
+
+postgresql_is_master: yes
+postgresql_port: 5432
+postgresql_version: 9.6
+
+rabbitmq_is_master: yes
+rabbitmq_host: 127.0.0.1
+rabbitmq_port: 5672
+rabbitmq_user: myapp
+
+redis_host: 127.0.0.1
+redis_port: 6379
+
+supervisor_daemon_mode: systemd
+supervisor_username: superman
+
+uwsgi_apps:
+  application:
+    name: '{{ djsite_instance_name }}'
+    config_file: '{{ playbook_dir }}/../roles-df/roles/django-site/templates/example.uwsgi.app.venv.ini.j2'
+    limit_as: 2048
+    listen: 1000
+    processes: '{{ 10 * ansible_processor_count }}'
+    project: '{{ djsite_project }}'
+    user: '{{ djsite_daemon_user }}'
+    group: '{{ djsite_daemon_group }}'
+    path: '{{ djsite_app_directory }}/production'
+    venv_path: '{{ djsite_app_directory }}/production/venv'
+uwsgi_system_install: no
+
+# Application ------------------------------------------------------------------
+
+djsite_app_directory: '/var/app/{{ djsite_instance_name }}'
+djsite_bower_enabled: yes
+djsite_celery_workers:
+  default:
+    config_file: example.celery.worker.modern.conf.j2
+    name: default
+    queues:
+      - default
+    type: worker
+  beat:
+    config_file: example.celery.worker.modern.conf.j2
+    name: beat
+    type: beat
+djsite_compress_enabled: yes
+djsite_compress_offline: yes
+djsite_coverage_minimum: 62
+djsite_coverage_options:
+  - --branch
+  - --include=myapp/*
+  - --omit=*/migrations/*,*/tests/*
+djsite_database_host: 127.0.0.1
+djsite_database_name: myapp
+djsite_database_port: '{{ postgresql_port|int }}'
+djsite_database_user: admin
+djsite_http2_enabled: yes
+djsite_instance_name: myapp
+djsite_project: MyApp
+djsite_repository_url: '{{ server_directory }}'
+djsite_ssh_key_private: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+djsite_ssh_key_public: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
+djsite_standalone: yes
+djsite_superuser:
+  name: admin
+  email: admin@myapp.com
+  password: '{{ djsite_superuser_password }}'
+djsite_test_options: --failfast --noinput
+
+djsite_configure_tasks_file: '{{ playbook_dir }}/../roles/myapp/tasks/configure-hook.yml'
+djsite_update_tasks_file: ''
+djsite_virtualenv_tasks_file: '{{ playbook_dir }}/../roles/myapp/tasks/virtualenv-hook.yml'
+
+server_directory: '{{ playbook_dir }}/../../server'
+# coverage_directory: '{{ server_directory }}/htmlcov/'
+# files_directory: '{{ djsite_app_directory }}/shared'
+# temporary_directory: '{{ djsite_app_directory }}/temporary'
+# upload_directory: '{{ djsite_app_directory }}/upload'
+
+debug_toolbar: no
+debug_toolbar_template_profiler: yes
+debug_toolbar_request_history: no
+newrelic_license_key: ''
+pycallgraph: no

@@ -1,0 +1,50 @@
+ansible_port: 22
+ansible_user: vagrant
+ansible_ssh_pass: vagrant
+ansible_become_pass: vagrant
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+ansible_ssh_private_key_file: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+
+ssh_authorized_keys:
+  - "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
+ssh_port: 22
+
+# domain: '{{ ansible_host }}'
+# domain_old: ''
+
+# Operating System ---------------------------------------------------------------------------------
+
+filesystem_packages: []
+
+register_ssh_host: yes
+
+systemd_journal_daemon_storage: persistent
+systemd_journal_daemon_system_max_use: 200M
+systemd_journal_daemon_runtime_max_use: 10M
+systemd_journal_daemon_max_level_store: warning
+systemd_journal_daemon_max_level_syslog: warning
+systemd_journal_daemon_max_level_kmsg: warning
+systemd_journal_daemon_max_level_console: notice
+systemd_journal_daemon_max_level_wall: critical
+
+# Optimized defaults -------------------------------------------------------------------------------
+
+build_packages:
+  - build-essential
+  - checkinstall
+  - git
+  - pkg-config
+kernel_packages: []
+mounts_filesystem_types: []
+python_packages:
+  - python3-dev
+system_administration_tools:
+  - htop
+  - iftop
+  - iotop
+  - screen
+  - tree
+system_tools:
+  - preload
+  - unzip
+  - tar

@@ -70,7 +70,7 @@ extra_packages:
 
 ### Django Development Server
 
-See django-site role's [README](roles/django-site/README.md).
+See django-site role's [README](roles/django-site/README.md) and [example]/examples/django-dev/).
 
 ### Mounting a S3 bucket with s3fs
 

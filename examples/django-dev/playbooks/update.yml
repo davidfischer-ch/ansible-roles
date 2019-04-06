@@ -1,0 +1,22 @@
+---
+
+- hosts:
+    - web
+  pre_tasks:
+    - name: Set socket max connections
+      sysctl:
+        name: net.core.somaxconn
+        sysctl_set: yes
+        value: '{{ uwsgi_apps.application.listen|int }}'
+        state: present
+      become: yes
+      tags: networking
+  roles:
+    # - myapp
+    - bower
+    - django-site
+    - certbot
+    - nginx
+    - uwsgi
+  vars:
+    djsite_role_action: setup

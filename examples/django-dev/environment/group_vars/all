@@ -1,0 +1,8 @@
+locale: en_US.UTF-8
+timezone: 'Etc/UTC'
+
+user: '{{ ansible_user }}'
+group: '{{ ansible_user }}'
+
+upgrade_packages_async: '{{ omit }}'
+upgrade_packages_poll: '{{ omit }}'

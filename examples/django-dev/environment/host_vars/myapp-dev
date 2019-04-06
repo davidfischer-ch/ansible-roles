@@ -1,0 +1,72 @@
+ansible_host: 192.168.56.102
+
+# Platform ---------------------------------------------------------------------
+
+postgresql_databases:
+  template1:
+    name: template1
+    extensions:
+      - hstore
+  application:
+    template: template1
+    clients:
+      - 127.0.0.1/32
+      - 192.168.56.0/24
+    extensions:
+      - hstore
+    name: '{{ djsite_database_name }}'
+    user: '{{ djsite_database_user }}'
+    password: '{{ djsite_database_password }}'
+  application-test:
+    template: template1
+    clients:
+      - 127.0.0.1/32
+      - 192.168.56.0/24
+    extensions:
+      - hstore
+    name: 'test_{{ djsite_database_name }}'
+    user: '{{ djsite_database_user }}'
+    password: '{{ djsite_database_password }}'
+
+rabbitmq_password: 0pc7TX587ReS1tCt
+
+redis_password: 3PqQXboyrAeUNyd7EVLekJXaqDua3b6j
+
+supervisor_password: aa95RWbRwYlxwAVX
+
+# Application ------------------------------------------------------------------
+
+djsite_database_password: mOfJA0B6TVvz2Jrz
+djsite_superuser_password: EqSyPX7XuUsD8VYl
+
+djsite_debug_enabled: yes
+djsite_domains:
+  - '{{ ansible_host }}'
+  - 127.0.0.1
+djsite_http2_enabled: yes
+djsite_max_releases: 1
+djsite_redirect_ssl: no
+djsite_release_mode: normal
+djsite_secret_key: 5za@y))z)nbtb$12j&7)q=*hh5@5xg1abcd_d757b$buf*9ny0
+djsite_settings_module: development
+djsite_ssl_enabled: no
+
+admin_url: admin
+appenlight_private_key: ''
+debug_toolbar: no
+email:
+  backend: django.core.mail.backends.dummy.EmailBackend
+  directory: /tmp
+  imap:
+    host: imap.gmail.com
+    port: 993
+  smtp:
+    host: smtp.gmail.com
+    port: 465
+    tls: no
+    ssl: yes
+  user:
+    email: admin@myapp.com
+    name: admin@myapp.com
+    password: hsitumlwfqsjqlkc
+ya_django_profiler: no
