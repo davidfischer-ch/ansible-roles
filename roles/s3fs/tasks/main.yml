@@ -3,14 +3,17 @@
 
 - block:
     - name: Install s3fs build packages
-      package: >
-        name={{ item }} state=present
+      package:
+        name: '{{ item }}'
+        state: present
       loop: '{{ s3fs_build_packages }}'
 
     - name: Clone s3fs source code
-      git: >
-        repo={{ s3fs_repository_url }} dest={{ local_source_directory }}/s3fs force=yes
-        version={{ s3fs_version }}
+      git:
+        repo: '{{ s3fs_repository_url }}'
+        dest: '{{ local_source_directory }}/s3fs'
+        force: yes
+        version: '{{ s3fs_version }}'
       register: _s3fs_git
 
     - name: Set s3fs build environment
@@ -53,8 +56,9 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ s3fs_build_env }} dest={{ local_source_directory }}/s3fs.build.cfg
+          copy:
+            content: '{{ s3fs_build_env }}'
+            dest: '{{ local_source_directory }}/s3fs.build.cfg'
       when: s3fs_build is change
   become: yes
   tags: [s3fs, packages]

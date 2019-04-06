@@ -37,8 +37,9 @@
       when: gitlab_kerberos_enabled|bool
 
     # - name: Install postfix server
-    #   package: >
-    #     name=postfix state=present
+    #   package:
+    #     name: postfix
+    #     state: present
     #   when: gitlab_postfix_enabled|bool
   become: yes
   tags: [gitlab, packages]

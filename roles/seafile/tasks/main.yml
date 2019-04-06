@@ -25,7 +25,7 @@
         state: present
 
     - name: Download Seafile distribution package
-      get_url: >
+      get_url:
         url: '{{ seafile_package_url }}'
         dest: '{{ local_source_directory }}/{{ seafile_package_url|basename }}'
         force: no

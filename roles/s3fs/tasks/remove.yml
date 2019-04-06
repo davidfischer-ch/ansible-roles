@@ -1,13 +1,13 @@
 ---
 
-- block:
-    - name: Remove s3fs
-      file: >
-        path={{ item }} state=absent
-      loop:
-        - '{{ local_source_directory }}/s3fs'
-        - '{{ local_source_directory }}/s3fs.build.cfg'
-        - /usr/local/bin/s3fs
-        - /usr/local/share/man/man1/s3fs.1
+- name: Remove s3fs
+  file:
+    path: '{{ item }}'
+    state: absent
   become: yes
+  loop:
+    - '{{ local_source_directory }}/s3fs'
+    - '{{ local_source_directory }}/s3fs.build.cfg'
+    - /usr/local/bin/s3fs
+    - /usr/local/share/man/man1/s3fs.1
   tags: [s3fs, packages]

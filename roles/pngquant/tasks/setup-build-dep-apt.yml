@@ -1,7 +1,8 @@
 ---
 
 - name: Install pngquant build dependencies
-  apt: >
-    name=pngquant state=build-dep
+  apt:
+    name: pngquant
+    state: build-dep
   become: yes
   tags: [pngquant, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882
