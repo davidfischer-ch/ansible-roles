@@ -78,7 +78,7 @@ python_dynamic_defaults:
       - python3-dev
     python_versions:
       - '2.7'
-      - '3.5'
+      - '3.6'
   macosx:
     python_versions:
       - '2.7'
