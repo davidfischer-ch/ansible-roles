@@ -24,10 +24,12 @@ postgresql_databases:
     extensions: []
   application:
     template: template1
-    clients:
-      - all  # see https://stackoverflow.com/questions/3278379/how-to-configure-postgresql-to-accept-all-incoming-connections
     extensions: []
     name: my-database
-    user: my-user
-    password: some-password-here
+    users:
+      - name: my-user
+        password: some-password-here
+        role_flags: [SUPERUSER, CREATEDB]
+        clients:
+          - all  # see https://stackoverflow.com/questions/3278379/how-to-configure-postgresql-to-accept-all-incoming-connections
 ```

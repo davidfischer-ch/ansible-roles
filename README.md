@@ -78,12 +78,16 @@ See s3fs role's [README](roles/s3fs/README.md).
 
 ### Seafile Professional Server
 
-See seafile role's [README](roles/seafile/README.md).
+See:
 
+* seafile role's [README](roles/seafile/README.md) and [example](examples/seafile-vm/).
 
 ### Setup a PostgreSQL server with an application DB
 
-See postgresql role's [README](roles/postgresql/README.md).
+See:
+
+* postgresql role's [README](roles/postgresql/README.md).
+* postgresql-databases role's [README](roles/postgresql-databases/README.md).
 
 ### Installing AWS utilities
 
