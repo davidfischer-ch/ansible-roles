@@ -8,13 +8,13 @@
 
 - block:
     - name: Install MariaDB packages
-      package: >
+      package:
         name: '{{ mariadb_packages }}'
         state: present
       tags: packages
 
     - name: Configure MariaDB
-      template: >
+      template:
         src: server.{{ mariadb_version }}.my.cnf.j2
         dest: /etc/mysql/my.cnf
         mode: 0644
