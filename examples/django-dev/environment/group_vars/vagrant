@@ -9,9 +9,6 @@ ssh_authorized_keys:
   - "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
 ssh_port: 22
 
-# domain: '{{ ansible_host }}'
-# domain_old: ''
-
 # Operating System ---------------------------------------------------------------------------------
 
 filesystem_packages: []
