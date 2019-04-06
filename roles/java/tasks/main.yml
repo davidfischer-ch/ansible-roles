@@ -12,7 +12,7 @@
 
     - name: Install Java packages
       package:
-        name: '{{ java_packages }}'
+        name: '{{ java_packages|join(" ") }}'
         state: present
   become: yes
   tags: [java, packages]
