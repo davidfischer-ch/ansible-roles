@@ -34,7 +34,7 @@
 
     - name: Setup PostgreSQL users (deprecation error)
       fail:
-        msg: 'Please define user {{ item.value.name }} with the new method.'
+        msg: 'Please define user {{ item.value.user }} with the new method.'
       loop_control:
         label: '{{ item.value.name }}'
       tags: flush-extra
