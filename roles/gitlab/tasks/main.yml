@@ -68,7 +68,7 @@
     - name: Configure GitLab URL
       lineinfile:
         dest: /etc/gitlab/gitlab.rb
-        line: "external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ domain }}{{ gitlab_web_path }}'"
+        line: "external_url 'http{% if gitlab_ssl_enabled|bool %}s{% endif %}://{{ gitlab_domain }}{{ gitlab_web_path }}'"
         regexp: '^external_url \S+'
       notify: restart gitlab
       register: _gitlab_url

@@ -65,7 +65,7 @@ $CONFIG = array(
  * domains prevents host header poisoning. Do not remove this, as it performs
  * necessary security checks.
  */
-'trusted_domains' => array ('127.0.0.1', '{{ domain }}'),
+'trusted_domains' => array ('127.0.0.1', '{{ owncloud_domain }}'),
 
 
 /**
@@ -228,7 +228,7 @@ $CONFIG = array(
  * server, for example ``oc-admin@example.com``, substituting your own domain,
  * of course.
  */
-'mail_domain' => '{{ domain }}',
+'mail_domain' => '{{ owncloud_domain }}',
 
 /**
  * FROM address that overrides the built-in ``sharing-noreply`` and

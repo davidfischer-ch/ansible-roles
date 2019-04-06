@@ -1,6 +1,6 @@
 Listen 0.0.0.0:{{ owncloud_port|int }}
 <VirtualHost *:{{ owncloud_port|int }}>
-    ServerName {{ domain }}
+    ServerName {{ owncloud_domain }}
     DocumentRoot {{ owncloud_web_directory }}
 
     SSLEngine {{ owncloud_ssl_enabled|bool|ternary('on', 'off') }}
