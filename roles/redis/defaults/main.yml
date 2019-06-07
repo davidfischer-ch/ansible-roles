@@ -10,6 +10,8 @@ redis_dynamic_defaults:
       - redis-server
     redis_service: redis-server
 redis_apt_repository: 'ppa:chris-lea/redis-server'
+redis_bind_address: 0.0.0.0
+redis_databases: 16
 redis_interface: null
 redis_port: 6379
 redis_ufw_rules:

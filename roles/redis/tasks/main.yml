@@ -17,13 +17,28 @@
   become: yes
   tags: [redis, packages]
 
-- name: Setup Redis
-  template:
-    src: redis.conf.j2
-    dest: '{{ redis_config_path }}'
-    mode: 0644
-  notify: restart redis
-  become: yes
+- block:
+    - name: Detect Redis version
+      shell:
+        redis-server -v| egrep -o 'Redis server v=[0-9](\.[0-9]+)+' | cut -d= -f 2
+      changed_when: no
+      check_mode: no
+      register: _redis_version
+
+    - set_fact:
+        redis_version: '{{ _redis_version.stdout }}'
+        redis_conf_suffix: "{{ (_redis_version.stdout is version('5.0.5', '>='))|ternary('new', 'old') }}"
+
+    - debug:
+        msg: 'Redis version {{ redis_version }}, detected as {{ redis_conf_suffix }}'
+
+    - name: Configure Redis
+      template:
+        src: redis.conf.{{ redis_conf_suffix }}.j2
+        dest: '{{ redis_config_path }}'
+        mode: 0644
+      become: yes
+      notify: restart redis
   tags: [redis, config]
 
 - name: Start Redis service
