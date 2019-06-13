@@ -2,7 +2,7 @@
 
 dependencies:
   - role: kernel
-    tags: [docker, dependencies]
+    tags: [docker, always]
 
   - role: python
     tags: [docker, dependencies]
