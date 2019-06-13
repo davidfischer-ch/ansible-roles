@@ -157,6 +157,7 @@
     - name: Get images from Docker Hub
       docker_image:
         name: '{{ item }}'
+        source: pull
       loop: '{{ docker_images }}'
 
     - name: Tag and push to local registry
