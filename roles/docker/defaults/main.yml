@@ -1,5 +1,5 @@
-docker_apt_key: 58118E89F3A912897C070ADBF76221572C52609D
-docker_apt_repository: 'deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main'
+docker_apt_key: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+docker_apt_repository: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
 # docker_compose_checksum: 335bd0d7421e4d47c9d80a95706304bd799ccbfc96a686755d69228880cc6149  # 08/04/2017
 docker_compose_path: /usr/local/bin/docker-compose
 # docker_compose_version: 1.12.0  # 08/04/2017
@@ -25,8 +25,16 @@ docker_interface: null
 docker_machine_path: /usr/local/bin/docker-machine
 # docker_machine_version: 0.10.0  # 08/04/2017
 docker_machines: {}
-docker_packages:
+docker_old_packages:
+  - containerd
+  - docker
   - docker-engine
+  - docker.io
+  - runc
+docker_packages:
+  - containerd.io
+  - docker-ce
+  - docker-ce-cli
 docker_python_packages:
   - docker-py
 docker_registry_ufw_rules:

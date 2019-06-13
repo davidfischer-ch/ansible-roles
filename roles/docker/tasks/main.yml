@@ -29,6 +29,11 @@
   when: docker_install_compose|bool
 
 - block:
+    - name: Uninstall old Docker packages
+      package:
+        name: '{{ docker_old_packages }}'
+        state: absent
+
     - name: Register Docker apt key
       apt_key:
         keyserver: hkp://p80.pool.sks-keyservers.net:80
@@ -79,15 +84,30 @@
         - memcg
         - memcg_kmem
         - memcg_swap
+      when: item in kernel_config
+
+    - name: Read GRUB configuration
+      command: grep GRUB_CMDLINE_LINUX= /etc/default/grub
+      changed_when: no
+      check_mode: no
+      register: _docker_grub_config
 
     - name: Enable the memory/swap accounting
       lineinfile:
         dest: /etc/default/grub
+        backrefs: yes
         backup: yes
-        line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 noprompt"'
-        regexp: 'GRUB_CMDLINE_LINUX='
+        line: 'GRUB_CMDLINE_LINUX="\1 {{ item }}"'
+        regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
         state: present
+      loop:
+        - cgroup_enable=memory
+        - swapaccount=1
       notify: update grub
+      when: item not in _docker_grub_config.stdout
+
+    # Otherwise "update grub" will be called after "restart & wait started" !!!
+    - meta: flush_handlers
 
     - name: Create the docker group
       group:
@@ -101,7 +121,6 @@
       changed_when: "'cgroup_enable=memory' not in _docker_cmdline.stdout"
       check_mode: no
       notify:
-        - update grub
         - restart
         - wait started
       register: _docker_cmdline
