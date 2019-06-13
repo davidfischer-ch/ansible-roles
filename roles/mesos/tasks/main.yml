@@ -8,50 +8,53 @@
 
 - block:
     - name: Install Mesos packages
-      package: >
-        name={{ item }} state=present
-      loop: '{{ mesos_packages }}'
+      package:
+        name: '{{ mesos_packages }}'
+        state: present
 
     - name: Install Mesos Python packages
-      pip: >
-        name={{ item }} state=present
-      loop: '{{ mesos_python_packages }}'
+      pip:
+        name: '{{ mesos_python_packages }}'
+        state: present
 
     - name: Download Mesos distribution package
-      get_url: >
-        url={{ mesos_package_url }} dest={{ local_source_directory }}/{{ mesos_package_url|basename }} force=no
+      get_url:
+        url: '{{ mesos_package_url }}'
+        dest: '{{ local_source_directory }}/{{ mesos_package_url|basename }}'
+        force: no
 
     - name: Extract Mesos distribution package
-      unarchive: >
-        src={{ local_source_directory }}/{{ mesos_package_url|basename }} dest={{ local_source_directory }} copy=no
+      unarchive:
+        src: '{{ local_source_directory }}/{{ mesos_package_url|basename }}'
+        dest: '{{ local_source_directory }}'
+        copy: no
 
     - name: Set Mesos build environment
       set_fact:
-        mesos_build_env: >
-          {{ mesos_version }}
+        mesos_build_env: '{{ mesos_version }}'
 
     - name: Detect if Mesos must be reinstalled
       command: >
         cat '{{ local_source_directory }}/mesos.build.cfg'
-      changed_when: >
-        mesos_build_env|trim != mesos_build.stdout|default('')|trim
+      changed_when: mesos_build_env|trim != mesos_build.stdout|default('')|trim
       check_mode: no
       failed_when: no
       register: mesos_build
 
     - block:
         - name: Create Mesos build directory
-          file: >
-            name={{ local_source_directory }}/mesos-{{ mesos_version }}/build state=directory
+          file:
+            path: '{{ local_source_directory }}/mesos-{{ mesos_version }}/build'
+            state: directory
 
         - name: Bootstrap Mesos build process
-          command: >
+          command:
             ./bootstrap
           args:
             chdir: '{{ local_source_directory }}/mesos-{{ mesos_version }}/build'
 
         - name: Configure Mesos build process
-          command: >
+          command:
             ./configure
           args:
             chdir: '{{ local_source_directory }}/mesos-{{ mesos_version }}/build'
@@ -62,7 +65,8 @@
         - set_fact:
             mesos_jobs: '{{ [ansible_processor_cores, ansible_memory_mb.nocache.free // 1024]|min }}'
 
-        - debug: msg='CPU {{ ansible_processor_cores }} Cores, RAM {{ ansible_memory_mb.nocache.free }} MB free -> Will compile Mesos with {{ mesos_jobs }} jobs.'
+        - debug:
+            msg: 'CPU {{ ansible_processor_cores }} Cores, RAM {{ ansible_memory_mb.nocache.free }} MB free -> Will compile Mesos with {{ mesos_jobs }} jobs.'
 
         - name: Build Mesos from source
           make:
@@ -81,8 +85,9 @@
             target: install
 
         - name: Save build environment
-          copy: >
-            content={{ mesos_build_env }} dest={{ local_source_directory }}/mesos.build.cfg
-      when: mesos_build|changed
+          copy:
+            content: '{{ mesos_build_env }}'
+            dest: '{{ local_source_directory }}/mesos.build.cfg'
+      when: mesos_build is change
   become: yes
   tags: [mesos, packages]
