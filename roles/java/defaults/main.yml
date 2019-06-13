@@ -10,6 +10,5 @@ java_open_packages:
   - 'openjdk-{{ java_version }}-jdk'
 java_oracle_packages:
   - 'oracle-java{{ java_version }}-installer'
-java_packages:
-  - '{{ java_from_oracle|bool|ternary(java_oracle_packages, java_open_packages) }}'
+java_packages: '{{ java_from_oracle|bool|ternary(java_oracle_packages, java_open_packages) }}'
 # java_version: 8  # 22/11/2016
