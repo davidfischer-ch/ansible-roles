@@ -16,7 +16,7 @@ docker_engine_ufw_rules:
     rule: allow
 docker_images:
   - hello-world
-docker_install_compose: yes
+docker_install_compose: no
 docker_install_engine: yes
 docker_install_machine: no
 docker_install_registry: no
