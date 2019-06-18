@@ -3,7 +3,7 @@
 local postgres postgres trust
 
 {{ postgresql_authentication_rules|join('\n') }}
-{% for database in postgresql_databases.itervalues()|sort %}
+{% for database in postgresql_databases.values()|sort %}
 
 local {{ database.name }} postgres trust
 
