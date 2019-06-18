@@ -1,7 +1,7 @@
 ---
 
 - hosts:
-    - ansible-bootstrap
+    - ansible_bootstrap
   gather_facts: no
   tags: ansible-bootstrap
   tasks:
