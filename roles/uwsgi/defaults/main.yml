@@ -4,3 +4,11 @@ uwsgi_packages:
   - uwsgi-plugin-python3
 uwsgi_reload_on_update: no
 uwsgi_system_install: yes
+uwsgi_auto_restart: yes
+uwsgi_auto_start: yes
+uwsgi_kill_as_group: no
+uwsgi_num_procs: 1
+uwsgi_start_secs: 10
+uwsgi_stop_as_group: no
+uwsgi_stop_signal: QUIT
+uwsgi_stop_wait_secs: 10

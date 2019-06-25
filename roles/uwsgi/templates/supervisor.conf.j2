@@ -1,11 +1,14 @@
 [program:uwsgi-{{ item.value.name }}]
 command={{ item.value.venv_path }}/bin/uwsgi --{{ item.value.config_file.split('.')[-2] }} /etc/supervisor/conf.d/uwsgi-{{ item.value.name }}.{{ item.value.config_file.split('.')[-2] }}
 directory={{ item.value.path }}
-stopsignal=QUIT
+stopsignal={{ item.value.stop_signal|default(uwsgi_stop_signal) }}
+stopwaitsecs={{ item.value.stop_wait_secs|default(uwsgi_stop_wait_secs)|int }}
+stopasgroup={{ item.value.stop_as_group|default(uwsgi_stop_as_group)|bool|ternary('true', 'false') }}
+killasgroup={{ item.value.kill_as_group|default(uwsgi_kill_as_group)|bool|ternary('true', 'false') }}
 stdout_logfile=/var/log/supervisor/uwsgi-{{ item.value.name }}-stdout.log
 stderr_logfile=/var/log/supervisor/uwsgi-{{ item.value.name }}-stderr.log
 user=root
-numprocs=1
-autostart=true
-autorestart=true
-startsecs=10
+numprocs={{ item.value.num_procs|default(uwsgi_num_procs)|int }}
+autostart={{ item.value.auto_start|default(uwsgi_auto_start)|bool|ternary('true', 'false') }}
+autorestart={{ item.value.auto_restart|default(uwsgi_auto_restart)|bool|ternary('true', 'false') }}
+startsecs={{ item.value.start_secs|default(uwsgi_start_secs)|int }}
