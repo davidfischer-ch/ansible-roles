@@ -2,8 +2,8 @@
 
 - assert:
     that:
-      - memcache_log_file.split('/') > 3  # Ensure 'Create memcache directories' will not change /var/log directly
-      - memcache_pid_file.split('/') > 3  # Ensure 'Create memcache directories' will not change /var/run directly
+      - memcache_log_file.split('/')|length > 3  # Ensure 'Create memcache directories' will not change /var/log directly
+      - memcache_pid_file.split('/')|length > 3  # Ensure 'Create memcache directories' will not change /var/run directly
   tags: [memcache, always]
 
 - name: Stop memcache service

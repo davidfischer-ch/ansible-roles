@@ -3,8 +3,8 @@
 - assert:
     that:
       - memcache_binding_protocol in memcache_binding_protocols
-      - memcache_log_file.split('/') > 3  # Ensure 'Create memcache directories' will not change /var/log directly
-      - memcache_pid_file.split('/') > 3  # Ensure 'Create memcache directories' will not change /var/run directly
+      - memcache_log_file.split('/')|length > 3  # Ensure 'Create memcache directories' will not change /var/log directly
+      - memcache_pid_file.split('/')|length > 3  # Ensure 'Create memcache directories' will not change /var/run directly
       - memcache_verbosity_level in memcache_verbosity_levels
   tags: [memcache, always]
 
