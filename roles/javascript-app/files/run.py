@@ -17,13 +17,17 @@ def main():
     with socketserver.TCPServer(('', PORT), Handler) as server:
 
         def cleanup_server(signal, frame):
-            print('Stopping server...', signal)
+            print('Stopping server...')
             server.server_close()
             sys.exit(0)
 
-        print('Serving content as http://localhost:{0}'.format(PORT))
-        signal.signal(signal.SIGINT, cleanup_server)
-        server.serve_forever()
+        try:
+            print('Serving content as http://localhost:{0}'.format(PORT))
+            signal.signal(signal.SIGINT, cleanup_server)
+            server.serve_forever()
+        finally:
+            print('Stopping server...')
+            server.server_close()
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
