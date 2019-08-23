@@ -76,8 +76,8 @@
         dest: /etc/{{ item.src }}/haproxy
         mode: '{{ item.mode }}'
       loop:
-        - {src: default, mode: 0644}
-        - {src: init.d,  mode: 0755}
+        - { src: default, mode: 644 }
+        - { src: init.d,  mode: 755 }
       notify: restart haproxy
 
     - name: Copy default HAProxy error pages
