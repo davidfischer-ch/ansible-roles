@@ -1,0 +1,14 @@
+jsapp_hosting_implementations:
+  - none
+  - s3
+jsapp_node_environment:
+  PATH: "{{ jsapp_node_env_paths|join(':') }}"
+jsapp_node_env_paths:
+  - '{{ jsapp_directory }}/build/node_modules/.bin'
+  - '{{ jsapp_directory }}/node_venv/lib/node_modules/.bin'
+  - '{{ jsapp_directory }}/node_venv/bin'
+  - '{{ ansible_env.PATH }}'
+jsapp_role_actions:
+  - run
+  - setup
+  - upload

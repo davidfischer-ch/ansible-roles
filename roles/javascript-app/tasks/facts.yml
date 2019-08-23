@@ -1,0 +1,19 @@
+---
+
+- block:
+    - assert:
+        that:
+          - jsapp_hosting_implementation in jsapp_hosting_implementations
+          - jsapp_instance_name is defined
+          - jsapp_repository_url is defined
+          - jsapp_role_action in jsapp_role_actions
+
+    # FIXME temporary cheat
+    - set_fact:
+        jsapp_source_checksum: 42
+
+    - set_fact:
+        jsapp_repository_is_local: "{{ '://' not in jsapp_repository_url }}"
+
+    - include_tasks: facts-{{ jsapp_hosting_implementation }}.yml
+  tags: always

@@ -1,0 +1,16 @@
+---
+
+- import_tasks: read-config.yml
+
+- name: Serve Application (http://127.0.0.1:8000) (Ctrl+C to stop)
+  script: >
+    files/run.py
+  args:
+    chdir: '{{ jsapp_directory }}/build/{{ jsapp_config.static_path }}'
+
+# - name: Run Application
+#   command: >
+#     npm run watch
+#   args:
+#     chdir: '{{ jsapp_directory }}/build/{{ jsapp_config.source_path }}'
+#   environment: '{{ jsapp_node_environment }}'

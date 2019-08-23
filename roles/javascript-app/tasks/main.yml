@@ -1,0 +1,6 @@
+---
+
+- block:
+    - import_tasks: facts.yml
+    - import_tasks: '{{ jsapp_role_action }}.yml'
+  tags: javascript-app
