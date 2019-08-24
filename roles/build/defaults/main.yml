@@ -26,3 +26,5 @@ build_dynamic_defaults:
       - mercurial
       - pkg-config
       - subversion
+  macosx:
+    build_packages: []

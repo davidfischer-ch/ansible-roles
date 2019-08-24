@@ -80,6 +80,7 @@ python_dynamic_defaults:
       - '2.7'
       - '3.6'
   macosx:
+    python_packages: []
     python_versions:
       - '2.7'
 python_build_flags: []
