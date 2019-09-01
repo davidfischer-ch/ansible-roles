@@ -4,8 +4,8 @@
 """
     Cleanup Ubuntu Phone packages.
 
-    :author: David Fischer <david.fischer.ch@gmail.com>
-    :copyright: (c) 2015 David Fischer. All rights reserved.
+    :author: David Fischer <david@fisch3r.net>
+    :copyright: (c) 2015-2019 David Fischer. All rights reserved.
 """
 
 import argparse, re
