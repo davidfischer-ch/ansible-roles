@@ -70,7 +70,7 @@ extra_packages:
 
 ### Django Development Server
 
-See django-site role's [README](https://github.com/davidfischer-ch/ansible-role-django-site/blob/master/README.md) and [example]/examples/django-dev/).
+See django-site role's [README](https://github.com/davidfischer-ch/ansible-role-django-site/blob/master/README.md) and [example](examples/django-dev/).
 
 ### Mounting a S3 bucket with s3fs
 
