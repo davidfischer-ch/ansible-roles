@@ -1,9 +1,0 @@
-openssl_build_cfg: "-Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)'"
-openssl_checksum: 921e76fccd14f83ae517c15eb10e9821ad73d084936278a839fe5650063ef0ae  # 30/10/2017
-openssl_from_source: no  # also install from source if yes
-openssl_packages:
-  - openssl
-openssl_source_package: "OpenSSL_{{ (openssl_version|string).replace('.', '_') }}.tar.gz"
-openssl_source_directoy: "openssl-OpenSSL_{{ (openssl_version|string).replace('.', '_') }}"
-# openssl_version: 1.1.1a  # 10/12/2018 by default only used when installing from source
-ssl_cert_days: 365

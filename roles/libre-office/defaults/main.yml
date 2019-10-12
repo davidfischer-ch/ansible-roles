@@ -1,6 +1,0 @@
-libre_office_daemon_user: libre-office
-libre_office_daemon_group: '{{ libre_office_daemon_user }}'
-libre_office_packages:
-  - libreoffice
-  - openjdk-7-jre-headless
-libre_office_port: 8100

@@ -1,4 +1,0 @@
-mysql_query_cache_types:
-  demand: 2
-  off: 0
-  on: 1

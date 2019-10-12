@@ -1,0 +1,381 @@
+---
+
+- name: aeroo-docs
+  src: https://github.com/davidfischer-ch/ansible-role-aeroo-docs
+  version: master  # Please never in production :)
+
+- name: ampache
+  src: https://github.com/davidfischer-ch/ansible-role-ampache
+  version: master  # Please never in production :)
+
+- name: android-studio
+  src: https://github.com/davidfischer-ch/ansible-role-android-studio
+  version: master  # Please never in production :)
+
+- name: ansible
+  src: https://github.com/davidfischer-ch/ansible-role-ansible
+  version: master  # Please never in production :)
+
+- name: ansible-tower
+  src: https://github.com/davidfischer-ch/ansible-role-ansible-tower
+  version: master  # Please never in production :)
+
+- name: apache
+  src: https://github.com/davidfischer-ch/ansible-role-apache
+  version: master  # Please never in production :)
+
+- name: archive-to-s3
+  src: https://github.com/davidfischer-ch/ansible-role-archive-to-s3
+  version: master  # Please never in production :)
+
+- name: aws-lambda
+  src: https://github.com/davidfischer-ch/ansible-role-aws-lambda
+  version: master  # Please never in production :)
+
+- name: aws-schedule
+  src: https://github.com/davidfischer-ch/ansible-role-aws-schedule
+  version: master  # Please never in production :)
+
+- name: bash
+  src: https://github.com/davidfischer-ch/ansible-role-bash
+  version: master  # Please never in production :)
+
+- name: bootstrap
+  src: https://github.com/davidfischer-ch/ansible-role-bootstrap
+  version: master  # Please never in production :)
+
+- name: bower
+  src: https://github.com/davidfischer-ch/ansible-role-bower
+  version: master  # Please never in production :)
+
+- name: build
+  src: https://github.com/davidfischer-ch/ansible-role-build
+  version: master  # Please never in production :)
+
+- name: certbot
+  src: https://github.com/davidfischer-ch/ansible-role-certbot
+  version: master  # Please never in production :)
+
+- name: cloudwatch-logs-agent
+  src: https://github.com/davidfischer-ch/ansible-role-cloudwatch-logs-agent
+  version: master  # Please never in production :)
+
+- name: cloudwatch-mon-scripts
+  src: https://github.com/davidfischer-ch/ansible-role-cloudwatch-mon-scripts
+  version: master  # Please never in production :)
+
+- name: composer
+  src: https://github.com/davidfischer-ch/ansible-role-composer
+  version: master  # Please never in production :)
+
+- name: cordova
+  src: https://github.com/davidfischer-ch/ansible-role-cordova
+  version: master  # Please never in production :)
+
+- name: daemon
+  src: https://github.com/davidfischer-ch/ansible-role-daemon
+  version: master  # Please never in production :)
+
+- name: datadog-agent
+  src: https://github.com/davidfischer-ch/ansible-role-datadog-agent
+  version: master  # Please never in production :)
+
+- name: desktop
+  src: https://github.com/davidfischer-ch/ansible-role-desktop
+  version: master  # Please never in production :)
+
+- name: development
+  src: https://github.com/davidfischer-ch/ansible-role-development
+  version: master  # Please never in production :)
+
+- name: devpi
+  src: https://github.com/davidfischer-ch/ansible-role-devpi
+  version: master  # Please never in production :)
+
+- name: django-site
+  src: https://github.com/davidfischer-ch/ansible-role-django-site
+  version: master  # Please never in production :)
+
+- name: docker
+  src: https://github.com/davidfischer-ch/ansible-role-docker
+  version: master  # Please never in production :)
+
+- name: drush
+  src: https://github.com/davidfischer-ch/ansible-role-drush
+  version: master  # Please never in production :)
+
+- name: efs
+  src: https://github.com/davidfischer-ch/ansible-role-efs
+  version: master  # Please never in production :)
+
+- name: elasticsearch
+  src: https://github.com/davidfischer-ch/ansible-role-elasticsearch
+  version: master  # Please never in production :)
+
+- name: exfat
+  src: https://github.com/davidfischer-ch/ansible-role-exfat
+  version: master  # Please never in production :)
+
+- name: fail2ban
+  src: https://github.com/davidfischer-ch/ansible-role-fail2ban
+  version: master  # Please never in production :)
+
+- name: gaming
+  src: https://github.com/davidfischer-ch/ansible-role-gaming
+  version: master  # Please never in production :)
+
+- name: gexiv2
+  src: https://github.com/davidfischer-ch/ansible-role-gexiv2
+  version: master  # Please never in production :)
+
+- name: github
+  src: https://github.com/davidfischer-ch/ansible-role-github
+  version: master  # Please never in production :)
+
+- name: gitlab
+  src: https://github.com/davidfischer-ch/ansible-role-gitlab
+  version: master  # Please never in production :)
+
+- name: gpac
+  src: https://github.com/davidfischer-ch/ansible-role-gpac
+  version: master  # Please never in production :)
+
+- name: grub
+  src: https://github.com/davidfischer-ch/ansible-role-grub
+  version: master  # Please never in production :)
+
+- name: haproxy
+  src: https://github.com/davidfischer-ch/ansible-role-haproxy
+  version: master  # Please never in production :)
+
+- name: is-master
+  src: https://github.com/davidfischer-ch/ansible-role-is-master
+  version: master  # Please never in production :)
+
+- name: java
+  src: https://github.com/davidfischer-ch/ansible-role-java
+  version: master  # Please never in production :)
+
+- name: javascript-app
+  src: https://github.com/davidfischer-ch/ansible-role-javascript-app
+  version: master  # Please never in production :)
+
+- name: jenkins
+  src: https://github.com/davidfischer-ch/ansible-role-jenkins
+  version: master  # Please never in production :)
+
+- name: jmeter
+  src: https://github.com/davidfischer-ch/ansible-role-jmeter
+  version: master  # Please never in production :)
+
+- name: juju
+  src: https://github.com/davidfischer-ch/ansible-role-juju
+  version: master  # Please never in production :)
+
+- name: kernel
+  src: https://github.com/davidfischer-ch/ansible-role-kernel
+  version: master  # Please never in production :)
+
+- name: kibana
+  src: https://github.com/davidfischer-ch/ansible-role-kibana
+  version: master  # Please never in production :)
+
+- name: laptop
+  src: https://github.com/davidfischer-ch/ansible-role-laptop
+  version: master  # Please never in production :)
+
+- name: libre-office
+  src: https://github.com/davidfischer-ch/ansible-role-libre-office
+  version: master  # Please never in production :)
+
+- name: local-source
+  src: https://github.com/davidfischer-ch/ansible-role-local-source
+  version: master  # Please never in production :)
+
+- name: logrotate
+  src: https://github.com/davidfischer-ch/ansible-role-logrotate
+  version: master  # Please never in production :)
+
+- name: logstash
+  src: https://github.com/davidfischer-ch/ansible-role-logstash
+  version: master  # Please never in production :)
+
+- name: mariadb
+  src: https://github.com/davidfischer-ch/ansible-role-mariadb
+  version: master  # Please never in production :)
+
+- name: mariadb-client
+  src: https://github.com/davidfischer-ch/ansible-role-mariadb-client
+  version: master  # Please never in production :)
+
+- name: memcache
+  src: https://github.com/davidfischer-ch/ansible-role-memcache
+  version: master  # Please never in production :)
+
+- name: mesos
+  src: https://github.com/davidfischer-ch/ansible-role-mesos
+  version: master  # Please never in production :)
+
+- name: miscellaneous
+  src: https://github.com/davidfischer-ch/ansible-role-miscellaneous
+  version: master  # Please never in production :)
+
+- name: mounts
+  src: https://github.com/davidfischer-ch/ansible-role-mounts
+  version: master  # Please never in production :)
+
+- name: multimedia
+  src: https://github.com/davidfischer-ch/ansible-role-multimedia
+  version: master  # Please never in production :)
+
+- name: mysql
+  src: https://github.com/davidfischer-ch/ansible-role-mysql
+  version: master  # Please never in production :)
+
+- name: mysql-client
+  src: https://github.com/davidfischer-ch/ansible-role-mysql-client
+  version: master  # Please never in production :)
+
+- name: newrelic
+  src: https://github.com/davidfischer-ch/ansible-role-newrelic
+  version: master  # Please never in production :)
+
+- name: nfs
+  src: https://github.com/davidfischer-ch/ansible-role-nfs
+  version: master  # Please never in production :)
+
+- name: nginx
+  src: https://github.com/davidfischer-ch/ansible-role-nginx
+  version: master  # Please never in production :)
+
+- name: node
+  src: https://github.com/davidfischer-ch/ansible-role-node
+  version: master  # Please never in production :)
+
+- name: openssl
+  src: https://github.com/davidfischer-ch/ansible-role-openssl
+  version: master  # Please never in production :)
+
+- name: owncloud
+  src: https://github.com/davidfischer-ch/ansible-role-owncloud
+  version: master  # Please never in production :)
+
+- name: owncloud-client
+  src: https://github.com/davidfischer-ch/ansible-role-owncloud-client
+  version: master  # Please never in production :)
+
+- name: phantomjs
+  src: https://github.com/davidfischer-ch/ansible-role-phantomjs
+  version: master  # Please never in production :)
+
+- name: phone
+  src: https://github.com/davidfischer-ch/ansible-role-phone
+  version: master  # Please never in production :)
+
+- name: php
+  src: https://github.com/davidfischer-ch/ansible-role-php
+  version: master  # Please never in production :)
+
+- name: pngquant
+  src: https://github.com/davidfischer-ch/ansible-role-pngquant
+  version: master  # Please never in production :)
+
+- name: postfix
+  src: https://github.com/davidfischer-ch/ansible-role-postfix
+  version: master  # Please never in production :)
+
+- name: postgresql
+  src: https://github.com/davidfischer-ch/ansible-role-postgresql
+  version: master  # Please never in production :)
+
+- name: postgresql-client
+  src: https://github.com/davidfischer-ch/ansible-role-postgresql-client
+  version: master  # Please never in production :)
+
+- name: postgresql-databases
+  src: https://github.com/davidfischer-ch/ansible-role-postgresql-databases
+  version: master  # Please never in production :)
+
+- name: python
+  src: https://github.com/davidfischer-ch/ansible-role-python
+  version: master  # Please never in production :)
+
+- name: pytoolbox
+  src: https://github.com/davidfischer-ch/ansible-role-pytoolbox
+  version: master  # Please never in production :)
+
+- name: rabbitmq
+  src: https://github.com/davidfischer-ch/ansible-role-rabbitmq
+  version: master  # Please never in production :)
+
+- name: redis
+  src: https://github.com/davidfischer-ch/ansible-role-redis
+  version: master  # Please never in production :)
+
+- name: register-ssh-hosts
+  src: https://github.com/davidfischer-ch/ansible-role-register-ssh-hosts
+  version: master  # Please never in production :)
+
+- name: rsync
+  src: https://github.com/davidfischer-ch/ansible-role-rsync
+  version: master  # Please never in production :)
+
+- name: rsyslog
+  src: https://github.com/davidfischer-ch/ansible-role-rsyslog
+  version: master  # Please never in production :)
+
+- name: ruby
+  src: https://github.com/davidfischer-ch/ansible-role-ruby
+  version: master  # Please never in production :)
+
+- name: s3fs
+  src: https://github.com/davidfischer-ch/ansible-role-s3fs
+  version: master  # Please never in production :)
+
+- name: seafile
+  src: https://github.com/davidfischer-ch/ansible-role-seafile
+  version: master  # Please never in production :)
+
+- name: seafile-client
+  src: https://github.com/davidfischer-ch/ansible-role-seafile-client
+  version: master  # Please never in production :)
+
+- name: sentry-cli
+  src: https://github.com/davidfischer-ch/ansible-role-sentry-cli
+  version: master  # Please never in production :)
+
+- name: sublime-text
+  src: https://github.com/davidfischer-ch/ansible-role-sublime-text
+  version: master  # Please never in production :)
+
+- name: supervisor
+  src: https://github.com/davidfischer-ch/ansible-role-supervisor
+  version: master  # Please never in production :)
+
+- name: systemd
+  src: https://github.com/davidfischer-ch/ansible-role-systemd
+  version: master  # Please never in production :)
+
+- name: timestamp
+  src: https://github.com/davidfischer-ch/ansible-role-timestamp
+  version: master  # Please never in production :)
+
+- name: ufw
+  src: https://github.com/davidfischer-ch/ansible-role-ufw
+  version: master  # Please never in production :)
+
+- name: uwsgi
+  src: https://github.com/davidfischer-ch/ansible-role-uwsgi
+  version: master  # Please never in production :)
+
+- name: vagrant
+  src: https://github.com/davidfischer-ch/ansible-role-vagrant
+  version: master  # Please never in production :)
+
+- name: varnish
+  src: https://github.com/davidfischer-ch/ansible-role-varnish
+  version: master  # Please never in production :)
+
+- name: veracrypt
+  src: https://github.com/davidfischer-ch/ansible-role-veracrypt
+  version: master  # Please never in production :)

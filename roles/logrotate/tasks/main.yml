@@ -1,7 +1,0 @@
-# Install and configure logrotate
----
-
-- block:
-    - import_tasks: facts.yml
-    - import_tasks: '{{ logrotate_role_action }}.yml'
-  tags: logrotate

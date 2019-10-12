@@ -1,4 +1,0 @@
----
-
-- import_tasks: deploy-release.yml
-- import_tasks: make-migrations.yml

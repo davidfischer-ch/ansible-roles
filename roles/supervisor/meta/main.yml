@@ -1,5 +1,0 @@
----
-
-dependencies:
-  - role: python
-    tags: [supervisor, dependencies]

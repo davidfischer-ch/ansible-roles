@@ -1,9 +1,0 @@
----
-
-dependencies:
-  - role: github
-    tags: [gpac, dependencies]
-    when: "'github' in gpac_repository_url"
-
-  - role: openssl
-    tags: [gpac, dependencies]

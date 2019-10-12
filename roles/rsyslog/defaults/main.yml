@@ -1,5 +1,0 @@
-rsyslog_packages:
-  - rsyslog
-
-rsyslog_cron_log: /var/log/cron.log
-rsyslog_default_config_file: /etc/rsyslog.d/50-default.conf

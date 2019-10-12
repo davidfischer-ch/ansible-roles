@@ -1,9 +1,0 @@
----
-
-- block:
-    - fail:
-        msg: 'Sublime Text is now installed via the repository'
-      when: sublime_text_version is defined
-
-    - include_tasks: setup-{{ ansible_pkg_mgr }}.yml
-  tags: [sublime-text, packages]

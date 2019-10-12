@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: local-source
-    tags: [cloudwatch-logs-agent, dependencies]
-
-  - role: python
-    tags: [cloudwatch-logs-agent, dependencies]

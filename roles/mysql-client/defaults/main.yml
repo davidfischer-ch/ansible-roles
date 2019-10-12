@@ -1,8 +1,0 @@
-mysql_client_dynamic_defaults:
-  debian-7.*:
-    mysql_client_packages:
-      - 'mysql-client-{{ mysql_version }}'
-  linux:
-    mysql_client_packages:
-      - 'mysql-client-{{ mysql_version }}'
-      - 'mysql-client-core-{{ mysql_version }}'

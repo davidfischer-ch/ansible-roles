@@ -1,8 +1,0 @@
----
-
-- name: Install Vagrant packages
-  package:
-    name: '{{ vagrant_packages }}'
-    state: present
-  become: yes
-  tags: [vagrant, packages] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

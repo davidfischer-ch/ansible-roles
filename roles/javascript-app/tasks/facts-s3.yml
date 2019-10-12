@@ -1,8 +1,0 @@
----
-
-- assert:
-    that:
-      - jsapp_s3_bucket_name is defined
-      - jsapp_s3_region is defined
-      - jsapp_s3_permission is defined
-  tags: [javascript-app, always] # FIXME Remove when this is fixed https://github.com/ansible/ansible/issues/30882

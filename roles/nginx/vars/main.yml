@@ -1,4 +1,0 @@
-nginx_daemon_modes:
-  supervisor: supervisor
-  systemd: system
-  systemv: system

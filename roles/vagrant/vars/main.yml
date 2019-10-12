@@ -1,9 +1,0 @@
-vagrant_power_modes:
-  - poweroff
-  - running
-  - saved
-vagrant_role_actions:
-  - destroy
-  - power-control
-  - setup
-  - snapshot

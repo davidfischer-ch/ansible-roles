@@ -1,9 +1,0 @@
----
-
-- assert:
-    that:
-      - aws_lambda_account_id is defined
-      - aws_lambda_environment is defined
-      - aws_lambda_functions is defined
-      - aws_lambda_region is defined
-  tags: always

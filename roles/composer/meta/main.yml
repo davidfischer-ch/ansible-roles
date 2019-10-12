@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: github
-    tags: [composer, dependencies]
-
-  - role: php
-    tags: [composer, dependencies]

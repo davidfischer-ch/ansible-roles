@@ -1,3 +1,0 @@
-newrelic_apt_repository: 'deb http://apt.newrelic.com/debian/ newrelic non-free'
-newrelic_install_sysmon_agent: yes
-newrelic_license_key: ''

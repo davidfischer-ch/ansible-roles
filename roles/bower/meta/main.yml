@@ -1,5 +1,0 @@
----
-
-dependencies:
-  - role: node
-    tags: [bower, dependencies]

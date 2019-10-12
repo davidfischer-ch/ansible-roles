@@ -1,1 +1,0 @@
-timestamp_command: python -c "import datetime; print(datetime.datetime.utcnow().strftime('%Y%m%dT%H%M%S%f'))"

@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: java
-    tags: [mesos, dependencies]
-
-  - role: python
-    tags: [mesos, dependencies]

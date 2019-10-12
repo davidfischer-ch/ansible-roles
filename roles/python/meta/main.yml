@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: build
-    tags: [python, dependencies]
-
-  - role: local-source
-    tags: [python, dependencies]

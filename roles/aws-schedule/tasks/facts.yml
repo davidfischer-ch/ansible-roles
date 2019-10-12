@@ -1,9 +1,0 @@
----
-
-- assert:
-    that:
-      - aws_schedule_account_id is defined
-      - aws_schedule_environment is defined
-      - aws_schedule_functions is defined
-      - aws_schedule_region is defined
-  tags: always

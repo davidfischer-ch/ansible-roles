@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: github
-    tags: [exfat, dependencies]
-
-  - role: local-source
-    tags: [exfat, dependencies]

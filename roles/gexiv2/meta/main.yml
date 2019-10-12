@@ -1,5 +1,0 @@
----
-
-dependencies:
-  - role: local-source
-    tags: [gexiv2, dependencies]

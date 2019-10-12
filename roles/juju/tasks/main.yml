@@ -1,8 +1,0 @@
----
-
-- name: Install JuJu packages
-  package:
-    name: '{{ juju_packages }}'
-    state: present
-  become: yes
-  tags: [juju, packages]

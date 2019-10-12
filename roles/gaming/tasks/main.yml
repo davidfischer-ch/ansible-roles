@@ -1,8 +1,0 @@
----
-
-- name: Install gaming packages
-  package:
-    name: '{{ gaming_packages }}'
-    state: present
-  become: yes
-  tags: [gaming, packages]

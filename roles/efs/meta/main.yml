@@ -1,8 +1,0 @@
----
-
-dependencies:
-  - role: github
-    tags: [efs, dependencies]
-
-  - role: local-source
-    tags: [efs, dependencies]

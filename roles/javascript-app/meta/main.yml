@@ -1,6 +1,0 @@
----
-
-dependencies:
-  - role: python
-    tags: [javascript-app, dependencies]
-    when: jsapp_role_action == 'setup'

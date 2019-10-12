@@ -1,3 +1,0 @@
----
-
-- include_tasks: upload-{{ jsapp_hosting_implementation }}.yml

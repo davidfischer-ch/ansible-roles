@@ -1,5 +1,0 @@
-{% if nginx_geoip_blocking_enabled|bool %}
-if ($allow_visit = block) {
-    return 403;
-}
-{% endif %}

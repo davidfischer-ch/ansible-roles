@@ -1,7 +1,0 @@
----
-
-- name: reload kibana
-  service:
-    name: kibana
-    state: restarted
-  become: yes

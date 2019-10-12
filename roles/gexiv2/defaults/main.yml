@@ -1,6 +1,0 @@
-gexiv2_build_packages:
-  - autoconf
-  - gobject-introspection
-  - libexiv2-dev
-  - libgirepository1.0-dev
-# gexiv2_version: gexiv2-0.10.8  # 10/12/2018

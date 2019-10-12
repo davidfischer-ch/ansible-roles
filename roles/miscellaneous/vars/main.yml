@@ -1,5 +1,0 @@
-apt_distribution_categories_suffix:
-  core: ''
-  backports: '-backports'
-  updates: '-updates'
-  security: '-security'

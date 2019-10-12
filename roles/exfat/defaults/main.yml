@@ -1,9 +1,0 @@
-exfat_build_cfg: ''
-exfat_build_packages:
-  - autoconf
-  - automake
-  - gcc
-  - libfuse-dev
-  - make
-  - pkg-config
-exfat_version: master

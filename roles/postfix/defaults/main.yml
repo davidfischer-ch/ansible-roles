@@ -1,2 +1,0 @@
-postfix_mailname: '{{ ansible_fqdn }}'
-postfix_package: postfix

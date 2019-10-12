@@ -1,7 +1,0 @@
----
-
-- name: reload rsyslog
-  service:
-    name: rsyslog
-    state: reloaded
-  become: yes

@@ -1,5 +1,0 @@
-jsapp_directory: '{{ ansible_user_dir }}/js_apps/{{ jsapp_instance_name }}'
-jsapp_production_mode: yes
-jsapp_python_packages:
-  - nodeenv
-jsapp_python_version: '{{ python_versions|first }}'

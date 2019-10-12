@@ -1,9 +1,0 @@
-logrotate_packages:
-  - logrotate
-
-lograte_config_file: logrotate.conf.j2
-logrotate_extra_config: ''
-logrotate_log_rotations_frequency: weekly
-logrotate_log_rotations_max_count: 4
-
-logrotate_log_rotations: []
