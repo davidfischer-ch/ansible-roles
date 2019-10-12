@@ -70,27 +70,27 @@ extra_packages:
 
 ### Django Development Server
 
-See django-site role's [README](roles/django-site/README.md) and [example]/examples/django-dev/).
+See django-site role's [README](https://github.com/davidfischer-ch/ansible-role-django-site/blob/master/README.md) and [example]/examples/django-dev/).
 
 ### Mounting a S3 bucket with s3fs
 
-See s3fs role's [README](roles/s3fs/README.md).
+See s3fs role's [README](https://github.com/davidfischer-ch/ansible-role-s3fs/blob/master/README.md).
 
 ### Seafile Professional Server
 
 See:
 
-* seafile role's [README](roles/seafile/README.md) and [example](examples/seafile-vm/).
+* seafile role's [README](https://github.com/davidfischer-ch/ansible-role-seafile/blob/master/README.md) and [example](examples/seafile-vm/).
 
 ### Setup a PostgreSQL server with an application DB
 
 See:
 
-* postgresql role's [README](roles/postgresql/README.md).
-* postgresql-databases role's [README](roles/postgresql-databases/README.md).
+* postgresql role's [README](https://github.com/davidfischer-ch/ansible-role-postgresql/blob/master/README.md).
+* postgresql-databases role's [README](https://github.com/davidfischer-ch/ansible-role-postgresql-databases/blob/master/README.md).
 
 ### Installing AWS utilities
 
-See cloudwatch-logs-agent role's [README](roles/cloudwatch-logs-agent/README.md).
+See cloudwatch-logs-agent role's [README](https://github.com/davidfischer-ch/ansible-role-cloudwatch-logs-agent/blob/master/README.md).
 
 2014-2019 - David Fischer
