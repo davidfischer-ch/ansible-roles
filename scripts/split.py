@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
-import glob, os, subprocess
+import os, subprocess
 from pathlib import Path
 
 from pytoolbox import filesystem
 from pytoolbox.subprocess import rsync
 from requests import post, put
 
-ANSIBLE_ROLES_DIRECTORY = Path('ansible-roles').absolute()
-ROLES_SOURCE_DIRECTORY = ANSIBLE_ROLES_DIRECTORY / 'roles'
-ROLES_TARGET_DIRECTORY = Path('roles').absolute()
-README_TEMPLATE = Path('README.md').absolute()
+SCRIPTS_DIRECTORY = Path(__file__).absolute().parent
+LIBRARY_DIRECTORY = SCRIPTS_DIRECTORY.parent
+ROLES_SOURCE_DIRECTORY = LIBRARY_DIRECTORY / 'roles'
+ROLES_TARGET_DIRECTORY = LIBRARY_DIRECTORY.parent
+README_TEMPLATE = SCRIPTS_DIRECTORY / 'README.md'
 
 GITHUB_API = 'https://api.github.com'
 GITHUB_USER = 'davidfischer-ch'
@@ -49,7 +50,7 @@ PATHS = [
 
 
 def main():
-    roles = {Path(p).name for p in glob.glob(str(ROLES_SOURCE_DIRECTORY / '*'))}
+    roles = {Path(p).name for p in ROLES_SOURCE_DIRECTORY.glob('*')}
     ROLES_TARGET_DIRECTORY.mkdir(exist_ok=True)
     for role in sorted(roles):
         process_role(role, roles)
@@ -81,7 +82,7 @@ def process_role(role, roles):
     if not directory.exists():
         print('Create role', role)
         try:
-            rsync(ANSIBLE_ROLES_DIRECTORY, directory, destination_is_dir=True)
+            rsync(LIBRARY_DIRECTORY, directory, destination_is_dir=True)
             os.chdir(directory)
             paths = PATHS + [f'roles/{r}' for r in roles - {role}]
             print('\tFiltering')

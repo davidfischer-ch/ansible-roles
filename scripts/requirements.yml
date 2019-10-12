@@ -1,0 +1,5 @@
+{% for role in roles|sort %}
+- name: {{ role }}
+  src: https://github.com/{{ GITHUB_USER }}/ansible-role-{{ role }}
+  version: master  # Please never in production :)
+{% endfor %}
