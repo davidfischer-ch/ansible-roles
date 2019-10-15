@@ -86,7 +86,7 @@ def main():
     for lookup_key in lookup_keys:
         for key, variables in defaults.items():
             if re.match('^%s$' % key, lookup_key):
-                match = True
+                match |= key != 'default'
                 for name, value in variables.items():
                     if name not in hostvars:
                         facts.setdefault(name, value)
