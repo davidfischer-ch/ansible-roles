@@ -45,7 +45,7 @@
   max_fail_percentage: 0
 
 - hosts:
-    - worker
+    - web
   roles:
     - nginx
     - uwsgi
