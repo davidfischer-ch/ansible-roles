@@ -1,0 +1,2 @@
+# Make it possible to define this repository as a dependency using ansible-galaxy
+dependencies: []
