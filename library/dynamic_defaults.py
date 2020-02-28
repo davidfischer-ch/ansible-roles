@@ -65,7 +65,7 @@ def main():
     # See https://newrelic.com/infrastructure/pricing (CPU Cores + GB RAM) x hours used
     module = AnsibleModule(
         argument_spec=dict(
-            hostvars=dict(required=True, type='dict'),
+            hostvars=dict(no_log=True, required=True, type='dict'),
             defaults=dict(required=True, type='dict'),
             lookup_keys=dict(required=False, default=LOOKUP_KEYS, type='list'),
             must_match=dict(required=False, default=False, type='bool')

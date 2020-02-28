@@ -83,7 +83,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             host=dict(default=None),
-            api_key=dict(default=None),
+            api_key=dict(default=None, no_log=True),
             ca_cert=dict(default=None, type='path'),
             name=dict(required=True),
             namespace=dict(required=True),
