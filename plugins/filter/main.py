@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-import itertools
+import itertools, re
 
 from ansible import errors
 
@@ -65,6 +65,20 @@ def oldest_ec2_snapshots(snapshots, keep):
     return sorted(snapshots, key=lambda s: s['start_time'])[keep:]
 
 
+def regex_findall(value, expression):
+    """
+    >>> regex_findall('something\\nspecial\\nis\\nhidden', 'spec.Al')
+    []
+    >>> regex_findall('something\\nspecial\\nis\\nhidden', 'spec.al')
+    ['special']
+    >>> regex_findall(
+    ...     '<td> x-forwarded-for  </td>  <td> 10.137.69.68  </td>',
+    ...     '<td>\\s*x-forwarded-for\\s*</td>[^<]+<td>\\s*([0-9\\.]+)')
+    ['10.137.69.68']
+    """
+    return re.findall(expression, value, re.MULTILINE)
+
+
 class FilterModule(object):
     """Ansible miscellaneous filters."""
 
@@ -77,10 +91,12 @@ class FilterModule(object):
             'really_mandatory': really_mandatory,
             'ec2_group_rules': ec2_group_rules,
             'ec2_vpc_routes': ec2_vpc_routes,
-            'oldest_ec2_snapshots': oldest_ec2_snapshots
+            'oldest_ec2_snapshots': oldest_ec2_snapshots,
+            'regex_findall': regex_findall
         }
 
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
+    print('All tests passed')
