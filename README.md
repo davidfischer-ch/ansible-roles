@@ -131,4 +131,4 @@ Examples:
 - There is a new action available (you have to call it)
 - Enhanced support of the hundreds Linux distributions
 
-2014-2019 - David Fischer
+2014-2020 - David Fischer
