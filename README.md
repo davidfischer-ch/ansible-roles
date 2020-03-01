@@ -93,4 +93,42 @@ See:
 
 See cloudwatch-logs-agent role's [README](https://github.com/davidfischer-ch/ansible-role-cloudwatch-logs-agent/blob/master/README.md).
 
+## Versioning
+
+Convention: `v<MAJOR>.<MINOR>.<PATCH>`
+
+### MAJOR Upgrade
+
+Breaking change that cannot be applied as-is on hosts setup using a previous version of the role.
+It may requires a migration procedure or some additional code.
+
+Examples:
+
+- A deprecated feature is now removed
+- More to come
+
+### MINOR Upgrade
+
+Non-breaking change that cannot be applied as-is without updating the automation using the role.
+
+Requires some changes in the code using the role.
+
+Examples:
+
+- A default value defined in the role is changed or removed
+- A variable is renamed or its data scheme is modified
+- More to come
+
+### PATCH Upgrade
+
+An update that is assumed to be safe to be applied.
+
+Examples:
+
+- Some bug fixes
+- Code or templates refactoring
+- There is a new feature (disabled by default)
+- There is a new action available (you have to call it)
+- Enhanced support of the hundreds Linux distributions
+
 2014-2019 - David Fischer
