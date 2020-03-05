@@ -13,7 +13,7 @@ LOOKUP_KEYS = [
     'default'
 ]
 
-DOCUMENTATION = r"""
+DOCUMENTATION = """
 ---
 module: dynamic_defaults
 author: "David Fischer (@davidfischer-ch)"
@@ -43,7 +43,7 @@ options:
       - Force that at least of the lookup keys is matched.
 """ % (LOOKUP_KEYS, )
 
-EXAMPLES = r"""
+EXAMPLES = """
 - dynamic_defaults:
     hostvars: '{{ hostvars[inventory_hostname] }}'
     defaults:
@@ -65,7 +65,7 @@ def main():
     # See https://newrelic.com/infrastructure/pricing (CPU Cores + GB RAM) x hours used
     module = AnsibleModule(
         argument_spec=dict(
-            hostvars=dict(no_log=True, required=True, type='dict'),
+            hostvars=dict(required=True, type='dict'),  # NEVER use no_log otherwise it will break content!
             defaults=dict(required=True, type='dict'),
             lookup_keys=dict(required=False, default=LOOKUP_KEYS, type='list'),
             must_match=dict(required=False, default=False, type='bool')
