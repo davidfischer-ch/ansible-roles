@@ -52,6 +52,10 @@
   src: https://github.com/davidfischer-ch/ansible-role-build
   version: master  # Please never in production :)
 
+- name: buildah
+  src: https://github.com/davidfischer-ch/ansible-role-buildah
+  version: master  # Please never in production :)
+
 - name: certbot
   src: https://github.com/davidfischer-ch/ansible-role-certbot
   version: master  # Please never in production :)
@@ -118,6 +122,10 @@
 
 - name: fail2ban
   src: https://github.com/davidfischer-ch/ansible-role-fail2ban
+  version: master  # Please never in production :)
+
+- name: fuse-overlayfs
+  src: https://github.com/davidfischer-ch/ansible-role-fuse-overlayfs
   version: master  # Please never in production :)
 
 - name: gaming
