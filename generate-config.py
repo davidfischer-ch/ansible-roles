@@ -1,19 +1,12 @@
 #!/usr/bin/env python
 
-import collections, datetime, subprocess, yaml
+import argparse, collections, datetime, subprocess, yaml
 
 import jinja2
 
-OPTIONS_BLACKLIST = {
-    'CONNECTION_FACTS_MODULES',
-    'DEFAULT_HANDLER_INCLUDES_STATIC',
-    'DEFAULT_REMOTE_PORT',
-    'DEFAULT_SQUASH_ACTIONS',
-    'DEFAULT_TASK_INCLUDES_STATIC',
-}
+OPTIONS_BLACKLIST = {'CONNECTION_FACTS_MODULES'}
 
-TEMPLATE = """
-# Generator: ./generate-config.py
+TEMPLATE = """# Generator: ./generate-config.py
 # Date: {{ date }}
 {% for section, options in config.items()|sort %}
 [{{ section }}]
@@ -21,14 +14,16 @@ TEMPLATE = """
 {% for line in description %}
 # {{ line }}
 {%- endfor %}
-{{ key }}={{ default }}
+{% if default != None %}{{ key }} = {{ default }}{% else %}# {{ key }} ={% endif -%}
 {%- endfor %}
-{% endfor -%}
-"""
+{% endfor -%}"""
 
 
 def main():
-    'Generate ansible.cfg based on ansible-config.'
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                     epilog='Generate ansible.cfg based on ansible-config.')
+    parser.add_argument('-o', '--filename', default='ansible.cfg.generated')
+    args = parser.parse_args()
 
     config = collections.defaultdict(set)
     for section, key, meta in get_options():
@@ -39,8 +34,10 @@ def main():
         config[section].add((key, default, name, description))
 
     templates = jinja2.Environment(loader=jinja2.BaseLoader).from_string(TEMPLATE)
-    with open('ansible.cfg', 'w') as f:
-        f.write(templates.render(config=config, date=datetime.datetime.utcnow()))
+    content = templates.render(config=config, date=datetime.datetime.utcnow())
+
+    with open(args.filename, 'w') as f:
+        f.write(content)
 
 
 def clean_default(value):
@@ -62,7 +59,7 @@ def get_options():
             ini = meta['ini'][0]
         except KeyError:
             continue  # This option cannot be defined in the ini file
-        if 'deprecated' in ini:
+        if 'deprecatd' in meta or 'deprecated' in ini:
             continue
         key, section = (ini[k] for k in ('key', 'section'))
         if env_name not in OPTIONS_BLACKLIST:
@@ -71,4 +68,3 @@ def get_options():
 
 if __name__ == '__main__':
     main()
-
