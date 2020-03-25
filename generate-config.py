@@ -10,9 +10,6 @@ OPTIONS_BLACKLIST = {
     'DEFAULT_SQUASH_ACTIONS',           # Deprecated even if not marked as deprecated...
     'DEFAULT_TASK_INCLUDES_STATIC',     # Deprecated even if not marked as deprecated...
 }
-OPTIONS_DISABLED = {
-    'DEFAULT_VAULT_IDENTITY_LIST',  # Default value is broken, at least using this tool
-}
 
 TEMPLATE = """# Generator: ./generate-config.py
 # Date: {{ date }}
@@ -34,12 +31,12 @@ def main():
     args = parser.parse_args()
 
     config = collections.defaultdict(set)
-    for section, key, meta, enabled in get_options():
+    for section, key, meta in get_options():
         default, description, name = (
             globals()[f'clean_{k}'](meta.get(k))
             for k in ('default', 'description', 'name')
         )
-        config[section].add((key, default, name, description, enabled and default is not None))
+        config[section].add((key, default, name, description, is_enabled(default)))
 
     templates = jinja2.Environment(loader=jinja2.BaseLoader).from_string(TEMPLATE)
     content = templates.render(config=config, date=datetime.datetime.utcnow())
@@ -71,7 +68,11 @@ def get_options():
             continue
         key, section = (ini[k] for k in ('key', 'section'))
         if env_name not in OPTIONS_BLACKLIST:
-            yield section, key, meta, env_name not in OPTIONS_DISABLED
+            yield section, key, meta
+
+
+def is_enabled(default):
+    return default not in (None, '')
 
 
 if __name__ == '__main__':
