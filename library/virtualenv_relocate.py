@@ -28,6 +28,11 @@ options:
   operation:
     required: true
     choices: [copy, move, none]
+    description:
+      - The operation to do just before fixing paths.
+      - copy means you want the source to be copied to destination.
+      - move means you want the source to me moved to destination.
+      - none means you only need to fix an already duplicated venv.
   encoding:
     required: false
     default: 'utf-8'
@@ -36,7 +41,10 @@ options:
 """
 
 EXAMPLES = r"""
-- virtualenv_relocate: source=/var/app/my-app/test destination=/var/app/releases/alpha
+- virtualenv_relocate:
+    source: /var/app/my-app/test
+    destination: /var/app/releases/alpha
+    operation: copy
 """
 
 
@@ -89,6 +97,8 @@ def relocate(source_directory, destination_directory, encoding='utf-8'):
         find_recursive(os.path.join(destination_directory, 'bin'), ['*']),
         find_recursive(os.path.join(destination_directory, 'src'), ['*.so'])
     ]):
+        if os.path.islink(path):
+            continue  # Do not follow symbolic links
         with open(path, 'r+b') as f:
             content = f.read()
             updated_content = content.replace(b_source_directory, b_destination_directory)
