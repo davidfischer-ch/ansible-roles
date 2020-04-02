@@ -17,6 +17,11 @@ This library is covering multiple use-cases:
 
 The roles are generic enough to be usable as-is.
 
+## Scripts
+
+- [generate-config.py](scripts/generate-config.py) : Generate ansible.cfg based on ansible-config.
+- [split/](scripts/split/) : Scripts used to split this library in many repositories.
+
 ## Examples
 
 ### An Ubuntu Desktop Computer

@@ -7,7 +7,7 @@ from pytoolbox import filesystem
 from pytoolbox.subprocess import rsync
 from requests import post, put
 
-SCRIPTS_DIRECTORY = Path(__file__).absolute().parent
+SCRIPTS_DIRECTORY = Path(__file__).absolute().parent.parent
 LIBRARY_DIRECTORY = SCRIPTS_DIRECTORY.parent
 ROLES_SOURCE_DIRECTORY = LIBRARY_DIRECTORY / 'roles'
 ROLES_TARGET_DIRECTORY = LIBRARY_DIRECTORY.parent
