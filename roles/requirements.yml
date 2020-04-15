@@ -144,6 +144,10 @@
   src: https://github.com/davidfischer-ch/ansible-role-gitlab
   version: master  # Please never in production :)
 
+- name: go
+  src: https://github.com/davidfischer-ch/ansible-role-go
+  version: master  # Please never in production :)
+
 - name: gpac
   src: https://github.com/davidfischer-ch/ansible-role-gpac
   version: master  # Please never in production :)
@@ -362,6 +366,10 @@
 
 - name: systemd
   src: https://github.com/davidfischer-ch/ansible-role-systemd
+  version: master  # Please never in production :)
+
+- name: terraform
+  src: https://github.com/davidfischer-ch/ansible-role-terraform
   version: master  # Please never in production :)
 
 - name: timestamp
