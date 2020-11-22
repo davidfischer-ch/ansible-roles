@@ -36,6 +36,10 @@
   src: https://github.com/davidfischer-ch/ansible-role-aws-schedule
   version: master  # Please never in production :)
 
+- name: aws-xray
+  src: https://github.com/davidfischer-ch/ansible-role-aws-xray
+  version: master  # Please never in production :)
+
 - name: bash
   src: https://github.com/davidfischer-ch/ansible-role-bash
   version: master  # Please never in production :)
