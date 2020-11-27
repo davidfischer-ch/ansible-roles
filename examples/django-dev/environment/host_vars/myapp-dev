@@ -52,7 +52,6 @@ djsite_settings_module: development
 djsite_ssl_enabled: no
 
 admin_url: admin
-appenlight_private_key: ''
 debug_toolbar: no
 email:
   backend: django.core.mail.backends.dummy.EmailBackend
