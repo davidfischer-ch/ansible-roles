@@ -5,6 +5,11 @@
   gather_facts: no
   tags: ansible-bootstrap
   tasks:
+    - assert:
+        that:
+          - ansible_python_interpreter is defined
+          - bootstrap_python_package is defined
+
     - name: Generate locale
       raw: >
         echo 'NOT_CHANGED' || locale-gen {{ locale }}
@@ -14,7 +19,9 @@
 
     - name: Install Python
       raw: >
-         python --version && echo 'NOT_CHANGED' || { apt-get update && apt-get -y install python; }
+         {{ ansible_python_interpreter }} --version && \
+         echo 'NOT_CHANGED' || \
+         { apt-get update && apt-get -y install {{ bootstrap_python_package }}; }
       become: yes
       changed_when: "'NOT_CHANGED' not in _python_install.stdout"
       register: _python_install
