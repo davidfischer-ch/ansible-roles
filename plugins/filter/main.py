@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-import itertools, re
+import itertools, re, subprocess
 
 from ansible import errors
 
@@ -79,6 +79,36 @@ def regex_findall(value, expression):
     return re.findall(expression, value, re.MULTILINE)
 
 
+# VirtualBox ---------------------------------------------------------------------------------------
+
+VBOX_LIST_REGEX = re.compile(r'"(?P<name>[^"]+)"\s+{(?P<uuid>[0-9a-f\-]+)}')
+
+
+def get_virtualbox_machines_list():
+    result = subprocess.check_output(['vboxmanage', 'list', 'vms']).decode('utf-8')
+    return {n: u for n, u in VBOX_LIST_REGEX.findall(result)}
+
+
+def get_vagrant_machine_id(name, provider):
+    if provider == 'virtualbox':
+        return get_virtualbox_machines_list().get(name)
+    else:
+        raise NotImplementedError(
+            'Handling machine {0} provider {1} not yet implemented.'.format(name, provider))
+
+
+def set_vagrant_machines_ids(machines):
+
+    def with_id(machine, id):
+        value = {'uuid': get_vagrant_machine_id(machine['name'], machine['provider'])}
+        value.update(machine)
+        return value
+
+    return [with_id(machine) for machine in machines]
+
+
+# Filters ------------------------------------------------------------------------------------------
+
 class FilterModule(object):
     """Ansible miscellaneous filters."""
 
@@ -92,7 +122,8 @@ class FilterModule(object):
             'ec2_group_rules': ec2_group_rules,
             'ec2_vpc_routes': ec2_vpc_routes,
             'oldest_ec2_snapshots': oldest_ec2_snapshots,
-            'regex_findall': regex_findall
+            'regex_findall': regex_findall,
+            'set_vagrant_machines_ids': set_vagrant_machines_ids
         }
 
 
