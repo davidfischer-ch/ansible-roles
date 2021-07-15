@@ -19,8 +19,18 @@ The roles are generic enough to be usable as-is.
 
 ## Scripts
 
+### Development Tools
+
+- [check-syntax.py](scripts/check-syntax.py) : Check YAML syntax of a whole file tree.
+- [refresh-roles.sh](scripts/refresh-roles.sh) : Use ansible-galaxy to install/update roles in roles/ directory. Roles are listed in [requirements.yml](roles/requirements.yml).
+- [git-init-roles.py](scripts/git-init-roles.py) : Convert roles from "ansible-galaxy copies" to proprer "git clones". Useful when working on roles.
+- [git-status-roles.py](scripts/git-status-roles.py) : Show the git status of roles when its meaningful (something changed). Useful when working on roles.
+
+### Legacy
+
 - [generate-config.py](scripts/generate-config.py) : Generate ansible.cfg based on ansible-config.
 - [split/](scripts/split/) : Scripts used to split this library in many repositories.
+
 
 ## Examples
 
