@@ -132,10 +132,8 @@ def set_state(directory, name, state, provider=None, timeout=120):
 def get_state(directory, name, wait=False, timeout=120):
     start_time = time.time()
     while True:
-        match = VBOX_LIST_REGEX.search(
-            subprocess.check_output(
-                ['vagrant', 'status', name],
-                cwd=directory))
+        status_raw = subprocess.check_output(['vagrant', 'status', name], cwd=directory)
+        match = VBOX_LIST_REGEX.search(status_raw.decode('utf-8'))
         state = match.groupdict()['status'] if match else 'not created'
         if state == 'not created':
             state = 'absent'
