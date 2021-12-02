@@ -99,7 +99,7 @@ def get_vagrant_machine_id(name, provider):
 
 def set_vagrant_machines_ids(machines):
 
-    def with_id(machine, id):
+    def with_id(machine):
         value = {'uuid': get_vagrant_machine_id(machine['name'], machine['provider'])}
         value.update(machine)
         return value
