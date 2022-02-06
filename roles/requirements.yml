@@ -164,6 +164,10 @@
   src: https://github.com/davidfischer-ch/ansible-role-haproxy
   version: master  # Please never in production :)
 
+- name: home-assistant
+  src: https://github.com/davidfischer-ch/ansible-role-home-assistant
+  version: master  # Please never in production :)
+
 - name: is-master
   src: https://github.com/davidfischer-ch/ansible-role-is-master
   version: master  # Please never in production :)
