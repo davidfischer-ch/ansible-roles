@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import functools, os, shutil, subprocess, tempfile, yaml
+import functools, os, subprocess, yaml
 from pathlib import Path
 
 roles = Path('roles').resolve()
