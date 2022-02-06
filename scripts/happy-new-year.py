@@ -13,10 +13,6 @@ with open(roles / 'requirements.yml') as f:
 
 for requirement in requirements:
     name = requirement['name']
-    url = requirement['src']
-    version = requirement['version']
-
-    url = url.replace('https://', 'git@').replace('github.com/', 'github.com:') + '.git'
     target = roles / name
     target_git = target / '.git'
     target_readme = target / 'README.md'
