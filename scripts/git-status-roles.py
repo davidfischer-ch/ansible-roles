@@ -8,7 +8,6 @@ roles = Path('roles').resolve()
 with open(roles / 'requirements.yml') as f:
     requirements = yaml.safe_load(f.read())
 
-
 for requirement in requirements:
     name = requirement['name']
 
