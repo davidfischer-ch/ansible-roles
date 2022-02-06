@@ -88,6 +88,10 @@
   src: https://github.com/davidfischer-ch/ansible-role-datadog-agent
   version: master  # Please never in production :)
 
+- name: deconz
+  src: https://github.com/davidfischer-ch/ansible-role-deconz
+  version: master  # Please never in production :)
+
 - name: desktop
   src: https://github.com/davidfischer-ch/ansible-role-desktop
   version: master  # Please never in production :)
