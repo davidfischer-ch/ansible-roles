@@ -3,6 +3,8 @@
 import functools, os, subprocess, yaml
 from pathlib import Path
 
+import termcolor
+
 roles = Path('roles').resolve()
 
 with open(roles / 'requirements.yml') as f:
@@ -17,5 +19,5 @@ for requirement in requirements:
     status = run(['git', 'status', '.']).stdout.decode('utf-8')
     if status.count(os.linesep) > 9:
         print()
-        print(f'[{name}] Status')
+        print(termcolor.colored(f'Status of {name}', 'cyan'))
         print(status)
