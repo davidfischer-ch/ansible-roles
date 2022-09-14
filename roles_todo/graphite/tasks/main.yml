@@ -51,7 +51,7 @@
   template:
     src: '{{ item }}'
     dest: '{{ graphite_bin_directory }}/conf/{{ item|basename|pathname }}'
-    mode: 0644
+    mode: '644'
   tags: [graphite, config]
   with_fileglob:
     - ../templates/*.conf.j2
@@ -61,6 +61,6 @@
   template:
     src: local_settings.py.j2
     dest: '{{ graphite_bin_directory }}/webapp/graphite/local_settings.py'
-    mode: 0644
+    mode: '644'
   become: yes
   tags: [graphite, config]
