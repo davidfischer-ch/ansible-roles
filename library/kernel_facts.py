@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-
 import errno, os, re, sys
 
 from ansible.module_utils.basic import AnsibleModule

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-
 import os, re, shutil
 
 from ansible.module_utils.basic import AnsibleModule

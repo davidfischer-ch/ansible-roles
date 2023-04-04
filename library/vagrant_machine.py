@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-
 import itertools, re, subprocess, time
 
 from ansible.module_utils.basic import AnsibleModule

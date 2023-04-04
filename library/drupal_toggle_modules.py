@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-
 import collections, itertools, json, os, subprocess
 
 from ansible.module_utils.basic import AnsibleModule
