@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-import functools, shutil, subprocess, tempfile, yaml
 from pathlib import Path
+import functools, shutil, subprocess, tempfile, yaml
+
+import termcolor
 
 roles = Path('roles').resolve()
-
-with open(roles / 'requirements.yml') as f:
-    requirements = yaml.safe_load(f.read())
+requirements = yaml.safe_load((roles / 'requirements.yml').read_text(encoding='utf-8'))
 
 for requirement in requirements:
     name = requirement['name']
@@ -19,13 +19,16 @@ for requirement in requirements:
 
     run = functools.partial(subprocess.run, cwd=target, capture_output=True)
 
+    print()
+    print(termcolor.colored(f'Git init {name}', 'cyan'))
+
     if target_git.exists():
-        print(f'[{name}] Remove {target_git}')
         shutil.rmtree(target_git)
 
     with tempfile.TemporaryDirectory() as source:
         source_git = Path(source) / '.git'
-        print(f'[{name}] Cloning version {version} from {url}')
+        print(f'Cloning version {version} from {url}')
         run(['git', 'clone', url, source, '--branch', version])
         # bugs.python.org/issue32689
         shutil.move(str(source_git), target_git)
+
