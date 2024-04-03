@@ -204,6 +204,10 @@
   src: https://github.com/davidfischer-ch/ansible-role-kibana
   version: master  # Please never in production :)
 
+- name: klipper
+  src: https://github.com/davidfischer-ch/ansible-role-klipper
+  version: main  # Please never in production :)
+
 - name: laptop
   src: https://github.com/davidfischer-ch/ansible-role-laptop
   version: master  # Please never in production :)
