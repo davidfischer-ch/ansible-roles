@@ -4,7 +4,7 @@
     - web
   pre_tasks:
     - name: Set socket max connections
-      sysctl:
+      ansible.builtin.sysctl:
         name: net.core.somaxconn
         sysctl_set: yes
         value: '{{ uwsgi_apps.application.listen|int }}'

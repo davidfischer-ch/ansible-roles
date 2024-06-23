@@ -23,7 +23,7 @@
     - all:!localhost
   pre_tasks:
     - name: Setup convenient myapp BASH aliases
-      set_fact:
+      ansible.builtin.set_fact:
         bash_aliases:
           # purge-spawn-tasks-queue: "sudo -H -u {{ djsite_daemon_user }} bash -c '{{ djsite_app_directory }}/production/venv/bin/celery worker --app myapp.tasks --hostname destructor --queues spawn-tasks --purge'"
           nglogs: 'tail -f /var/log/nginx/{{ djsite_instance_name }}/*.log'
